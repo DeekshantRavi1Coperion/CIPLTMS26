@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div>
+        <h2>
+            Dear Sir/Madam,</h2>
+        <p>
+                        Please assign following complaint log in the TMS,</p>
+        <br />
+        <table style="width: 90%" border="1" cellpadding="10" cellspacing="0">
+            <tr>
+                <td style="width: 20%;">
+                    Complaint Log No.:
+                </td>
+                <td colspan="2">
+                    {#complaintlogno#}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Complaint Received Date:
+                </td>
+                <td>
+                    {#complaintrcvddate#}
+                </td>
+                <td>
+                    Location: &nbsp;{#location#}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Customer Name:
+                </td>
+                <td colspan="2">
+                    {#customername#}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address:
+                </td>
+                <td colspan="2">
+                    {#address#}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Plant:
+                </td>
+                <td>
+                    {#plant#}
+                </td>
+                <td>
+                    JOB No.:&nbsp;&nbsp; {#jobno#}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    PO No.:
+                </td>
+                <td>
+                    {#pono#}
+                </td>
+                <td>
+                    Item Name:&nbsp;&nbsp; {#itemname#}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Model No:
+                </td>
+                <td>
+                    {#modelno#}
+                </td>
+                <td>
+                    Warranty:&nbsp;&nbsp; {#warranty#}
+                </td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        Please click on below links to assign above complaint log request<br />
+        <br />
+        <table style="width: 60%" border="1" cellpadding="10" cellspacing="0">
+            <tr>
+                <td style="width: 50%;">
+                    {#assignlink#}
+                </td>
+                <!--<td>
+                    {#cancellink#}
+                </td>-->
+            </tr>
+        </table>
+        <br />
+        <br />
+        Regards
+        <br />
+        {#createdby#}
+        <br />
+        <br />
+        <br />
+    </div>
+</body>
+</html>
