@@ -1,0 +1,121 @@
+﻿<html>
+<body>
+    <meta charset='utf-8' />
+    <link href="../../Styles/LOT.css" rel="stylesheet" />
+    <h2 class='headerStyle'>HRD TICKET</h2>
+    <hr />
+    <table class='tblheader'>
+        <tr>
+            <td class='td1header'>Ticket Number:</td>
+            <td class='td2header'><b>{#TicketNumber#}</b></td>
+            <td class='td1header'>Status:</td>
+            <td class='td2header'>{#Status#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Ticket Type:</td>
+            <td class='td2header'>{#TicketType#}</td>
+            <td class='td1header'>Ticket Subtype:</td>
+            <td class='td2header'>{#TicketSubtype#}</td>
+        </tr>
+        <tr>
+            <td class='td1header'>Allocated To:</td>
+            <td class='td2header'>{#AllocatedTo#}</td>
+            <td class='td1header'>&nbsp;</td>
+            <td class='td2header'>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="td1header">Description:</td>
+            <td class="td2header" colspan='3'>{#Description#}</td>
+        </tr>
+    </table>
+    <hr />
+
+    <h3 class='header2'>Signatories</h3>
+    <hr />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Open</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Created Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#CreatedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Created By:</td>
+                <td class='tdsignatories2'>{#CreatedBy#}</td>
+                <td class='tdsignatories1'>Created On:</td>
+                <td class='tdsignatories2'>{#CreatedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Allocated</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Allocated Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#AllocatedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Allocated By:</td>
+                <td class='tdsignatories2'>{#AllocatedBy#}</td>
+                <td class='tdsignatories1'>Allocated On:</td>
+                <td class='tdsignatories2'>{#AllocatedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Cancelled</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Cancelled Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#CancelledRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Cancelled By:</td>
+                <td class='tdsignatories2'>{#CancelledBy#}</td>
+                <td class='tdsignatories1'>Cancelled On:</td>
+                <td class='tdsignatories2'>{#CancelledOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Closed</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Closed Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#ClosedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Closed By:</td>
+                <td class='tdsignatories2'>{#ClosedBy#}</td>
+                <td class='tdsignatories1'>Closed On:</td>
+                <td class='tdsignatories2'>{#ClosedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+</body>
+</html>
