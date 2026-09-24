@@ -1,0 +1,481 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <link href="../../Styles/LOT.css" rel="stylesheet" />
+</head>
+<body>
+
+    <h2 class='headerStyle'>Travel Statement</h2>
+    <hr />
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">Tour No.:</td>
+            <td class="td2header">TI512</td>
+            <td class="td1header">Tour Sanction No.:</td>
+            <td class="td2header">HR/2021/TS/498</td>
+        </tr>
+
+
+        <tr>
+            <td class="td1header">Emplyoee Name:</td>
+            <td class="td2header">Preet G. Bhagwanani</td>
+            <td class="td1header">Employee ID:</td>
+            <td class="td2header">SL004</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Designation:</td>
+            <td class="td2header" colspan='3'>Assistant General Manager</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Start Date Of Tour:</td>
+            <td class="td2header">21-Mar-2021</td>
+            <td class="td1header">End Date Of Tour:</td>
+            <td class="td2header">21-Mar-2021</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Name Of Customer/Vendor:</td>
+            <td class="td2header" colspan='3'>Saleha Metal</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Place Of Visit:</td>
+            <td class="td2header" colspan='3'>New Delhi</td>
+        </tr>
+
+
+        <tr>
+            <td class="td1header">Purpose Of Visit:</td>
+            <td class="td2header">Sales</td>
+            <td class="td1header">Job/Enquiry No.:</td>
+            <td class="td2header">test</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Business Segment:</td>
+            <td class="td2header">CEP (100)</td>
+            <td class="td1header">Mode Of Travel:</td>
+            <td class="td2header">Air</td>
+        </tr>
+
+
+    </table>
+    <hr />
+
+
+    <h3 class='header2'>Expenses</h3>
+    <hr />
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">Airfare:</td>
+            <td class="td2header" align="right">{#airfare#}</td>
+            <td class="td1header">Telephone/Mobile:</td>
+            <td class="td2header">{#telephoneMobile#}</td>
+        </tr>
+
+
+        <tr>
+            <td class="td1header">Lodging:</td>
+            <td class="td2header">{#lodging#}</td>
+            <td class="td1header">Tips:</td>
+            <td class="td2header">{#tips#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Meals:</td>
+            <td class="td2header">{#meals#}</td>
+            <td class="td1header">Visa Fee:</td>
+            <td class="td2header">{#visaFee#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Ground Transport:</td>
+            <td class="td2header">{#groundTransport#}</td>
+            <td class="td1header">Daily Allowance:</td>
+            <td class="td2header">{#dailyAllowance#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Entertainment:</td>
+            <td class="td2header">{#entertainment#}</td>
+            <td class="td1header">Other:</td>
+            <td class="td2header">{#other#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Gifts:</td>
+            <td class="td2header">{#gifts#}</td>
+            <td class="td1header">Tour Cost Recoverable:</td>
+            <td class="td2header">{#tourCostRecoverable#}</td>
+        </tr>
+    </table>
+    <hr />
+
+    <h3 class='header2'>Expense Statement</h3>
+    <table class="tblsuitems">
+        <tr class="trsubitems">
+            <th class="td1subitems">Sr.No.</th>
+            <th class="td2subitems">Description</th>
+            <th class="td3subitems">Amount</th>
+            <th class="td4subitems">Currency</th>
+        </tr>
+        <tr>
+            <td class="td1subitems">1</td>
+            <td class="td2subitems">Advance Obtained</td>
+            <td class="td3subitems">{#advanceObtained#}</td>
+            <td class="td4subitems">{#advanceObtainedCurrency#}</td>
+        </tr>
+        <tr>
+            <td class="td1subitems">2</td>
+            <td class="td2subitems">Total Submitted Bill Amount</td>
+            <td class="td3subitems">{#totalSubmittedBillAmount#}</td>
+            <td class="td4subitems">{#totalSubmittedBillAmountCurrency#}</td>
+        </tr>
+        <tr>
+            <td class="td1subitems">3</td>
+            <td class="td2subitems">Disallowed Amount</td>
+            <td class="td3subitems">{#disallowedAmount#}</td>
+            <td class="td4subitems">{#disallowedAmountCurrency#}</td>
+        </tr>
+        <tr>
+            <td class="td1subitems">4</td>
+            <td class="td2subitems">Bill Passed Amount</td>
+            <td class="td3subitems">{#billPassedAmount#}</td>
+            <td class="td4subitems">{#billPassedAmountCurrency#}</td>
+        </tr>
+        <tr>
+            <td class="td1subitems">5</td>
+            <td class="td2subitems">Setteled Amount</td>
+            <td class="td3subitems">{#setteledAmount#}</td>
+            <td class="td4subitems">{#setteledAmountCurrency#}</td>
+        </tr>
+    </table>
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">Reason for Disallowing:</td>
+            <td class="td2header" colspan='3'>{#reasonforDisallowing#}</td>
+        </tr>
+        <tr>
+            <td class="td1header">Settlement Type:</td>
+            <td class="td2header">{#settlementType#}</td>            
+        </tr>
+        <tr>
+            <td class="td1header">Voucher No.:</td>
+            <td class="td2header">{#voucherNo#}</td>
+            <td class="td1header">Voucher Date:</td>
+            <td class="td2header">{#voucherDate#}</td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <h3 class='header2'>Signatories</h3>
+    <hr />
+
+    <fieldset class="pdffieldset">
+        <legend class="pdflegend">Created/Amended</legend>
+        <table class="tblsignatories">
+            <tr>
+                <td colspan="3">Created Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#createdRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Created By:</td>
+                <td class="tdsignatories2">{#createdBy#}</td>
+                <td class="tdsignatories1">Created On:</td>
+                <td class="tdsignatories2">{#createdOn#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td colspan="3">Amended Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#amendedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Amended By:</td>
+                <td class="tdsignatories2">{#amendedBy#}</td>
+                <td class="tdsignatories1">Amended On:</td>
+                <td class="tdsignatories2">{#amendedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <hr class="hrsignatories" />
+    <fieldset class="pdffieldset">
+        <legend class="pdflegend">Approved/Amended Approved</legend>
+        <table class="tblsignatories">
+            <tr>
+                <td colspan="3">Approved Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#approvedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Approved By:</td>
+                <td class="tdsignatories2">{#approvedBy#}</td>
+                <td class="tdsignatories1">Approved On:</td>
+                <td class="tdsignatories2">{#approvedOn#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td colspan="3">Amended Approved Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#amendedApprovedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Amended Approved By:</td>
+                <td class="tdsignatories2">{#amendedApprovedBy#}</td>
+                <td class="tdsignatories1">Amended Approved On:</td>
+                <td class="tdsignatories2">{#amendedApprovedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <hr class="hrsignatories" />
+
+    <fieldset class="pdffieldset">
+        <legend class="pdflegend">Checked/Amended Checked</legend>
+        <table class="tblsignatories">
+            <tr>
+                <td colspan="3">Checked Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#checkedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Checked By:</td>
+                <td class="tdsignatories2">{#checkedBy#}</td>
+                <td class="tdsignatories1">Checked On:</td>
+                <td class="tdsignatories2">{#checkedOn#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td colspan="3">Amended Checked Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#amendedCheckedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Amended Checked By:</td>
+                <td class="tdsignatories2">{#amendedCheckedBy#}</td>
+                <td class="tdsignatories1">Amended Checked On:</td>
+                <td class="tdsignatories2">{#amendedCheckedOn#}</td>
+            </tr>
+
+        </table>
+    </fieldset>
+
+    <hr class="hrsignatories" />
+
+    <fieldset class="pdffieldset">
+        <legend class="pdflegend">Passed/Amended Passed</legend>
+        <table class="tblsignatories">
+            <tr>
+                <td colspan="3">Passed Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#passedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Passed By:</td>
+                <td class="tdsignatories2">{#passedBy#}</td>
+                <td class="tdsignatories1">Passed On:</td>
+                <td class="tdsignatories2">{#passedOn#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td colspan="3">Amended Passed Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#amendedPassedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Amended Passed By:</td>
+                <td class="tdsignatories2">{#amendedPassedBy#}</td>
+                <td class="tdsignatories1">Amended Passed On:</td>
+                <td class="tdsignatories2">{#amendedPassedOn#}</td>
+            </tr>
+
+
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Amendment Count:</td>
+                <td class="tdsignatories2">{#amendmentCount#}</td>
+            </tr>
+
+            <tr>
+                <td colspan="3">Send To Amenment Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#sendToAmenmentRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Send To Amendment By:</td>
+                <td class="tdsignatories2">{#sendToAmendmentBy#}</td>
+                <td class="tdsignatories1">Send To Amendment On:</td>
+                <td class="tdsignatories2">{#sendToAmendmentOn#}</td>
+            </tr>
+
+        </table>
+    </fieldset>
+
+    <hr class="hrsignatories" />
+
+    <fieldset class="pdffieldset">
+        <legend class="pdflegend">Settled</legend>
+        <table class="tblsignatories">
+            <tr>
+                <td colspan="3">Settled Remarks:</td>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4">{#settledRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class="tdsignatories1">Settled By:</td>
+                <td class="tdsignatories2">{#settledBy#}</td>
+                <td class="tdsignatories1">Settled On:</td>
+                <td class="tdsignatories2">{#settledOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <hr />
+
+    <!--<html>
+    <body>
+        <h2 class='headerStyle'>TRANSMITTAL TO FACTORY</h2>
+        <hr />
+        <table class='tblheader'>
+            <tr>
+                <td class='td1header'>Company:</td>
+                <td class='td2header'>A35</td>
+                <td class='td1header'>&nbsp;</td>
+                <td class='td2header'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class='td1header'>Customer Name:</td>
+                <td class='td2header' colspan='3'>[HMEL] - HPCL- Mittal Energy Limited</td>
+            </tr>
+            <tr>
+                <td class='td1header'>JOB Number:</td>
+                <td class='td2header'>OSI2018008.N</td>
+                <td class='td1header'>TF Number:</td>
+                <td class='td2header'><b>OSI2018008-A35-0003</b></td>
+            </tr>
+            <tr>
+                <td class='td1header'>Customer PO Number:</td>
+                <td class='td2header'>7410000196</td>
+                <td class='td1header'>Date:</td>
+                <td class='td2header'>17-Oct-2020</td>
+            </tr>
+            <tr>
+                <td class='td1header'>Item:</td>
+                <td class='td2header' colspan='3'>TEST 4</td>
+            </tr>
+        </table>
+        <hr />
+        <h3 class='header2'>Subitems</h3>
+        <table class='tblsuitems'>
+            <tr class='trsubitems'>
+                <th class='tdsrno'>Sr.No.</th>
+                <th class='tdpono'>Production Order No.</th>
+                <th class='tdexpdateno'>Expected Completion Date</th>
+                <th class='tddesc'>Description</th>
+                <th class='tdtag'>Tag No.</th>
+                <th class='tdlotfor'>LOT For</th>
+                <th class='tddrgno'>Drg./Doc.No.</th>
+                <th class='tdrev'>Rev.</th>
+                <th class='tdcate'>Cat.</th>
+                <th class='tdquantity'>Qty.</th>
+            </tr>
+            <tr>
+                <td class='tdsrno'>1</td>
+                <td class='tdsrno'>P0949</td>
+                <td class='tdsrno'>31-Oct-2019</td>
+                <td class='tddesc'>SDF</td>
+                <td class='tdtag'>TAG5</td>
+                <td class='tdlotfor'>Valves [RV]</td>
+                <td class='tddrgno'>OSI2018003.0.412.0055.3.00</td>
+                <td class='tdrev'>0</td>
+                <td class='tdcate'>2,3</td>
+                <td class='tdquantity'>5</td>
+            </tr>
+        </table>
+        <h3 class='header2'>Category (For Factory)</h3>
+        <table class='tblcategory'>
+            <tr>
+                <th class='td1category'>1</th>
+                <td class='td2category'>Fabrication</td>
+                <th class='td1category'>2</th>
+                <td class='td2category'>Inspection</td>
+                <th class='td1category'>3</th>
+                <td class='td2category'>Information</td>
+            </tr>
+        </table>
+        <hr class='hrsignatories' />
+        <h3 class='header2'>Signatories</h3>
+        <hr />
+        <fieldset class='pdffieldset'>
+            <legend class='pdflegend'>Created</legend>
+            <table class='tblsignatories'>
+                <tr>
+                    <td colspan='3'>Important Notes:</td>
+                    <td colspan='3'>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan='4'></td>
+                </tr>
+                <tr><td colspan='4'>&nbsp;</td></tr>
+                <tr>
+                    <td class='tdsignatories1'>Created By:</td>
+                    <td class='tdsignatories2'>Deekshant Ravi</td>
+                    <td class='tdsignatories1'>Created On:</td>
+                    <td class='tdsignatories2'>17-Oct-2020  05:08:58 PM</td>
+                </tr>
+            </table>
+        </fieldset>
+        <hr class='hrsignatories' />
+        <fieldset class='pdffieldset'>
+            <legend class='pdflegend'>PM/PE Approved</legend>
+            <table class='tblsignatories'>
+            </table>
+        </fieldset>
+        <hr class='hrsignatories' />
+        <hr class='hrsignatories' />
+        <fieldset class='pdffieldset'>
+            <legend class='pdflegend'>Production & Quality Accepted - {#LOTItemName#}</legend>
+            <table class='tblsignatories'>
+
+    </body>
+    </html>-->
+
+</body>
+</html>
