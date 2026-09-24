@@ -1,0 +1,7759 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.IO;
+using System.Net.Mail;
+using CrystalDecisions.CrystalReports.Engine;
+using BAL;
+using System.Data.SqlClient;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Text;
+using iTextSharp.tool.xml;
+
+using System.Net.Mime;
+using iTextSharp.tool.xml.pipeline.css;
+using iTextSharp.tool.xml.pipeline.html;
+using iTextSharp.tool.xml.pipeline.end;
+using iTextSharp.tool.xml.parser;
+using System.Xml;
+using iTextSharp.tool.xml.css;
+using System.Management;
+//using Spire.Pdf;
+using System.Drawing.Printing;
+using System.Web.Services;
+using Ionic.Zip;
+
+public partial class VENDOR_CUSTOMER_MGMT_VENDOR_VendorsList : System.Web.UI.Page
+{
+
+    #region VARIABLES[===========================]
+
+    MailService objMailService = new MailService();
+    BAL.VendorCustomerManagement objVCM = new VendorCustomerManagement();
+    BAL.Common objCommon = new Common();
+
+    DataTable dtBillingAddress = new DataTable();
+    DataTable dtContactPerson = new DataTable();
+    DataTable dtBankDetails = new DataTable();
+    DataTable dtAttachments = new DataTable();
+    DataTable dtAmendments = new DataTable();
+    DataTable dtTemp;
+
+    DataSet dsMSMEStatus = new DataSet();
+    DataSet dsStatus = new DataSet();
+    DataSet dsCategory = new DataSet();
+    DataSet dsResponsible = new DataSet();
+    DataSet dsRelationType = new DataSet();
+    DataSet dsItemCategory = new DataSet();
+    DataSet dsItemSubCategory = new DataSet();
+    DataSet dsApprovers = new DataSet();
+    DataSet dsOrganizationType = new DataSet();
+    DataSet dsRevisiontype = new DataSet();
+    DataSet dsVendorList = new DataSet();
+
+    DataSet dsCountry = new DataSet();
+    DataSet dsState = new DataSet();
+    DataSet dsDOCTypes = new DataSet();
+    DataSet dsCheckers = new DataSet();
+
+    #endregion
+
+
+    #region EVENTS[============================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            HidePanel();
+            HideUpdatePanel();
+
+            if (!IsPostBack)
+            {
+
+                ClearSessions();
+
+                DateTime now = DateTime.Now;
+                var startDate = new DateTime(now.Year, now.Month, 1);
+                hdStartDateSearch.Value = Convert.ToDateTime(startDate).ToString("dd-MMM-yyyy");
+                txtStartDateSearch.Text = Convert.ToDateTime(startDate).ToString("dd-MMM-yyyy");
+
+                var endDate = startDate.AddMonths(1).AddDays(-1);
+                hdEndDateSearch.Value = Convert.ToDateTime(endDate).ToString("dd-MMM-yyyy");
+                txtEndDateSearch.Text = Convert.ToDateTime(endDate).ToString("dd-MMM-yyyy");
+
+                ddlItemSubCategoryToS.Items.Clear();
+                ddlItemSubCategoryToS.Items.Insert(0, "Select");
+                ddlItemSubCategoryToS.SelectedIndex = 0;
+
+                hdIsRevised.Value = "0";
+                hdIsEdited.Value = "0";
+
+                //BindRevisionTypes();
+                BindStatus();
+
+                GetResponsible();
+                BindResponsible();
+
+                GetRelationType();
+                BindRelationType();
+
+                GetCategory();
+                BindCategory();
+                BindOrganizationType();
+                //BindRevisionTypes();
+
+                BindItemCategory();
+                BindApprovers();
+
+
+                GetCountrys();
+                GetStates();
+
+                BindDOCTypes();
+                BindCheckers();
+
+                if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["PAN"])))
+                {
+                    txtPANS.Text = Convert.ToString(Request.QueryString["PAN"]);
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(Request.QueryString["name"])))
+                        txtVendorNameS.Text = Convert.ToString(Request.QueryString["name"]);
+
+                    chkClearDates.Checked = true;
+
+                    hdStartDateSearch.Value = "";
+                    txtStartDateSearch.Text = "";
+
+                    hdEndDateSearch.Value = "";
+                    txtEndDateSearch.Text = "";
+                }
+
+                GetVendorsList();
+
+                string declarationTextBankDetails = "1. I  " + Convert.ToString(Session["EMPLOYEE_NAME"]) + "  hereby confirm that I have verbally verified the above change in bank details with the authorized representative of the supplier through a direct telephonic conversation.\n" +
+                                        "2.The contact details used for this verification are the ones on record and are regularly used to communicate with the supplier.\n" +
+                                        "3.I also acknowledge the cybersecurity and bank fraud risks involved and confirm that the call was made to prevent any impersonation or fraudulent activity.";
+
+
+                txtDeclarationBankdetailsToS.Text = declarationTextBankDetails;
+                hdDateTimeofConfirmationBankdetailsToS.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtDateTimeofConfirmationBankdetailsToS.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+            }
+        }
+        else
+        {
+            Session["dsTravelStatementDetails"] = null;
+            //Response.Redirect("~/Login.aspx");
+            Response.Redirect("~/Login.aspx?PAN=" + Convert.ToString(Request.QueryString["PAN"]) + "&name=" + Convert.ToString(Request.QueryString["name"]));
+
+        }
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        GetVendorsList();
+    }
+
+    protected void gvVendorsList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+
+                txtRemarksToS.Text = string.Empty;
+
+                //ResetAll();
+                string vendorName = string.Empty;
+                int currentStatusId = 0;
+                int nextStatusId = 0;
+
+                //hdUpdationFlag.Value = "0";
+
+                hdIsRevised.Value = "0";
+                hdIsEdited.Value = "0";
+                int PID = 0;
+                //int amendmentPID = 0;
+
+                int rowindex = 0;
+
+                if (Convert.ToString(e.CommandArgument) == "ViewDETAIL" ||
+                    Convert.ToString(e.CommandArgument) == "EDIT" ||
+                    Convert.ToString(e.CommandArgument) == "SEND_MAIL" ||
+                    Convert.ToString(e.CommandArgument) == "DOWNLOAD_DOCS" //||
+                                                                           //Convert.ToString(e.CommandArgument) == "REVISE"
+                    )
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+                else if (Convert.ToString(e.CommandArgument) == "AMENDMENT" ||
+                         Convert.ToString(e.CommandArgument) == "AMEND" ||
+                         Convert.ToString(e.CommandArgument) == "CHECK" ||
+                         Convert.ToString(e.CommandArgument) == "PROC_HOD_APPROVE" ||
+                         Convert.ToString(e.CommandArgument) == "ACCOUNTS_CHECK" ||
+                         Convert.ToString(e.CommandArgument) == "FINAL_APPROVE" ||
+                         Convert.ToString(e.CommandArgument) == "REGISTER"
+                         )
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+
+                Label lblPID = gvVendorsList.Rows[rowindex].FindControl("lblPID") as Label;
+                //Label lblAmendmentId = gvVendorsList.Rows[rowindex].FindControl("lblAmendmentId") as Label;
+                Label lblVendorName = gvVendorsList.Rows[rowindex].FindControl("lblVendorName") as Label;
+                Label lblStatusId = gvVendorsList.Rows[rowindex].FindControl("lblStatusId") as Label;
+                Label lblCreatedBy = gvVendorsList.Rows[rowindex].FindControl("lblCreatedBy") as Label;
+                Label lblIsRequestedMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsRequestedMailSent") as Label;
+                Label lblHodApprovedBy = gvVendorsList.Rows[rowindex].FindControl("lblHodApprovedBy") as Label;
+                Label lblIsHodApprovedMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsHodApprovedMailSent") as Label;
+                Label lblAccountsLevel1ApprovedBy = gvVendorsList.Rows[rowindex].FindControl("lblAccountsLevel1ApprovedBy") as Label;
+                Label lblIsAccountsLevel1ApprovedMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsAccountsLevel1ApprovedMailSent") as Label;
+                Label lblAccountsLevel2ApprovedBy = gvVendorsList.Rows[rowindex].FindControl("lblAccountsLevel2ApprovedBy") as Label;
+                Label lblIsAccountsLevel2ApprovedMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsAccountsLevel2ApprovedMailSent") as Label;
+                Label lblRegisteredBy = gvVendorsList.Rows[rowindex].FindControl("lblRegisteredBy") as Label;
+                Label lblRevisedBy = gvVendorsList.Rows[rowindex].FindControl("lblRevisedBy") as Label;
+                Label lblIsRegisteredMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsRegisteredMailSent") as Label;
+                Label lblIsAmendmentMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsAmendmentMailSent") as Label;
+                Label lblIsAmendedMailSent = gvVendorsList.Rows[rowindex].FindControl("lblIsAmendedMailSent") as Label;
+                Label lblAmendmentCount = gvVendorsList.Rows[rowindex].FindControl("lblAmendmentCount") as Label;
+
+                Label lblAddressCount = gvVendorsList.Rows[rowindex].FindControl("lblAddressCount") as Label;
+                Label lblContactPersonCount = gvVendorsList.Rows[rowindex].FindControl("lblContactPersonCount") as Label;
+                Label lblBankDetailsCount = gvVendorsList.Rows[rowindex].FindControl("lblBankDetailsCount") as Label;
+                Label lblRevisionCount = gvVendorsList.Rows[rowindex].FindControl("lblRevisionCount") as Label;
+
+
+                Label lblPIDVRF = gvVendorsList.Rows[rowindex].FindControl("lblPIDVRF") as Label;
+                Label lblPIDGSTIN = gvVendorsList.Rows[rowindex].FindControl("lblPIDGSTIN") as Label;
+                Label lblPIDPAN = gvVendorsList.Rows[rowindex].FindControl("lblPIDPAN") as Label;
+                Label lblPIDCC = gvVendorsList.Rows[rowindex].FindControl("lblPIDCC") as Label;
+                Label lblPIDOther1 = gvVendorsList.Rows[rowindex].FindControl("lblPIDOther1") as Label;
+                Label lblPIDOther2 = gvVendorsList.Rows[rowindex].FindControl("lblPIDOther2") as Label;
+                Label lblPIDOther3 = gvVendorsList.Rows[rowindex].FindControl("lblPIDOther3") as Label;
+                Label lblPIDOther4 = gvVendorsList.Rows[rowindex].FindControl("lblPIDOther4") as Label;
+
+
+                Label lblFileNameVRF = gvVendorsList.Rows[rowindex].FindControl("lblFileNameVRF") as Label;
+                Label lblFileNameGSTIN = gvVendorsList.Rows[rowindex].FindControl("lblFileNameGSTIN") as Label;
+                Label lblFileNamePAN = gvVendorsList.Rows[rowindex].FindControl("lblFileNamePAN") as Label;
+                Label lblFileNameCC = gvVendorsList.Rows[rowindex].FindControl("lblFileNameCC") as Label;
+                Label lblFileNameOther1 = gvVendorsList.Rows[rowindex].FindControl("lblFileNameOther1") as Label;
+                Label lblFileNameOther2 = gvVendorsList.Rows[rowindex].FindControl("lblFileNameOther2") as Label;
+                Label lblFileNameOther3 = gvVendorsList.Rows[rowindex].FindControl("lblFileNameOther3") as Label;
+                Label lblFileNameOther4 = gvVendorsList.Rows[rowindex].FindControl("lblFileNameOther4") as Label;
+
+                PID = Convert.ToInt32(lblPID.Text);
+                //amendmentPID = Convert.ToInt32(lblAmendmentId.Text);
+                vendorName = lblVendorName.Text.Trim().ToUpper();
+                currentStatusId = Convert.ToInt32(lblStatusId.Text);
+
+                ViewState["PID"] = PID;
+
+                ImageButton btnViewDetail = gvVendorsList.Rows[rowindex].FindControl("btnViewDetail") as ImageButton;
+                ImageButton imgBtnViewDOCs = gvVendorsList.Rows[rowindex].FindControl("imgBtnViewDOCs") as ImageButton;
+                ImageButton imgBtnEdit = gvVendorsList.Rows[rowindex].FindControl("imgBtnEdit") as ImageButton;
+                ImageButton imgBtnSendMail = gvVendorsList.Rows[rowindex].FindControl("imgBtnSendMail") as ImageButton;
+
+                btnSave.Visible = false;
+                btnUpdateStatus.Visible = false;
+                btnSendToAmendment.Visible = false;
+                btnRegisterVendor.Visible = false;
+                //btnReviseVendor.Visible = false;
+
+                txtCodeToS.Enabled = false;
+
+                //pnlRevision.Visible = false;
+                //pnlAmendmentRemarks.Visible = false;
+
+
+
+                txtNameToS.Enabled = false;
+                txtCodeToS.Enabled = false;
+                txtPANNumberToS.Enabled = false;
+                //txtGSTInToS.Enabled = false;
+
+                //imgBtnFileVRF.Visible = false;
+                //imgBtnFileGSTIN.Visible = false;
+                //imgBtnFilePAN.Visible = false;
+                //imgBtnFileCC.Visible = false;
+                //imgBtnFileOther1.Visible = false;
+                //imgBtnFileOther2.Visible = false;
+                //imgBtnFileOther3.Visible = false;
+                //imgBtnFileOther4.Visible = false;
+
+                ViewState["CURRENT_STATUS_ID"] = currentStatusId;
+
+                HideUpdateMessagePanel();
+                //CommonDisableControls();
+                //DisplayNoneAllPanels();
+                //pnlVendorDetails.Style["display"] = "block";
+
+                //pnlViewAttachments.Visible = false;
+                //pnlAddAttachments.Visible = false;
+                //pnlReviseVendor.Visible = false;
+
+                DisableControls();
+
+
+                chkIsDefaultBillingAddressToS.Enabled = false;
+                chkIsDefaultContactPersonToS.Enabled = false;
+                //chkIsDefaultBankToS.Enabled = false;
+
+
+
+
+                //if (Convert.ToInt32(lblAmendmentCount.Text) > 0)
+                //{
+                //    pnlAmendmentRemarks.Visible = true;
+                //}
+
+
+                pnlSavingType.Visible = false;
+                if (Convert.ToInt32(lblCreatedBy.Text) == Convert.ToInt32(Session["EMP_RECORD_ID"]) ||
+                    Convert.ToInt32(lblRevisedBy.Text) == Convert.ToInt32(Session["EMP_RECORD_ID"]))
+                {
+                    pnlSavingType.Visible = true;
+                }
+
+
+
+                //ddlStateToS.Enabled = false;
+                if (Convert.ToString(e.CommandArgument) == "EDIT" ||
+                    Convert.ToString(e.CommandArgument) == "AMENDMENT" ||
+                    Convert.ToString(e.CommandArgument) == "AMEND" ||
+                    Convert.ToString(e.CommandArgument) == "CHECK" ||
+                    Convert.ToString(e.CommandArgument) == "PROC_HOD_APPROVE" ||
+                    Convert.ToString(e.CommandArgument) == "ACCOUNTS_CHECK" ||
+                    Convert.ToString(e.CommandArgument) == "FINAL_APPROVE" ||
+                    Convert.ToString(e.CommandArgument) == "REGISTER"
+                )
+                {
+                    txtTypeOfRequestToS.Text = "New";
+                    if (Convert.ToInt32(lblRevisionCount.Text) > 0)
+                        txtTypeOfRequestToS.Text = "Revision";
+
+
+                    if (Convert.ToString(e.CommandArgument) == "EDIT")
+                    {
+                        hdIsEdited.Value = "1";
+
+                        //CommonEnableControls();
+
+                        btnSave.Visible = true;
+                        //pnlSavingTypeToS.Visible = true;
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.Created_1;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+
+                        //if (Convert.ToInt32(lblAmendmentCount.Text) == 0)
+                        //{
+                        //    txtNameToS.Enabled = true;
+                        //    txtCodeToS.Enabled = true;
+                        //    txtPANNumberToS.Enabled = true;
+                        //    txtGSTInToS.Enabled = true;
+                        //}
+
+                        EnableControls();
+
+                        if (Convert.ToInt32(lblAddressCount.Text) > 1)
+                            chkIsDefaultBillingAddressToS.Enabled = true;
+
+                        if (Convert.ToInt32(lblContactPersonCount.Text) > 1)
+                            chkIsDefaultContactPersonToS.Enabled = true;
+
+                        //if (Convert.ToInt32(lblBankDetailsCount.Text) > 1)
+                        //    chkIsDefaultBankToS.Enabled = true;
+                    }
+
+                    //else if (Convert.ToString(e.CommandArgument) == "AMENDMENT")
+                    //{
+                    //    btnUpdateStatus.Visible = true;
+                    //    btnUpdateStatus.Text = "Send to Amendment";
+                    //    nextStatusId = (int)StatusAndTypes.EnumStatus.Amendment_2;
+                    //    ViewState["NEXT_STATUS_ID"] = nextStatusId;
+
+                    //    //ShowAttachedFiles(
+                    //    //      lblPIDVRF.Text
+                    //    //    , lblPIDGSTIN.Text
+                    //    //    , lblPIDPAN.Text
+                    //    //    , lblPIDCC.Text
+                    //    //    , lblPIDOther1.Text
+                    //    //    , lblPIDOther2.Text
+                    //    //    , lblPIDOther3.Text
+                    //    //    , lblPIDOther4.Text
+                    //    //    , lblFileNameVRF.Text
+                    //    //    , lblFileNameGSTIN.Text
+                    //    //    , lblFileNamePAN.Text
+                    //    //    , lblFileNameCC.Text
+                    //    //    , lblFileNameOther1.Text
+                    //    //    , lblFileNameOther2.Text
+                    //    //    , lblFileNameOther3.Text
+                    //    //    , lblFileNameOther4.Text);
+
+                    //    //ddlStateToS.Enabled = false;
+                    //}
+
+                    else if (Convert.ToString(e.CommandArgument) == "AMEND")
+                    {
+                        hdIsEdited.Value = "1";
+
+                        //CommonEnableControls();
+
+                        btnUpdateStatus.Visible = true;
+                        btnUpdateStatus.Text = "Amend Vendor";
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.Amended_3;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+
+                        //pnlAddAttachments.Visible = true;
+
+                        if (Convert.ToInt32(lblAddressCount.Text) > 1)
+                            chkIsDefaultBillingAddressToS.Enabled = true;
+
+                        if (Convert.ToInt32(lblContactPersonCount.Text) > 1)
+                            chkIsDefaultContactPersonToS.Enabled = true;
+
+                        //if (Convert.ToInt32(lblBankDetailsCount.Text) > 1)
+                        //    chkIsDefaultBankToS.Enabled = true;
+
+
+                        EnableControls();
+
+                        //if (ddlCountryToS.SelectedValue == "95")
+                        //{
+                        //    ddlStateToS.Enabled = true;
+                        //}
+                    }
+
+                    else if (Convert.ToString(e.CommandArgument) == "CHECK")
+                    {
+                        btnUpdateStatus.Visible = true;
+                        btnSendToAmendment.Visible = true;
+                        btnUpdateStatus.Text = "Check & Approve";
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.Checked_4;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+                    }
+
+                    else if (Convert.ToString(e.CommandArgument) == "PROC_HOD_APPROVE")
+                    {
+                        btnUpdateStatus.Visible = true;
+                        btnSendToAmendment.Visible = true;
+                        btnUpdateStatus.Text = "Check & Approve";
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.PROCHODApproved_5;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+                    }
+
+                    else if (Convert.ToString(e.CommandArgument) == "ACCOUNTS_CHECK")
+                    {
+                        btnUpdateStatus.Visible = true;
+                        btnSendToAmendment.Visible = true;
+                        btnUpdateStatus.Text = "Check & Approve";
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.AccountsChecked_6;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+                    }
+
+                    else if (Convert.ToString(e.CommandArgument) == "FINAL_APPROVE")
+                    {
+                        btnUpdateStatus.Visible = true;
+                        btnSendToAmendment.Visible = true;
+                        btnUpdateStatus.Text = "Check & Approve";
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.FinalApproved_7;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+                    }
+
+                    else if (Convert.ToString(e.CommandArgument) == "REGISTER")
+                    {
+                        txtCodeToS.Enabled = true;
+                        btnRegisterVendor.Visible = true;
+                        btnSendToAmendment.Visible = true;
+                        btnRegisterVendor.Text = "Register Vendor";
+
+                        if (Convert.ToInt32(lblRevisedBy.Text) > 0)
+                        {
+                            btnRegisterVendor.Text = "Register Vendor";
+                        }
+
+                        nextStatusId = (int)StatusAndTypes.EnumStatus.Registered_8;
+                        ViewState["NEXT_STATUS_ID"] = nextStatusId;
+                    }
+
+                    //else if (Convert.ToString(e.CommandArgument) == "REVISE")
+                    //{
+                    //    btnReviseVendor.Visible = true;
+                    //    BindRevisionTypes();
+                    //    pnlReviseVendor.Visible = true;
+                    //    EnableControls();
+
+                    //    rdSavingType.Visible = false;
+
+                    //    if (Convert.ToInt32(lblAddressCount.Text) > 1)
+                    //        chkIsDefaultBillingAddressToS.Enabled = true;
+
+                    //    if (Convert.ToInt32(lblContactPersonCount.Text) > 1)
+                    //        chkIsDefaultContactPersonToS.Enabled = true;
+
+                    //    if (Convert.ToInt32(lblBankDetailsCount.Text) > 1)
+                    //        chkIsDefaultBankToS.Enabled = true;
+
+                    //    mpeUpdateLOT.Show();
+                    //}
+
+
+                    BindVendorsDetail(PID);
+
+                    mpeUpdateLOT.Show();
+                }
+
+
+                //Send missed mail
+                else if (Convert.ToString(e.CommandArgument) == "SEND_MAIL")
+                {
+                    int sendMailValue = 0;
+                    sendMailValue = objMailService.ProcessMail(PID, currentStatusId);
+
+                    if (sendMailValue > 0)
+                    {
+                        int val = objVCM.UpdateMailStatus(sendMailValue, currentStatusId, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+
+                        SuccessMessage("Mail sent successfully.");
+                        GetVendorsList();
+                    }
+                }
+
+                else if (Convert.ToString(e.CommandArgument) == "ViewDETAIL")
+                {
+                    ModalPopupExtender4.Show();
+                    iframeViewEntityInPDF.Attributes.Add("src", "ViewVendorInPDF.aspx?pid=" + PID);
+                }
+
+                else if (Convert.ToString(e.CommandArgument) == "DOWNLOAD_DOCS")
+                {
+                    DownloadDOCsZip(PID, (int)StatusAndTypes.EnumEntityType.Vendor, vendorName);
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvVendorsList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int rowindex = e.Row.RowIndex;
+
+                DataTable dtApprovers = (DataTable)Session["dtApprovers"];
+
+                Label lblStatusId = (Label)e.Row.FindControl("lblStatusId");
+
+                Label lblVendorCode = (Label)e.Row.FindControl("lblVendorCode");
+                Label lblIsMSMED = (Label)e.Row.FindControl("lblIsMSMED");
+                Label lblIsISOCertified = (Label)e.Row.FindControl("lblIsISOCertified");
+                Label lblIsTechnicalDetailsReceived = (Label)e.Row.FindControl("lblIsTechnicalDetailsReceived");
+                Label lblIsVisitByQa = (Label)e.Row.FindControl("lblIsVisitByQa");
+                Label lblIsGovernment = (Label)e.Row.FindControl("lblIsGovernment");
+                Label lblIsOneTime = (Label)e.Row.FindControl("lblIsOneTime");
+
+                Label lblCreatedBy = (Label)e.Row.FindControl("lblCreatedBy");
+                Label lblCheckedBy = (Label)e.Row.FindControl("lblCheckedBy");
+                Label lblPROCHodApprovedBy = (Label)e.Row.FindControl("lblPROCHodApprovedBy");
+                Label lblAccountsCheckedBy = (Label)e.Row.FindControl("lblAccountsCheckedBy");
+                Label lblFinalApprovedBy = (Label)e.Row.FindControl("lblFinalApprovedBy");
+                Label lblRegisteredBy = (Label)e.Row.FindControl("lblRegisteredBy");
+                Label lblRevisedBy = (Label)e.Row.FindControl("lblRevisedBy");
+                Label lblSendToAmendmentBy = (Label)e.Row.FindControl("lblSendToAmendmentBy");
+                Label lblRevisionCount = (Label)e.Row.FindControl("lblRevisionCount");
+                Label lblCheckerId = (Label)e.Row.FindControl("lblCheckerId");
+
+
+                Label lblIsCreatedMailSent = (Label)e.Row.FindControl("lblIsCreatedMailSent");
+                Label lblCheckedMailSent = (Label)e.Row.FindControl("lblCheckedMailSent");
+                Label lblIsPROCHodApprovedMailSent = (Label)e.Row.FindControl("lblIsPROCHodApprovedMailSent");
+                Label lblIsAccountsCheckedMailSent = (Label)e.Row.FindControl("lblIsAccountsCheckedMailSent");
+                Label lblIsFinalApprovedMailSent = (Label)e.Row.FindControl("lblIsFinalApprovedMailSent");
+                Label lblIsRegisteredMailSent = (Label)e.Row.FindControl("lblIsRegisteredMailSent");
+                Label lblIsAmendmentMailSent = (Label)e.Row.FindControl("lblIsAmendmentMailSent");
+                Label lblIsAmendedMailSent = (Label)e.Row.FindControl("lblIsAmendedMailSent");
+                Label lblIsRevisedMailSent = (Label)e.Row.FindControl("lblIsRevisedMailSent");
+                Label lblIsSentForApproval = (Label)e.Row.FindControl("lblIsSentForApproval");
+
+                Button btnSendToAmendment = (Button)e.Row.FindControl("btnSendToAmendment");
+                Button btnAmend = (Button)e.Row.FindControl("btnAmend");
+                Button btnCheck = (Button)e.Row.FindControl("btnCheck");
+                Button btnPROCHODApprove = (Button)e.Row.FindControl("btnPROCHODApprove");
+                Button btnAccountsCheck = (Button)e.Row.FindControl("btnAccountsCheck");
+                Button btnFinalApprove = (Button)e.Row.FindControl("btnFinalApprove");
+                Button btnRegister = (Button)e.Row.FindControl("btnRegister");
+                Button btnRevised = (Button)e.Row.FindControl("btnRevised");
+                Button btnNew = (Button)e.Row.FindControl("btnNew");
+
+                ImageButton imgBtnEdit = (ImageButton)e.Row.FindControl("imgBtnEdit");
+                ImageButton imgBtnSendMail = (ImageButton)e.Row.FindControl("imgBtnSendMail");
+                ImageButton imgStatus = (ImageButton)e.Row.FindControl("imgStatus");
+
+                ImageButton imgIsMsmed = (ImageButton)e.Row.FindControl("imgIsMsmed");
+                ImageButton imgIsIsoCertified = (ImageButton)e.Row.FindControl("imgIsIsoCertified");
+                ImageButton imgIsTechnicalDetailsReceived = (ImageButton)e.Row.FindControl("imgIsTechnicalDetailsReceived");
+                ImageButton imgIsVisitByQa = (ImageButton)e.Row.FindControl("imgIsVisitByQa");
+                ImageButton imgIsGovernment = (ImageButton)e.Row.FindControl("imgIsGovernment");
+                ImageButton imgIsOneTime = (ImageButton)e.Row.FindControl("imgIsOneTime");
+
+
+
+
+                //btnSendToAmendment.Visible = false;
+                btnAmend.Visible = false;
+                btnCheck.Visible = false;
+                btnPROCHODApprove.Visible = false;
+                btnAccountsCheck.Visible = false;
+                btnFinalApprove.Visible = false;
+                btnRegister.Visible = false;
+                btnRevised.Visible = false;
+                btnNew.Visible = false;
+
+                imgBtnEdit.Visible = false;
+                imgBtnSendMail.Visible = false;
+
+
+                if (Convert.ToInt32(lblRevisionCount.Text) > 0)
+                    btnRevised.Visible = true;
+                else
+                    btnNew.Visible = true;
+
+                int currentStatusId = Convert.ToInt32(lblStatusId.Text);
+                int currentUserId = Convert.ToInt32(Session["EMP_RECORD_ID"]);
+
+                if (currentStatusId == (int)StatusAndTypes.EnumStatus.Created_1)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/1_Requested.png";
+                    imgStatus.ToolTip = "Created";
+
+                    if (Convert.ToInt32(lblCreatedBy.Text) == currentUserId)
+                    {
+                        imgBtnEdit.Visible = true;
+
+                        if (Convert.ToInt32(lblIsCreatedMailSent.Text) == 0 && Convert.ToInt32(lblIsSentForApproval.Text) > 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    //foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.Checker_1))
+                    //{
+                    //    if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId && Convert.ToInt32(lblIsSentForApproval.Text) > 0)
+                    //    {
+                    //        btnCheck.Visible = true;
+                    //    }
+                    //}
+
+                    if (currentUserId == Convert.ToInt32(lblCheckerId.Text) && Convert.ToInt32(lblIsSentForApproval.Text) > 0)
+                    {
+                        btnCheck.Visible = true;
+                    }
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.Amendment_2)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/2_Amendment.png";
+                    imgStatus.ToolTip = "In Amendment";
+
+                    if (Convert.ToInt32(lblCreatedBy.Text) == currentUserId ||
+                        Convert.ToInt32(lblRevisedBy.Text) == currentUserId)
+                    {
+                        btnAmend.Visible = true;
+                    }
+
+                    if (Convert.ToInt32(lblSendToAmendmentBy.Text) == currentUserId && Convert.ToInt32(lblIsAmendmentMailSent.Text) == 0)
+                    {
+                        imgBtnSendMail.Visible = true;
+                    }
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.Amended_3)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/3_Amended.png";
+                    imgStatus.ToolTip = "Amended";
+
+                    if (Convert.ToInt32(lblCreatedBy.Text) == currentUserId)
+                    {
+                        imgBtnEdit.Visible = true;
+
+                        if (Convert.ToInt32(lblIsAmendedMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    //foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.Checker_1))
+                    //{
+                    //    if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId)
+                    //    {
+                    //        btnCheck.Visible = true;
+                    //    }
+                    //}
+
+                    if (currentUserId == Convert.ToInt32(lblCheckerId.Text))
+                    {
+                        btnCheck.Visible = true;
+                    }
+
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.Checked_4)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/4_checked.png";
+                    imgStatus.ToolTip = "Checked";
+
+                    if (Convert.ToInt32(lblCheckedBy.Text) == currentUserId)
+                    {
+                        if (Convert.ToInt32(lblCheckedMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.ProcurementHead_2))
+                    {
+                        if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId)
+                        {
+                            btnPROCHODApprove.Visible = true;
+                        }
+                    }
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.PROCHODApproved_5)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/4_HODApproved.png";
+                    imgStatus.ToolTip = "Procurement Approved";
+
+                    if (Convert.ToInt32(lblPROCHodApprovedBy.Text) == currentUserId)
+                    {
+                        if (Convert.ToInt32(lblIsPROCHodApprovedMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.AccountsChecker_3))
+                    {
+                        if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId)
+                        {
+                            btnAccountsCheck.Visible = true;
+                            //btnSendToAmendment.Visible = true;
+                        }
+                    }
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.AccountsChecked_6)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/5_FL1Approved.png";
+                    imgStatus.ToolTip = "Accounts Checked";
+
+                    if (Convert.ToInt32(lblAccountsCheckedBy.Text) == currentUserId)
+                    {
+                        if (Convert.ToInt32(lblIsAccountsCheckedMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.FinalApprover_4))
+                    {
+                        if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId)
+                        {
+                            btnFinalApprove.Visible = true;
+                        }
+                    }
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.FinalApproved_7)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/6_FL2Approved.png";
+                    imgStatus.ToolTip = "Final Approved";
+
+                    if (Convert.ToInt32(lblFinalApprovedBy.Text) == currentUserId)
+                    {
+                        if (Convert.ToInt32(lblIsFinalApprovedMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.ITTeam_5))
+                    {
+                        if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId)
+                        {
+                            btnRegister.Visible = true;
+                        }
+                    }
+
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.Registered_8)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/7_Registered.png";
+                    imgStatus.ToolTip = "Registered";
+
+                    if (Convert.ToInt32(lblRegisteredBy.Text) == currentUserId)
+                    {
+                        if (Convert.ToInt32(lblIsRegisteredMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                }
+                else if (currentStatusId == (int)StatusAndTypes.EnumStatus.Revised_9)
+                {
+                    imgStatus.ImageUrl = "~/Images/VCM/8_revised.png";
+                    imgStatus.ToolTip = "Revised";
+
+                    if (Convert.ToInt32(lblRevisedBy.Text) == currentUserId)
+                    {
+                        imgBtnEdit.Visible = true;
+
+                        if (Convert.ToInt32(lblIsRevisedMailSent.Text) == 0)
+                        {
+                            imgBtnSendMail.Visible = true;
+                        }
+                    }
+
+                    //foreach (DataRow dr in dtApprovers.Select("APPROVER_TYPE_FID = " + (int)StatusAndTypes.EnumApproverType.Checker_1))
+                    //{
+                    //    if (Convert.ToInt32(dr["EMP_RECORD_FID"]) == currentUserId)
+                    //    {
+                    //        btnCheck.Visible = true;
+                    //        //btnSendToAmendment.Visible = true;
+                    //    }
+                    //}
+
+                    if (currentUserId == Convert.ToInt32(lblCheckerId.Text))
+                    {
+                        btnCheck.Visible = true;
+                    }
+                }
+
+
+                //if (Convert.ToInt32(lblIsMSMED.Text) > 0)
+                //{
+                //    imgIsMsmed.ImageUrl = "~/Images/VCM/on.png";
+                //    imgIsMsmed.ToolTip = "YES";
+                //}
+                //else
+                //{
+                //    imgIsMsmed.ImageUrl = "~/Images/VCM/off.png";
+                //    imgIsMsmed.ToolTip = "NO";
+                //}
+
+                if (Convert.ToInt32(lblIsISOCertified.Text) > 0)
+                {
+                    imgIsIsoCertified.ImageUrl = "~/Images/VCM/on.png";
+                    imgIsIsoCertified.ToolTip = "YES";
+                }
+                else
+                {
+                    imgIsIsoCertified.ImageUrl = "~/Images/VCM/off.png";
+                    imgIsIsoCertified.ToolTip = "NO";
+                }
+
+                if (Convert.ToInt32(lblIsTechnicalDetailsReceived.Text) > 0)
+                {
+                    imgIsTechnicalDetailsReceived.ImageUrl = "~/Images/VCM/on.png";
+                    imgIsTechnicalDetailsReceived.ToolTip = "YES";
+                }
+                else
+                {
+                    imgIsTechnicalDetailsReceived.ImageUrl = "~/Images/VCM/off.png";
+                    imgIsTechnicalDetailsReceived.ToolTip = "NO";
+                }
+
+                if (Convert.ToInt32(lblIsVisitByQa.Text) > 0)
+                {
+                    imgIsVisitByQa.ImageUrl = "~/Images/VCM/on.png";
+                    imgIsVisitByQa.ToolTip = "YES";
+                }
+                else
+                {
+                    imgIsVisitByQa.ImageUrl = "~/Images/VCM/off.png";
+                    imgIsVisitByQa.ToolTip = "NO";
+                }
+
+                if (Convert.ToInt32(lblIsGovernment.Text) > 0)
+                {
+                    imgIsGovernment.ImageUrl = "~/Images/VCM/on.png";
+                    imgIsGovernment.ToolTip = "YES";
+                }
+                else
+                {
+                    imgIsGovernment.ImageUrl = "~/Images/VCM/off.png";
+                    imgIsGovernment.ToolTip = "NO";
+                }
+
+
+                if (Convert.ToInt32(lblIsOneTime.Text) > 0)
+                {
+                    imgIsOneTime.ImageUrl = "~/Images/VCM/on.png";
+                    imgIsOneTime.ToolTip = "YES";
+                }
+                else
+                {
+                    imgIsOneTime.ImageUrl = "~/Images/VCM/off.png";
+                    imgIsOneTime.ToolTip = "NO";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    //protected void btnPreview_Click(object sender, EventArgs e)
+    //{
+    //    mpeUpdateLOT.Show();
+    //    PreviewVendor();
+    //}
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+
+        int statusId = Convert.ToInt32(ViewState["CURRENT_STATUS_ID"]);
+        //SaveVendor(statusId, true, false);
+        SaveVendor(statusId);
+        GetVendorsList();
+    }
+
+    //protected void btnReviseVendor_Click(object sender, EventArgs e)
+    //{
+
+    //    int statusId = (int)StatusAndTypes.EnumStatus.Revised_8;
+    //    //SaveVendor(statusId, false, true);
+    //    SaveVendor(statusId, true);
+    //    GetVendorsList();
+    //}
+
+    protected void btnUpdateStatus_Click(object sender, EventArgs e)
+    {
+        int statusId = Convert.ToInt32(ViewState["NEXT_STATUS_ID"]);
+        if (statusId == (int)StatusAndTypes.EnumStatus.Amended_3)
+        {
+            //SaveVendor(statusId, false, false);
+            SaveVendor(statusId);
+        }
+        else
+        {
+            UpdateStatus(statusId);
+        }
+
+        GetVendorsList();
+
+    }
+
+    protected void btnSendToAmendment_Click(object sender, EventArgs e)
+    {
+        int statusId = (int)StatusAndTypes.EnumStatus.Amendment_2;
+        UpdateStatus(statusId);
+
+        GetVendorsList();
+
+    }
+
+    protected void btnRegisterVendor_Click(object sender, EventArgs e)
+    {
+        int statusId = Convert.ToInt32(ViewState["NEXT_STATUS_ID"]);
+        UpdateStatus(statusId);
+        GetVendorsList();
+    }
+
+    //protected void btnReviseVendor_Click(object sender, EventArgs e)
+    //{
+    //    int statusId = (int)StatusAndTypes.EnumStatus.Revised_8;
+    //    SaveVendor(statusId, false, true);
+    //    GetVendorsList();
+    //}
+
+    protected void chkClearDates_CheckedChanged(object sender, EventArgs e)
+    {
+        if (chkClearDates.Checked)
+        {
+            txtStartDateSearch.Text = "";
+            hdStartDateSearch.Value = "";
+
+            txtEndDateSearch.Text = "";
+            hdEndDateSearch.Value = "";
+
+        }
+        else
+        {
+            DateTime now = DateTime.Now;
+            var startDate = new DateTime(now.Year, now.Month, 1);
+            hdStartDateSearch.Value = Convert.ToDateTime(startDate).ToString("dd-MMM-yyyy");
+            txtStartDateSearch.Text = Convert.ToDateTime(startDate).ToString("dd-MMM-yyyy");
+
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            hdEndDateSearch.Value = Convert.ToDateTime(endDate).ToString("dd-MMM-yyyy");
+            txtEndDateSearch.Text = Convert.ToDateTime(endDate).ToString("dd-MMM-yyyy");
+        }
+
+        GetVendorsList();
+
+    }
+
+    protected void ddlItemCategory_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        mpeUpdateLOT.Show();
+        BindItemSubCategorys();
+
+        //DisplayNoneAllPanels();
+        //pnlVendorOtherDetails.Style["display"] = "block";
+    }
+
+    //protected void ddlCountryToS_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    mpeUpdateLOT.Show();
+    //    BindStatesToS();
+    //}
+
+
+
+
+    protected void btnAddUpdateAddressToList_Click(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(hdBillingAddressUpdationFlag.Value) == 0)
+        {
+            AddBillingAddress();
+        }
+        else
+        {
+            UpdateBillingAddress();
+        }
+
+        this.mpeUpdateLOT.Show();
+    }
+
+    protected void gvBillingAddress_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvBillingAddress.Rows[rowindex].FindControl("lblSrNo") as Label;
+                Label lblPID = gvBillingAddress.Rows[rowindex].FindControl("lblPID") as Label;
+                Label lblGSTIN = gvBillingAddress.Rows[rowindex].FindControl("lblGSTIN") as Label;
+                Label lblAddress1 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress1") as Label;
+                Label lblAddress2 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress2") as Label;
+                Label lblAddress3 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress3") as Label;
+                Label lblCity = gvBillingAddress.Rows[rowindex].FindControl("lblCity") as Label;
+                Label lblStateID = gvBillingAddress.Rows[rowindex].FindControl("lblStateID") as Label;
+                Label lblOtherState = gvBillingAddress.Rows[rowindex].FindControl("lblOtherState") as Label;
+                Label lblCountryID = gvBillingAddress.Rows[rowindex].FindControl("lblCountryID") as Label;
+                Label lblPINCode = gvBillingAddress.Rows[rowindex].FindControl("lblPINCode") as Label;
+                Label lblPhone = gvBillingAddress.Rows[rowindex].FindControl("lblPhone") as Label;
+                Label lblEmail = gvBillingAddress.Rows[rowindex].FindControl("lblEmail") as Label;
+                Label lblIsDefault = gvBillingAddress.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+                ViewState["BILLING_ADDRESS_PID"] = Convert.ToInt32(lblPID.Text);
+
+                //hdRevNoText.Value = "";
+                //hdRevNoTextOld.Value = "";
+                //txtRevNoText.Enabled = false;
+
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+                {
+                    string stateCode = "";
+                    if (ddlStateToS.SelectedIndex > 0)
+                        stateCode = ddlStateToS.SelectedItem.Text.Substring(ddlStateToS.SelectedItem.Text.Length - 3, 2);
+
+                    btnAddUpdateAddressToList.Text = "Update Address";
+
+                    hdBillingAddressUpdationFlag.Value = "1";
+
+                    if (!string.IsNullOrEmpty(lblSrNo.Text)) hdBillingAddressSRNo.Value = lblSrNo.Text;
+                    else hdBillingAddressSRNo.Value = "0";
+
+                    //if (!string.IsNullOrEmpty(txtPANNumberToS.Text)) txtPANToSS.Text = txtPANNumberToS.Text;
+                    //else txtPANToSS.Text = string.Empty;
+
+                    //if (!string.IsNullOrEmpty(lblGSTIN.Text)) txtGSTInToS.Text = lblGSTIN.Text;
+                    //else txtGSTInToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblGSTIN.Text))
+                    {
+                        string panTxt = lblGSTIN.Text.Substring(2, 10);
+                        string runningNoTxt = lblGSTIN.Text.Substring(12, 3);
+                        if (panTxt == txtPANNumberToS.Text)
+                        {
+                            txtPANToSS.Text = txtPANNumberToS.Text.ToUpper();
+                            txtGSTInToS.Text = lblGSTIN.Text.ToUpper();
+                            txtGSTInRunningNoToS.Text = runningNoTxt.ToUpper();
+                        }
+                        else
+                        {
+                            txtPANToSS.Text = txtPANNumberToS.Text.ToUpper();
+                            txtGSTInRunningNoToS.Text = runningNoTxt.ToUpper();
+                            string gstin = stateCode + txtPANNumberToS.Text + runningNoTxt;
+                            txtGSTInToS.Text = FormattedString(gstin);
+                        }
+                    }
+                    else
+                    {
+                        txtGSTInToS.Text = string.Empty;
+                        txtGSTInRunningNoToS.Text = string.Empty;
+                        txtPANToSS.Text = txtPANNumberToS.Text.ToUpper();
+                    }
+
+
+                    if (!string.IsNullOrEmpty(lblAddress1.Text)) txtAddress1ToS.Text = lblAddress1.Text;
+                    else txtAddress1ToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblAddress2.Text)) txtAddress2ToS.Text = lblAddress2.Text;
+                    else txtAddress2ToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblAddress3.Text)) txtAddress3ToS.Text = lblAddress3.Text;
+                    else txtAddress3ToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblCity.Text)) txtCityToS.Text = lblCity.Text;
+                    else txtCityToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblOtherState.Text)) txtOtherStateToS.Text = lblOtherState.Text;
+                    else txtOtherStateToS.Text = string.Empty;
+
+                    BindStatesToS();
+                    if (ddlStateToS.DataSource != null && Convert.ToInt32(lblStateID.Text) > 0)
+                    {
+                        ddlStateToS.SelectedValue = lblStateID.Text;
+                    }
+
+                    if (!string.IsNullOrEmpty(lblPINCode.Text)) txtPhoneToS.Text = lblPINCode.Text;
+                    else txtPINCodeToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblPhone.Text)) txtPhoneToS.Text = lblPhone.Text;
+                    else txtPhoneToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblEmail.Text)) txtEmailToS.Text = lblEmail.Text;
+                    else txtEmailToS.Text = string.Empty;
+
+                    if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultBillingAddressToS.Checked = true;
+
+                    mpeAddBillingAddress.Show();
+                    mpeUpdateLOT.Show();
+                }
+
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveBillingAddress(Convert.ToInt32(lblSrNo.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvBillingAddress_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+                CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+                if (Convert.ToInt32(lblIsDefault.Text) > 0)
+                    chkIsDefault.Checked = true;
+                else chkIsDefault.Checked = false;
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+    protected void btnAddUpdateContactPersonToList_Click(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(hdContactPersonUpdationFlag.Value) == 0)
+        {
+            AddContactPerson();
+        }
+        else
+        {
+            UpdateContactPerson();
+        }
+
+        this.mpeUpdateLOT.Show();
+    }
+
+    protected void gvContactPerson_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvContactPerson.Rows[rowindex].FindControl("lblSrNo") as Label;
+                Label lblPID = gvBillingAddress.Rows[rowindex].FindControl("lblPID") as Label;
+                Label lblContactPersonName = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonName") as Label;
+                Label lblContactPersonMobile = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonMobile") as Label;
+                Label lblContactPersonPhone = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonPhone") as Label;
+                Label lblContactPersonEmail = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonEmail") as Label;
+                Label lblIsDefault = gvContactPerson.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+                ViewState["CONTACT_PERSON_PID"] = Convert.ToInt32(lblPID.Text);
+
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+                {
+                    btnAddUpdateContactPersonToList.Text = "Update Contact Person";
+
+                    hdContactPersonUpdationFlag.Value = "1";
+
+                    if (!string.IsNullOrEmpty(lblSrNo.Text)) hdContactPersonSRNo.Value = lblSrNo.Text;
+                    else hdContactPersonSRNo.Value = "0";
+
+                    if (!string.IsNullOrEmpty(lblContactPersonName.Text)) txtContactPersonNameToS.Text = lblContactPersonName.Text;
+                    else txtContactPersonNameToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblContactPersonMobile.Text)) txtContactPersonMobileToS.Text = lblContactPersonMobile.Text;
+                    else txtContactPersonMobileToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblContactPersonPhone.Text)) txtContactPersonPhoneToS.Text = lblContactPersonPhone.Text;
+                    else txtContactPersonPhoneToS.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblContactPersonEmail.Text)) txtContactPersonEmailToS.Text = lblContactPersonEmail.Text;
+                    else txtContactPersonEmailToS.Text = string.Empty;
+
+                    if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultContactPersonToS.Checked = true;
+
+                    mpeAddContactPerson.Show();
+                    mpeUpdateLOT.Show();
+                }
+
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveContactPerson(Convert.ToInt32(lblSrNo.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvContactPerson_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+                CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+                if (Convert.ToInt32(lblIsDefault.Text) > 0)
+                    chkIsDefault.Checked = true;
+                else chkIsDefault.Checked = false;
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+    //protected void btnAddUpdateBankDetailsToList_Click(object sender, EventArgs e)
+    //{
+    //    if (Convert.ToInt32(hdBankDetailsUpdationFlag.Value) == 0)
+    //    {
+    //        AddBankDetails();
+    //    }
+    //    else
+    //    {
+    //        UpdateBankDetails();
+    //    }
+
+    //    this.mpeUpdateLOT.Show();
+    //}
+
+    //protected void gvBankDetails_RowCommand(object sender, GridViewCommandEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (Session["EMP_RECORD_ID"] != null)
+    //        {
+    //            int rowindex = 0;
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+    //                rowindex = rowSelect.RowIndex;
+    //            }
+
+    //            Label lblSrNo = gvBankDetails.Rows[rowindex].FindControl("lblSrNo") as Label;
+    //            Label lblPID = gvBillingAddress.Rows[rowindex].FindControl("lblPID") as Label;
+    //            Label lblBankName = gvBankDetails.Rows[rowindex].FindControl("lblBankName") as Label;
+    //            Label lblBranch = gvBankDetails.Rows[rowindex].FindControl("lblBranch") as Label;
+    //            Label lblSWIFTCode = gvBankDetails.Rows[rowindex].FindControl("lblSWIFTCode") as Label;
+    //            Label lblAccountNumber = gvBankDetails.Rows[rowindex].FindControl("lblAccountNumber") as Label;
+    //            Label lblRTGSOrIFSC = gvBankDetails.Rows[rowindex].FindControl("lblRTGSOrIFSC") as Label;
+    //            Label lblISBN = gvBankDetails.Rows[rowindex].FindControl("lblISBN") as Label;
+    //            Label lblIsDefault = gvBankDetails.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+    //            ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+    //            ViewState["BANK_DETAIL_PID"] = Convert.ToInt32(lblPID.Text);
+
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+    //            {
+    //                btnAddUpdateBankDetailsToList.Text = "Update Bank Details";
+
+    //                hdBankDetailsUpdationFlag.Value = "1";
+
+    //                if (!string.IsNullOrEmpty(lblSrNo.Text)) hdBankDetailsSRNo.Value = lblSrNo.Text;
+    //                else hdBankDetailsSRNo.Value = "0";
+
+    //                if (!string.IsNullOrEmpty(lblBankName.Text)) txtBankNameToS.Text = lblBankName.Text;
+    //                else txtBankNameToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblBranch.Text)) txtBranchToS.Text = lblBranch.Text;
+    //                else txtBranchToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblSWIFTCode.Text)) txtSWIFTCodeToS.Text = lblSWIFTCode.Text;
+    //                else txtSWIFTCodeToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblAccountNumber.Text)) txtAccountNumberToS.Text = lblAccountNumber.Text;
+    //                else txtAccountNumberToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblRTGSOrIFSC.Text)) txtRTGSOrIFSCToS.Text = lblRTGSOrIFSC.Text;
+    //                else txtRTGSOrIFSCToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblISBN.Text)) txtISBNToS.Text = lblISBN.Text;
+    //                else txtISBNToS.Text = string.Empty;
+
+    //                if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultBankToS.Checked = true;
+
+    //                mpeAddBankDetails.Show();
+    //                mpeUpdateLOT.Show();
+    //            }
+
+
+    //            if (Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                RemoveBankDetails(Convert.ToInt32(lblSrNo.Text));
+    //            }
+    //        }
+    //        else
+    //        {
+    //            Response.Redirect("~/Login.aspx");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void gvBankDetails_RowDataBound(object sender, GridViewRowEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (e.Row.RowType == DataControlRowType.Header)
+    //        {
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //        if (e.Row.RowType == DataControlRowType.DataRow)
+    //        {
+    //            Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+    //            CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+    //            if (Convert.ToInt32(lblIsDefault.Text) > 0)
+    //                chkIsDefault.Checked = true;
+    //            else chkIsDefault.Checked = false;
+
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+
+
+
+    protected void btnAddUpdateAttachmentToList_Click(object sender, EventArgs e)
+    {
+        AddAttachment();
+        mpeUpdateLOT.Show();
+    }
+
+    protected void gvAttachments_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "VIEW_DOC" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvAttachments.Rows[rowindex].FindControl("lblSrNo") as Label;
+                Label lblSrInNo = gvAttachments.Rows[rowindex].FindControl("lblSrInNo") as Label;
+                Label lblPID = gvAttachments.Rows[rowindex].FindControl("lblPID") as Label;
+                Label lblDocName = gvAttachments.Rows[rowindex].FindControl("lblDocName") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+                ViewState["SR_NO_IN"] = Convert.ToInt32(lblSrInNo.Text);
+
+                if (Convert.ToString(e.CommandArgument) == "VIEW_DOC")
+                {
+                    ViewDOC(Convert.ToInt32(lblPID.Text), lblDocName.Text);
+                }
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveAttachments(Convert.ToInt32(lblSrInNo.Text));
+                }
+
+                mpeUpdateLOT.Show();
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvAttachments_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvRemarks_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    //protected void imgBtnFileVRF_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDVRF.Value), txtFileNameVRF.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFileGSTIN_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDGSTIN.Value), txtFileNameGSTIN.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFilePAN_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDPAN.Value), txtFileNamePAN.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFileCC_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDCancelledCheque.Value), txtFileNameCancelledCheque.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFileOther1_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDOther1.Value), txtFileNameOther1.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFileOther2_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDOther2.Value), txtFileNameOther2.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFileOther3_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDOther3.Value), txtFileNameOther3.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+    //protected void imgBtnFileOther4_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    ViewDOC(Convert.ToInt32(hdPIDOther4.Value), txtFileNameOther4.Text);
+    //    mpeUpdateLOT.Show();
+    //}
+
+
+
+    //Billing Address
+    //protected void btnShowNewAddressWindow_Click(object sender, EventArgs e)
+    //{
+    //    EnableBillingAddressControls();
+    //    btnAddUpdateAddressToList.Text = "Add Address";
+    //    hdBillingAddressUpdationFlag.Value = "0";
+    //    ResetBillingAddress();
+
+    //    mpeUpdateLOT.Show();
+    //    mpeAddBillingAddress.Show();
+    //}
+
+    //protected void btnAddUpdateAddressToList_Click(object sender, EventArgs e)
+    //{
+    //    if (Convert.ToInt32(hdBillingAddressUpdationFlag.Value) == 0)
+    //    {
+    //        AddBillingAddress();
+    //    }
+    //    else
+    //    {
+    //        UpdateBillingAddress();
+    //    }
+
+    //    mpeUpdateLOT.Show();
+
+    //    //DisplayNoneAllPanels();
+    //    //pnlBillingAddress.Style["display"] = "block";
+    //}
+
+    //protected void gvBillingAddress_RowCommand(object sender, GridViewCommandEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (Session["EMP_RECORD_ID"] != null)
+    //        {
+    //            ResetAllPanelIconImages();
+    //            imgBtnShowPnl2.ImageUrl = "~/Images/VCM/a_pnl2.png";
+
+    //            int rowindex = 0;
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "VIEW" ||
+    //                Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+    //                rowindex = rowSelect.RowIndex;
+    //            }
+
+    //            Label lblSrNo = gvBillingAddress.Rows[rowindex].FindControl("lblSrNo") as Label;
+    //            Label lblPID = gvBillingAddress.Rows[rowindex].FindControl("lblPID") as Label;
+    //            Label lblAddress1 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress1") as Label;
+    //            Label lblAddress2 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress2") as Label;
+    //            Label lblAddress3 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress3") as Label;
+    //            Label lblCity = gvBillingAddress.Rows[rowindex].FindControl("lblCity") as Label;
+    //            Label lblState = gvBillingAddress.Rows[rowindex].FindControl("lblState") as Label;
+    //            Label lblCountry = gvBillingAddress.Rows[rowindex].FindControl("lblCountry") as Label;
+    //            Label lblPhone = gvBillingAddress.Rows[rowindex].FindControl("lblPhone") as Label;
+    //            Label lblEmail = gvBillingAddress.Rows[rowindex].FindControl("lblEmail") as Label;
+    //            Label lblIsDefault = gvBillingAddress.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+    //            ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+    //            ViewState["BA_PID"] = Convert.ToInt32(lblPID.Text);
+
+    //            //hdRevNoText.Value = "";
+    //            //hdRevNoTextOld.Value = "";
+    //            //txtRevNoText.Enabled = false;
+
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "VIEW")
+    //            {
+    //                btnAddUpdateAddressToList.Text = "Update Address";
+
+    //                hdBillingAddressUpdationFlag.Value = "1";
+
+    //                if (!string.IsNullOrEmpty(lblSrNo.Text)) hdBillingAddressSRNo.Value = lblSrNo.Text;
+    //                else hdBillingAddressSRNo.Value = "0";
+
+    //                if (!string.IsNullOrEmpty(lblAddress1.Text)) txtAddress1ToS.Text = lblAddress1.Text;
+    //                else txtAddress1ToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblAddress2.Text)) txtAddress2ToS.Text = lblAddress2.Text;
+    //                else txtAddress2ToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblAddress3.Text)) txtAddress3ToS.Text = lblAddress3.Text;
+    //                else txtAddress3ToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblCity.Text)) txtCityToS.Text = lblCity.Text;
+    //                else txtCityToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblState.Text)) txtStateToS.Text = lblState.Text;
+    //                else txtStateToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblCountry.Text)) txtCountryToS.Text = lblCountry.Text;
+    //                else txtCountryToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblPhone.Text)) txtPhoneToS.Text = lblPhone.Text;
+    //                else txtPhoneToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblEmail.Text)) txtEmailToS.Text = lblEmail.Text;
+    //                else txtEmailToS.Text = string.Empty;
+
+    //                if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultBillingAddressToS.Checked = true;
+
+
+
+    //                //EnableBillingAddressControls();
+
+    //                if (Convert.ToString(e.CommandArgument) == "VIEW")
+    //                {
+    //                    //DisableBillingAddressControls();
+    //                }
+
+    //                mpeAddBillingAddress.Show();
+
+    //            }
+
+
+    //            if (Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                RemoveBillingAddress(Convert.ToInt32(lblSrNo.Text));
+    //            }
+
+    //            mpeUpdateLOT.Show();
+
+    //            DisplayNoneAllPanels();
+    //            pnlBillingAddress.Style["display"] = "block";
+    //        }
+    //        else
+    //        {
+    //            Response.Redirect("~/Login.aspx");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void gvBillingAddress_RowDataBound(object sender, GridViewRowEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (e.Row.RowType == DataControlRowType.Header)
+    //        {
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //        if (e.Row.RowType == DataControlRowType.DataRow)
+    //        {
+    //            Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+    //            CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+    //            if (Convert.ToInt32(lblIsDefault.Text) > 0)
+    //                chkIsDefault.Checked = true;
+    //            else chkIsDefault.Checked = false;
+
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void btnRefreshBillingAddress_Click(object sender, EventArgs e)
+    //{
+    //    RefreshBillingAddress();
+    //    mpeUpdateLOT.Show();
+    //}
+
+
+    //Contact Person
+    //protected void btnShowNewContactPersonWindow_Click(object sender, EventArgs e)
+    //{
+
+    //    btnAddUpdateContactPersonToList.Text = "Add Contact Person";
+    //    hdContactPersonUpdationFlag.Value = "0";
+    //    ResetContactPerson();
+
+    //    mpeUpdateLOT.Show();
+    //    mpeAddContactPerson.Show();
+    //}
+
+    //protected void btnAddUpdateContactPersonToList_Click(object sender, EventArgs e)
+    //{
+    //    if (Convert.ToInt32(hdContactPersonUpdationFlag.Value) == 0)
+    //    {
+    //        AddContactPerson();
+    //    }
+    //    else
+    //    {
+    //        UpdateContactPerson();
+    //    }
+    //    mpeUpdateLOT.Show();
+
+    //    DisplayNoneAllPanels();
+    //    pnlContactPerson.Style["display"] = "block";
+    //}
+
+    //protected void gvContactPerson_RowCommand(object sender, GridViewCommandEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (Session["EMP_RECORD_ID"] != null)
+    //        {
+    //            ResetAllPanelIconImages();
+    //            imgBtnShowPnl3.ImageUrl = "~/Images/VCM/a_pnl3.png";
+
+    //            int rowindex = 0;
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "REMOVE" ||
+    //                Convert.ToString(e.CommandArgument) == "VIEW")
+    //            {
+    //                GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+    //                rowindex = rowSelect.RowIndex;
+    //            }
+
+    //            Label lblSrNo = gvContactPerson.Rows[rowindex].FindControl("lblSrNo") as Label;
+    //            Label lblPID = gvContactPerson.Rows[rowindex].FindControl("lblPID") as Label;
+    //            Label lblContactPersonName = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonName") as Label;
+    //            Label lblContactPersonMobile = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonMobile") as Label;
+    //            Label lblContactPersonPhone = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonPhone") as Label;
+    //            Label lblContactPersonEmail = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonEmail") as Label;
+    //            Label lblIsDefault = gvContactPerson.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+    //            ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+    //            ViewState["CP_PID"] = Convert.ToInt32(lblPID.Text);
+
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "VIEW")
+    //            {
+    //                btnAddUpdateContactPersonToList.Text = "Update Contact Person";
+
+    //                hdContactPersonUpdationFlag.Value = "1";
+
+    //                if (!string.IsNullOrEmpty(lblSrNo.Text)) hdContactPersonSRNo.Value = lblSrNo.Text;
+    //                else hdContactPersonSRNo.Value = "0";
+
+    //                if (!string.IsNullOrEmpty(lblContactPersonName.Text)) txtContactPersonNameToS.Text = lblContactPersonName.Text;
+    //                else txtContactPersonNameToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblContactPersonMobile.Text)) txtContactPersonMobileToS.Text = lblContactPersonMobile.Text;
+    //                else txtContactPersonMobileToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblContactPersonPhone.Text)) txtContactPersonPhoneToS.Text = lblContactPersonPhone.Text;
+    //                else txtContactPersonPhoneToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblContactPersonEmail.Text)) txtContactPersonEmailToS.Text = lblContactPersonEmail.Text;
+    //                else txtContactPersonEmailToS.Text = string.Empty;
+
+    //                if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultContactPersonToS.Checked = true;
+
+
+    //                //EnableContactPersonControls();
+
+    //                if (Convert.ToString(e.CommandArgument) == "VIEW")
+    //                {
+    //                    //DisableContactPersonControls();
+    //                }
+
+    //                mpeAddContactPerson.Show();
+    //            }
+
+
+    //            if (Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                RemoveContactPerson(Convert.ToInt32(lblSrNo.Text));
+    //            }
+
+    //            mpeUpdateLOT.Show();
+
+    //            DisplayNoneAllPanels();
+    //            pnlContactPerson.Style["display"] = "block";
+    //        }
+    //        else
+    //        {
+    //            Response.Redirect("~/Login.aspx");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void gvContactPerson_RowDataBound(object sender, GridViewRowEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (e.Row.RowType == DataControlRowType.Header)
+    //        {
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //        if (e.Row.RowType == DataControlRowType.DataRow)
+    //        {
+    //            Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+    //            CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+    //            if (Convert.ToInt32(lblIsDefault.Text) > 0)
+    //                chkIsDefault.Checked = true;
+    //            else chkIsDefault.Checked = false;
+
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void btnRefreshContactPerson_Click(object sender, EventArgs e)
+    //{
+    //    RefreshContactPerson();
+    //    mpeUpdateLOT.Show();
+    //}
+
+
+    //Bank Details
+    //protected void btnShowNewBankDetailsWindow_Click(object sender, EventArgs e)
+    //{
+    //    btnAddUpdateBankDetailsToList.Text = "Add Bank Details";
+    //    hdBankDetailsUpdationFlag.Value = "0";
+    //    ResetBankDetails();
+
+    //    mpeUpdateLOT.Show();
+    //    mpeAddBankDetails.Show();
+    //}
+
+    //protected void btnAddUpdateBankDetailsToList_Click(object sender, EventArgs e)
+    //{
+    //    mpeUpdateLOT.Show();
+    //    if (Convert.ToInt32(hdBankDetailsUpdationFlag.Value) == 0)
+    //    {
+    //        AddBankDetails();
+    //    }
+    //    else
+    //    {
+    //        UpdateBankDetails();
+    //    }
+    //    mpeUpdateLOT.Show();
+
+    //    DisplayNoneAllPanels();
+    //    pnlBankDetails.Style["display"] = "block";
+    //}
+
+    //protected void gvBankDetails_RowCommand(object sender, GridViewCommandEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (Session["EMP_RECORD_ID"] != null)
+    //        {
+    //            ResetAllPanelIconImages();
+    //            imgBtnShowPnl4.ImageUrl = "~/Images/VCM/a_pnl4.png";
+
+    //            int rowindex = 0;
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "REMOVE" ||
+    //                Convert.ToString(e.CommandArgument) == "VIEW")
+    //            {
+    //                GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+    //                rowindex = rowSelect.RowIndex;
+    //            }
+
+    //            Label lblSrNo = gvBankDetails.Rows[rowindex].FindControl("lblSrNo") as Label;
+    //            Label lblPID = gvBankDetails.Rows[rowindex].FindControl("lblPID") as Label;
+    //            Label lblBankName = gvBankDetails.Rows[rowindex].FindControl("lblBankName") as Label;
+    //            Label lblBranch = gvBankDetails.Rows[rowindex].FindControl("lblBranch") as Label;
+    //            Label lblSWIFTCode = gvBankDetails.Rows[rowindex].FindControl("lblSWIFTCode") as Label;
+    //            Label lblAccountNumber = gvBankDetails.Rows[rowindex].FindControl("lblAccountNumber") as Label;
+    //            Label lblRTGSOrIFSC = gvBankDetails.Rows[rowindex].FindControl("lblRTGSOrIFSC") as Label;
+    //            Label lblISBN = gvBankDetails.Rows[rowindex].FindControl("lblISBN") as Label;
+    //            Label lblIsDefault = gvBankDetails.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+    //            ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+    //            ViewState["BD_PID"] = Convert.ToInt32(lblPID.Text);
+
+    //            if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+    //                Convert.ToString(e.CommandArgument) == "VIEW")
+    //            {
+    //                btnAddUpdateBankDetailsToList.Text = "Update Bank Details";
+
+    //                hdBankDetailsUpdationFlag.Value = "1";
+
+    //                if (!string.IsNullOrEmpty(lblSrNo.Text)) hdBankDetailsSRNo.Value = lblSrNo.Text;
+    //                else hdBankDetailsSRNo.Value = "0";
+
+    //                if (!string.IsNullOrEmpty(lblBankName.Text)) txtBankNameToS.Text = lblBankName.Text;
+    //                else txtBankNameToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblBranch.Text)) txtBranchToS.Text = lblBranch.Text;
+    //                else txtBranchToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblSWIFTCode.Text)) txtSWIFTCodeToS.Text = lblSWIFTCode.Text;
+    //                else txtSWIFTCodeToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblAccountNumber.Text)) txtAccountNumberToS.Text = lblAccountNumber.Text;
+    //                else txtAccountNumberToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblRTGSOrIFSC.Text)) txtRTGSOrIFSCToS.Text = lblRTGSOrIFSC.Text;
+    //                else txtRTGSOrIFSCToS.Text = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(lblISBN.Text)) txtISBNToS.Text = lblISBN.Text;
+    //                else txtISBNToS.Text = string.Empty;
+
+    //                if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultBankToS.Checked = true;
+
+    //                //EnableBankDetailControls();
+
+    //                if (Convert.ToString(e.CommandArgument) == "VIEW")
+    //                {
+    //                    //DisableBankDetailControls();
+    //                }
+
+    //                mpeAddBankDetails.Show();
+    //            }
+
+
+    //            if (Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                RemoveBankDetails(Convert.ToInt32(lblSrNo.Text));
+    //            }
+
+    //            mpeUpdateLOT.Show();
+
+    //            DisplayNoneAllPanels();
+    //            pnlBankDetails.Style["display"] = "block";
+    //        }
+    //        else
+    //        {
+    //            Response.Redirect("~/Login.aspx");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void gvBankDetails_RowDataBound(object sender, GridViewRowEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (e.Row.RowType == DataControlRowType.Header)
+    //        {
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //        if (e.Row.RowType == DataControlRowType.DataRow)
+    //        {
+    //            Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+    //            CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+    //            if (Convert.ToInt32(lblIsDefault.Text) > 0)
+    //                chkIsDefault.Checked = true;
+    //            else chkIsDefault.Checked = false;
+
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void btnRefreshBankDetails_Click(object sender, EventArgs e)
+    //{
+    //    RefreshBankDetails();
+    //    mpeUpdateLOT.Show();
+    //}
+
+
+
+    //protected void btnAddUpdateAttachmentToList_Click(object sender, EventArgs e)
+    //{
+    //    AddAttachment();
+    //    mpeUpdateLOT.Show();
+
+    //    DisplayNoneAllPanels();
+    //    pnlAttachments.Style["display"] = "block";
+    //}
+
+    //protected void gvAttachments_RowCommand(object sender, GridViewCommandEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (Session["EMP_RECORD_ID"] != null)
+    //        {
+    //            ResetAllPanelIconImages();
+    //            imgBtnShowPnl6.ImageUrl = "~/Images/VCM/a_pnl6.png";
+
+    //            int rowindex = 0;
+    //            if (Convert.ToString(e.CommandArgument) == "VIEW_DOC" ||
+    //                Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+    //                rowindex = rowSelect.RowIndex;
+    //            }
+
+    //            Label lblSrNo = gvAttachments.Rows[rowindex].FindControl("lblSrNo") as Label;
+    //            Label lblPID = gvAttachments.Rows[rowindex].FindControl("lblPID") as Label;
+    //            Label lblDOCName = gvAttachments.Rows[rowindex].FindControl("lblDOCName") as Label;
+
+    //            if (Convert.ToString(e.CommandArgument) == "VIEW_DOC")
+    //            {
+    //                mpeUpdateLOT.Show();
+    //                ViewDOC(Convert.ToInt32(lblPID.Text), lblDOCName.Text);
+    //            }
+
+
+    //            if (Convert.ToString(e.CommandArgument) == "REMOVE")
+    //            {
+    //                RemoveAttachments(Convert.ToInt32(lblSrNo.Text));
+    //            }
+
+    //            mpeUpdateLOT.Show();
+
+    //            DisplayNoneAllPanels();
+    //            pnlAttachments.Style["display"] = "block";
+    //        }
+    //        else
+    //        {
+    //            Response.Redirect("~/Login.aspx");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void gvAttachments_RowDataBound(object sender, GridViewRowEventArgs e)
+    //{
+    //    try
+    //    {
+    //        if (e.Row.RowType == DataControlRowType.Header)
+    //        {
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //        if (e.Row.RowType == DataControlRowType.DataRow)
+    //        {
+    //            for (int i = 0; i < e.Row.Cells.Count; i++)
+    //            {
+    //                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //protected void btnRefreshAttachments_Click(object sender, EventArgs e)
+    //{
+    //    RefreshAttachments();
+    //    mpeUpdateLOT.Show();
+    //}
+
+
+    //protected void btnGetRevisionTypes_Click(object sender, EventArgs e)
+    //{
+
+    //    DataTable dtRevisionTypes = new DataTable();
+    //    dtRevisionTypes.Columns.Add("VALUE", typeof(int));
+    //    foreach (System.Web.UI.WebControls.ListItem item in chkListRevisionsForToS.Items)
+    //    {
+    //        if (item.Selected)
+    //        {
+    //            dtRevisionTypes.Rows.Add(Convert.ToInt32(item.Value));
+    //        }
+    //    }
+
+    //    Session["dtRevisionTypes"] = dtRevisionTypes;
+    //    EnableRevisionControls(dtRevisionTypes);
+
+    //    mpeUpdateLOT.Show();
+    //}
+
+
+
+    #endregion
+
+
+    #region METHODS[===========================]
+
+    private void ClearSessions()
+    {
+        Session["dtBillingAddress"] = null;
+        Session["dtContactPerson"] = null;
+        Session["dtBankDetails"] = null;
+        Session["dtAttachments"] = null;
+    }
+
+
+    //Primary Dropdowns
+
+    private void GetCountrys()
+    {
+        try
+        {
+            Session["dtCountry"] = null;
+            dsCountry = objCommon.GetCountry();
+            if (dsCountry.Tables.Count > 0 && dsCountry.Tables[0].Rows.Count > 0)
+            {
+                Session["dtCountry"] = dsCountry.Tables[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindCountrysToS()
+    {
+        try
+        {
+            DataTable dtCountry = new DataTable();
+
+            if (Session["dtCountry"] != null)
+                dtCountry = (DataTable)Session["dtCountry"];
+            else
+            {
+                GetCountrys();
+                dtCountry = (DataTable)Session["dtCountry"];
+            }
+
+            if (dtCountry.Rows.Count > 0)
+            {
+                ddlCountryToS.DataSource = dtCountry;
+                ddlCountryToS.DataTextField = "COUNTRY_NAME";
+                ddlCountryToS.DataValueField = "COUNTRY_ID";
+                ddlCountryToS.DataBind();
+                ddlCountryToS.Items.Insert(0, "Select");
+                ddlCountryToS.SelectedValue = "95";
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void GetStates()
+    {
+        try
+        {
+            Session["dtState"] = null;
+            dsState = objCommon.GetStates();
+            if (dsState.Tables.Count > 0 && dsState.Tables[0].Rows.Count > 0)
+            {
+                Session["dtState"] = dsState.Tables[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void BindStatesToS()
+    {
+        try
+        {
+            ddlStateToS.Items.Clear();
+            ddlStateToS.Items.Insert(0, "Select");
+            ddlStateToS.SelectedIndex = 0;
+            ddlStateToS.Enabled = false;
+
+            txtOtherStateToS.Text = string.Empty;
+            txtOtherStateToS.Enabled = true;
+
+            txtSWIFTCodeToS.Text = string.Empty;
+            txtSWIFTCodeToS.Enabled = true;
+
+            txtISBNToS.Text = string.Empty;
+            txtISBNToS.Enabled = true;
+
+
+            if (ddlCountryToS.SelectedIndex > 0 && ddlCountryToS.SelectedValue == "95") //india
+            {
+                DataTable dtState = new DataTable();
+
+                if (Session["dtState"] != null)
+                    dtState = (DataTable)Session["dtState"];
+                else
+                {
+                    GetStates();
+                    dtState = (DataTable)Session["dtState"];
+                }
+
+
+                if (dtState.Rows.Count > 0)
+                {
+                    ddlStateToS.DataSource = dtState;
+                    ddlStateToS.DataTextField = "STATE_NAME_GST_CODE";
+                    ddlStateToS.DataValueField = "STATE_PID";
+                    ddlStateToS.DataBind();
+                    ddlStateToS.Items.Insert(0, "Select");
+                    ddlStateToS.SelectedIndex = 0;
+                    if (ddlCountryToS.SelectedValue == "95")
+                    {
+                        ddlStateToS.Enabled = true;
+                    }
+
+
+                    txtOtherStateToS.Enabled = false;
+                    txtSWIFTCodeToS.Enabled = false;
+                    txtISBNToS.Enabled = false;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+    //private void BindRevisionTypes()
+    //{
+    //    try
+    //    {
+    //        dsRevisiontype = objVCM.GetRevisionType((int)StatusAndTypes.EnumEntityType.Vendor);
+    //        if (dsRevisiontype.Tables.Count > 0 && dsRevisiontype.Tables[0].Rows.Count > 0)
+    //        {
+    //            chkListRevisionsForToS.DataSource = dsRevisiontype.Tables[0];
+    //            chkListRevisionsForToS.DataTextField = "NAME";
+    //            chkListRevisionsForToS.DataValueField = "PID";
+    //            chkListRevisionsForToS.DataBind();
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    private void BindMSMEStatus()
+    {
+        try
+        {
+            dsMSMEStatus = objVCM.GetMSMEStatus();
+            if (dsMSMEStatus.Tables.Count > 0 && dsMSMEStatus.Tables[0].Rows.Count > 0)
+            {
+                ddlMSMEStatusToS.DataSource = dsMSMEStatus.Tables[0];
+                ddlMSMEStatusToS.DataTextField = "NAME";
+                ddlMSMEStatusToS.DataValueField = "PID";
+                ddlMSMEStatusToS.DataBind();
+                ddlMSMEStatusToS.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindStatus()
+    {
+        try
+        {
+            dsStatus = objVCM.GetStatus();
+            if (dsStatus.Tables.Count > 0 && dsStatus.Tables[0].Rows.Count > 0)
+            {
+                ddlStatusS.DataSource = dsStatus.Tables[0];
+                ddlStatusS.DataTextField = "NAME";
+                ddlStatusS.DataValueField = "PID";
+                ddlStatusS.DataBind();
+                ddlStatusS.Items.Insert(0, "All");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void GetCategory()
+    {
+        try
+        {
+            Session["dtCategory"] = null;
+            dsCategory = objVCM.GetCategorys();
+            if (dsCategory.Tables.Count > 0 && dsCategory.Tables[0].Rows.Count > 0)
+            {
+                Session["dtCategory"] = dsCategory.Tables[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindCategory()
+    {
+        try
+        {
+            DataTable dtCategory = new DataTable();
+
+            if (Session["dtCategory"] != null)
+                dtCategory = (DataTable)Session["dtCategory"];
+            else
+            {
+                GetCategory();
+                dtCategory = (DataTable)Session["dtCategory"];
+            }
+
+            if (dtCategory.Rows.Count > 0)
+            {
+                ddlCategoryS.DataSource = dtCategory;
+                ddlCategoryS.DataTextField = "NAME";
+                ddlCategoryS.DataValueField = "PID";
+                ddlCategoryS.DataBind();
+                ddlCategoryS.Items.Insert(0, "All");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindCategoryToS()
+    {
+        try
+        {
+            DataTable dtCategory = new DataTable();
+
+            if (Session["dtCategory"] != null)
+                dtCategory = (DataTable)Session["dtCategory"];
+            else
+            {
+                GetCategory();
+                dtCategory = (DataTable)Session["dtCategory"];
+            }
+
+            if (dtCategory.Rows.Count > 0)
+            {
+                ddlCategoryToS.DataSource = dtCategory;
+                ddlCategoryToS.DataTextField = "NAME";
+                ddlCategoryToS.DataValueField = "PID";
+                ddlCategoryToS.DataBind();
+                ddlCategoryToS.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindApprovers()
+    {
+        dsApprovers = objVCM.GetApprovers((int)StatusAndTypes.EnumEntityType.Vendor);
+        if (dsApprovers.Tables != null && dsApprovers.Tables[0].Rows.Count > 0)
+        {
+            Session["dtApprovers"] = dsApprovers.Tables[0];
+        }
+    }
+
+    private void GetResponsible()
+    {
+        try
+        {
+            Session["dtResponsible"] = null;
+            dsResponsible = objVCM.GetResponsibles();
+            if (dsResponsible.Tables.Count > 0 && dsResponsible.Tables[0].Rows.Count > 0)
+            {
+                Session["dtResponsible"] = dsResponsible.Tables[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindResponsible()
+    {
+        try
+        {
+            DataTable dtResponsible = new DataTable();
+
+            if (Session["dtResponsible"] != null)
+                dtResponsible = (DataTable)Session["dtResponsible"];
+            else
+            {
+                GetResponsible();
+                dtResponsible = (DataTable)Session["dtResponsible"];
+            }
+
+            if (dtResponsible.Rows.Count > 0)
+            {
+                ddlResponsibleS.DataSource = dtResponsible;
+                ddlResponsibleS.DataTextField = "NAME";
+                ddlResponsibleS.DataValueField = "PID";
+                ddlResponsibleS.DataBind();
+                ddlResponsibleS.Items.Insert(0, "All");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindResponsibleToS()
+    {
+        try
+        {
+            DataTable dtResponsible = new DataTable();
+
+            if (Session["dtResponsible"] != null)
+                dtResponsible = (DataTable)Session["dtResponsible"];
+            else
+            {
+                GetResponsible();
+                dtResponsible = (DataTable)Session["dtResponsible"];
+            }
+
+            if (dtResponsible.Rows.Count > 0)
+            {
+                ddlResponsibleToS.DataSource = dtResponsible;
+                ddlResponsibleToS.DataTextField = "NAME";
+                ddlResponsibleToS.DataValueField = "PID";
+                ddlResponsibleToS.DataBind();
+                ddlResponsibleToS.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void GetRelationType()
+    {
+        try
+        {
+            Session["dtRelationType"] = null;
+            dsRelationType = objVCM.GetRelationTypes();
+            if (dsRelationType.Tables.Count > 0 && dsRelationType.Tables[0].Rows.Count > 0)
+            {
+                Session["dtRelationType"] = dsRelationType.Tables[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindRelationType()
+    {
+        try
+        {
+            DataTable dtRelationType = new DataTable();
+
+            if (Session["dtRelationType"] != null)
+                dtRelationType = (DataTable)Session["dtRelationType"];
+            else
+            {
+                GetRelationType();
+                dtRelationType = (DataTable)Session["dtRelationType"];
+            }
+
+
+            if (dtRelationType.Rows.Count > 0)
+            {
+                ddlRelationTypeS.DataSource = dtRelationType;
+                ddlRelationTypeS.DataTextField = "NAME";
+                ddlRelationTypeS.DataValueField = "PID";
+                ddlRelationTypeS.DataBind();
+                ddlRelationTypeS.Items.Insert(0, "All");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindRelationTypeToS()
+    {
+        try
+        {
+            DataTable dtRelationType = new DataTable();
+
+            if (Session["dtRelationType"] != null)
+                dtRelationType = (DataTable)Session["dtRelationType"];
+            else
+            {
+                GetRelationType();
+                dtRelationType = (DataTable)Session["dtRelationType"];
+            }
+
+
+            if (dtRelationType.Rows.Count > 0)
+            {
+                ddlRelationTypeToS.DataSource = dtRelationType;
+                ddlRelationTypeToS.DataTextField = "NAME";
+                ddlRelationTypeToS.DataValueField = "PID";
+                ddlRelationTypeToS.DataBind();
+                ddlRelationTypeToS.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindItemCategory()
+    {
+        try
+        {
+            dsItemCategory = objVCM.GetItemCategorys();
+            if (dsItemCategory.Tables.Count > 0 && dsItemCategory.Tables[0].Rows.Count > 0)
+            {
+                ddlItemCategoryToS.DataSource = dsItemCategory.Tables[0];
+                ddlItemCategoryToS.DataTextField = "NAME";
+                ddlItemCategoryToS.DataValueField = "PID";
+                ddlItemCategoryToS.DataBind();
+                ddlItemCategoryToS.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindItemSubCategorys()
+    {
+        try
+        {
+            ddlItemSubCategoryToS.Items.Clear();
+            ddlItemSubCategoryToS.Items.Insert(0, "Select");
+            ddlItemSubCategoryToS.SelectedIndex = 0;
+
+            if (ddlItemCategoryToS.SelectedIndex > 0)
+            {
+                dsItemSubCategory = objVCM.GetItemSubCategorys(Convert.ToInt32(ddlItemCategoryToS.SelectedValue));
+                if (dsItemSubCategory.Tables.Count > 0 && dsItemSubCategory.Tables[0].Rows.Count > 0)
+                {
+                    ddlItemSubCategoryToS.DataSource = dsItemSubCategory.Tables[0];
+                    ddlItemSubCategoryToS.DataTextField = "NAME";
+                    ddlItemSubCategoryToS.DataValueField = "PID";
+                    ddlItemSubCategoryToS.DataBind();
+                    ddlItemSubCategoryToS.Items.Insert(0, "Select");
+                    ddlItemSubCategoryToS.SelectedIndex = 0;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindOrganizationType()
+    {
+        try
+        {
+            dsOrganizationType = objVCM.GetOrganizationType();
+            if (dsOrganizationType.Tables.Count > 0 && dsOrganizationType.Tables[0].Rows.Count > 0)
+            {
+                ddlOrganizationTypeS.DataSource = dsOrganizationType.Tables[0];
+                ddlOrganizationTypeS.DataTextField = "NAME";
+                ddlOrganizationTypeS.DataValueField = "PID";
+                ddlOrganizationTypeS.DataBind();
+                ddlOrganizationTypeS.Items.Insert(0, "All");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void BindDOCTypes()
+    {
+        try
+        {
+            dsDOCTypes = objVCM.GetDODTypes((int)StatusAndTypes.EnumEntityType.Vendor);
+            if (dsDOCTypes.Tables.Count > 0 && dsDOCTypes.Tables[0].Rows.Count > 0)
+            {
+                ddlAttachmentType.DataSource = dsDOCTypes.Tables[0];
+                ddlAttachmentType.DataTextField = "NAME";
+                ddlAttachmentType.DataValueField = "PID";
+                ddlAttachmentType.DataBind();
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindCheckers()
+    {
+        try
+        {
+            dsCheckers = objVCM.GetApproversById((int)StatusAndTypes.EnumApproverType.Checker_1);
+            if (dsCheckers.Tables.Count > 0 && dsCheckers.Tables[0].Rows.Count > 0)
+            {
+                ddlCheckerToS.DataSource = dsCheckers.Tables[0];
+                ddlCheckerToS.DataTextField = "EMPLOYEE_NAME";
+                ddlCheckerToS.DataValueField = "EMP_RECORD_FID";
+                ddlCheckerToS.DataBind();
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    //private void BindRevisionTypes()
+    //{
+    //    try
+    //    {
+    //        dsRevisiontype = objVCM.GetRevisionType((int)StatusAndTypes.EnumEntityType.Vendor);
+    //        if (dsRevisiontype.Tables.Count > 0 && dsRevisiontype.Tables[0].Rows.Count > 0)
+    //        {
+    //            chkListRevisionsForToS.DataSource = dsRevisiontype.Tables[0];
+    //            chkListRevisionsForToS.DataTextField = "NAME";
+    //            chkListRevisionsForToS.DataValueField = "PID";
+    //            chkListRevisionsForToS.DataBind();
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+
+    protected void DownloadDOCsZip(int vendorId, int vendorTypeId, string vendorName)
+    {
+        using (ZipFile zip = new ZipFile())
+        {
+            zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+
+            byte[] vendorPDFbytes = GetPDFBytes(vendorId);
+            DataSet dsAttachedFiles = objVCM.GetDOCs(vendorId, vendorTypeId);
+
+            int count = 0;
+            foreach (DataRow row in dsAttachedFiles.Tables[0].Rows)
+            {
+                count++;
+
+                string name = count + Convert.ToString(row["DOC_NAME"]);
+                byte[] bytes = (byte[])row["DOC"];
+                zip.AddEntry(name, bytes);
+            }
+
+            if (vendorPDFbytes != null)
+            {
+                zip.AddEntry(vendorName + ".pdf", vendorPDFbytes);
+            }
+
+            Response.Clear();
+            Response.BufferOutput = false;
+            string zipName = String.Format("Zip_Vendor_DOCs_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+            Response.ContentType = "application/zip";
+            Response.AddHeader("content-disposition", "attachment; filename=" + zipName);
+            zip.Save(Response.OutputStream);
+            Response.End();
+        }
+    }
+
+    public byte[] GetPDFBytes(int pid)
+    {
+        try
+        {
+            VendorHtmlForPDF objVendorHtmlForPDF = new VendorHtmlForPDF();
+
+            DataSet dsDetails = new DataSet();
+            byte[] pdfBytes;
+            var cssText = File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath("~/Styles/LOT.css"));
+
+            dsDetails = objVCM.GetVendorForPDF(pid);
+            string htmltxt = objVendorHtmlForPDF.GetHtmlForPDF(pid, dsDetails);
+
+            StringBuilder sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(htmltxt))
+            {
+                sb.Append("<html>\n");
+                sb.Append("<body>\n");
+
+                sb.Append(htmltxt + "\n");
+
+                sb.Append("</body>\n");
+                sb.Append("</html>\n");
+            }
+
+            var html = sb.ToString();
+
+            string imagePath = System.Web.Hosting.HostingEnvironment.MapPath("\\Images\\COPERION") + "\\logo2.png";
+
+            iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(imagePath);
+            img.Alignment = Element.ALIGN_LEFT;
+            img.ScaleToFit(180f, 250f);
+
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var document = new Document(PageSize.A4);
+                var writer = PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+                document.Add(img);
+                using (var cssMemoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(cssText)))
+                {
+                    using (var htmlMemoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(html)))
+                    {
+                        XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlMemoryStream, cssMemoryStream);
+                    }
+                }
+
+                document.Close();
+                pdfBytes = memoryStream.GetBuffer();
+
+                return pdfBytes;
+            }
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+
+
+
+
+
+
+    private void RemoveBillingAddress(int srNo)
+    {
+        if (Session["dtBillingAddress"] != null)
+            dtTemp = (DataTable)Session["dtBillingAddress"];
+        else
+            AddTempBillingAddressTable();
+
+        dtTemp = (DataTable)Session["dtBillingAddress"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            foreach (DataRow dr in dtTemp.Select("SR_NO='" + srNo + "'"))
+            {
+                dtTemp.Rows.Remove(dr);
+            }
+        }
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            for (int i = 0; i < dtTemp.Rows.Count; i++)
+            {
+                dtTemp.Rows[i]["SR_NO"] = i + 1;
+            }
+        }
+
+        gvBillingAddress.DataSource = dtTemp;
+        gvBillingAddress.DataBind();
+
+        lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+    }
+
+    private void AddBillingAddress()
+    {
+        try
+        {
+            string GSTIN = string.Empty;
+            string Address1 = string.Empty;
+            string Address2 = string.Empty;
+            string Address3 = string.Empty;
+            string City = string.Empty;
+            string State = string.Empty;
+            string OtherState = string.Empty;
+            string Country = string.Empty;
+            string PINCode = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            int CountryId = 0;
+            int StateId = 0;
+
+            if (Session["dtBillingAddress"] != null)
+                dtTemp = (DataTable)Session["dtBillingAddress"];
+            else
+                AddTempBillingAddressTable();
+
+            dtTemp = (DataTable)Session["dtBillingAddress"];
+
+
+            //if (!string.IsNullOrEmpty(txtGSTInToS.Text))
+            //{
+            //    GSTIN = Convert.ToString(txtGSTInToS.Text);
+            //    if (dtTemp.Rows.Count > 0)
+            //    {
+            //        foreach (DataRow item in dtTemp.Select("GSTIN='" + GSTIN + "'"))
+            //        {
+            //            lblBillingAddressWindowMsg.Text = "GSTIN already added to list!";
+            //            mpeAddBillingAddress.Show();
+            //            return;
+            //        }
+            //    }
+            //}
+
+            if (!string.IsNullOrEmpty(txtGSTInToS.Text))
+                GSTIN = Convert.ToString(txtGSTInToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress1ToS.Text))
+                Address1 = Convert.ToString(txtAddress1ToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress2ToS.Text))
+                Address2 = Convert.ToString(txtAddress2ToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress3ToS.Text))
+                Address3 = Convert.ToString(txtAddress3ToS.Text);
+
+            if (!string.IsNullOrEmpty(txtCityToS.Text))
+                City = Convert.ToString(txtCityToS.Text);
+
+            if (!string.IsNullOrEmpty(txtOtherStateToS.Text))
+                OtherState = Convert.ToString(txtOtherStateToS.Text);
+
+            if (ddlCountryToS.SelectedIndex > 0)
+            {
+                CountryId = Convert.ToInt32(ddlCountryToS.SelectedValue);
+                Country = ddlCountryToS.SelectedItem.Text;
+            }
+
+            if (ddlStateToS.SelectedIndex > 0)
+            {
+                StateId = Convert.ToInt32(ddlStateToS.SelectedValue);
+                State = ddlStateToS.SelectedItem.Text;
+            }
+
+            if (!string.IsNullOrEmpty(txtPINCodeToS.Text))
+                PINCode = Convert.ToString(txtPINCodeToS.Text);
+
+            if (!string.IsNullOrEmpty(txtPhoneToS.Text))
+                Phone = Convert.ToString(txtPhoneToS.Text);
+
+            if (!string.IsNullOrEmpty(txtEmailToS.Text))
+                Email = Convert.ToString(txtEmailToS.Text);
+
+            if (chkIsDefaultBillingAddressToS.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+
+            DataRow dr = dtTemp.NewRow();
+
+            int index = gvBillingAddress.Rows.Count + 1;
+
+            dr["SR_NO"] = index;
+            dr["PID"] = 0;
+            dr["GSTIN"] = GSTIN;
+            dr["ADDRESS_LINE1"] = Address1;
+            dr["ADDRESS_LINE2"] = Address2;
+            dr["ADDRESS_LINE3"] = Address3;
+            dr["CITY"] = City;
+            dr["OTHER_STATE"] = OtherState;
+            dr["STATE_ID"] = StateId;
+            dr["COUNTRY_ID"] = CountryId;
+            dr["PIN_CODE"] = PINCode;
+            dr["PHONE"] = Phone;
+            dr["EMAIL"] = Email;
+            dr["IS_DEFAULT"] = IsDefault;
+            dr["IS_DELETED"] = 0;
+            dr["IS_REVISED"] = 0;
+
+            dr["STATE"] = State;
+            dr["COUNTRY"] = Country;
+
+            dtTemp.Rows.Add(dr);
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                int count = 0;
+                foreach (DataRow item in dtTemp.Select("IS_DEFAULT=1"))
+                {
+                    count++;
+                    if (count > 0) break;
+                }
+
+                if (count == 0)
+                {
+                    dtTemp.Rows[0]["IS_DEFAULT"] = 1;
+                }
+            }
+
+            gvBillingAddress.DataSource = dtTemp;
+            gvBillingAddress.DataBind();
+            lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+
+
+            Session["dtBillingAddress"] = dtTemp;
+
+
+            ResetBillingAddress();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void UpdateBillingAddress()
+    {
+        try
+        {
+            int PID = Convert.ToInt32(ViewState["BILLING_ADDRESS_PID"]);
+            string GSTIN = string.Empty;
+            string Address1 = string.Empty;
+            string Address2 = string.Empty;
+            string Address3 = string.Empty;
+            string City = string.Empty;
+            string OtherState = string.Empty;
+            string State = string.Empty;
+            string Country = string.Empty;
+            string PINCode = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            int CountryId = 0;
+            int StateId = 0;
+
+            if (!string.IsNullOrEmpty(txtGSTInToS.Text))
+                GSTIN = Convert.ToString(txtGSTInToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress1ToS.Text))
+                Address1 = Convert.ToString(txtAddress1ToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress2ToS.Text))
+                Address2 = Convert.ToString(txtAddress2ToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress3ToS.Text))
+                Address3 = Convert.ToString(txtAddress3ToS.Text);
+
+            if (!string.IsNullOrEmpty(txtCityToS.Text))
+                City = Convert.ToString(txtCityToS.Text);
+
+            if (!string.IsNullOrEmpty(txtOtherStateToS.Text))
+                OtherState = Convert.ToString(txtOtherStateToS.Text);
+
+            if (ddlCountryToS.SelectedIndex > 0)
+            {
+                CountryId = Convert.ToInt32(ddlCountryToS.SelectedValue);
+                Country = ddlCountryToS.SelectedItem.Text;
+            }
+
+            if (ddlStateToS.SelectedIndex > 0)
+            {
+                StateId = Convert.ToInt32(ddlStateToS.SelectedValue);
+                State = ddlStateToS.SelectedItem.Text;
+            }
+
+            if (!string.IsNullOrEmpty(txtPINCodeToS.Text))
+                PINCode = Convert.ToString(txtPINCodeToS.Text);
+
+            if (!string.IsNullOrEmpty(txtPhoneToS.Text))
+                Phone = Convert.ToString(txtPhoneToS.Text);
+
+            if (!string.IsNullOrEmpty(txtEmailToS.Text))
+                Email = Convert.ToString(txtEmailToS.Text);
+
+
+
+
+            if (Session["dtBillingAddress"] != null)
+                dtTemp = (DataTable)Session["dtBillingAddress"];
+            else
+                AddTempBillingAddressTable();
+
+            dtTemp = (DataTable)Session["dtBillingAddress"];
+
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                if (chkIsDefaultBillingAddressToS.Checked)
+                {
+                    IsDefault = 1;
+                    foreach (DataRow drt in dtTemp.Rows)
+                    {
+                        drt["IS_DEFAULT"] = 0;
+                    }
+                }
+
+
+                foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdBillingAddressSRNo.Value) + "'"))
+                {
+                    d["PID"] = PID;
+                    d["IS_DELETED"] = 0;
+                    d["IS_REVISED"] = 0;
+
+                    if (Convert.ToInt32(hdBillingAddressSRNo.Value) > 0)
+                        d["SR_NO"] = Convert.ToString(hdBillingAddressSRNo.Value);
+                    else d["SR_NO"] = "0";
+
+                    if (!string.IsNullOrEmpty(GSTIN))
+                        d["GSTIN"] = GSTIN;
+                    else d["GSTIN"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Address1))
+                        d["ADDRESS_LINE1"] = Address1;
+                    else d["ADDRESS_LINE1"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Address2))
+                        d["ADDRESS_LINE2"] = Address2;
+                    else d["ADDRESS_LINE2"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Address3))
+                        d["ADDRESS_LINE3"] = Address3;
+                    else d["ADDRESS_LINE3"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(City))
+                        d["CITY"] = City;
+                    else d["CITY"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(OtherState))
+                        d["OTHER_STATE"] = OtherState;
+                    else d["OTHER_STATE"] = string.Empty;
+
+                    if (StateId > 0)
+                        d["STATE_ID"] = StateId;
+                    else d["STATE_ID"] = string.Empty;
+
+                    if (CountryId > 0)
+                        d["COUNTRY_ID"] = CountryId;
+                    else d["COUNTRY_ID"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(PINCode))
+                        d["PIN_CODE"] = PINCode;
+                    else d["PIN_CODE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Phone))
+                        d["PHONE"] = Phone;
+                    else d["PHONE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Email))
+                        d["EMAIL"] = Email;
+                    else d["EMAIL"] = string.Empty;
+
+
+                    if (!string.IsNullOrEmpty(State))
+                        d["STATE"] = State;
+                    else d["STATE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Country))
+                        d["COUNTRY"] = Country;
+                    else d["COUNTRY"] = string.Empty;
+
+                    if (IsDefault > 0)
+                        d["IS_DEFAULT"] = 1;
+                    else d["IS_DEFAULT"] = 0;
+                }
+            }
+
+            gvBillingAddress.DataSource = dtTemp;
+            gvBillingAddress.DataBind();
+
+            lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+
+            Session["dtBillingAddress"] = dtTemp;
+
+            ResetBillingAddress();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void AddTempBillingAddressTable()
+    {
+        dtBillingAddress.Columns.Add("SR_NO", typeof(int));
+        dtBillingAddress.Columns.Add("PID", typeof(int));
+        dtBillingAddress.Columns.Add("ADDRESS_LINE1", typeof(string));
+        dtBillingAddress.Columns.Add("ADDRESS_LINE2", typeof(string));
+        dtBillingAddress.Columns.Add("ADDRESS_LINE3", typeof(string));
+        dtBillingAddress.Columns.Add("CITY", typeof(string));
+        dtBillingAddress.Columns.Add("OTHER_STATE", typeof(string));
+        dtBillingAddress.Columns.Add("PIN_CODE", typeof(string));
+        dtBillingAddress.Columns.Add("STATE_ID", typeof(int));
+        dtBillingAddress.Columns.Add("COUNTRY_ID", typeof(int));
+        dtBillingAddress.Columns.Add("PHONE", typeof(string));
+        dtBillingAddress.Columns.Add("EMAIL", typeof(string));
+        dtBillingAddress.Columns.Add("GSTIN", typeof(string));
+        dtBillingAddress.Columns.Add("IS_DEFAULT", typeof(int));
+        dtBillingAddress.Columns.Add("IS_DELETED", typeof(int));
+        dtBillingAddress.Columns.Add("IS_REVISED", typeof(int));
+
+        dtBillingAddress.Columns.Add("STATE", typeof(string));
+        dtBillingAddress.Columns.Add("COUNTRY", typeof(string));
+
+        Session["dtBillingAddress"] = dtBillingAddress;
+    }
+
+    private void ResetBillingAddress()
+    {
+        txtGSTInToS.Text = string.Empty;
+        txtAddress1ToS.Text = string.Empty;
+        txtAddress2ToS.Text = string.Empty;
+        txtAddress3ToS.Text = string.Empty;
+        txtCityToS.Text = string.Empty;
+        txtOtherStateToS.Text = string.Empty;
+        txtPINCodeToS.Text = string.Empty;
+        ddlStateToS.SelectedIndex = 0;
+        //ddlCountryToS.SelectedIndex = 0;
+        txtPhoneToS.Text = string.Empty;
+        txtEmailToS.Text = string.Empty;
+        chkIsDefaultBillingAddressToS.Checked = false;
+        lblBillingAddressWindowMsg.Text = string.Empty;
+    }
+
+
+
+
+
+
+    private void RemoveContactPerson(int srNo)
+    {
+        if (Session["dtContactPerson"] != null)
+            dtTemp = (DataTable)Session["dtContactPerson"];
+        else
+            AddTempContactPersonTable();
+
+        dtTemp = (DataTable)Session["dtContactPerson"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            foreach (DataRow dr in dtTemp.Select("SR_NO='" + srNo + "'"))
+            {
+                dtTemp.Rows.Remove(dr);
+            }
+        }
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            for (int i = 0; i < dtTemp.Rows.Count; i++)
+            {
+                dtTemp.Rows[i]["SR_NO"] = i + 1;
+            }
+        }
+
+        gvContactPerson.DataSource = dtTemp;
+        gvContactPerson.DataBind();
+
+        lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+    }
+
+    private void AddContactPerson()
+    {
+        try
+        {
+            string Name = string.Empty;
+            string Mobile = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            if (Session["dtContactPerson"] != null)
+                dtTemp = (DataTable)Session["dtContactPerson"];
+            else
+                AddTempContactPersonTable();
+
+            dtTemp = (DataTable)Session["dtContactPerson"];
+
+            if (!string.IsNullOrEmpty(txtContactPersonNameToS.Text))
+                Name = Convert.ToString(txtContactPersonNameToS.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonMobileToS.Text))
+                Mobile = Convert.ToString(txtContactPersonMobileToS.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonPhoneToS.Text))
+                Phone = Convert.ToString(txtContactPersonPhoneToS.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonEmailToS.Text))
+                Email = Convert.ToString(txtContactPersonEmailToS.Text);
+
+            if (chkIsDefaultContactPersonToS.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+
+            DataRow dr = dtTemp.NewRow();
+
+            int index = gvContactPerson.Rows.Count + 1;
+
+            dr["SR_NO"] = index;
+            dr["PID"] = 0;
+            dr["NAME"] = Name;
+            dr["MOBILE_NO"] = Mobile;
+            dr["PHONE"] = Phone;
+            dr["EMAIL"] = Email;
+            dr["IS_DEFAULT"] = IsDefault;
+            dr["IS_DELETED"] = 0;
+            dr["IS_REVISED"] = 0;
+
+            dtTemp.Rows.Add(dr);
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                int count = 0;
+                foreach (DataRow item in dtTemp.Select("IS_DEFAULT=1"))
+                {
+                    count++;
+                    if (count > 0) break;
+                }
+
+                if (count == 0)
+                {
+                    dtTemp.Rows[0]["IS_DEFAULT"] = 1;
+                }
+            }
+
+            gvContactPerson.DataSource = dtTemp;
+            gvContactPerson.DataBind();
+            lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+
+            ResetContactPerson();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void UpdateContactPerson()
+    {
+        try
+        {
+            int PID = Convert.ToInt32(ViewState["CONTACT_PERSON_PID"]);
+            string Name = string.Empty;
+            string Mobile = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            if (!string.IsNullOrEmpty(txtContactPersonNameToS.Text))
+                Name = Convert.ToString(txtContactPersonNameToS.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonMobileToS.Text))
+                Mobile = Convert.ToString(txtContactPersonMobileToS.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonPhoneToS.Text))
+                Phone = Convert.ToString(txtContactPersonPhoneToS.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonEmailToS.Text))
+                Email = Convert.ToString(txtContactPersonEmailToS.Text);
+
+
+            if (Session["dtContactPerson"] != null)
+                dtTemp = (DataTable)Session["dtContactPerson"];
+            else
+                AddTempContactPersonTable();
+
+            dtTemp = (DataTable)Session["dtContactPerson"];
+
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                if (chkIsDefaultContactPersonToS.Checked)
+                {
+                    IsDefault = 1;
+                    foreach (DataRow drt in dtTemp.Rows)
+                    {
+                        drt["IS_DEFAULT"] = 0;
+                    }
+                }
+
+                foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdContactPersonSRNo.Value) + "'"))
+                {
+                    d["PID"] = PID;
+                    d["IS_DELETED"] = 0;
+                    d["IS_REVISED"] = 0;
+
+                    if (Convert.ToInt32(hdContactPersonSRNo.Value) > 0)
+                        d["SR_NO"] = Convert.ToString(hdContactPersonSRNo.Value);
+                    else d["SR_NO"] = "0";
+
+                    if (!string.IsNullOrEmpty(Name))
+                        d["NAME"] = Name;
+                    else d["NAME"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Mobile))
+                        d["MOBILE_NO"] = Mobile;
+                    else d["MOBILE_NO"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Phone))
+                        d["PHONE"] = Phone;
+                    else d["PHONE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Email))
+                        d["EMAIL"] = Email;
+                    else d["EMAIL"] = string.Empty;
+
+                    if (IsDefault > 0)
+                        d["IS_DEFAULT"] = 1;
+                    else d["IS_DEFAULT"] = 0;
+                }
+            }
+
+            gvContactPerson.DataSource = dtTemp;
+            gvContactPerson.DataBind();
+
+            lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+
+            ResetContactPerson();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void AddTempContactPersonTable()
+    {
+        dtContactPerson.Columns.Add("SR_NO", typeof(int));
+        dtContactPerson.Columns.Add("PID", typeof(int));
+        dtContactPerson.Columns.Add("NAME", typeof(string));
+        dtContactPerson.Columns.Add("MOBILE_NO", typeof(string));
+        dtContactPerson.Columns.Add("PHONE", typeof(string));
+        dtContactPerson.Columns.Add("EMAIL", typeof(string));
+        dtContactPerson.Columns.Add("IS_DEFAULT", typeof(int));
+        dtContactPerson.Columns.Add("IS_DELETED", typeof(int));
+        dtContactPerson.Columns.Add("IS_REVISED", typeof(int));
+
+        Session["dtContactPerson"] = dtContactPerson;
+    }
+
+    private void ResetContactPerson()
+    {
+        txtContactPersonNameToS.Text = string.Empty;
+        txtContactPersonMobileToS.Text = string.Empty;
+        txtContactPersonPhoneToS.Text = string.Empty;
+        txtContactPersonEmailToS.Text = string.Empty;
+        chkIsDefaultContactPersonToS.Checked = false;
+    }
+
+
+
+
+    //private void RemoveBankDetails(int srNo)
+    //{
+    //    if (Session["dtBankDetails"] != null)
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+    //    else
+    //        AddTempContactPersonTable();
+
+    //    dtTemp = (DataTable)Session["dtBankDetails"];
+
+    //    if (dtTemp.Rows.Count > 0)
+    //    {
+    //        foreach (DataRow dr in dtTemp.Select("SR_NO='" + srNo + "'"))
+    //        {
+    //            dtTemp.Rows.Remove(dr);
+    //        }
+    //    }
+
+    //    if (dtTemp.Rows.Count > 0)
+    //    {
+    //        for (int i = 0; i < dtTemp.Rows.Count; i++)
+    //        {
+    //            dtTemp.Rows[i]["SR_NO"] = i + 1;
+    //        }
+    //    }
+
+    //    gvBankDetails.DataSource = dtTemp;
+    //    gvBankDetails.DataBind();
+
+    //    lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+    //}
+
+    //private void AddBankDetails()
+    //{
+    //    try
+    //    {
+    //        string BankName = string.Empty;
+    //        string Branch = string.Empty;
+    //        string SWIFTCode = string.Empty;
+    //        string AccountNumber = string.Empty;
+    //        string RTGSOrIFSC = string.Empty;
+    //        string ISBN = string.Empty;
+    //        int IsDefault = 0;
+
+    //        if (Session["dtBankDetails"] != null)
+    //            dtTemp = (DataTable)Session["dtBankDetails"];
+    //        else
+    //            AddTempBankDetailsTable();
+
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+
+    //        if (!string.IsNullOrEmpty(txtBankNameToS.Text))
+    //            BankName = Convert.ToString(txtBankNameToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtBranchToS.Text))
+    //            Branch = Convert.ToString(txtBranchToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtSWIFTCodeToS.Text))
+    //            SWIFTCode = Convert.ToString(txtSWIFTCodeToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtAccountNumberToS.Text))
+    //            AccountNumber = Convert.ToString(txtAccountNumberToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtRTGSOrIFSCToS.Text))
+    //            RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSCToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtISBNToS.Text))
+    //            ISBN = Convert.ToString(txtISBNToS.Text);
+
+    //        if (chkIsDefaultBankToS.Checked)
+    //        {
+    //            IsDefault = 1;
+    //            foreach (DataRow drt in dtTemp.Rows)
+    //            {
+    //                drt["IS_DEFAULT"] = 0;
+    //            }
+    //        }
+
+
+    //        DataRow dr = dtTemp.NewRow();
+
+    //        int index = gvBankDetails.Rows.Count + 1;
+
+    //        dr["SR_NO"] = index;
+    //        dr["PID"] = 0;
+    //        dr["BANK_NAME"] = BankName;
+    //        dr["BRANCH"] = Branch;
+    //        dr["SWIFT_CODE"] = SWIFTCode;
+    //        dr["ACCOUNT_NUMBER"] = AccountNumber;
+    //        dr["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+    //        dr["ISBN"] = ISBN;
+    //        dr["IS_DEFAULT"] = IsDefault;
+    //        dr["IS_DELETED"] = 0;
+    //        dr["IS_REVISED"] = 0;
+
+    //        dtTemp.Rows.Add(dr);
+
+    //        if (dtTemp.Rows.Count > 0)
+    //        {
+    //            int count = 0;
+    //            foreach (DataRow item in dtTemp.Select("IS_DEFAULT=1"))
+    //            {
+    //                count++;
+    //                if (count > 0) break;
+    //            }
+
+    //            if (count == 0)
+    //            {
+    //                dtTemp.Rows[0]["IS_DEFAULT"] = 1;
+    //            }
+    //        }
+
+    //        gvBankDetails.DataSource = dtTemp;
+    //        gvBankDetails.DataBind();
+    //        lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+    //        ResetBankDetails();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //private void UpdateBankDetails()
+    //{
+    //    try
+    //    {
+    //        int PID = Convert.ToInt32(ViewState["BANK_DETAIL_PID"]);
+    //        string BankName = string.Empty;
+    //        string Branch = string.Empty;
+    //        string SWIFTCode = string.Empty;
+    //        string AccountNumber = string.Empty;
+    //        string RTGSOrIFSC = string.Empty;
+    //        string ISBN = string.Empty;
+    //        int IsDefault = 0;
+
+    //        if (!string.IsNullOrEmpty(txtBankNameToS.Text))
+    //            BankName = Convert.ToString(txtBankNameToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtBranchToS.Text))
+    //            Branch = Convert.ToString(txtBranchToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtSWIFTCodeToS.Text))
+    //            SWIFTCode = Convert.ToString(txtSWIFTCodeToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtAccountNumberToS.Text))
+    //            AccountNumber = Convert.ToString(txtAccountNumberToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtRTGSOrIFSCToS.Text))
+    //            RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSCToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtISBNToS.Text))
+    //            ISBN = Convert.ToString(txtISBNToS.Text);
+
+
+    //        if (Session["dtBankDetails"] != null)
+    //            dtTemp = (DataTable)Session["dtBankDetails"];
+    //        else
+    //            AddTempBankDetailsTable();
+
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+
+
+    //        if (dtTemp.Rows.Count > 0)
+    //        {
+    //            if (chkIsDefaultBankToS.Checked)
+    //            {
+    //                IsDefault = 1;
+    //                foreach (DataRow drt in dtTemp.Rows)
+    //                {
+    //                    drt["IS_DEFAULT"] = 0;
+    //                }
+    //            }
+
+    //            foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdBankDetailsSRNo.Value) + "'"))
+    //            {
+    //                d["PID"] = PID;
+    //                d["IS_DELETED"] = 0;
+    //                d["IS_REVISED"] = 0;
+
+    //                if (Convert.ToInt32(hdBankDetailsSRNo.Value) > 0)
+    //                    d["SR_NO"] = Convert.ToString(hdBankDetailsSRNo.Value);
+    //                else d["SR_NO"] = "0";
+
+    //                if (!string.IsNullOrEmpty(BankName))
+    //                    d["BANK_NAME"] = BankName;
+    //                else d["BANK_NAME"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(Branch))
+    //                    d["BRANCH"] = Branch;
+    //                else d["BRANCH"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(SWIFTCode))
+    //                    d["SWIFT_CODE"] = SWIFTCode;
+    //                else d["SWIFT_CODE"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(AccountNumber))
+    //                    d["ACCOUNT_NUMBER"] = AccountNumber;
+    //                else d["ACCOUNT_NUMBER"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(RTGSOrIFSC))
+    //                    d["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+    //                else d["RTGS_OR_IFSC_CODE"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(ISBN))
+    //                    d["ISBN"] = ISBN;
+    //                else d["ISBN"] = string.Empty;
+
+    //                if (IsDefault > 0)
+    //                    d["IS_DEFAULT"] = 1;
+    //                else d["IS_DEFAULT"] = 0;
+    //            }
+    //        }
+
+    //        gvBankDetails.DataSource = dtTemp;
+    //        gvBankDetails.DataBind();
+
+    //        lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+    //        ResetBankDetails();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //private void AddTempBankDetailsTable()
+    //{
+    //    dtBankDetails.Columns.Add("SR_NO", typeof(int));
+    //    dtBankDetails.Columns.Add("PID", typeof(int));
+    //    dtBankDetails.Columns.Add("BANK_NAME", typeof(string));
+    //    dtBankDetails.Columns.Add("BRANCH", typeof(string));
+    //    dtBankDetails.Columns.Add("SWIFT_CODE", typeof(string));
+    //    dtBankDetails.Columns.Add("ACCOUNT_NUMBER", typeof(string));
+    //    dtBankDetails.Columns.Add("RTGS_OR_IFSC_CODE", typeof(string));
+    //    dtBankDetails.Columns.Add("ISBN", typeof(string));
+    //    dtBankDetails.Columns.Add("IS_DEFAULT", typeof(int));
+    //    dtBankDetails.Columns.Add("IS_DELETED", typeof(int));
+    //    dtBankDetails.Columns.Add("IS_REVISED", typeof(int));
+
+    //    Session["dtBankDetails"] = dtBankDetails;
+    //}
+
+    //private void ResetBankDetails()
+    //{
+    //    txtBankNameToS.Text = string.Empty;
+    //    txtBranchToS.Text = string.Empty;
+    //    txtSWIFTCodeToS.Text = string.Empty;
+    //    txtAccountNumberToS.Text = string.Empty;
+    //    txtRTGSOrIFSCToS.Text = string.Empty;
+    //    txtISBNToS.Text = string.Empty;
+    //    chkIsDefaultBankToS.Checked = false;
+    //}
+
+
+
+
+
+
+
+
+
+
+    private void DisableControls()
+    {
+        txtNameToS.Enabled = false;
+        txtCodeToS.Enabled = false;
+        txtPANNumberToS.Enabled = false;
+        txtGSTInToS.Enabled = false;
+        txtCreditDaysToS.Enabled = false;
+        txtCreditLimitToS.Enabled = false;
+        ddlCategoryToS.Enabled = false;
+        ddlMSMEStatusToS.Enabled = false;
+        //chkIsAssociatedToS.Enabled = false;
+        rdAssociatedToS.Enabled = false;
+        rdIsOneTimeVendorToS.Enabled = false;
+
+
+        txtAddress1ToS.Enabled = false;
+        txtAddress2ToS.Enabled = false;
+        txtAddress3ToS.Enabled = false;
+        txtCityToS.Enabled = false;
+        ddlStateToS.Enabled = false;
+        ddlCountryToS.Enabled = false;
+        txtOtherStateToS.Enabled = false;
+        //txtCountryToS.Enabled = false;
+        txtPhoneToS.Enabled = false;
+        txtEmailToS.Enabled = false;
+        chkIsDefaultBillingAddressToS.Enabled = false;
+
+        txtContactPersonNameToS.Enabled = false;
+        txtContactPersonMobileToS.Enabled = false;
+        txtContactPersonPhoneToS.Enabled = false;
+        txtContactPersonEmailToS.Enabled = false;
+        chkIsDefaultContactPersonToS.Enabled = false;
+
+        txtBankNameToS.Enabled = false;
+        txtBranchToS.Enabled = false;
+        txtSWIFTCodeToS.Enabled = false;
+        txtAccountNumberToS.Enabled = false;
+        txtRTGSOrIFSCToS.Enabled = false;
+        txtISBNToS.Enabled = false;
+        //chkIsDefaultBankToS.Enabled = false;
+
+        //chkIsTechnicalDetailsReceivedToS.Enabled = false;
+        //chkIsISOCertifiedToS.Enabled = false;
+        //chkIsQAVisitedToS.Enabled = false;
+        //chkIsGovernmentToS.Enabled = false;
+
+
+        rdIsTechnicalDetailsReceivedToS.Enabled = false;
+        rdIsISOCertifiedToS.Enabled = false;
+        rdIsQAVisitedToS.Enabled = false;
+        rdIsGovernmentToS.Enabled = false;
+
+
+
+        ddlResponsibleToS.Enabled = false;
+        ddlRelationTypeToS.Enabled = false;
+        ddlItemCategoryToS.Enabled = false;
+        ddlItemSubCategoryToS.Enabled = false;
+
+
+        //rdSavingType.Visible = false;
+
+
+        //pnlViewAttachments.Visible = true;
+
+
+        imgBtnShowPopupAddBillingAddress.Visible = false;
+        imgBtnShowPopupAddContactPerson.Visible = false;
+        //imgBtnShowPopupAddBankDetails.Visible = false;
+
+
+        gvBillingAddress.Columns[0].Visible = false; // Properties column
+        gvBillingAddress.Columns[1].Visible = false; // Remove column
+
+        gvContactPerson.Columns[0].Visible = false; // Properties column
+        gvContactPerson.Columns[1].Visible = false; // Remove column
+
+        //gvBankDetails.Columns[0].Visible = false; // Properties column
+        //gvBankDetails.Columns[1].Visible = false; // Remove column
+
+    }
+
+
+    private void EnableControls()
+    {
+        //txtNameToS.Enabled = true;
+        //txtCodeToS.Enabled = true;
+        //txtPANNumberToS.Enabled = true;
+
+        txtCreditDaysToS.Enabled = true;
+        txtCreditLimitToS.Enabled = true;
+        ddlCategoryToS.Enabled = true;
+        ddlMSMEStatusToS.Enabled = true;
+        //chkIsAssociatedToS.Enabled = true;
+        rdAssociatedToS.Enabled = true;
+        rdIsOneTimeVendorToS.Enabled = true;
+
+        txtGSTInToS.Enabled = true;
+        txtAddress1ToS.Enabled = true;
+        txtAddress2ToS.Enabled = true;
+        txtAddress3ToS.Enabled = true;
+        txtCityToS.Enabled = true;
+
+
+        ddlCountryToS.Enabled = true;
+
+        if (ddlCountryToS.SelectedValue == "95")
+        {
+            ddlStateToS.Enabled = true;
+        }
+
+        txtOtherStateToS.Enabled = true;
+
+        //txtStateToS.Enabled = true;
+        //txtCountryToS.Enabled = true;
+        txtPhoneToS.Enabled = true;
+        txtEmailToS.Enabled = true;
+        //chkIsDefaultBillingAddressToS.Enabled = true;
+
+        txtContactPersonNameToS.Enabled = true;
+        txtContactPersonMobileToS.Enabled = true;
+        txtContactPersonPhoneToS.Enabled = true;
+        txtContactPersonEmailToS.Enabled = true;
+        //chkIsDefaultContactPersonToS.Enabled = true;
+
+        txtBankNameToS.Enabled = true;
+        txtBranchToS.Enabled = true;
+        txtSWIFTCodeToS.Enabled = true;
+        txtAccountNumberToS.Enabled = true;
+        txtRTGSOrIFSCToS.Enabled = true;
+        txtISBNToS.Enabled = true;
+        //chkIsDefaultBankToS.Enabled = true;
+
+        //chkIsTechnicalDetailsReceivedToS.Enabled = true;
+        //chkIsISOCertifiedToS.Enabled = true;
+        //chkIsQAVisitedToS.Enabled = true;
+        //chkIsGovernmentToS.Enabled = true;
+
+        rdIsTechnicalDetailsReceivedToS.Enabled = true;
+        rdIsISOCertifiedToS.Enabled = true;
+        rdIsQAVisitedToS.Enabled = true;
+        rdIsGovernmentToS.Enabled = true;
+
+
+        ddlResponsibleToS.Enabled = true;
+        ddlRelationTypeToS.Enabled = true;
+        ddlItemCategoryToS.Enabled = true;
+        ddlItemSubCategoryToS.Enabled = true;
+
+        //rdSavingType.Visible = true;
+
+        imgBtnShowPopupAddBillingAddress.Visible = true;
+        imgBtnShowPopupAddContactPerson.Visible = true;
+        //imgBtnShowPopupAddBankDetails.Visible = true;
+
+
+        gvBillingAddress.Columns[0].Visible = true; // Properties column
+        gvBillingAddress.Columns[1].Visible = true; // Remove column
+
+        gvContactPerson.Columns[0].Visible = true; // Properties column
+        gvContactPerson.Columns[1].Visible = true; // Remove column
+
+        //gvBankDetails.Columns[0].Visible = true; // Properties column
+        //gvBankDetails.Columns[1].Visible = true; // Remove column
+
+
+        //pnlAddAttachments.Visible = true;
+    }
+
+    //private void DisableVendorDetailsControls()
+    //{
+    //    txtNameToS.Enabled = false;
+    //    txtCodeToS.Enabled = false;
+    //    txtPANNumberToS.Enabled = false;
+    //    txtGSTInToS.Enabled = false;
+    //    txtCreditDaysToS.Enabled = false;
+    //    txtCreditLimitToS.Enabled = false;
+    //    ddlCategoryToS.Enabled = false;
+    //    chkIsMSMEDToS.Enabled = false;
+    //}
+
+    //private void EnableVendorDetailsControls()
+    //{
+    //    //txtNameToS.Enabled = true;
+    //    //txtCodeToS.Enabled = true;
+    //    //txtPANNumberToS.Enabled = true;
+    //    //txtGSTInToS.Enabled = true;
+    //    txtCreditDaysToS.Enabled = true;
+    //    txtCreditLimitToS.Enabled = true;
+    //    ddlCategoryToS.Enabled = true;
+    //    chkIsMSMEDToS.Enabled = true;
+    //}
+
+
+
+    //private void DisableBillingAddressControls()
+    //{
+    //    btnAddUpdateAddressToList.Visible = false;
+    //    txtAddress1ToS.Enabled = false;
+    //    txtAddress2ToS.Enabled = false;
+    //    txtAddress3ToS.Enabled = false;
+    //    txtCityToS.Enabled = false;
+    //    txtStateToS.Enabled = false;
+    //    txtCountryToS.Enabled = false;
+    //    txtPhoneToS.Enabled = false;
+    //    txtEmailToS.Enabled = false;
+    //    chkIsDefaultBillingAddressToS.Enabled = false;
+    //}
+
+    //private void EnableBillingAddressControls()
+    //{
+    //    btnAddUpdateAddressToList.Visible = true;
+    //    txtAddress1ToS.Enabled = true;
+    //    txtAddress2ToS.Enabled = true;
+    //    txtAddress3ToS.Enabled = true;
+    //    txtCityToS.Enabled = true;
+    //    txtStateToS.Enabled = true;
+    //    txtCountryToS.Enabled = true;
+    //    txtPhoneToS.Enabled = true;
+    //    txtEmailToS.Enabled = true;
+    //    chkIsDefaultBillingAddressToS.Enabled = true;
+    //}
+
+
+    //private void DisableContactPersonControls()
+    //{
+    //    btnAddUpdateContactPersonToList.Visible = false;
+    //    txtContactPersonNameToS.Enabled = false;
+    //    txtContactPersonMobileToS.Enabled = false;
+    //    txtContactPersonPhoneToS.Enabled = false;
+    //    txtContactPersonEmailToS.Enabled = false;
+    //    chkIsDefaultContactPersonToS.Enabled = false;
+    //}
+
+    //private void EnableContactPersonControls()
+    //{
+    //    btnAddUpdateContactPersonToList.Visible = true;
+    //    txtContactPersonNameToS.Enabled = true;
+    //    txtContactPersonMobileToS.Enabled = true;
+    //    txtContactPersonPhoneToS.Enabled = true;
+    //    txtContactPersonEmailToS.Enabled = true;
+    //    chkIsDefaultContactPersonToS.Enabled = true;
+    //}
+
+
+    //private void DisableBankDetailControls()
+    //{
+    //    btnAddUpdateBankDetailsToList.Visible = false;
+    //    txtBankNameToS.Enabled = false;
+    //    txtBranchToS.Enabled = false;
+    //    txtSWIFTCodeToS.Enabled = false;
+    //    txtAccountNumberToS.Enabled = false;
+    //    txtRTGSOrIFSCToS.Enabled = false;
+    //    txtISBNToS.Enabled = false;
+    //    chkIsDefaultBankToS.Enabled = false;
+    //}
+
+    //private void EnableBankDetailControls()
+    //{
+    //    btnAddUpdateBankDetailsToList.Visible = true;
+    //    txtBankNameToS.Enabled = true;
+    //    txtBranchToS.Enabled = true;
+    //    txtSWIFTCodeToS.Enabled = true;
+    //    txtAccountNumberToS.Enabled = true;
+    //    txtRTGSOrIFSCToS.Enabled = true;
+    //    txtISBNToS.Enabled = true;
+    //    chkIsDefaultBankToS.Enabled = true;
+    //}
+
+
+    //private void DisableOtherDetailsControls()
+    //{
+    //    chkIsTechnicalDetailsReceivedToS.Enabled = false;
+    //    chkIsISOCertifiedToS.Enabled = false;
+    //    chkIsQAVisitedToS.Enabled = false;
+    //    chkIsGovernmentToS.Enabled = false;
+    //    ddlResponsibleToS.Enabled = false;
+    //    ddlRelationTypeToS.Enabled = false;
+    //    ddlItemCategoryToS.Enabled = false;
+    //    ddlItemSubCategoryToS.Enabled = false;
+    //}
+
+    //private void EnableOtherDetailsControls()
+    //{
+    //    chkIsTechnicalDetailsReceivedToS.Enabled = true;
+    //    chkIsISOCertifiedToS.Enabled = true;
+    //    chkIsQAVisitedToS.Enabled = true;
+    //    chkIsGovernmentToS.Enabled = true;
+    //    ddlResponsibleToS.Enabled = true;
+    //    ddlRelationTypeToS.Enabled = true;
+    //    ddlItemCategoryToS.Enabled = true;
+    //    ddlItemSubCategoryToS.Enabled = true;
+    //}
+
+
+    //private void HideGridColumns()
+    //{
+    //    //gvBillingAddress.Columns[0].Visible = false;
+    //    //gvBillingAddress.Columns[1].Visible = false;
+
+    //    gvContactPerson.Columns[0].Visible = false;
+    //    gvContactPerson.Columns[1].Visible = false;
+
+    //    gvBankDetails.Columns[0].Visible = false;
+    //    gvBankDetails.Columns[1].Visible = false;
+
+    //    gvAttachments.Columns[0].Visible = false;
+    //}
+
+    //private void ShowGridColumns()
+    //{
+    //    gvBillingAddress.Columns[0].Visible = true;
+    //    gvBillingAddress.Columns[1].Visible = true;
+
+    //    gvContactPerson.Columns[0].Visible = true;
+    //    gvContactPerson.Columns[1].Visible = true;
+
+    //    gvBankDetails.Columns[0].Visible = true;
+    //    gvBankDetails.Columns[1].Visible = true;
+
+    //    gvAttachments.Columns[0].Visible = true;
+    //}
+
+
+
+
+    private void GetVendorsList()
+    {
+        try
+        {
+            string StartDate = string.Empty;
+            string EndDate = string.Empty;
+            string VendorName = string.Empty;
+            string VendorCode = string.Empty;
+            int StatusId = 0;
+            int ResponsibleId = 0;
+            int RelationTypeId = 0;
+            string PAN = string.Empty;
+            string GSTIN = string.Empty;
+            int CategoryId = 0;
+            int OrganizationTypeId = 0;
+
+
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdStartDateSearch.Value)))
+                StartDate = Convert.ToDateTime(hdStartDateSearch.Value).ToString("yyyy-MM-dd");
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdEndDateSearch.Value)))
+                EndDate = Convert.ToDateTime(hdEndDateSearch.Value).ToString("yyyy-MM-dd");
+
+            if (!string.IsNullOrEmpty(txtVendorNameS.Text))
+                VendorName = txtVendorNameS.Text;
+
+            if (!string.IsNullOrEmpty(txtVendorCodeS.Text))
+                VendorCode = txtVendorCodeS.Text;
+
+            if (ddlStatusS.SelectedIndex > 0)
+                StatusId = Convert.ToInt32(ddlStatusS.SelectedValue);
+
+            if (ddlResponsibleS.SelectedIndex > 0)
+                ResponsibleId = Convert.ToInt32(ddlResponsibleS.SelectedValue);
+
+            if (ddlRelationTypeS.SelectedIndex > 0)
+                RelationTypeId = Convert.ToInt32(ddlRelationTypeS.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtPANS.Text))
+                PAN = txtPANS.Text;
+
+            //if (!string.IsNullOrEmpty(txtGSTINS.Text))
+            //    GSTIN = txtGSTINS.Text;
+
+            if (ddlCategoryS.SelectedIndex > 0)
+                CategoryId = Convert.ToInt32(ddlCategoryS.SelectedValue);
+
+            if (ddlOrganizationTypeS.SelectedIndex > 0)
+                OrganizationTypeId = Convert.ToInt32(ddlOrganizationTypeS.SelectedValue);
+
+            dsVendorList = objVCM.GetVendorsList
+                (
+                      StartDate
+                    , EndDate
+                    , VendorName
+                    , VendorCode
+                    , StatusId
+                    , ResponsibleId
+                    , RelationTypeId
+                    , PAN
+                    , GSTIN
+                    , CategoryId
+                    , OrganizationTypeId
+                );
+
+            if (dsVendorList.Tables.Count > 0 && dsVendorList.Tables[0].Rows.Count > 0)
+            {
+                //Session["dsLOTList"] = dsLOTList;
+                gvVendorsList.DataSource = dsVendorList.Tables[0];
+                gvVendorsList.DataBind();
+            }
+            else
+            {
+                //Session["dsLOTList"] = null;
+                gvVendorsList.DataSource = null;
+                gvVendorsList.DataBind();
+            }
+            lblRecords.Text = "Records[" + dsVendorList.Tables[0].Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    //private void CommonDisableControls()
+    //{
+    //    //txtNameToS.Enabled = false;
+    //    //txtPANNumberToS.Enabled = false;
+    //    //txtGSTInToS.Enabled = false;
+    //    txtCreditDaysToS.Enabled = false;
+    //    txtCreditLimitToS.Enabled = false;
+    //    ddlCategoryToS.Enabled = false;
+    //    chkIsMSMEDToS.Enabled = false;
+    //    chkIsGovernmentToS.Enabled = false;
+
+    //    chkIsTechnicalDetailsReceivedToS.Enabled = false;
+    //    chkIsISOCertifiedToS.Enabled = false;
+    //    chkIsQAVisitedToS.Enabled = false;
+    //    ddlResponsibleToS.Enabled = false;
+    //    ddlRelationTypeToS.Enabled = false;
+    //    ddlItemCategoryToS.Enabled = false;
+    //    ddlItemSubCategoryToS.Enabled = false;
+
+    //    pnlSavingTypeToS.Visible = false;
+    //    btnPreview.Visible = false;
+
+    //    //btnShowNewAddressWindow.Visible = false;
+    //    //btnShowNewContactPersonWindow.Visible = false;
+    //    //btnShowNewBankDetailsWindow.Visible = false;
+    //    //btnShowNewAttachmentsWindow.Visible = false;
+
+    //    btnRefreshBillingAddress.Visible = false;
+    //    btnRefreshContactPerson.Visible = false;
+    //    btnRefreshBankDetails.Visible = false;
+    //    btnRefreshAttachments.Visible = false;
+
+    //}
+
+    //private void CommonEnableControls()
+    //{
+    //    //txtNameToS.Enabled = true;
+    //    //txtPANNumberToS.Enabled = true;
+    //    //txtGSTInToS.Enabled = true;
+    //    txtCreditDaysToS.Enabled = true;
+    //    txtCreditLimitToS.Enabled = true;
+    //    ddlCategoryToS.Enabled = true;
+    //    chkIsMSMEDToS.Enabled = true;
+    //    chkIsGovernmentToS.Enabled = true;
+
+    //    chkIsTechnicalDetailsReceivedToS.Enabled = true;
+    //    chkIsISOCertifiedToS.Enabled = true;
+    //    chkIsQAVisitedToS.Enabled = true;
+    //    ddlResponsibleToS.Enabled = true;
+    //    ddlRelationTypeToS.Enabled = true;
+    //    ddlItemCategoryToS.Enabled = true;
+    //    ddlItemSubCategoryToS.Enabled = true;
+
+    //    pnlSavingTypeToS.Visible = true;
+    //    btnPreview.Visible = true;
+
+    //    //btnShowNewAddressWindow.Visible = true;
+    //    //btnShowNewContactPersonWindow.Visible = true;
+    //    //btnShowNewBankDetailsWindow.Visible = true;
+    //    //btnShowNewAttachmentsWindow.Visible = true;
+
+    //    btnRefreshBillingAddress.Visible = true;
+    //    btnRefreshContactPerson.Visible = true;
+    //    btnRefreshBankDetails.Visible = true;
+    //    btnRefreshAttachments.Visible = true;
+    //}
+
+    private void BindVendorsDetail(int PID)
+    {
+        DataSet dsVendorDetails = new DataSet();
+        dsVendorDetails = objVCM.GetVendorDetails(PID);
+
+        DataTable dtVendorDetails = new DataTable();
+        DataTable dtBillingAddress = new DataTable();
+        DataTable dtContactPerson = new DataTable();
+        DataTable dtBankDetails = new DataTable();
+        DataTable dtOtherDetails = new DataTable();
+        DataTable dtDOCs = new DataTable();
+        DataTable dtAmendmentRemarks = new DataTable();
+        DataTable dtRevisionTypes = new DataTable();
+        DataTable dtFinalApprovers = new DataTable();
+
+
+        if (dsVendorDetails != null && dsVendorDetails.Tables.Count > 0)
+        {
+            if (dsVendorDetails.Tables[0] != null && dsVendorDetails.Tables[0].Rows.Count > 0)
+                dtVendorDetails = dsVendorDetails.Tables[0];
+
+            if (dsVendorDetails.Tables[1] != null && dsVendorDetails.Tables[1].Rows.Count > 0)
+                dtBillingAddress = dsVendorDetails.Tables[1];
+
+            if (dsVendorDetails.Tables[2] != null && dsVendorDetails.Tables[2].Rows.Count > 0)
+                dtContactPerson = dsVendorDetails.Tables[2];
+
+            if (dsVendorDetails.Tables[3] != null && dsVendorDetails.Tables[3].Rows.Count > 0)
+                dtBankDetails = dsVendorDetails.Tables[3];
+
+            if (dsVendorDetails.Tables[4] != null && dsVendorDetails.Tables[4].Rows.Count > 0)
+                dtOtherDetails = dsVendorDetails.Tables[4];
+
+            if (dsVendorDetails.Tables[5] != null && dsVendorDetails.Tables[5].Rows.Count > 0)
+                dtDOCs = dsVendorDetails.Tables[5];
+
+            if (dsVendorDetails.Tables[6] != null && dsVendorDetails.Tables[6].Rows.Count > 0)
+                dtAmendmentRemarks = dsVendorDetails.Tables[6];
+
+            if (dsVendorDetails.Tables[7] != null && dsVendorDetails.Tables[7].Rows.Count > 0)
+                dtRevisionTypes = dsVendorDetails.Tables[7];
+
+            if (dsVendorDetails.Tables[8] != null && dsVendorDetails.Tables[8].Rows.Count > 0)
+                dtFinalApprovers = dsVendorDetails.Tables[8];
+        }
+
+
+        if (dtVendorDetails.Rows.Count > 0)
+        {
+            txtNameToS.Text = Convert.ToString(dtVendorDetails.Rows[0]["NAME"]);
+            txtCodeToS.Text = Convert.ToString(dtVendorDetails.Rows[0]["CODE"]);
+            txtPANNumberToS.Text = Convert.ToString(dtVendorDetails.Rows[0]["PAN"]);
+            //txtGSTInToS.Text = Convert.ToString(dtVendorDetails.Rows[0]["GSTIN"]);
+            txtCreditDaysToS.Text = Convert.ToString(dtVendorDetails.Rows[0]["CREDIT_DAYS"]);
+            txtCreditLimitToS.Text = Convert.ToString(dtVendorDetails.Rows[0]["CREDIT_LIMIT"]);
+
+            BindCategoryToS();
+            if (!string.IsNullOrEmpty(Convert.ToString(dtVendorDetails.Rows[0]["CATEGORY_FID"])) &&
+                Convert.ToString(dtVendorDetails.Rows[0]["CATEGORY_FID"]) != "0")
+                ddlCategoryToS.SelectedValue = Convert.ToString(dtVendorDetails.Rows[0]["CATEGORY_FID"]);
+
+
+            BindMSMEStatus();
+            if (!string.IsNullOrEmpty(Convert.ToString(dtVendorDetails.Rows[0]["MSME_STATUS_FID"])) &&
+                Convert.ToString(dtVendorDetails.Rows[0]["MSME_STATUS_FID"]) != "0")
+                ddlMSMEStatusToS.SelectedValue = Convert.ToString(dtVendorDetails.Rows[0]["MSME_STATUS_FID"]);
+
+            //if (Convert.ToInt32(dtVendorDetails.Rows[0]["IS_ASSOCIATED"]) > 0)
+            //    chkIsAssociatedToS.Checked = true;
+
+            if (Convert.ToInt32(dtVendorDetails.Rows[0]["IS_ASSOCIATED"]) > 0)
+                rdAssociatedToS.SelectedValue = "1";
+
+            //if (Convert.ToInt32(dtVendorDetails.Rows[0]["IS_GOVERNMENT"]) > 0)
+            //    chkIsGovernmentToS.Checked = true;
+
+            if (Convert.ToInt32(dtVendorDetails.Rows[0]["IS_GOVERNMENT"]) > 0)
+                rdIsGovernmentToS.SelectedValue = "1";
+
+            if (Convert.ToInt32(dtVendorDetails.Rows[0]["IS_ONE_TIME"]) > 0)
+                rdIsOneTimeVendorToS.SelectedValue = "1";
+
+
+            if (Convert.ToInt32(dtVendorDetails.Rows[0]["CHECKER_FID"]) > 0)
+                ddlCheckerToS.SelectedValue = Convert.ToString(dtVendorDetails.Rows[0]["CHECKER_FID"]);
+        }
+
+        if (dtBillingAddress.Rows.Count > 0)
+        {
+            //DataRow dr = dtBillingAddress.Rows[0];
+
+            ////hdBillingAddressPID.Value = Convert.ToString(dr["PID"]);
+
+            //txtAddress1ToS.Text = Convert.ToString(dr["ADDRESS_LINE1"]);
+            //txtAddress2ToS.Text = Convert.ToString(dr["ADDRESS_LINE2"]);
+            //txtAddress3ToS.Text = Convert.ToString(dr["ADDRESS_LINE3"]);
+            //txtCityToS.Text = Convert.ToString(dr["CITY"]);
+            ////txtStateToS.Text = Convert.ToString(dr["STATE"]);
+            ////txtCountryToS.Text = Convert.ToString(dr["COUNTRY"]);
+
+            //BindCountrysToS();
+            //ddlCountryToS.SelectedValue = Convert.ToString(dr["COUNTRY_FID"]);
+
+            //BindStatesToS();
+            //ddlStateToS.SelectedValue = Convert.ToString(dr["STATE_FID"]);
+
+            //txtOtherStateToS.Text = Convert.ToString(dr["OTHER_STATE"]);
+
+            //txtPhoneToS.Text = Convert.ToString(dr["PHONE"]);
+            //txtEmailToS.Text = Convert.ToString(dr["EMAIL"]);
+
+            //if (Convert.ToInt32(dr["IS_DEFAULT"]) > 0)
+            //    chkIsDefaultBillingAddressToS.Checked = true;
+
+            BindCountrysToS();
+            if (Convert.ToInt32(dtBillingAddress.Rows[0]["COUNTRY_ID"]) > 0)
+                ddlCountryToS.SelectedValue = Convert.ToString(dtBillingAddress.Rows[0]["COUNTRY_ID"]);
+
+            //BindStatesToS();
+            //if (Convert.ToInt32(dtBillingAddress.Rows[0]["STATE_ID"]) > 0)
+            //    ddlStateToS.SelectedValue = Convert.ToString(dtBillingAddress.Rows[0]["STATE_ID"]);
+
+            gvBillingAddress.DataSource = dtBillingAddress;
+            gvBillingAddress.DataBind();
+            lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+
+            Session["dtBillingAddress"] = dtBillingAddress;
+        }
+
+        if (dtContactPerson.Rows.Count > 0)
+        {
+            //DataRow dr = dtContactPerson.Rows[0];
+
+            //hdContactPersonPID.Value = Convert.ToString(dr["PID"]);
+
+            //txtContactPersonNameToS.Text = Convert.ToString(dr["NAME"]);
+            //txtContactPersonMobileToS.Text = Convert.ToString(dr["MOBILE_NO"]);
+            //txtContactPersonPhoneToS.Text = Convert.ToString(dr["PHONE"]);
+            //txtContactPersonEmailToS.Text = Convert.ToString(dr["EMAIL"]);
+
+            //if (Convert.ToInt32(dr["IS_DEFAULT"]) > 0)
+            //    chkIsDefaultContactPersonToS.Checked = true;
+
+            gvContactPerson.DataSource = dtContactPerson;
+            gvContactPerson.DataBind();
+            lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+
+            Session["dtContactPerson"] = dtContactPerson;
+
+        }
+
+        if (dtBankDetails.Rows.Count > 0)
+        {
+            DataRow dr = dtBankDetails.Rows[0];
+
+            hdBankDetailsPID.Value = Convert.ToString(dr["PID"]);
+            txtBankNameToS.Text = Convert.ToString(dr["BANK_NAME"]);
+            txtBranchToS.Text = Convert.ToString(dr["BRANCH"]);
+            txtSWIFTCodeToS.Text = Convert.ToString(dr["SWIFT_CODE"]);
+            txtAccountNumberToS.Text = Convert.ToString(dr["ACCOUNT_NUMBER"]);
+            txtRTGSOrIFSCToS.Text = Convert.ToString(dr["RTGS_OR_IFSC_CODE"]);
+            txtISBNToS.Text = Convert.ToString(dr["ISBN"]);
+
+            //if (Convert.ToInt32(dr["IS_DEFAULT"]) > 0)
+            //    chkIsDefaultBankToS.Checked = true;
+
+            //gvBankDetails.DataSource = dtBankDetails;
+            //gvBankDetails.DataBind();
+            //lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+            //Session["dtBankDetails"] = dtBankDetails;
+
+            dvDeclarationBD.Visible = false;
+
+            if (dtRevisionTypes.Rows.Count > 0 && dtRevisionTypes != null)
+            {
+                foreach (DataRow drd in dtRevisionTypes.Select("REVISION_TYPE_FID = 8")) //Change in Bank Account Details
+                {
+                    foreach (DataRow dru in dtFinalApprovers.Select("EMP_RECORD_FID = " + Convert.ToInt32(Session["EMP_RECORD_ID"])))
+                    {
+                        dvDeclarationBD.Visible = true;
+                    }
+                }
+            }
+        }
+
+        if (dtOtherDetails.Rows.Count > 0)
+        {
+            //if (Convert.ToInt32(dtOtherDetails.Rows[0]["IS_ISO_CERTIFIED"]) > 0)
+            //    chkIsISOCertifiedToS.Checked = true;
+
+            //if (Convert.ToInt32(dtOtherDetails.Rows[0]["IS_TECHNICAL_DETAILS_RECEIVED"]) > 0)
+            //    chkIsTechnicalDetailsReceivedToS.Checked = true;
+
+            //if (Convert.ToInt32(dtOtherDetails.Rows[0]["IS_VISIT_BY_QA"]) > 0)
+            //    chkIsQAVisitedToS.Checked = true;
+
+            if (Convert.ToInt32(dtOtherDetails.Rows[0]["IS_ISO_CERTIFIED"]) > 0)
+                rdIsISOCertifiedToS.SelectedValue = "1";
+
+            if (Convert.ToInt32(dtOtherDetails.Rows[0]["IS_TECHNICAL_DETAILS_RECEIVED"]) > 0)
+                rdIsTechnicalDetailsReceivedToS.SelectedValue = "1";
+
+            if (Convert.ToInt32(dtOtherDetails.Rows[0]["IS_VISIT_BY_QA"]) > 0)
+                rdIsQAVisitedToS.SelectedValue = "1";
+
+            BindResponsibleToS();
+            if (!string.IsNullOrEmpty(Convert.ToString(dtOtherDetails.Rows[0]["RESPONSIBLE_FID"])) &&
+                Convert.ToString(dtOtherDetails.Rows[0]["RESPONSIBLE_FID"]) != "0")
+                ddlResponsibleToS.SelectedValue = Convert.ToString(dtOtherDetails.Rows[0]["RESPONSIBLE_FID"]);
+
+            BindRelationTypeToS();
+            if (!string.IsNullOrEmpty(Convert.ToString(dtOtherDetails.Rows[0]["VENDOR_TYPE_FID"])) &&
+                Convert.ToString(dtOtherDetails.Rows[0]["VENDOR_TYPE_FID"]) != "0")
+                ddlRelationTypeToS.SelectedValue = Convert.ToString(dtOtherDetails.Rows[0]["VENDOR_TYPE_FID"]);
+
+            if (!string.IsNullOrEmpty(Convert.ToString(dtOtherDetails.Rows[0]["ITEM_CATEGORY_FID"])) &&
+                Convert.ToString(dtOtherDetails.Rows[0]["ITEM_CATEGORY_FID"]) != "0")
+                ddlItemCategoryToS.SelectedValue = Convert.ToString(dtOtherDetails.Rows[0]["ITEM_CATEGORY_FID"]);
+
+            BindItemSubCategorys();
+            if (!string.IsNullOrEmpty(Convert.ToString(dtOtherDetails.Rows[0]["ITEM_SUBCATEGORY_FID"])) &&
+                Convert.ToString(dtOtherDetails.Rows[0]["ITEM_SUBCATEGORY_FID"]) != "0")
+                ddlItemSubCategoryToS.SelectedValue = Convert.ToString(dtOtherDetails.Rows[0]["ITEM_SUBCATEGORY_FID"]);
+        }
+
+        Session["dtAttachments"] = null;
+        if (dtDOCs.Rows.Count > 0)
+        {
+            Session["dtAttachments"] = dtDOCs;
+            gvAttachments.DataSource = dtDOCs;
+            gvAttachments.DataBind();
+            lblAttachmentsRecords.Text = "[" + gvAttachments.Rows.Count + "]";
+        }
+
+        if (dtAmendmentRemarks.Rows.Count > 0)
+        {
+            gvRemarks.DataSource = dtAmendmentRemarks;
+            gvRemarks.DataBind();
+        }
+
+
+
+        //lblEditOrAmendText.Text = "Edit Notes:";
+        //rdSavingType.Enabled = true;
+        //rdSavingType.SelectedIndex = 0;
+        //if (Convert.ToInt32(lblIsSentForApproval.Text) > 0) //|| Convert.ToInt32(lblIsAmendedSentForApproval.Text) > 0)
+        //{
+        //    if (Convert.ToInt32(lblIsSentForApproval.Text) > 0)
+        //        rdSavingType.SelectedValue = Convert.ToString(lblIsSentForApproval.Text);
+
+        //    rdSavingType.Enabled = false;
+        //}
+
+
+        //hdRemovedSubitemIDs.Value = string.Empty;
+        //HideSubitemsPanel();
+
+        //if (Convert.ToInt32(lblAmendmentCounts.Text) == 0)
+        //    hdUpdationType.Value = Convert.ToString(LOTAllStatusAndTypes.EnumLOTUpdationType.Edit);
+        //else
+        //{
+        //    hdUpdationType.Value = Convert.ToString(LOTAllStatusAndTypes.EnumLOTUpdationType.Amend);//EditAmended
+
+        //    if (!string.IsNullOrEmpty(lblAmendedRemarks.Text))
+        //        txtAmendedRemarksToEdit.Text = lblAmendedRemarks.Text;
+        //    else txtAmendedRemarksToEdit.Text = "";
+        //}
+
+        //Reset();
+    }
+
+
+
+    private void UpdateStatus(int statusId)
+    {
+        string remarks = string.Empty;
+        string vendorCode = string.Empty;
+        string Declaration = string.Empty;
+        string ContactPerson = string.Empty;
+        string ContactNo = string.Empty;
+        string ContactDate = string.Empty;
+        string ContactedBy = string.Empty;
+
+
+        int pid = Convert.ToInt32(ViewState["PID"]);
+        int currentUserId = Convert.ToInt32(Session["EMP_RECORD_ID"]);
+
+        if (!string.IsNullOrEmpty(txtCodeToS.Text))
+            vendorCode = txtCodeToS.Text.Trim().ToUpper();
+
+        if (!string.IsNullOrEmpty(txtRemarksToS.Text))
+            remarks = txtRemarksToS.Text;
+
+
+        if (!string.IsNullOrEmpty(txtDeclarationBankdetailsToS.Text))
+            Declaration = txtDeclarationBankdetailsToS.Text;
+
+        if (!string.IsNullOrEmpty(txtNameofPersonContactedBankdetailsToS.Text))
+            ContactPerson = txtNameofPersonContactedBankdetailsToS.Text;
+
+        if (!string.IsNullOrEmpty(txtContactNumberBankdetailsToS.Text))
+            ContactNo = txtContactNumberBankdetailsToS.Text;
+
+        if (!string.IsNullOrEmpty(txtDateTimeofConfirmationBankdetailsToS.Text))
+            ContactDate = Convert.ToDateTime(txtDateTimeofConfirmationBankdetailsToS.Text).ToString("yyyy-MM-dd");
+
+        if (!string.IsNullOrEmpty(txtContactedbyBankdetailsToS.Text))
+            ContactedBy = txtContactedbyBankdetailsToS.Text;
+
+
+        int result = objVCM.UpdateStatus(pid, statusId, remarks, vendorCode, currentUserId, Declaration, ContactPerson, ContactNo, ContactDate, ContactedBy);
+
+        if (result > 0)
+        {
+            int sendMailValue = objMailService.ProcessMail(pid, statusId);
+
+            if (sendMailValue > 0)
+            {
+                int val = objVCM.UpdateMailStatus(sendMailValue, statusId, currentUserId);
+                SuccessMessage("Status updated of vendor: '" + txtNameToS.Text + "' and mail sent successfully.");
+                Reset();
+            }
+            else
+            {
+                SuccessMessage("Status updated of vendor: '" + txtNameToS.Text + "' successfully.");
+                Reset();
+            }
+        }
+        else if (result < 0)
+        {
+            ExceptionUpdateMessage("Please try again! Vendor exists with vendor code: " + vendorCode);
+            mpeUpdateLOT.Show();
+            return;
+        }
+    }
+
+    //private void PreviewVendor()
+    //{
+    //    try
+    //    {
+    //        Session["dtVendorDetails"] = null;
+
+    //        DataTable dtAddressTable = new DataTable();
+    //        DataTable dtBankTable = new DataTable();
+    //        DataTable dtContactPersonTable = new DataTable();
+
+    //        if (Session["dtBillingAddress"] != null)
+    //            dtAddressTable = (DataTable)Session["dtBillingAddress"];
+
+    //        if (Session["dtBankDetails"] != null)
+    //            dtBankTable = (DataTable)Session["dtBankDetails"];
+
+    //        if (Session["dtContactPerson"] != null)
+    //            dtContactPersonTable = (DataTable)Session["dtContactPerson"];
+
+    //        if (dtAddressTable.Rows.Count == 0 || dtAddressTable == null)
+    //        {
+    //            ExceptionMessage("Please add atleast 1 billing address...!!!");
+    //            return;
+    //        }
+
+    //        if (dtContactPersonTable.Rows.Count == 0 || dtContactPersonTable == null)
+    //        {
+    //            ExceptionMessage("Please add atleast 1 contact person...!!!");
+    //            return;
+    //        }
+
+    //        if (dtBankTable.Rows.Count == 0 || dtBankTable == null)
+    //        {
+    //            ExceptionMessage("Please add atleast 1 bank detail...!!!");
+    //            return;
+    //        }
+
+    //        int entityId = 0;
+    //        string LOTTFSubitemIDs = string.Empty;
+
+    //        DataTable dtVendorDetails = new DataTable();
+    //        dtVendorDetails.Columns.Add("NAME", typeof(string));
+    //        dtVendorDetails.Columns.Add("CODE", typeof(string));
+    //        dtVendorDetails.Columns.Add("STATUS", typeof(string));
+    //        dtVendorDetails.Columns.Add("CATEGORY", typeof(string));
+    //        dtVendorDetails.Columns.Add("GSTIN", typeof(string));
+    //        dtVendorDetails.Columns.Add("PAN", typeof(string));
+    //        dtVendorDetails.Columns.Add("CREDIT_DAYS", typeof(string));
+    //        dtVendorDetails.Columns.Add("CREDIT_LIMIT", typeof(string));
+    //        dtVendorDetails.Columns.Add("IS_MSMED", typeof(string));
+    //        dtVendorDetails.Columns.Add("IS_ISO_CERTIFIED", typeof(string));
+    //        dtVendorDetails.Columns.Add("IS_TECHNICAL_DETAILS_RECEIVED", typeof(string));
+    //        dtVendorDetails.Columns.Add("IS_VISIT_BY_QA", typeof(string));
+    //        dtVendorDetails.Columns.Add("IS_GOVERNMENT", typeof(string));
+    //        dtVendorDetails.Columns.Add("RESPONSIBLE", typeof(string));
+    //        dtVendorDetails.Columns.Add("VENDOR_TYPE", typeof(string));
+    //        dtVendorDetails.Columns.Add("ITEM_CATEGORY", typeof(string));
+    //        dtVendorDetails.Columns.Add("ITEM_SUBCATEGORY", typeof(string));
+
+
+
+
+    //        DataRow dr = dtVendorDetails.NewRow();
+    //        dr["NAME"] = FormattedString(txtNameToS.Text);
+    //        dr["CODE"] = FormattedString(txtCodeToS.Text);
+    //        dr["STATUS"] = "Requested";
+    //        dr["CATEGORY"] = ddlCategoryToS.SelectedItem.Text;
+    //        dr["GSTIN"] = FormattedString(txtGSTInToS.Text); ;
+    //        dr["PAN"] = FormattedString(txtPANNumberToS.Text); ;
+    //        dr["CREDIT_DAYS"] = txtCreditDaysToS.Text;
+    //        dr["CREDIT_LIMIT"] = txtCreditLimitToS.Text;
+
+    //        if (chkIsMSMEDToS.Checked)
+    //            dr["IS_MSMED"] = "YES";
+    //        else dr["IS_MSMED"] = "NO";
+
+    //        if (chkIsISOCertifiedToS.Checked)
+    //            dr["IS_ISO_CERTIFIED"] = "YES";
+    //        else dr["IS_ISO_CERTIFIED"] = "NO";
+
+    //        if (chkIsTechnicalDetailsReceivedToS.Checked)
+    //            dr["IS_TECHNICAL_DETAILS_RECEIVED"] = "YES";
+    //        else dr["IS_TECHNICAL_DETAILS_RECEIVED"] = "NO";
+
+    //        if (chkIsQAVisitedToS.Checked)
+    //            dr["IS_VISIT_BY_QA"] = "YES";
+    //        else dr["IS_VISIT_BY_QA"] = "NO";
+
+    //        if (chkIsGovernmentToS.Checked)
+    //            dr["IS_GOVERNMENT"] = "Government";
+    //        else dr["IS_GOVERNMENT"] = "Non-Government";
+
+    //        dr["RESPONSIBLE"] = ddlResponsibleToS.SelectedItem.Text;
+    //        dr["VENDOR_TYPE"] = ddlRelationTypeToS.SelectedItem.Text;
+    //        dr["ITEM_CATEGORY"] = ddlItemCategoryToS.SelectedItem.Text;
+    //        dr["ITEM_SUBCATEGORY"] = ddlItemSubCategoryToS.SelectedItem.Text;
+
+    //        dtVendorDetails.Rows.Add(dr);
+
+    //        Session["dtVendorDetails"] = dtVendorDetails;
+    //        AddTempAmendmentsTable();
+
+
+    //        if (dtVendorDetails.Rows.Count > 0)
+    //        {
+    //            ModalPopupExtender4.Show();
+    //            iframeViewEntityInPDF.Attributes.Add("src", "ViewVendorInPDF.aspx?pid=" + entityId);
+    //        }
+    //        else
+    //        {
+    //            ExceptionMessage("Please enter vendor details...!!!");
+    //            return;
+    //        }
+
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        //
+    //    }
+    //}
+
+    //private void SaveVendor(int StatusId, bool IsRevisionFlag)
+    //{
+    //    try
+    //    {
+    //        int pid = Convert.ToInt32(ViewState["PID"]);
+    //        string VendorName = string.Empty;
+    //        int CategoryId = 0;
+    //        string Gstin = string.Empty;
+    //        string Pan = string.Empty;
+    //        int CreditDays = 0;
+    //        double CreditLimit = 0;
+    //        int MSMEStatusId = 0;
+    //        int IsAssociated = 0;
+    //        int IsIsoCertified = 0;
+    //        int IsTechnicalDetailsReceived = 0;
+    //        int IsVisitByQa = 0;
+    //        int IsGovernment = 0;
+    //        int ResponsibleId = 0;
+    //        int VendorTypeId = 0;
+    //        int ItemCategoryFid = 0;
+    //        int ItemSubcategoryFid = 0;
+    //        int EntityTypeId = 0;
+    //        int SavingType = 0;
+    //        string Remarks = string.Empty;
+    //        int CreatedBy = Convert.ToInt32(Session["EMP_RECORD_ID"]);
+
+
+    //        if (!string.IsNullOrEmpty(txtNameToS.Text))
+    //            VendorName = FormattedString(txtNameToS.Text);
+
+    //        if (ddlCategoryToS.SelectedIndex > 0)
+    //            CategoryId = Convert.ToInt32(ddlCategoryToS.SelectedValue);
+
+    //        if (ddlMSMEStatusToS.SelectedIndex > 0)
+    //            MSMEStatusId = Convert.ToInt32(ddlMSMEStatusToS.SelectedValue);
+
+    //        if (!string.IsNullOrEmpty(txtGSTInToS.Text))
+    //            Gstin = FormattedString(txtGSTInToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtPANNumberToS.Text))
+    //            Pan = FormattedString(txtPANNumberToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtCreditDaysToS.Text))
+    //            CreditDays = Convert.ToInt32(txtCreditDaysToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtCreditLimitToS.Text))
+    //            CreditLimit = Convert.ToDouble(txtCreditLimitToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtRemarksToS.Text))
+    //            Remarks = txtRemarksToS.Text;
+
+    //        //IsAssociated = Convert.ToInt32(chkIsAssociatedToS.Checked);
+    //        IsAssociated = Convert.ToInt32(rdAssociatedToS.SelectedValue);
+    //        //IsIsoCertified = Convert.ToInt32(chkIsISOCertifiedToS.Checked);
+    //        //IsTechnicalDetailsReceived = Convert.ToInt32(chkIsTechnicalDetailsReceivedToS.Checked);
+    //        //IsVisitByQa = Convert.ToInt32(chkIsQAVisitedToS.Checked);
+    //        //IsGovernment = Convert.ToInt32(chkIsGovernmentToS.Checked);
+
+    //        IsIsoCertified = Convert.ToInt32(rdIsISOCertifiedToS.SelectedValue);
+    //        IsTechnicalDetailsReceived = Convert.ToInt32(rdIsTechnicalDetailsReceivedToS.SelectedValue);
+    //        IsVisitByQa = Convert.ToInt32(rdIsQAVisitedToS.SelectedValue);
+    //        IsGovernment = Convert.ToInt32(rdIsGovernmentToS.SelectedValue);
+
+
+    //        if (ddlResponsibleToS.SelectedIndex > 0)
+    //            ResponsibleId = Convert.ToInt32(ddlResponsibleToS.SelectedValue);
+
+    //        if (ddlRelationTypeToS.SelectedIndex > 0)
+    //            VendorTypeId = Convert.ToInt32(ddlRelationTypeToS.SelectedValue);
+
+    //        if (ddlItemCategoryToS.SelectedIndex > 0)
+    //            ItemCategoryFid = Convert.ToInt32(ddlItemCategoryToS.SelectedValue);
+
+    //        if (ddlItemSubCategoryToS.SelectedIndex > 0)
+    //            ItemSubcategoryFid = Convert.ToInt32(ddlItemSubCategoryToS.SelectedValue);
+
+    //        EntityTypeId = (int)StatusAndTypes.EnumEntityType.Vendor;
+    //        SavingType = (int)StatusAndTypes.EnumSavingType.SaveAndSendForApproval;
+
+    //        DataTable dtAddressTable = new DataTable();
+    //        DataTable dtBankTable = new DataTable();
+    //        DataTable dtContactPersonTable = new DataTable();
+    //        DataTable dtDOCsTable = new DataTable();
+    //        DataTable dtRevisionTypes = new DataTable();
+
+    //        dtAddressTable = GetBillingAddress();
+    //        dtBankTable = GetBankDetails();
+    //        dtContactPersonTable = GetContactPerson();
+    //        dtDOCsTable = GetAttachment(IsRevisionFlag);
+
+    //        dtAddressTable = RemoveDatatabeColumns(dtAddressTable);
+    //        dtContactPersonTable = RemoveDatatabeColumns(dtContactPersonTable);
+    //        dtBankTable = RemoveDatatabeColumns(dtBankTable);
+    //        dtDOCsTable = RemoveDatatabeColumns(dtDOCsTable);
+
+    //        BAL.VendorCustomerManagement objVCM = new BAL.VendorCustomerManagement();
+
+    //        //if (IsRevisionFlag)
+    //        //{
+    //        //    SavingType = 1;
+    //        //    dtRevisionTypes = GetRevisionTypes();
+
+    //        //    if (dtRevisionTypes.Rows.Count == 0 || dtRevisionTypes == null)
+    //        //    {
+    //        //        ExceptionMessage("Please select atleast 1 revision type...!!!");
+    //        //        mpeUpdateLOT.Show();
+    //        //        return;
+    //        //    }
+    //        //}
+
+
+    //        int result = objVCM.UpdateVendor
+    //            (
+    //                  pid
+    //                , StatusId
+    //                , VendorName
+    //                , CategoryId
+    //                , MSMEStatusId
+    //                //, Gstin
+    //                , Pan
+    //                , CreditDays
+    //                , CreditLimit
+    //                , IsAssociated
+    //                , IsIsoCertified
+    //                , IsTechnicalDetailsReceived
+    //                , IsVisitByQa
+    //                , IsGovernment
+    //                , 0
+    //                , ResponsibleId
+    //                , VendorTypeId
+    //                , ItemCategoryFid
+    //                , ItemSubcategoryFid
+    //                , EntityTypeId
+    //                , dtAddressTable
+    //                , dtBankTable
+    //                , dtContactPersonTable
+    //                , dtDOCsTable
+    //                , SavingType
+    //                , Remarks
+    //                , IsRevisionFlag
+    //                , dtRevisionTypes
+    //                , CreatedBy
+    //            );
+
+
+
+    //        if (result > 0)
+    //        {
+    //            string msgTxt = "updated";
+    //            if (IsRevisionFlag)
+    //            {
+    //                msgTxt = "revised";
+    //            }
+
+    //            if (SavingType == Convert.ToInt32(StatusAndTypes.EnumSavingType.SaveAndSendForApproval))
+    //            {
+    //                int sendMailValue = objMailService.ProcessMail(pid, txtNameToS.Text, StatusId);
+
+    //                if (sendMailValue > 0)
+    //                {
+    //                    int val = objVCM.UpdateMailStatus(sendMailValue, StatusId, CreatedBy);
+    //                    SuccessMessage("Vendor " + msgTxt + " as '" + VendorName + "' and mail sent successfully.");
+    //                    Reset();
+    //                }
+    //                else
+    //                {
+    //                    SuccessMessage("Vendor " + msgTxt + " as '" + VendorName + "' successfully.");
+    //                    Reset();
+    //                }
+    //            }
+    //            else
+    //            {
+    //                SuccessMessage("Vendor " + msgTxt + " as '" + VendorName + "' successfully.");
+    //                Reset();
+    //            }
+
+    //            ResetAll();
+    //        }
+    //        else if (result < 0)
+    //        {
+    //            ExceptionMessage("Please try again! Vendor already exists with GSTIN: " + Gstin);
+    //            return;
+    //        }
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+
+    private void SaveVendor(int StatusId)
+    {
+        try
+        {
+            int pid = Convert.ToInt32(ViewState["PID"]);
+            string VendorName = string.Empty;
+            int CategoryId = 0;
+            string Gstin = string.Empty;
+            string Pan = string.Empty;
+            int CreditDays = 0;
+            double CreditLimit = 0;
+            int MSMEStatusId = 0;
+            int IsAssociated = 0;
+            int IsIsoCertified = 0;
+            int IsTechnicalDetailsReceived = 0;
+            int IsVisitByQa = 0;
+            int IsGovernment = 0;
+            int IsOneTime = 0;
+            int ResponsibleId = 0;
+            int VendorTypeId = 0;
+            int ItemCategoryFid = 0;
+            int ItemSubcategoryFid = 0;
+            int EntityTypeId = 0;
+            int SavingType = 0;
+            string Remarks = string.Empty;
+            int CreatedBy = Convert.ToInt32(Session["EMP_RECORD_ID"]);
+            int checkerId = Convert.ToInt32(ddlCheckerToS.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtNameToS.Text))
+                VendorName = FormattedString(txtNameToS.Text);
+
+            if (ddlCategoryToS.SelectedIndex > 0)
+                CategoryId = Convert.ToInt32(ddlCategoryToS.SelectedValue);
+
+            if (ddlMSMEStatusToS.SelectedIndex > 0)
+                MSMEStatusId = Convert.ToInt32(ddlMSMEStatusToS.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtGSTInToS.Text))
+                Gstin = FormattedString(txtGSTInToS.Text);
+
+            if (!string.IsNullOrEmpty(txtPANNumberToS.Text))
+                Pan = FormattedString(txtPANNumberToS.Text);
+
+            if (!string.IsNullOrEmpty(txtCreditDaysToS.Text))
+                CreditDays = Convert.ToInt32(txtCreditDaysToS.Text);
+
+            if (!string.IsNullOrEmpty(txtCreditLimitToS.Text))
+                CreditLimit = Convert.ToDouble(txtCreditLimitToS.Text);
+
+            if (!string.IsNullOrEmpty(txtRemarksToS.Text))
+                Remarks = txtRemarksToS.Text;
+
+            //IsAssociated = Convert.ToInt32(chkIsAssociatedToS.Checked);
+            //IsIsoCertified = Convert.ToInt32(chkIsISOCertifiedToS.Checked);
+            //IsTechnicalDetailsReceived = Convert.ToInt32(chkIsTechnicalDetailsReceivedToS.Checked);
+            //IsVisitByQa = Convert.ToInt32(chkIsQAVisitedToS.Checked);
+            //IsGovernment = Convert.ToInt32(chkIsGovernmentToS.Checked);
+
+            IsAssociated = Convert.ToInt32(rdAssociatedToS.SelectedValue);
+            IsIsoCertified = Convert.ToInt32(rdIsISOCertifiedToS.SelectedValue);
+            IsTechnicalDetailsReceived = Convert.ToInt32(rdIsTechnicalDetailsReceivedToS.SelectedValue);
+            IsVisitByQa = Convert.ToInt32(rdIsQAVisitedToS.SelectedValue);
+            IsGovernment = Convert.ToInt32(rdIsGovernmentToS.SelectedValue);
+            IsOneTime = Convert.ToInt32(rdIsOneTimeVendorToS.SelectedValue);
+
+
+            if (ddlResponsibleToS.SelectedIndex > 0)
+                ResponsibleId = Convert.ToInt32(ddlResponsibleToS.SelectedValue);
+
+            if (ddlRelationTypeToS.SelectedIndex > 0)
+                VendorTypeId = Convert.ToInt32(ddlRelationTypeToS.SelectedValue);
+
+            if (ddlItemCategoryToS.SelectedIndex > 0)
+                ItemCategoryFid = Convert.ToInt32(ddlItemCategoryToS.SelectedValue);
+
+            if (ddlItemSubCategoryToS.SelectedIndex > 0)
+                ItemSubcategoryFid = Convert.ToInt32(ddlItemSubCategoryToS.SelectedValue);
+
+            EntityTypeId = (int)StatusAndTypes.EnumEntityType.Vendor;
+            //SavingType = (int)StatusAndTypes.EnumSavingType.SaveAndSendForApproval;
+            SavingType = Convert.ToInt32(rdSavingType.SelectedValue);
+
+            DataTable dtAddressTable = new DataTable();
+            DataTable dtBankTable = new DataTable();
+            DataTable dtContactPersonTable = new DataTable();
+            DataTable dtDOCsTable = new DataTable();
+            DataTable dtRevisionTypes = new DataTable();
+
+            dtAddressTable = GetBillingAddress();
+            dtBankTable = GetBankDetails();
+            dtContactPersonTable = GetContactPerson();
+            dtDOCsTable = GetAttachment();
+
+            if (dtAddressTable == null)
+            {
+                ExceptionMessage("Please add at least 1 billing address!!!");
+                return;
+            }
+            else
+            {
+                int count = 0;
+                foreach (DataRow dtt in dtAddressTable.Rows)
+                {
+                    string panTxt = "";
+                    if (!string.IsNullOrEmpty(dtt["GSTIN"].ToString()))
+                    {
+                        panTxt = dtt["GSTIN"].ToString().Substring(2, 10);
+                        if (panTxt != txtPANNumberToS.Text)
+                        {
+                            count++;
+                            break;
+                        }
+                    }
+
+                }
+
+                if (count > 0)
+                {
+                    ExceptionMessage("1 or more PAN number(s) in GSTIN from Billing Address List are not matching with PAN!!!");
+                    return;
+                }
+            }
+
+            if (dtContactPersonTable == null)
+            {
+                ExceptionMessage("Please add at least 1 contact person!!!");
+                return;
+            }
+
+            if (dtBankTable == null)
+            {
+                ExceptionMessage("Please add at least 1 bank detail!!!");
+                return;
+            }
+
+            dtAddressTable = RemoveDatatabeColumns(dtAddressTable);
+            dtContactPersonTable = RemoveDatatabeColumns(dtContactPersonTable);
+            dtBankTable = RemoveDatatabeColumns(dtBankTable);
+            dtDOCsTable = RemoveDatatabeColumns(dtDOCsTable);
+
+            BAL.VendorCustomerManagement objVCM = new BAL.VendorCustomerManagement();
+
+            //if (IsRevisionFlag)
+            //{
+            //    SavingType = 1;
+            //    dtRevisionTypes = GetRevisionTypes();
+
+            //    if (dtRevisionTypes.Rows.Count == 0 || dtRevisionTypes == null)
+            //    {
+            //        ExceptionMessage("Please select atleast 1 revision type...!!!");
+            //        mpeUpdateLOT.Show();
+            //        return;
+            //    }
+            //}
+
+
+            int result = objVCM.UpdateVendor
+                (
+                      pid
+                    , StatusId
+                    , VendorName
+                    , CategoryId
+                    , MSMEStatusId
+                    //, Gstin
+                    , Pan
+                    , CreditDays
+                    , CreditLimit
+                    , IsAssociated
+                    , IsIsoCertified
+                    , IsTechnicalDetailsReceived
+                    , IsVisitByQa
+                    , IsGovernment
+                    , IsOneTime
+                    , ResponsibleId
+                    , VendorTypeId
+                    , ItemCategoryFid
+                    , ItemSubcategoryFid
+                    , EntityTypeId
+                    , dtAddressTable
+                    , dtBankTable
+                    , dtContactPersonTable
+                    , dtDOCsTable
+                    , SavingType
+                    , Remarks
+                    , dtRevisionTypes
+                    , CreatedBy
+                    , checkerId
+                );
+
+
+
+            if (result > 0)
+            {
+                string msgTxt = "updated";
+                //if (IsRevisionFlag)
+                //{
+                //    msgTxt = "revised";
+                //}
+
+                if (SavingType == Convert.ToInt32(StatusAndTypes.EnumSavingType.SaveAndSendForApproval))
+                {
+                    int sendMailValue = objMailService.ProcessMail(pid, StatusId);
+
+                    if (sendMailValue > 0)
+                    {
+                        int val = objVCM.UpdateMailStatus(sendMailValue, StatusId, CreatedBy);
+                        SuccessMessage("Vendor " + msgTxt + " as '" + VendorName + "' and mail sent successfully.");
+                        Reset();
+                    }
+                    else
+                    {
+                        SuccessMessage("Vendor " + msgTxt + " as '" + VendorName + "' successfully.");
+                        Reset();
+                    }
+                }
+                else
+                {
+                    SuccessMessage("Vendor " + msgTxt + " as '" + VendorName + "' successfully.");
+                    Reset();
+                }
+
+                ResetAll();
+            }
+            else if (result < 0)
+            {
+                ExceptionMessage("Please try again! Vendor already exists with GSTIN: " + Gstin);
+                return;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+    //private DataTable GetBillingAddress(bool IsRevisionFlag)
+    //{
+    //    try
+    //    {
+    //        string Address1 = string.Empty;
+    //        string Address2 = string.Empty;
+    //        string Address3 = string.Empty;
+    //        string City = string.Empty;
+    //        int StateId = 0;
+    //        int CountryId = 0;
+    //        string OtherState = string.Empty;
+    //        string Phone = string.Empty;
+    //        string Email = string.Empty;
+    //        int IsDefault = 0;
+
+    //        if (!string.IsNullOrEmpty(txtAddress1ToS.Text))
+    //            Address1 = Convert.ToString(txtAddress1ToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtAddress2ToS.Text))
+    //            Address2 = Convert.ToString(txtAddress2ToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtAddress3ToS.Text))
+    //            Address3 = Convert.ToString(txtAddress3ToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtCityToS.Text))
+    //            City = Convert.ToString(txtCityToS.Text);
+
+    //        if (ddlStateToS.SelectedIndex > 0)
+    //            StateId = Convert.ToInt32(ddlStateToS.SelectedValue);
+
+    //        if (ddlCountryToS.SelectedIndex > 0)
+    //            CountryId = Convert.ToInt32(ddlCountryToS.SelectedValue);
+
+    //        if (!string.IsNullOrEmpty(txtOtherStateToS.Text))
+    //            OtherState = Convert.ToString(txtOtherStateToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtPhoneToS.Text))
+    //            Phone = Convert.ToString(txtPhoneToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtEmailToS.Text))
+    //            Email = Convert.ToString(txtEmailToS.Text);
+
+    //        if (chkIsDefaultBillingAddressToS.Checked) IsDefault = 1;
+
+
+    //        dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("SR_NO", typeof(int));
+    //        dtTemp.Columns.Add("PID", typeof(int));
+    //        dtTemp.Columns.Add("ADDRESS_LINE1", typeof(string));
+    //        dtTemp.Columns.Add("ADDRESS_LINE2", typeof(string));
+    //        dtTemp.Columns.Add("ADDRESS_LINE3", typeof(string));
+    //        dtTemp.Columns.Add("CITY", typeof(string));
+    //        dtTemp.Columns.Add("STATE_FID", typeof(int));
+    //        dtTemp.Columns.Add("COUNTRY_FID", typeof(int));
+    //        dtTemp.Columns.Add("OTHER_STATE", typeof(string));
+    //        dtTemp.Columns.Add("PHONE", typeof(string));
+    //        dtTemp.Columns.Add("EMAIL", typeof(string));
+    //        dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+    //        dtTemp.Columns.Add("IS_DELETED", typeof(int));
+    //        dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+    //        DataRow dr = dtTemp.NewRow();
+
+    //        int index = dtTemp.Rows.Count + 1;
+
+    //        dr["SR_NO"] = index;
+    //        dr["PID"] = Convert.ToInt32(hdBillingAddressPID.Value);
+    //        dr["ADDRESS_LINE1"] = Address1;
+    //        dr["ADDRESS_LINE2"] = Address2;
+    //        dr["ADDRESS_LINE3"] = Address3;
+    //        dr["CITY"] = City;
+
+    //        dr["STATE_FID"] = StateId;
+    //        dr["COUNTRY_FID"] = CountryId;
+    //        dr["OTHER_STATE"] = OtherState;
+
+    //        dr["PHONE"] = Phone;
+    //        dr["EMAIL"] = Email;
+    //        dr["IS_DEFAULT"] = IsDefault;
+    //        dr["IS_DELETED"] = 0;
+
+    //        dr["IS_REVISED"] = 0;
+    //        if (IsRevisionFlag) dr["IS_REVISED"] = 1;
+
+    //        dtTemp.Rows.Add(dr);
+
+    //        return dtTemp;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return null;
+    //    }
+    //}
+
+    private DataTable GetBillingAddress()
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+
+            if (Session["dtBillingAddress"] != null)
+                dt = (DataTable)Session["dtBillingAddress"];
+            else return null;
+
+            dtTemp = new DataTable();
+
+            dtTemp.Columns.Add("SR_NO", typeof(int));
+            dtTemp.Columns.Add("PID", typeof(int));
+            dtTemp.Columns.Add("ADDRESS_LINE1", typeof(string));
+            dtTemp.Columns.Add("ADDRESS_LINE2", typeof(string));
+            dtTemp.Columns.Add("ADDRESS_LINE3", typeof(string));
+            dtTemp.Columns.Add("CITY", typeof(string));
+            dtTemp.Columns.Add("STATE_FID", typeof(int));
+            dtTemp.Columns.Add("COUNTRY_FID", typeof(int));
+            dtTemp.Columns.Add("OTHER_STATE", typeof(string));
+            dtTemp.Columns.Add("PIN_CODE", typeof(string));
+            dtTemp.Columns.Add("PHONE", typeof(string));
+            dtTemp.Columns.Add("EMAIL", typeof(string));
+            dtTemp.Columns.Add("GSTIN", typeof(string));
+            dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+            dtTemp.Columns.Add("IS_DELETED", typeof(int));
+            dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+
+            foreach (DataRow dro in dt.Rows)
+            {
+                DataRow dr = dtTemp.NewRow();
+
+                int index = dtTemp.Rows.Count + 1;
+
+                dr["SR_NO"] = index;
+                dr["PID"] = dro["PID"];
+                dr["ADDRESS_LINE1"] = dro["ADDRESS_LINE1"];
+                dr["ADDRESS_LINE2"] = dro["ADDRESS_LINE2"];
+                dr["ADDRESS_LINE3"] = dro["ADDRESS_LINE3"];
+                dr["CITY"] = dro["CITY"];
+
+                dr["STATE_FID"] = dro["STATE_ID"];
+                dr["COUNTRY_FID"] = dro["COUNTRY_ID"];
+                dr["OTHER_STATE"] = dro["OTHER_STATE"];
+                dr["PIN_CODE"] = dro["PIN_CODE"];
+
+                dr["PHONE"] = dro["PHONE"];
+                dr["EMAIL"] = dro["EMAIL"];
+                dr["GSTIN"] = dro["GSTIN"];
+
+                dr["IS_DEFAULT"] = dro["IS_DEFAULT"];
+                dr["IS_DELETED"] = dro["IS_DELETED"];
+                dr["IS_REVISED"] = 0;
+
+                dtTemp.Rows.Add(dr);
+            }
+
+            return dtTemp;
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+
+
+
+    //private DataTable GetContactPerson(bool IsRevisionFlag)
+    //{
+    //    try
+    //    {
+    //        string Name = string.Empty;
+    //        string Mobile = string.Empty;
+    //        string Phone = string.Empty;
+    //        string Email = string.Empty;
+    //        int IsDefault = 0;
+
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonNameToS.Text))
+    //            Name = Convert.ToString(txtContactPersonNameToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonMobileToS.Text))
+    //            Mobile = Convert.ToString(txtContactPersonMobileToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonPhoneToS.Text))
+    //            Phone = Convert.ToString(txtContactPersonPhoneToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonEmailToS.Text))
+    //            Email = Convert.ToString(txtContactPersonEmailToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonEmailToS.Text))
+    //            Email = Convert.ToString(txtContactPersonEmailToS.Text);
+
+    //        if (chkIsDefaultContactPersonToS.Checked) IsDefault = 1;
+
+
+    //        dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("SR_NO", typeof(int));
+    //        dtTemp.Columns.Add("PID", typeof(int));
+    //        dtTemp.Columns.Add("NAME", typeof(string));
+    //        dtTemp.Columns.Add("MOBILE_NO", typeof(string));
+    //        dtTemp.Columns.Add("PHONE", typeof(string));
+    //        dtTemp.Columns.Add("EMAIL", typeof(string));
+    //        dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+    //        dtTemp.Columns.Add("IS_DELETED", typeof(int));
+    //        dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+    //        DataRow dr = dtTemp.NewRow();
+
+    //        int index = dtTemp.Rows.Count + 1;
+
+    //        dr["SR_NO"] = index;
+    //        dr["PID"] = Convert.ToInt32(hdContactPersonPID.Value);
+    //        dr["NAME"] = Name;
+    //        dr["MOBILE_NO"] = Mobile;
+    //        dr["PHONE"] = Phone;
+    //        dr["EMAIL"] = Email;
+    //        dr["IS_DEFAULT"] = IsDefault;
+    //        dr["IS_DELETED"] = 0;
+
+    //        dr["IS_REVISED"] = 0;
+    //        if (IsRevisionFlag) dr["IS_REVISED"] = 1;
+
+    //        dtTemp.Rows.Add(dr);
+
+    //        return dtTemp;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return null;
+    //    }
+    //}
+
+    //private DataTable GetContactPerson()
+    //{
+    //    try
+    //    {
+    //        DataTable dt = new DataTable();
+
+    //        if (Session["dtContactPerson"] != null)
+    //            dt = (DataTable)Session["dtContactPerson"];
+    //        else return null;
+
+
+    //        dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("SR_NO", typeof(int));
+    //        dtTemp.Columns.Add("PID", typeof(int));
+    //        dtTemp.Columns.Add("NAME", typeof(string));
+    //        dtTemp.Columns.Add("MOBILE_NO", typeof(string));
+    //        dtTemp.Columns.Add("PHONE", typeof(string));
+    //        dtTemp.Columns.Add("EMAIL", typeof(string));
+    //        dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+    //        dtTemp.Columns.Add("IS_DELETED", typeof(int));
+    //        dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+
+    //        foreach (DataRow dro in dt.Rows)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+
+    //            int index = dtTemp.Rows.Count + 1;
+
+    //            dr["SR_NO"] = index;
+    //            dr["PID"] = dro["PID"];
+    //            dr["NAME"] = dro["NAME"];
+    //            dr["MOBILE_NO"] = dro["MOBILE_NO"];
+    //            dr["PHONE"] = dro["PHONE"];
+    //            dr["EMAIL"] = dro["EMAIL"];
+
+    //            dr["IS_DEFAULT"] = dro["IS_DEFAULT"];
+    //            dr["IS_DELETED"] = dro["IS_DELETED"];
+    //            dr["IS_REVISED"] = 0;
+
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+
+    //        return dtTemp;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return null;
+    //    }
+    //}
+
+    private DataTable GetContactPerson()
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+
+            if (Session["dtContactPerson"] != null)
+                dt = (DataTable)Session["dtContactPerson"];
+            else return null;
+
+
+            dtTemp = new DataTable();
+
+            dtTemp.Columns.Add("SR_NO", typeof(int));
+            dtTemp.Columns.Add("PID", typeof(int));
+            dtTemp.Columns.Add("NAME", typeof(string));
+            dtTemp.Columns.Add("MOBILE_NO", typeof(string));
+            dtTemp.Columns.Add("PHONE", typeof(string));
+            dtTemp.Columns.Add("EMAIL", typeof(string));
+            dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+            dtTemp.Columns.Add("IS_DELETED", typeof(int));
+            dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+
+            foreach (DataRow dro in dt.Rows)
+            {
+                DataRow dr = dtTemp.NewRow();
+
+                int index = dtTemp.Rows.Count + 1;
+
+                dr["SR_NO"] = index;
+                dr["PID"] = dro["PID"];
+                dr["NAME"] = dro["NAME"];
+                dr["MOBILE_NO"] = dro["MOBILE_NO"];
+                dr["PHONE"] = dro["PHONE"];
+                dr["EMAIL"] = dro["EMAIL"];
+
+                dr["IS_DEFAULT"] = dro["IS_DEFAULT"];
+                dr["IS_DELETED"] = dro["IS_DELETED"];
+                dr["IS_REVISED"] = 0;
+
+                dtTemp.Rows.Add(dr);
+            }
+
+
+            return dtTemp;
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+
+
+
+    private DataTable GetBankDetails()
+    {
+        try
+        {
+            string BankName = string.Empty;
+            string Branch = string.Empty;
+            string SWIFTCode = string.Empty;
+            string AccountNumber = string.Empty;
+            string RTGSOrIFSC = string.Empty;
+            string ISBN = string.Empty;
+
+
+            if (!string.IsNullOrEmpty(txtBankNameToS.Text))
+                BankName = Convert.ToString(txtBankNameToS.Text);
+
+            if (!string.IsNullOrEmpty(txtBranchToS.Text))
+                Branch = Convert.ToString(txtBranchToS.Text);
+
+            if (!string.IsNullOrEmpty(txtSWIFTCodeToS.Text))
+                SWIFTCode = Convert.ToString(txtSWIFTCodeToS.Text);
+
+            if (!string.IsNullOrEmpty(txtAccountNumberToS.Text))
+                AccountNumber = Convert.ToString(txtAccountNumberToS.Text);
+
+            if (!string.IsNullOrEmpty(txtRTGSOrIFSCToS.Text))
+                RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSCToS.Text);
+
+            if (!string.IsNullOrEmpty(txtISBNToS.Text))
+                ISBN = Convert.ToString(txtISBNToS.Text);
+
+
+            dtTemp = new DataTable();
+
+            dtTemp.Columns.Add("SR_NO", typeof(int));
+            dtTemp.Columns.Add("PID", typeof(int));
+            dtTemp.Columns.Add("BANK_NAME", typeof(string));
+            dtTemp.Columns.Add("BRANCH", typeof(string));
+            dtTemp.Columns.Add("SWIFT_CODE", typeof(string));
+            dtTemp.Columns.Add("ACCOUNT_NUMBER", typeof(string));
+            dtTemp.Columns.Add("RTGS_OR_IFSC_CODE", typeof(string));
+            dtTemp.Columns.Add("ISBN", typeof(string));
+            dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+            dtTemp.Columns.Add("IS_DELETED", typeof(int));
+            dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+            DataRow dr = dtTemp.NewRow();
+
+            int index = dtTemp.Rows.Count + 1;
+
+            dr["SR_NO"] = index;
+            dr["PID"] = Convert.ToInt32(hdBankDetailsPID.Value);
+            dr["BANK_NAME"] = BankName;
+            dr["BRANCH"] = Branch;
+            dr["SWIFT_CODE"] = SWIFTCode;
+            dr["ACCOUNT_NUMBER"] = AccountNumber;
+            dr["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+            dr["ISBN"] = ISBN;
+            dr["IS_DEFAULT"] = 1;
+            dr["IS_DELETED"] = 0;
+            dr["IS_REVISED"] = 0;
+
+            dtTemp.Rows.Add(dr);
+
+            return dtTemp;
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+
+    //private DataTable GetBankDetails()
+    //{
+    //    try
+    //    {
+    //        DataTable dt = new DataTable();
+
+    //        if (Session["dtBankDetails"] != null)
+    //            dt = (DataTable)Session["dtBankDetails"];
+    //        else return null;
+
+    //        dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("SR_NO", typeof(int));
+    //        dtTemp.Columns.Add("PID", typeof(int));
+    //        dtTemp.Columns.Add("BANK_NAME", typeof(string));
+    //        dtTemp.Columns.Add("BRANCH", typeof(string));
+    //        dtTemp.Columns.Add("SWIFT_CODE", typeof(string));
+    //        dtTemp.Columns.Add("ACCOUNT_NUMBER", typeof(string));
+    //        dtTemp.Columns.Add("RTGS_OR_IFSC_CODE", typeof(string));
+    //        dtTemp.Columns.Add("ISBN", typeof(string));
+    //        dtTemp.Columns.Add("IS_DEFAULT", typeof(int));
+    //        dtTemp.Columns.Add("IS_DELETED", typeof(int));
+    //        dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+
+    //        foreach (DataRow dro in dt.Rows)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+
+    //            int index = dtTemp.Rows.Count + 1;
+
+    //            dr["SR_NO"] = index;
+    //            dr["PID"] = dro["PID"];
+    //            dr["BANK_NAME"] = dro["BANK_NAME"];
+    //            dr["BRANCH"] = dro["BRANCH"];
+    //            dr["SWIFT_CODE"] = dro["SWIFT_CODE"];
+    //            dr["ACCOUNT_NUMBER"] = dro["ACCOUNT_NUMBER"];
+    //            dr["RTGS_OR_IFSC_CODE"] = dro["RTGS_OR_IFSC_CODE"];
+    //            dr["ISBN"] = dro["ISBN"];
+
+    //            dr["IS_DEFAULT"] = dro["IS_DEFAULT"];
+    //            dr["IS_DELETED"] = dro["IS_DELETED"];
+    //            dr["IS_REVISED"] = 0;
+
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+
+    //        return dtTemp;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return null;
+    //    }
+    //}
+
+
+
+
+
+    //private DataTable GetAttachment(bool IsRevisionFlag)
+    //{
+    //    try
+    //    {
+    //        dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("SR_NO", typeof(int));
+    //        dtTemp.Columns.Add("PID", typeof(int));
+    //        dtTemp.Columns.Add("DOC_TYPE_FID", typeof(int));
+    //        dtTemp.Columns.Add("DOC_TYPE", typeof(string));
+    //        dtTemp.Columns.Add("DOC_NAME", typeof(string));
+    //        dtTemp.Columns.Add("DOC", typeof(byte[]));
+    //        dtTemp.Columns.Add("IS_DELETED", typeof(int));
+    //        dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+    //        byte[] FileBytesVRF = null;
+    //        byte[] FileBytesGSTIN = null;
+    //        byte[] FileBytesPAN = null;
+    //        byte[] FileBytesCC = null;
+    //        byte[] FileBytesOther1 = null;
+    //        byte[] FileBytesOther2 = null;
+    //        byte[] FileBytesOther3 = null;
+    //        byte[] FileBytesOther4 = null;
+
+    //        string FileNameVRF = string.Empty;
+    //        string FileNameGSTIN = string.Empty;
+    //        string FileNamePAN = string.Empty;
+    //        string FileNameCC = string.Empty;
+    //        string FileNameOther1 = string.Empty;
+    //        string FileNameOther2 = string.Empty;
+    //        string FileNameOther3 = string.Empty;
+    //        string FileNameOther4 = string.Empty;
+
+    //        if (fileUploadAttachmentVRF.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentVRF.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentVRF.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameVRF = str[str.Length - 1];
+    //                FileBytesVRF = GetFileBytes(fileUploadAttachmentVRF.PostedFile.FileName, fileUploadAttachmentVRF.PostedFile.InputStream);
+    //            }
+    //        }
+
+
+    //        if (fileUploadAttachmentGSTIN.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentGSTIN.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentGSTIN.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameGSTIN = str[str.Length - 1];
+    //                FileBytesGSTIN = GetFileBytes(fileUploadAttachmentGSTIN.PostedFile.FileName, fileUploadAttachmentGSTIN.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentPAN.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentPAN.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentPAN.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNamePAN = str[str.Length - 1];
+    //                FileBytesPAN = GetFileBytes(fileUploadAttachmentPAN.PostedFile.FileName, fileUploadAttachmentPAN.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentCancelledCheque.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentCancelledCheque.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentCancelledCheque.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameCC = str[str.Length - 1];
+    //                FileBytesCC = GetFileBytes(fileUploadAttachmentCancelledCheque.PostedFile.FileName, fileUploadAttachmentCancelledCheque.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentOther.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentOther.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentOther.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameOther = str[str.Length - 1];
+    //                FileBytesOther = GetFileBytes(fileUploadAttachmentOther.PostedFile.FileName, fileUploadAttachmentOther.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameGSTIN)) && FileBytesGSTIN != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 1;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.GSTIn;
+    //            dr["DOC_NAME"] = FileNameGSTIN;
+    //            dr["DOC"] = FileBytesGSTIN;
+    //            dr["IS_DELETED"] = 0;
+
+    //            dr["IS_REVISED"] = 0;
+    //            if (IsRevisionFlag) dr["IS_REVISED"] = 1;
+
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNamePAN)) && FileBytesPAN != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 2;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.PAN;
+    //            dr["DOC_NAME"] = FileNamePAN;
+    //            dr["DOC"] = FileBytesPAN;
+    //            dr["IS_DELETED"] = 0;
+
+    //            dr["IS_REVISED"] = 0;
+    //            if (IsRevisionFlag) dr["IS_REVISED"] = 1;
+
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameCC)) && FileBytesCC != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 3;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.CancelledCheque;
+    //            dr["DOC_NAME"] = FileNameCC;
+    //            dr["DOC"] = FileBytesCC;
+    //            dr["IS_DELETED"] = 0;
+
+    //            dr["IS_REVISED"] = 0;
+    //            if (IsRevisionFlag) dr["IS_REVISED"] = 1;
+
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameOther)) && FileBytesOther != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 4;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.Other;
+    //            dr["DOC_NAME"] = FileNameOther;
+    //            dr["DOC"] = FileBytesOther;
+    //            dr["IS_DELETED"] = 0;
+
+    //            dr["IS_REVISED"] = 0;
+    //            if (IsRevisionFlag) dr["IS_REVISED"] = 1;
+
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        return dtTemp;
+
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return null;
+    //    }
+    //}
+
+    //private DataTable GetAttachment()
+    //{
+    //    try
+    //    {
+    //        dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("SR_NO", typeof(int));
+    //        dtTemp.Columns.Add("PID", typeof(int));
+    //        dtTemp.Columns.Add("DOC_TYPE_FID", typeof(int));
+    //        dtTemp.Columns.Add("DOC_TYPE", typeof(string));
+    //        dtTemp.Columns.Add("DOC_NAME", typeof(string));
+    //        dtTemp.Columns.Add("DOC", typeof(byte[]));
+    //        dtTemp.Columns.Add("IS_DELETED", typeof(int));
+    //        dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+    //        byte[] FileBytesVRF = null;
+    //        byte[] FileBytesGSTIN = null;
+    //        byte[] FileBytesPAN = null;
+    //        byte[] FileBytesCC = null;
+    //        byte[] FileBytesOther1 = null;
+    //        byte[] FileBytesOther2 = null;
+    //        byte[] FileBytesOther3 = null;
+    //        byte[] FileBytesOther4 = null;
+
+    //        string FileNameVRF = string.Empty;
+    //        string FileNameGSTIN = string.Empty;
+    //        string FileNamePAN = string.Empty;
+    //        string FileNameCC = string.Empty;
+    //        string FileNameOther1 = string.Empty;
+    //        string FileNameOther2 = string.Empty;
+    //        string FileNameOther3 = string.Empty;
+    //        string FileNameOther4 = string.Empty;
+
+
+    //        if (fileUploadAttachmentVRF.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentVRF.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentVRF.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameVRF = str[str.Length - 1];
+    //                FileBytesVRF = GetFileBytes(fileUploadAttachmentVRF.PostedFile.FileName, fileUploadAttachmentVRF.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentGSTIN.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentGSTIN.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentGSTIN.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameGSTIN = str[str.Length - 1];
+    //                FileBytesGSTIN = GetFileBytes(fileUploadAttachmentGSTIN.PostedFile.FileName, fileUploadAttachmentGSTIN.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentPAN.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentPAN.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentPAN.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNamePAN = str[str.Length - 1];
+    //                FileBytesPAN = GetFileBytes(fileUploadAttachmentPAN.PostedFile.FileName, fileUploadAttachmentPAN.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentCancelledCheque.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentCancelledCheque.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentCancelledCheque.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameCC = str[str.Length - 1];
+    //                FileBytesCC = GetFileBytes(fileUploadAttachmentCancelledCheque.PostedFile.FileName, fileUploadAttachmentCancelledCheque.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentOther1.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentOther1.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentOther1.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameOther1 = str[str.Length - 1];
+    //                FileBytesOther1 = GetFileBytes(fileUploadAttachmentOther1.PostedFile.FileName, fileUploadAttachmentOther1.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentOther2.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentOther2.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentOther2.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameOther2 = str[str.Length - 1];
+    //                FileBytesOther2 = GetFileBytes(fileUploadAttachmentOther2.PostedFile.FileName, fileUploadAttachmentOther2.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentOther3.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentOther3.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentOther3.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameOther3 = str[str.Length - 1];
+    //                FileBytesOther3 = GetFileBytes(fileUploadAttachmentOther3.PostedFile.FileName, fileUploadAttachmentOther3.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (fileUploadAttachmentOther4.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentOther4.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentOther4.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileNameOther4 = str[str.Length - 1];
+    //                FileBytesOther4 = GetFileBytes(fileUploadAttachmentOther4.PostedFile.FileName, fileUploadAttachmentOther4.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameVRF)) && FileBytesGSTIN != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 1;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.VRF;
+    //            dr["DOC_NAME"] = FileNameVRF;
+    //            dr["DOC"] = FileBytesVRF;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameGSTIN)) && FileBytesGSTIN != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 2;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.GSTIn;
+    //            dr["DOC_NAME"] = FileNameGSTIN;
+    //            dr["DOC"] = FileBytesGSTIN;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNamePAN)) && FileBytesPAN != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 3;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.PAN;
+    //            dr["DOC_NAME"] = FileNamePAN;
+    //            dr["DOC"] = FileBytesPAN;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameCC)) && FileBytesCC != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 4;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.CancelledCheque;
+    //            dr["DOC_NAME"] = FileNameCC;
+    //            dr["DOC"] = FileBytesCC;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameOther1)) && FileBytesOther1 != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 5;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.Other1;
+    //            dr["DOC_NAME"] = FileNameOther1;
+    //            dr["DOC"] = FileBytesOther1;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameOther2)) && FileBytesOther2 != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 6;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.Other2;
+    //            dr["DOC_NAME"] = FileNameOther2;
+    //            dr["DOC"] = FileBytesOther2;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameOther3)) && FileBytesOther3 != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 7;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.Other3;
+    //            dr["DOC_NAME"] = FileNameOther3;
+    //            dr["DOC"] = FileBytesOther3;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileNameOther4)) && FileBytesOther4 != null)
+    //        {
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = 8;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = (int)StatusAndTypes.EnumDOCTypes.Other4;
+    //            dr["DOC_NAME"] = FileNameOther4;
+    //            dr["DOC"] = FileBytesOther4;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+
+    //        return dtTemp;
+
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return null;
+    //    }
+    //}
+
+
+    private DataTable GetAttachment()
+    {
+        try
+        {
+
+            DataTable dt = new DataTable();
+
+            if (Session["dtAttachments"] != null)
+                dt = (DataTable)Session["dtAttachments"];
+            else return null;
+
+
+            string ss = ("DOC Column Type: " + dt.Columns["DOC"].DataType.FullName);
+
+            dtTemp = new DataTable();
+
+            dtTemp.Columns.Add("SR_NO", typeof(int));
+            dtTemp.Columns.Add("PID", typeof(int));
+            dtTemp.Columns.Add("DOC_TYPE_FID", typeof(int));
+            dtTemp.Columns.Add("DOC_TYPE", typeof(string));
+            dtTemp.Columns.Add("DOC_NAME", typeof(string));
+            dtTemp.Columns.Add("DOC", typeof(byte[]));
+            dtTemp.Columns.Add("IS_DELETED", typeof(int));
+            dtTemp.Columns.Add("IS_REVISED", typeof(int));
+
+            foreach (DataRow dro in dt.Rows)
+            {
+                DataRow dr = dtTemp.NewRow();
+
+                int index = dtTemp.Rows.Count + 1;
+
+                dr["SR_NO"] = index;
+                dr["PID"] = dro["PID"];
+                dr["DOC_TYPE_FID"] = dro["DOC_TYPE_FID"];
+                dr["DOC_NAME"] = dro["DOC_NAME"];
+                dr["DOC"] = dro["DOC"];
+                dr["IS_DELETED"] = dro["IS_DELETED"];
+                dr["IS_REVISED"] = dro["IS_REVISED"];
+                dtTemp.Rows.Add(dr);
+            }
+
+            return dtTemp;
+
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+
+
+
+    //private void AddTempBillingAddressTable()
+    //{
+    //    dtBillingAddress.Columns.Add("SR_NO", typeof(int));
+    //    dtBillingAddress.Columns.Add("SR_NO_IN", typeof(int));
+    //    dtBillingAddress.Columns.Add("PID", typeof(int));
+    //    dtBillingAddress.Columns.Add("ADDRESS_LINE1", typeof(string));
+    //    dtBillingAddress.Columns.Add("ADDRESS_LINE2", typeof(string));
+    //    dtBillingAddress.Columns.Add("ADDRESS_LINE3", typeof(string));
+    //    dtBillingAddress.Columns.Add("CITY", typeof(string));
+    //    dtBillingAddress.Columns.Add("STATE", typeof(string));
+    //    dtBillingAddress.Columns.Add("COUNTRY", typeof(string));
+    //    dtBillingAddress.Columns.Add("PHONE", typeof(string));
+    //    dtBillingAddress.Columns.Add("EMAIL", typeof(string));
+    //    dtBillingAddress.Columns.Add("IS_DEFAULT", typeof(int));
+    //    dtBillingAddress.Columns.Add("IS_DELETED", typeof(int));
+    //    dtBillingAddress.Columns.Add("IS_REVISED", typeof(int));
+
+    //    Session["dtBillingAddress"] = dtBillingAddress;
+    //}
+
+    ////private void ResetBillingAddress()
+    ////{
+    ////    txtAddress1ToS.Text = string.Empty;
+    ////    txtAddress2ToS.Text = string.Empty;
+    ////    txtAddress3ToS.Text = string.Empty;
+    ////    txtCityToS.Text = string.Empty;
+    ////    txtStateToS.Text = string.Empty;
+    ////    txtCountryToS.Text = string.Empty;
+    ////    txtPhoneToS.Text = string.Empty;
+    ////    txtEmailToS.Text = string.Empty;
+    ////    chkIsDefaultBillingAddressToS.Checked = false;
+    ////}
+
+
+
+
+
+    //private void UpdateContactPerson()
+    //{
+    //    try
+    //    {
+    //        string Name = string.Empty;
+    //        string Mobile = string.Empty;
+    //        string Phone = string.Empty;
+    //        string Email = string.Empty;
+    //        int IsDefault = 0;
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonNameToS.Text))
+    //            Name = Convert.ToString(txtContactPersonNameToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonMobileToS.Text))
+    //            Mobile = Convert.ToString(txtContactPersonMobileToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonPhoneToS.Text))
+    //            Phone = Convert.ToString(txtContactPersonPhoneToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtContactPersonEmailToS.Text))
+    //            Email = Convert.ToString(txtContactPersonEmailToS.Text);
+
+    //        //if (chkIsDefaultContactPersonToS.Checked)
+    //        //{
+    //        //    IsDefault = 1;
+    //        //    foreach (DataRow drt in dtTemp.Rows)
+    //        //    {
+    //        //        drt["IS_DEFAULT"] = 0;
+    //        //    }
+    //        //}
+
+    //        if (chkIsDefaultContactPersonToS.Checked) IsDefault = 1;
+
+    //        if (dtTemp != null && Session["dtContactPerson"] != null)
+    //            dtTemp = (DataTable)Session["dtContactPerson"];
+    //        else
+    //            AddTempContactPersonTable();
+
+    //        dtTemp = (DataTable)Session["dtContactPerson"];
+
+
+    //        if (dtTemp.Rows.Count > 0)
+    //        {
+    //            foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdContactPersonSRNo.Value) + "'"))
+    //            {
+    //                d["PID"] = Convert.ToInt32(ViewState["CP_PID"]);
+
+    //                if (GetIsRevisedFlag())
+    //                    d["IS_REVISED"] = 1;
+    //                else
+    //                    d["IS_REVISED"] = 0;
+
+    //                //if (Convert.ToInt32(hdContactPersonSRNo.Value) > 0)
+    //                //    d["SR_NO"] = Convert.ToString(hdContactPersonSRNo.Value);
+    //                //else d["SR_NO"] = "0";
+
+
+    //                if (Convert.ToInt32(hdContactPersonSRNo.Value) > 0)
+    //                {
+    //                    d["SR_NO"] = Convert.ToString(hdContactPersonSRNo.Value);
+    //                    d["SR_NO_IN"] = Convert.ToString(hdContactPersonSRNo.Value);
+    //                }
+    //                else
+    //                {
+    //                    d["SR_NO"] = "0";
+    //                    d["SR_NO_IN"] = "0";
+    //                }
+
+
+    //                if (!string.IsNullOrEmpty(Name))
+    //                    d["NAME"] = Name;
+    //                else d["NAME"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(Mobile))
+    //                    d["MOBILE_NO"] = Mobile;
+    //                else d["MOBILE_NO"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(Phone))
+    //                    d["PHONE"] = Phone;
+    //                else d["PHONE"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(Email))
+    //                    d["EMAIL"] = Email;
+    //                else d["EMAIL"] = string.Empty;
+
+    //                //if (IsDefault > 0)
+    //                //    d["IS_DEFAULT"] = 1;
+    //                //else d["IS_DEFAULT"] = 0;
+
+    //                if (IsDefault > 0)
+    //                {
+    //                    foreach (DataRow drt in dtTemp.Rows)
+    //                    {
+    //                        drt["IS_DEFAULT"] = 0;
+    //                    }
+    //                    d["IS_DEFAULT"] = 1;
+    //                }
+    //                else d["IS_DEFAULT"] = 0;
+
+    //            }
+    //        }
+
+    //        //gvContactPerson.DataSource = dtTemp;
+    //        //gvContactPerson.DataBind();
+
+    //        //lblContactPersonRecordsToS.Text = "[" + gvContactPerson.Rows.Count + "]";
+
+    //        DataTable dtTempActive = GetActiveDataTable(dtTemp);
+    //        BindContactPerson(GetIsEditedFlag(), GetIsRevisedFlag(), dtTempActive);
+
+    //        ResetContactPerson();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //private void BindContactPerson(bool isEdit, bool isRevised, DataTable dataTable)
+    //{
+    //    gvContactPerson.DataSource = dataTable;
+    //    gvContactPerson.DataBind();
+
+    //    foreach (GridViewRow gr in gvContactPerson.Rows)
+    //    {
+    //        ImageButton imgProperties = gr.FindControl("imgProperties") as ImageButton;
+    //        ImageButton imgRemove = gr.FindControl("imgRemove") as ImageButton;
+
+    //        Label lblPID = gr.FindControl("lblPID") as Label;
+
+    //        imgProperties.Visible = false;
+    //        imgRemove.Visible = false;
+
+    //        if (isRevised)
+    //        {
+    //            if (Convert.ToInt32(lblPID.Text) == 0)
+    //            {
+    //                imgRemove.Visible = true;
+    //            }
+    //        }
+    //        else if (isEdit)
+    //        {
+    //            imgProperties.Visible = true;
+    //            imgRemove.Visible = true;
+    //        }
+    //    }
+
+    //    lblContactPersonRecordsToS.Text = "[" + gvContactPerson.Rows.Count + "]";
+    //}
+
+    //private void AddTempContactPersonTable()
+    //{
+    //    dtContactPerson.Columns.Add("SR_NO", typeof(int));
+    //    dtContactPerson.Columns.Add("SR_NO_IN", typeof(int));
+    //    dtContactPerson.Columns.Add("PID", typeof(int));
+    //    dtContactPerson.Columns.Add("NAME", typeof(string));
+    //    dtContactPerson.Columns.Add("MOBILE_NO", typeof(string));
+    //    dtContactPerson.Columns.Add("PHONE", typeof(string));
+    //    dtContactPerson.Columns.Add("EMAIL", typeof(string));
+    //    dtContactPerson.Columns.Add("IS_DEFAULT", typeof(int));
+    //    dtContactPerson.Columns.Add("IS_DELETED", typeof(int));
+    //    dtContactPerson.Columns.Add("IS_REVISED", typeof(int));
+
+    //    Session["dtContactPerson"] = dtContactPerson;
+    //}
+
+    //private void ResetContactPerson()
+    //{
+    //    txtContactPersonNameToS.Text = string.Empty;
+    //    txtContactPersonMobileToS.Text = string.Empty;
+    //    txtContactPersonPhoneToS.Text = string.Empty;
+    //    txtContactPersonEmailToS.Text = string.Empty;
+    //    chkIsDefaultContactPersonToS.Checked = false;
+    //}
+
+
+
+    //private void RemoveBankDetails(int srNo)
+    //{
+    //    if (Session["dtBankDetails"] != null)
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+    //    else
+    //        AddTempContactPersonTable();
+
+    //    dtTemp = (DataTable)Session["dtBankDetails"];
+
+    //    if (dtTemp.Rows.Count > 0)
+    //    {
+    //        DataRow[] dr = dtTemp.Select("SR_NO_IN='" + srNo + "'");
+    //        dr[0]["IS_DELETED"] = 1;
+    //    }
+
+    //    Session["dtBankDetails"] = dtTemp;
+
+    //    DataTable dtTempActive = GetActiveDataTable(dtTemp);
+
+    //    //gvBankDetails.DataSource = dtTempActive;
+    //    //gvBankDetails.DataBind();
+
+    //    //lblBankDetailsRecordsToS.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+    //    BindBankDetails(GetIsEditedFlag(), GetIsRevisedFlag(), dtTempActive);
+    //}
+
+    //private void RefreshBankDetails()
+    //{
+    //    if (Session["dtBankDetails"] != null)
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+
+    //    if (dtTemp != null && dtTemp.Rows.Count > 0)
+    //    {
+    //        int index = 0;
+    //        foreach (DataRow dr in dtTemp.Select("IS_DELETED = 1"))
+    //        {
+    //            index++;
+    //            dr["SR_NO"] = index;
+    //            dr["SR_NO_IN"] = index;
+    //            dr["IS_DELETED"] = 0;
+    //        }
+
+    //        Session["dtBankDetails"] = dtTemp;
+
+    //        //gvBankDetails.DataSource = dtTemp;
+    //        //gvBankDetails.DataBind();
+
+    //        //lblBankDetailsRecordsToS.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+    //        BindBankDetails(GetIsEditedFlag(), GetIsRevisedFlag(), dtTemp);
+    //    }
+    //}
+
+    //private void AddBankDetails()
+    //{
+    //    try
+    //    {
+    //        string BankName = string.Empty;
+    //        string Branch = string.Empty;
+    //        string SWIFTCode = string.Empty;
+    //        string AccountNumber = string.Empty;
+    //        string RTGSOrIFSC = string.Empty;
+    //        string ISBN = string.Empty;
+    //        int IsDefault = 0;
+
+    //        if (dtTemp != null && Session["dtBankDetails"] != null)
+    //            dtTemp = (DataTable)Session["dtBankDetails"];
+    //        else
+    //            AddTempBankDetailsTable();
+
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+
+    //        if (!string.IsNullOrEmpty(txtBankNameToS.Text))
+    //            BankName = Convert.ToString(txtBankNameToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtBranchToS.Text))
+    //            Branch = Convert.ToString(txtBranchToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtSWIFTCodeToS.Text))
+    //            SWIFTCode = Convert.ToString(txtSWIFTCodeToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtAccountNumberToS.Text))
+    //            AccountNumber = Convert.ToString(txtAccountNumberToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtRTGSOrIFSCToS.Text))
+    //            RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSCToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtISBNToS.Text))
+    //            ISBN = Convert.ToString(txtISBNToS.Text);
+
+    //        if (chkIsDefaultBankToS.Checked)
+    //        {
+    //            IsDefault = 1;
+    //            foreach (DataRow drt in dtTemp.Rows)
+    //            {
+    //                drt["IS_DEFAULT"] = 0;
+    //            }
+    //        }
+
+    //        DataRow dr = dtTemp.NewRow();
+    //        int index = dtTemp.Rows.Count + 1;
+
+    //        dr["SR_NO"] = index;
+    //        dr["SR_NO_IN"] = index;
+    //        dr["PID"] = 0;
+    //        dr["BANK_NAME"] = BankName;
+    //        dr["BRANCH"] = Branch;
+    //        dr["SWIFT_CODE"] = SWIFTCode;
+    //        dr["ACCOUNT_NUMBER"] = AccountNumber;
+    //        dr["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+    //        dr["ISBN"] = ISBN;
+    //        dr["IS_DEFAULT"] = IsDefault;
+    //        dr["IS_DELETED"] = 0;
+    //        dr["IS_REVISED"] = 0;
+
+    //        dtTemp.Rows.Add(dr);
+
+    //        DataTable dtTempActive = GetActiveDataTable(dtTemp);
+
+    //        //gvBankDetails.DataSource = dtTemp;
+    //        //gvBankDetails.DataBind();
+    //        //lblBankDetailsRecordsToS.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+    //        BindBankDetails(GetIsEditedFlag(), GetIsRevisedFlag(), dtTempActive);
+
+    //        ResetBankDetails();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //private void UpdateBankDetails()
+    //{
+    //    try
+    //    {
+    //        string BankName = string.Empty;
+    //        string Branch = string.Empty;
+    //        string SWIFTCode = string.Empty;
+    //        string AccountNumber = string.Empty;
+    //        string RTGSOrIFSC = string.Empty;
+    //        string ISBN = string.Empty;
+    //        int IsDefault = 0;
+
+    //        if (!string.IsNullOrEmpty(txtBankNameToS.Text))
+    //            BankName = Convert.ToString(txtBankNameToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtBranchToS.Text))
+    //            Branch = Convert.ToString(txtBranchToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtSWIFTCodeToS.Text))
+    //            SWIFTCode = Convert.ToString(txtSWIFTCodeToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtAccountNumberToS.Text))
+    //            AccountNumber = Convert.ToString(txtAccountNumberToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtRTGSOrIFSCToS.Text))
+    //            RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSCToS.Text);
+
+    //        if (!string.IsNullOrEmpty(txtISBNToS.Text))
+    //            ISBN = Convert.ToString(txtISBNToS.Text);
+
+    //        //if (chkIsDefaultBankToS.Checked)
+    //        //{
+    //        //    IsDefault = 1;
+    //        //    foreach (DataRow drt in dtTemp.Rows)
+    //        //    {
+    //        //        drt["IS_DEFAULT"] = 0;
+    //        //    }
+    //        //}
+
+    //        if (chkIsDefaultBankToS.Checked) IsDefault = 1;
+
+    //        if (dtTemp != null && Session["dtBankDetails"] != null)
+    //            dtTemp = (DataTable)Session["dtBankDetails"];
+    //        else
+    //            AddTempBankDetailsTable();
+
+    //        dtTemp = (DataTable)Session["dtBankDetails"];
+
+
+    //        if (dtTemp.Rows.Count > 0)
+    //        {
+    //            foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdBankDetailsSRNo.Value) + "'"))
+    //            {
+    //                d["PID"] = Convert.ToInt32(ViewState["BD_PID"]);
+
+    //                if (GetIsRevisedFlag())
+    //                    d["IS_REVISED"] = 1;
+    //                else
+    //                    d["IS_REVISED"] = 0;
+
+    //                if (Convert.ToInt32(hdBankDetailsSRNo.Value) > 0)
+    //                {
+    //                    d["SR_NO"] = Convert.ToString(hdBankDetailsSRNo.Value);
+    //                    d["SR_NO_IN"] = Convert.ToString(hdBankDetailsSRNo.Value);
+    //                }
+    //                else
+    //                {
+    //                    d["SR_NO"] = "0";
+    //                    d["SR_NO_IN"] = "0";
+    //                }
+
+    //                if (!string.IsNullOrEmpty(BankName))
+    //                    d["BANK_NAME"] = BankName;
+    //                else d["BANK_NAME"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(Branch))
+    //                    d["BRANCH"] = Branch;
+    //                else d["BRANCH"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(SWIFTCode))
+    //                    d["SWIFT_CODE"] = SWIFTCode;
+    //                else d["SWIFT_CODE"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(AccountNumber))
+    //                    d["ACCOUNT_NUMBER"] = AccountNumber;
+    //                else d["ACCOUNT_NUMBER"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(RTGSOrIFSC))
+    //                    d["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+    //                else d["RTGS_OR_IFSC_CODE"] = string.Empty;
+
+    //                if (!string.IsNullOrEmpty(ISBN))
+    //                    d["ISBN"] = ISBN;
+    //                else d["ISBN"] = string.Empty;
+
+    //                //if (IsDefault > 0)
+    //                //    d["IS_DEFAULT"] = 1;
+    //                //else d["IS_DEFAULT"] = 0;
+
+    //                if (IsDefault > 0)
+    //                {
+    //                    foreach (DataRow drt in dtTemp.Rows)
+    //                    {
+    //                        drt["IS_DEFAULT"] = 0;
+    //                    }
+    //                    d["IS_DEFAULT"] = 1;
+    //                }
+    //                else d["IS_DEFAULT"] = 0;
+
+    //            }
+    //        }
+
+    //        //gvBankDetails.DataSource = dtTemp;
+    //        //gvBankDetails.DataBind();
+
+    //        //lblBankDetailsRecordsToS.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+    //        DataTable dtTempActive = GetActiveDataTable(dtTemp);
+    //        BindBankDetails(GetIsEditedFlag(), GetIsRevisedFlag(), dtTempActive);
+
+    //        ResetBankDetails();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //private void BindBankDetails(bool isEdit, bool isRevised, DataTable dataTable)
+    //{
+    //    gvBankDetails.DataSource = dataTable;
+    //    gvBankDetails.DataBind();
+
+    //    foreach (GridViewRow gr in gvBankDetails.Rows)
+    //    {
+    //        ImageButton imgProperties = gr.FindControl("imgProperties") as ImageButton;
+    //        ImageButton imgRemove = gr.FindControl("imgRemove") as ImageButton;
+
+    //        Label lblPID = gr.FindControl("lblPID") as Label;
+
+    //        imgProperties.Visible = false;
+    //        imgRemove.Visible = false;
+
+    //        if (isRevised)
+    //        {
+    //            if (Convert.ToInt32(lblPID.Text) == 0)
+    //            {
+    //                imgRemove.Visible = true;
+    //            }
+    //        }
+    //        else if (isEdit)
+    //        {
+    //            imgProperties.Visible = true;
+    //            imgRemove.Visible = true;
+    //        }
+    //    }
+
+    //    lblBankDetailsRecordsToS.Text = "[" + gvBankDetails.Rows.Count + "]";
+    //}
+
+    //private void AddTempBankDetailsTable()
+    //{
+    //    dtBankDetails.Columns.Add("SR_NO", typeof(int));
+    //    dtBankDetails.Columns.Add("SR_NO_IN", typeof(int));
+    //    dtBankDetails.Columns.Add("PID", typeof(int));
+    //    dtBankDetails.Columns.Add("BANK_NAME", typeof(string));
+    //    dtBankDetails.Columns.Add("BRANCH", typeof(string));
+    //    dtBankDetails.Columns.Add("SWIFT_CODE", typeof(string));
+    //    dtBankDetails.Columns.Add("ACCOUNT_NUMBER", typeof(string));
+    //    dtBankDetails.Columns.Add("RTGS_OR_IFSC_CODE", typeof(string));
+    //    dtBankDetails.Columns.Add("ISBN", typeof(string));
+    //    dtBankDetails.Columns.Add("IS_DEFAULT", typeof(int));
+    //    dtBankDetails.Columns.Add("IS_DELETED", typeof(int));
+    //    dtBankDetails.Columns.Add("IS_REVISED", typeof(int));
+
+    //    Session["dtBankDetails"] = dtBankDetails;
+    //}
+
+    //private void ResetBankDetails()
+    //{
+    //    txtBankNameToS.Text = string.Empty;
+    //    txtBranchToS.Text = string.Empty;
+    //    txtSWIFTCodeToS.Text = string.Empty;
+    //    txtAccountNumberToS.Text = string.Empty;
+    //    txtRTGSOrIFSCToS.Text = string.Empty;
+    //    txtISBNToS.Text = string.Empty;
+    //    chkIsDefaultBankToS.Checked = false;
+    //}
+
+
+
+    //private void RemoveAttachments(int srNo)
+    //{
+    //    if (Session["dtAttachments"] != null)
+    //        dtTemp = (DataTable)Session["dtAttachments"];
+    //    else
+    //        AddTempContactPersonTable();
+
+    //    dtTemp = (DataTable)Session["dtAttachments"];
+
+    //    if (dtTemp.Rows.Count > 0)
+    //    {
+    //        DataRow[] dr = dtTemp.Select("SR_NO_IN='" + srNo + "'");
+    //        dr[0]["IS_DELETED"] = 1;
+    //    }
+
+    //    Session["dtAttachments"] = dtTemp;
+
+    //    DataTable dtTempActive = GetActiveDataTable(dtTemp);
+
+    //    //gvAttachments.DataSource = dtTempActive;
+    //    //gvAttachments.DataBind();
+
+    //    //lblAttachmentsRecordsToS.Text = "[" + gvAttachments.Rows.Count + "]";
+
+    //    BindAttachments(GetIsEditedFlag(), GetIsRevisedFlag(), dtTempActive);
+    //}
+
+    //private void RefreshAttachments()
+    //{
+    //    if (Session["dtAttachments"] != null)
+    //        dtTemp = (DataTable)Session["dtAttachments"];
+
+    //    if (dtTemp != null && dtTemp.Rows.Count > 0)
+    //    {
+    //        int index = 0;
+    //        foreach (DataRow dr in dtTemp.Select("IS_DELETED = 1"))
+    //        {
+    //            index++;
+    //            dr["SR_NO"] = index;
+    //            dr["SR_NO_IN"] = index;
+    //            dr["IS_DELETED"] = 0;
+    //        }
+
+    //        Session["dtAttachments"] = dtTemp;
+
+    //        //gvAttachments.DataSource = dtTemp;
+    //        //gvAttachments.DataBind();
+
+    //        //lblAttachmentsRecordsToS.Text = "[" + gvAttachments.Rows.Count + "]";
+
+    //        BindAttachments(GetIsEditedFlag(), GetIsRevisedFlag(), dtTemp);
+    //    }
+    //}
+
+    //private void AddAttachment()
+    //{
+    //    try
+    //    {
+    //        if (dtTemp != null && Session["dtAttachments"] != null)
+    //            dtTemp = (DataTable)Session["dtAttachments"];
+    //        else
+    //            AddTempAttachmentsTable();
+
+    //        dtTemp = (DataTable)Session["dtAttachments"];
+
+    //        Byte[] FileBytes = null;
+    //        string FileName = string.Empty;
+
+
+    //        if (fileUploadAttachmentToS.HasFile)
+    //        {
+    //            if (!string.IsNullOrEmpty(fileUploadAttachmentToS.PostedFile.FileName))
+    //            {
+    //                string[] str = fileUploadAttachmentToS.PostedFile.FileName.Split('\\');
+    //                int length = str.Length;
+    //                FileName = str[str.Length - 1];
+    //                FileBytes = GetFileBytes(fileUploadAttachmentToS.PostedFile.FileName, fileUploadAttachmentToS.PostedFile.InputStream);
+    //            }
+    //        }
+
+    //        int index = 0;
+    //        foreach (DataRow dr in dtTemp.Select("DOC_TYPE_FID = " + Convert.ToInt32(ddlAttachmentTypeToS.SelectedValue)))
+    //        {
+    //            if (Convert.ToInt32(dr["DOC_TYPE_FID"]) != (int)StatusAndTypes.EnumDOCTypes.Other)
+    //            {
+    //                dr["IS_DELETED"] = 1;
+    //            }
+    //        }
+
+    //        if (!string.IsNullOrEmpty(Convert.ToString(FileName)) && FileBytes != null)
+    //        {
+    //            index = dtTemp.Rows.Count + 1;
+    //            DataRow dr = dtTemp.NewRow();
+    //            dr["SR_NO"] = index;
+    //            dr["SR_NO_IN"] = index;
+    //            dr["PID"] = 0;
+    //            dr["DOC_TYPE_FID"] = Convert.ToInt32(ddlAttachmentTypeToS.SelectedValue);
+    //            dr["DOC_TYPE"] = Convert.ToString(ddlAttachmentTypeToS.SelectedItem.Text);
+    //            dr["DOC_NAME"] = FileName;
+    //            dr["DOC"] = FileBytes;
+    //            dr["IS_DELETED"] = 0;
+    //            dr["IS_REVISED"] = 0;
+    //            dtTemp.Rows.Add(dr);
+    //        }
+
+    //        Session["dtAttachments"] = dtTemp;
+
+    //        DataTable dtTempActive = GetActiveDataTable(dtTemp);
+
+    //        //gvAttachments.DataSource = dtTempActive;
+    //        //gvAttachments.DataBind();
+    //        //lblAttachmentsRecordsToS.Text = "Files [" + gvAttachments.Rows.Count + "]";
+
+    //        BindAttachments(GetIsEditedFlag(), GetIsRevisedFlag(), dtTempActive);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+
+    //private void BindAttachments(bool isEdit, bool isRevised, DataTable dataTable)
+    //{
+    //    gvAttachments.DataSource = dataTable;
+    //    gvAttachments.DataBind();
+
+    //    foreach (GridViewRow gr in gvAttachments.Rows)
+    //    {
+    //        //ImageButton imgProperties = gr.FindControl("imgProperties") as ImageButton;
+    //        ImageButton imgRemove = gr.FindControl("imgRemove") as ImageButton;
+
+    //        Label lblPID = gr.FindControl("lblPID") as Label;
+
+    //        //imgProperties.Visible = false;
+    //        imgRemove.Visible = false;
+
+    //        if (isRevised)
+    //        {
+    //            if (Convert.ToInt32(lblPID.Text) == 0)
+    //            {
+    //                imgRemove.Visible = true;
+    //            }
+    //        }
+    //        else if (isEdit)
+    //        {
+    //            //imgProperties.Visible = true;
+    //            imgRemove.Visible = true;
+    //        }
+    //    }
+
+    //    lblAttachmentsRecordsToS.Text = "[" + gvAttachments.Rows.Count + "]";
+    //}
+
+    //private void AddTempAttachmentsTable()
+    //{
+    //    dtAttachments.Columns.Add("SR_NO", typeof(int));
+    //    dtAttachments.Columns.Add("SR_NO_IN", typeof(int));
+    //    dtAttachments.Columns.Add("PID", typeof(int));
+    //    dtAttachments.Columns.Add("DOC_TYPE_FID", typeof(int));
+    //    dtAttachments.Columns.Add("DOC_TYPE", typeof(string));
+    //    dtAttachments.Columns.Add("DOC_NAME", typeof(string));
+    //    dtAttachments.Columns.Add("DOC", typeof(byte[]));
+    //    dtAttachments.Columns.Add("IS_DELETED", typeof(int));
+    //    dtAttachments.Columns.Add("IS_REVISED", typeof(int));
+
+    //    Session["dtAttachments"] = dtAttachments;
+    //}
+
+
+
+
+    //private void ClearSessions()
+    //{
+    //    hdIsRevised.Value = "0";
+    //    hdIsEdited.Value = "0";
+    //    Session["dtCategory"] = null;
+    //    Session["dtResponsible"] = null;
+    //    Session["dtRelationType"] = null;
+    //    Session["dtVendorDetails"] = null;
+    //    Session["dtBillingAddress"] = null;
+    //    Session["dtContactPerson"] = null;
+    //    Session["dtBankDetails"] = null;
+    //    Session["dtAmendments"] = null;
+    //    Session["dtAttachments"] = null;
+    //    Session["dtApprovers"] = null;
+    //    Session["dtRevisionTypes"] = null;
+    //}
+
+    //private void AddTempAmendmentsTable()
+    //{
+    //    dtAmendments.Columns.Add("ENTITY_FID", typeof(int));
+    //    dtAmendments.Columns.Add("STATUS_FID", typeof(int));
+    //    dtAmendments.Columns.Add("ACTION_BY_ID", typeof(int));
+    //    dtAmendments.Columns.Add("DOCACTION_BY_NAME", typeof(string));
+    //    dtAmendments.Columns.Add("ACTION_ON", typeof(string));
+    //    dtAmendments.Columns.Add("REMARKS", typeof(string));
+
+    //    Session["dtAmendments"] = dtAmendments;
+    //}
+
+    //private DataTable GetActiveDataTable(DataTable dtTemp)
+    //{
+    //    DataRow[] rows = dtTemp.Select("IS_DELETED = 0");
+    //    DataTable dtTempActive = dtTemp.Clone();
+
+    //    if (rows.Length > 0)
+    //    {
+    //        dtTempActive = rows.CopyToDataTable();
+    //    }
+
+    //    if (dtTempActive.Rows.Count > 0)
+    //    {
+    //        for (int i = 0; i < dtTempActive.Rows.Count; i++)
+    //        {
+    //            dtTempActive.Rows[i]["SR_NO"] = i + 1;
+    //        }
+    //    }
+
+    //    return dtTempActive;
+    //}
+
+    //private void ViewDOC(int PID, string fileName)
+    //{
+    //    try
+    //    {
+    //        string fileExtn = fileName.Split('.')[1];
+    //        if (!string.IsNullOrEmpty(fileName))
+    //        {
+    //            fileExtn = fileName.Split('.').Last();
+    //            if (fileExtn == "jpg" || fileExtn == "jpeg" || fileExtn == "bmp" || fileExtn == "png" || fileExtn == "gif" ||
+    //                fileExtn == "JPG" || fileExtn == "JPEG" || fileExtn == "BMP" || fileExtn == "PNG" || fileExtn == "GIF")
+    //            {
+    //                imgFile.ImageUrl = "ViewAttachedImageFile.ashx?pid=" + PID;
+    //                mpeShowImageFile.Show();
+    //            }
+    //            else if (fileExtn == "pdf" || fileExtn == "PDF")
+    //            {
+    //                iframeViewPDFFile.Attributes.Add("src", "ViewAttachedPDFFile.aspx?pid=" + PID);
+    //                this.mpeShowPDFFile.Show();
+    //            }
+    //        }
+    //        else
+    //        {
+    //            ExceptionMessage("File Doesn't exist!");
+    //            return;
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw ex;
+    //    }
+    //}
+
+    //private void EnableRevisionControls(DataTable dtRevisionTypes)
+    //{
+    //    DisableVendorDetailsControls();
+    //    DisableBillingAddressControls();
+    //    DisableContactPersonControls();
+    //    DisableBankDetailControls();
+    //    DisableOtherDetailsControls();
+
+    //    btnShowBillingAddressPopup.Visible = false;
+    //    btnRefreshBillingAddress.Visible = false;
+
+    //    btnShowContactPersonPopup.Visible = false;
+    //    btnRefreshContactPerson.Visible = false;
+
+    //    btnShowBankDetailPopup.Visible = false;
+    //    btnRefreshBankDetails.Visible = false;
+
+
+    //    //gvContactPerson.Columns[1].Visible = false;
+    //    //gvBankDetails.Columns[1].Visible = false;
+    //    //gvAttachments.Columns[0].Visible = false;
+
+    //    foreach (DataRow dr in dtRevisionTypes.Rows)
+    //    {
+    //        if (Convert.ToInt32(dr["VALUE"]) == (int)StatusAndTypes.EnumRevisionType.BasicDetails_1)
+    //        {
+    //            EnableVendorDetailsControls();
+    //        }
+    //        if (Convert.ToInt32(dr["VALUE"]) == (int)StatusAndTypes.EnumRevisionType.BillingAddress_2)
+    //        {
+    //            btnShowBillingAddressPopup.Visible = true;
+    //            EnableBillingAddressControls();
+    //        }
+    //        if (Convert.ToInt32(dr["VALUE"]) == (int)StatusAndTypes.EnumRevisionType.ContactPerson_3)
+    //        {
+    //            btnShowContactPersonPopup.Visible = true;
+    //            EnableContactPersonControls();
+    //        }
+    //        if (Convert.ToInt32(dr["VALUE"]) == (int)StatusAndTypes.EnumRevisionType.BankDetail_4)
+    //        {
+    //            btnShowBankDetailPopup.Visible = true;
+    //            EnableBankDetailControls();
+    //        }
+    //        if (Convert.ToInt32(dr["VALUE"]) == (int)StatusAndTypes.EnumRevisionType.OtherDetail_5)
+    //        {
+    //            EnableOtherDetailsControls();
+    //        }
+    //    }
+
+
+
+
+
+    //}
+
+    private void ResetAll()
+    {
+        txtNameToS.Text = string.Empty;
+        txtCodeToS.Text = string.Empty;
+        txtPANNumberToS.Text = string.Empty;
+        txtGSTInToS.Text = string.Empty;
+        txtCreditDaysToS.Text = "0";
+        txtCreditLimitToS.Text = "0";
+        ddlCategoryToS.SelectedIndex = 0;
+        ddlMSMEStatusToS.SelectedIndex = 0;
+        //chkIsAssociatedToS.Checked = false;
+        rdAssociatedToS.SelectedIndex = 0;
+        ddlCheckerToS.SelectedIndex = 0;
+
+
+
+        txtAddress1ToS.Text = string.Empty;
+        txtAddress2ToS.Text = string.Empty;
+        txtAddress3ToS.Text = string.Empty;
+        txtCityToS.Text = string.Empty;
+        ddlCountryToS.SelectedIndex = 0;
+        //if (ddlStateToS.Enabled)
+        //{
+        //    ddlStateToS.SelectedIndex = 0;
+        //}
+        txtPhoneToS.Text = string.Empty;
+        txtEmailToS.Text = string.Empty;
+        chkIsDefaultBillingAddressToS.Checked = false;
+
+        txtContactPersonNameToS.Text = string.Empty;
+        txtContactPersonMobileToS.Text = string.Empty;
+        txtContactPersonPhoneToS.Text = string.Empty;
+        txtContactPersonEmailToS.Text = string.Empty;
+
+
+
+
+        txtBankNameToS.Text = string.Empty;
+        txtBranchToS.Text = string.Empty;
+        txtRTGSOrIFSCToS.Text = string.Empty;
+        txtAccountNumberToS.Text = string.Empty;
+        txtSWIFTCodeToS.Text = string.Empty;
+        txtISBNToS.Text = string.Empty;
+
+
+        //gvBankDetails.DataSource = null;
+        //gvBankDetails.DataBind();
+        //lblBankDetailsRecordsToS.Text = "[0]";
+
+        //chkIsTechnicalDetailsReceivedToS.Checked = false;
+        //chkIsISOCertifiedToS.Checked = false;
+        //chkIsQAVisitedToS.Checked = false;
+        //chkIsGovernmentToS.Checked = false;
+
+
+        rdIsTechnicalDetailsReceivedToS.SelectedIndex = 0;
+        rdIsISOCertifiedToS.SelectedIndex = 0;
+        rdIsQAVisitedToS.SelectedIndex = 0;
+        rdIsGovernmentToS.SelectedIndex = 0;
+
+        ddlResponsibleToS.SelectedIndex = 0;
+        ddlRelationTypeToS.SelectedIndex = 0;
+        ddlItemCategoryToS.SelectedIndex = 0;
+        ddlItemSubCategoryToS.SelectedIndex = 0;
+
+
+        ClearSessions();
+
+        gvBillingAddress.DataSource = null;
+        gvBillingAddress.DataBind();
+        lblBillingAddressRecords.Text = "[0]";
+
+        gvContactPerson.DataSource = null;
+        gvContactPerson.DataBind();
+        lblContactPersonRecords.Text = "[0]";
+
+        gvAttachments.DataSource = null;
+        gvAttachments.DataBind();
+        lblAttachmentsRecords.Text = "[0]";
+
+        txtRemarksToS.Text = string.Empty;
+    }
+
+    //private void DisplayNoneAllPanels()
+    //{
+    //    pnlVendorDetails.Style["display"] = "none";
+    //    pnlBillingAddress.Style["display"] = "none";
+    //    pnlContactPerson.Style["display"] = "none";
+    //    pnlBankDetails.Style["display"] = "none";
+    //    pnlVendorOtherDetails.Style["display"] = "none";
+    //    pnlAttachments.Style["display"] = "none";
+    //}
+
+    private void HideUpdatePanel()
+    {
+        //pnlUpdateMsg.Visible = false;
+        //lblUpdateMsg.Text = string.Empty;
+    }
+
+    private DataTable RemoveDatatabeColumns(DataTable dataTable)
+    {
+        if (dataTable != null && dataTable.Rows.Count > 0)
+        {
+            if (dataTable.Columns.Contains("SR_NO"))
+                dataTable.Columns.Remove("SR_NO");
+
+            if (dataTable.Columns.Contains("SR_NO_IN"))
+                dataTable.Columns.Remove("SR_NO_IN");
+
+            if (dataTable.Columns.Contains("DOC_TYPE"))
+                dataTable.Columns.Remove("DOC_TYPE");
+
+            if (dataTable.Columns.Contains("ENTITY_FID"))
+                dataTable.Columns.Remove("ENTITY_FID");
+
+            if (dataTable.Columns.Contains("ENTITY_TYPE_FID"))
+                dataTable.Columns.Remove("ENTITY_TYPE_FID");
+
+        }
+
+        return dataTable;
+    }
+
+    private void Reset()
+    {
+        //try
+        //{
+        //    ddlLOTMainItems.SelectedIndex = 0;
+        //    ddlLOTMainSubItems.SelectedIndex = 0;
+        //    txtCustomerCode.Text = string.Empty;
+        //    txtCustomerName.Text = string.Empty;
+        //    txtJOBNo.Text = string.Empty;
+        //    txtPONo.Text = string.Empty;
+        //    txtItemName.Text = string.Empty;
+        //    txtTFNo.Text = string.Empty;
+        //    txtNotes.Text = string.Empty;
+
+        //    gvJOBDetail.DataSource = null;
+        //    Session["dtSubitem"] = null;
+
+
+
+        //    dtTemp.Clear();
+        //    dtSubitem.Clear();
+        //    gvSubItem.DataSource = null;
+        //    gvSubItem.DataBind();
+
+
+        //    Session["dtAttachments"] = null;
+        //    dtTempAttachments.Clear();
+        //    gvAttachments.DataSource = null;
+        //    gvAttachments.DataBind();
+
+
+        //    ResetSubitems();
+        //}
+        //catch (Exception ex)
+        //{
+        //    ExceptionMessage(ex.ToString());
+        //    return;
+        //}
+    }
+
+    private string FormattedString(string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+            return text.ToUpper().Trim();
+
+        return "";
+    }
+
+    private byte[] GetFileBytes(string fileName, Stream stream)
+    {
+        byte[] GSTbytes = null;
+        #region
+        try
+        {
+            string GSTFilePath = fileName;
+            string GSTFileName = Path.GetFileName(GSTFilePath);
+            string GSText = Path.GetExtension(GSTFileName);
+            string GSTContentType = string.Empty;
+            switch (GSText)
+            {
+                case ".jpg":
+                    GSTContentType = "image/jpg";
+                    break;
+                case ".jpeg":
+                    GSTContentType = "image/jpeg";
+                    break;
+                case ".bmp":
+                    GSTContentType = "image/bmp";
+                    break;
+                case ".png":
+                    GSTContentType = "image/png";
+                    break;
+                case ".gif":
+                    GSTContentType = "image/gif";
+                    break;
+                case ".pdf":
+                    GSTContentType = "application/pdf";
+                    break;
+                case ".JPG":
+                    GSTContentType = "image/JPG";
+                    break;
+                case ".JPEG":
+                    GSTContentType = "image/JPEG";
+                    break;
+                case ".BMP":
+                    GSTContentType = "image/BMP";
+                    break;
+                case ".PNG":
+                    GSTContentType = "image/PNG";
+                    break;
+                case ".GIF":
+                    GSTContentType = "image/GIF";
+                    break;
+                case ".PDF":
+                    GSTContentType = "application/PDF";
+                    break;
+                case ".dxf":
+                    GSTContentType = "application/dxf";
+                    break;
+                case ".DXF":
+                    GSTContentType = "application/DXF";
+                    break;
+                case ".dwg":
+                    GSTContentType = "application/dwg";
+                    break;
+                case ".DWG":
+                    GSTContentType = "application/DWG";
+                    break;
+            }
+            Stream GSTfs = null;
+            BinaryReader GSTbr = null;
+            if (GSTContentType != string.Empty)
+            {
+                try
+                {
+                    GSTfs = stream;
+                    GSTfs.Position = 0;
+                    GSTbr = new BinaryReader(GSTfs);
+                    GSTbytes = GSTbr.ReadBytes((int)GSTfs.Length);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            else
+            {
+                ExceptionUpdateMessage("File format not recognised. Upload Image/PDF formats");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionUpdateMessage(ex.ToString());
+        }
+        #endregion
+        return GSTbytes;
+    }
+
+    private void HideUpdateMessagePanel()
+    {
+        pnlUpdateMsg.Visible = false;
+        lblUpdateMsg.Text = string.Empty;
+    }
+
+    private void ExceptionUpdateMessage(string message)
+    {
+        pnlUpdateMsg.Visible = true;
+        lblUpdateMsg.Text = message;
+        lblUpdateMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void HidePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    //private bool GetIsEditedFlag()
+    //{
+    //    if (hdIsEdited.Value != "0") return true;
+    //    return false;
+    //}
+
+    //private bool GetIsRevisedFlag()
+    //{
+    //    if (hdIsRevised.Value != "0") return true;
+    //    return false;
+    //}
+
+    //private void ResetAllPanelIconImages()
+    //{
+    //    imgBtnShowPnl1.ImageUrl = "~/Images/VCM/pnl1.png";
+    //    imgBtnShowPnl2.ImageUrl = "~/Images/VCM/pnl2.png";
+    //    imgBtnShowPnl3.ImageUrl = "~/Images/VCM/pnl3.png";
+    //    imgBtnShowPnl4.ImageUrl = "~/Images/VCM/pnl4.png";
+    //    imgBtnShowPnl5.ImageUrl = "~/Images/VCM/pnl5.png";
+    //    imgBtnShowPnl6.ImageUrl = "~/Images/VCM/pnl6.png";
+    //}
+
+    //private void ShowAttachedFiles(
+    //                               string PIDVRF
+    //                             , string PIDGSTIN
+    //                             , string PIDPAN
+    //                             , string PIDCC
+    //                             , string PIDOther1
+    //                             , string PIDOther2
+    //                             , string PIDOther3
+    //                             , string PIDOther4
+    //                             , string fileNameVRF
+    //                             , string fileNameGSTIN
+    //                             , string fileNamePAN
+    //                             , string fileNameCC
+    //                             , string fileNameOther1
+    //                             , string fileNameOther2
+    //                             , string fileNameOther3
+    //                             , string fileNameOther4)
+    //{
+
+    //    //txtFileNameVRF.Text = string.Empty;
+    //    //txtFileNameGSTIN.Text = string.Empty;
+    //    //txtFileNamePAN.Text = string.Empty;
+    //    //txtFileNameCancelledCheque.Text = string.Empty;
+    //    //txtFileNameOther1.Text = string.Empty;
+    //    //txtFileNameOther2.Text = string.Empty;
+    //    //txtFileNameOther3.Text = string.Empty;
+    //    //txtFileNameOther4.Text = string.Empty;
+
+    //    pnlViewAttachments.Visible = true;
+
+    //    if (!string.IsNullOrEmpty(fileNameVRF))
+    //    {
+    //        hdPIDVRF.Value = PIDVRF;
+    //        txtFileNameVRF.Text = fileNameVRF;
+    //        imgBtnFileVRF.Visible = true;
+    //        imgBtnFileVRF.ToolTip = fileNameVRF;
+
+    //        string extn = Convert.ToString(fileNameVRF).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileVRF.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileVRF.ToolTip = fileNameVRF;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileVRF.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileVRF.ToolTip = fileNameVRF;
+    //        }
+    //    }
+
+
+
+
+
+    //    if (!string.IsNullOrEmpty(fileNameGSTIN))
+    //    {
+    //        hdPIDGSTIN.Value = PIDGSTIN;
+    //        txtFileNameGSTIN.Text = fileNameGSTIN;
+    //        imgBtnFileGSTIN.Visible = true;
+    //        imgBtnFileGSTIN.ToolTip = fileNameGSTIN;
+
+    //        string extn = Convert.ToString(fileNameGSTIN).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileGSTIN.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileGSTIN.ToolTip = fileNameGSTIN;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileGSTIN.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileGSTIN.ToolTip = fileNameGSTIN;
+    //        }
+    //    }
+
+    //    if (!string.IsNullOrEmpty(fileNamePAN))
+    //    {
+    //        hdPIDPAN.Value = PIDPAN;
+    //        txtFileNamePAN.Text = fileNamePAN;
+    //        imgBtnFilePAN.Visible = true;
+    //        imgBtnFilePAN.ToolTip = fileNamePAN;
+
+    //        string extn = Convert.ToString(fileNamePAN).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFilePAN.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFilePAN.ToolTip = fileNamePAN;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFilePAN.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFilePAN.ToolTip = fileNamePAN;
+    //        }
+    //    }
+
+    //    if (!string.IsNullOrEmpty(fileNameCC))
+    //    {
+    //        hdPIDCancelledCheque.Value = PIDCC;
+    //        txtFileNameCancelledCheque.Text = fileNameCC;
+    //        imgBtnFileCC.Visible = true;
+    //        imgBtnFileCC.ToolTip = fileNameCC;
+
+    //        string extn = Convert.ToString(fileNameCC).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileCC.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileCC.ToolTip = fileNameCC;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileCC.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileCC.ToolTip = fileNameCC;
+    //        }
+    //    }
+
+    //    if (!string.IsNullOrEmpty(fileNameOther1))
+    //    {
+    //        hdPIDOther1.Value = PIDOther1;
+    //        txtFileNameOther1.Text = fileNameOther1;
+    //        imgBtnFileOther1.Visible = true;
+    //        imgBtnFileOther1.ToolTip = fileNameOther1;
+
+    //        string extn = Convert.ToString(fileNameOther1).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileOther1.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileOther1.ToolTip = fileNameOther1;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileOther1.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileOther1.ToolTip = fileNameOther1;
+    //        }
+    //    }
+
+
+    //    if (!string.IsNullOrEmpty(fileNameOther2))
+    //    {
+    //        hdPIDOther2.Value = PIDOther2;
+    //        txtFileNameOther2.Text = fileNameOther2;
+    //        imgBtnFileOther2.Visible = true;
+    //        imgBtnFileOther2.ToolTip = fileNameOther2;
+
+    //        string extn = Convert.ToString(fileNameOther2).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileOther2.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileOther2.ToolTip = fileNameOther2;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileOther2.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileOther2.ToolTip = fileNameOther2;
+    //        }
+    //    }
+
+
+    //    if (!string.IsNullOrEmpty(fileNameOther3))
+    //    {
+    //        hdPIDOther3.Value = PIDOther3;
+    //        txtFileNameOther3.Text = fileNameOther3;
+    //        imgBtnFileOther3.Visible = true;
+    //        imgBtnFileOther3.ToolTip = fileNameOther3;
+
+    //        string extn = Convert.ToString(fileNameOther3).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileOther3.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileOther3.ToolTip = fileNameOther3;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileOther3.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileOther3.ToolTip = fileNameOther3;
+    //        }
+    //    }
+
+
+    //    if (!string.IsNullOrEmpty(fileNameOther4))
+    //    {
+    //        hdPIDOther4.Value = PIDOther4;
+    //        txtFileNameOther4.Text = fileNameOther4;
+    //        imgBtnFileOther4.Visible = true;
+    //        imgBtnFileOther4.ToolTip = fileNameOther4;
+
+    //        string extn = Convert.ToString(fileNameOther4).Split('.').Last();
+    //        if (extn == "jpg" ||
+    //            extn == "jepg" ||
+    //            extn == "bmp" ||
+    //            extn == "png" ||
+    //            extn == "gif" ||
+    //            extn == "JPG" ||
+    //            extn == "JPEG" ||
+    //            extn == "BMP" ||
+    //            extn == "PNG" ||
+    //            extn == "GIF")
+    //        {
+    //            imgBtnFileOther4.ImageUrl = "~/Images/VCM/image.png";
+    //            imgBtnFileOther4.ToolTip = fileNameOther4;
+    //        }
+    //        else if (extn == "pdf" || extn == "PDF")
+    //        {
+    //            imgBtnFileOther4.ImageUrl = "~/Images/pdficon1.png";
+    //            imgBtnFileOther4.ToolTip = fileNameOther4;
+    //        }
+    //    }
+    //}
+
+    private void ViewDOC(int PID, string fileName)
+    {
+        try
+        {
+            string fileExtn = fileName.Split('.')[1];
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                fileExtn = fileName.Split('.').Last();
+                if (fileExtn == "jpg" || fileExtn == "jpeg" || fileExtn == "bmp" || fileExtn == "png" || fileExtn == "gif" ||
+                    fileExtn == "JPG" || fileExtn == "JPEG" || fileExtn == "BMP" || fileExtn == "PNG" || fileExtn == "GIF")
+                {
+                    imgFile.ImageUrl = "ViewAttachedImageFile.ashx?pid=" + PID;
+                    mpeShowImageFile.Show();
+                }
+                else if (fileExtn == "pdf" || fileExtn == "PDF")
+                {
+                    iframeViewPDFFile.Attributes.Add("src", "ViewAttachedPDFFile.aspx?pid=" + PID);
+                    this.mpeShowPDFFile.Show();
+                }
+            }
+            else
+            {
+                ExceptionMessage("File Doesn't exist!");
+                return;
+            }
+
+            this.mpeUpdateLOT.Show();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    //private DataTable GetRevisionTypes()
+    //{
+
+    //    DataTable dtRevisionTypes = new DataTable();
+    //    dtRevisionTypes.Columns.Add("VALUE", typeof(int));
+    //    foreach (System.Web.UI.WebControls.ListItem item in chkListRevisionsForToS.Items)
+    //    {
+    //        if (item.Selected)
+    //        {
+    //            dtRevisionTypes.Rows.Add(Convert.ToInt32(item.Value));
+    //        }
+    //    }
+
+    //    return dtRevisionTypes;
+    //}
+
+
+    private void AddAttachment()
+    {
+        try
+        {
+            if (Session["dtAttachments"] != null)
+                dtTemp = (DataTable)Session["dtAttachments"];
+            else
+                AddTempAttachmentsTable();
+
+            dtTemp = (DataTable)Session["dtAttachments"];
+
+            Byte[] FileBytes = null;
+            string FileName = string.Empty;
+
+
+            if (fileUploadAttachment.HasFile)
+            {
+                if (!string.IsNullOrEmpty(fileUploadAttachment.PostedFile.FileName))
+                {
+                    string[] str = fileUploadAttachment.PostedFile.FileName.Split('\\');
+                    int length = str.Length;
+                    FileName = str[str.Length - 1];
+                    FileBytes = GetFileBytes(fileUploadAttachment.PostedFile.FileName, fileUploadAttachment.PostedFile.InputStream);
+                }
+            }
+
+            int index = 0;
+            //foreach (DataRow dr in dtTemp.Select("DOC_TYPE_FID = " + Convert.ToInt32(ddlAttachmentType.SelectedValue)))
+            //{
+            //    if (Convert.ToInt32(dr["DOC_TYPE_FID"]) != (int)StatusAndTypes.EnumDOCTypes.Other1)
+            //    {
+            //        dtTemp.Rows.Remove(dr);
+            //    }
+            //}
+
+            if (!string.IsNullOrEmpty(Convert.ToString(FileName)) && FileBytes != null)
+            {
+                index = dtTemp.Rows.Count + 1;
+                DataRow dr = dtTemp.NewRow();
+                dr["SR_NO"] = index;
+                dr["SR_NO_IN"] = index;
+                dr["PID"] = 0;
+                dr["DOC_TYPE_FID"] = Convert.ToInt32(ddlAttachmentType.SelectedValue);
+                dr["DOC_TYPE"] = Convert.ToString(ddlAttachmentType.SelectedItem.Text);
+                dr["DOC_NAME"] = FileName;
+                dr["DOC"] = FileBytes;
+                dr["IS_DELETED"] = 0;
+                dr["IS_REVISED"] = 0;
+                dtTemp.Rows.Add(dr);
+            }
+
+            Session["dtAttachments"] = dtTemp;
+
+            DataRow[] rows = dtTemp.Select("IS_DELETED = 0");
+            DataTable dtTempActive = dtTemp.Clone();
+            foreach (DataRow row in rows)
+            {
+                dtTempActive.ImportRow(row);
+            }
+
+            if (dtTempActive != null && dtTempActive.Rows.Count > 0)
+            {
+                int count = 0;
+                foreach (DataRow drs in dtTempActive.Rows)
+                {
+                    count++;
+                    drs["SR_NO"] = count;
+                }
+            }
+
+            gvAttachments.DataSource = dtTempActive;
+            gvAttachments.DataBind();
+            lblAttachmentsRecords.Text = "[" + gvAttachments.Rows.Count + "]";
+
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void RemoveAttachments(int srNo)
+    {
+        if (Session["dtAttachments"] != null)
+            dtTemp = (DataTable)Session["dtAttachments"];
+        else
+            AddTempAttachmentsTable();
+
+        dtTemp = (DataTable)Session["dtAttachments"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            DataRow[] dr = dtTemp.Select("SR_NO_IN='" + srNo + "'");
+            dr[0]["IS_DELETED"] = 1;
+            //dtTemp.Rows.Remove(dr[0]);
+        }
+
+        Session["dtAttachments"] = dtTemp;
+
+        DataRow[] rows = dtTemp.Select("IS_DELETED = 0");
+        DataTable dtTempActive = dtTemp.Clone();
+        foreach (DataRow row in rows)
+        {
+            dtTempActive.ImportRow(row);
+        }
+
+        if (dtTempActive != null && dtTempActive.Rows.Count > 0)
+        {
+            int count = 0;
+            foreach (DataRow drs in dtTempActive.Rows)
+            {
+                count++;
+                drs["SR_NO"] = count;
+            }
+        }
+
+        gvAttachments.DataSource = dtTempActive;
+        gvAttachments.DataBind();
+
+        lblAttachmentsRecords.Text = "[" + gvAttachments.Rows.Count + "]";
+    }
+
+    private void AddTempAttachmentsTable()
+    {
+        dtAttachments.Columns.Add("SR_NO", typeof(int));
+        dtAttachments.Columns.Add("SR_NO_IN", typeof(int));
+        dtAttachments.Columns.Add("PID", typeof(int));
+        dtAttachments.Columns.Add("DOC_TYPE_FID", typeof(int));
+        dtAttachments.Columns.Add("DOC_TYPE", typeof(string));
+        dtAttachments.Columns.Add("DOC_NAME", typeof(string));
+        dtAttachments.Columns.Add("DOC", typeof(byte[]));
+        dtAttachments.Columns.Add("IS_DELETED", typeof(int));
+        dtAttachments.Columns.Add("IS_REVISED", typeof(int));
+
+        Session["dtAttachments"] = dtAttachments;
+    }
+    #endregion
+
+}

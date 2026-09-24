@@ -1,0 +1,2167 @@
+﻿using System;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.IO;
+using System.Collections.Generic;
+
+public partial class VENDOR_CUSTOMER_MGMT_VENDOR_RegisterVendorOLD1 : System.Web.UI.Page
+{
+
+    #region VARIABLES[=======================]
+
+    MailService objMailService = new MailService();
+    BAL.VendorCustomerManagement objVCM = new BAL.VendorCustomerManagement();
+
+    DataTable dtBillingAddress = new DataTable();
+    DataTable dtContactPerson = new DataTable();
+    DataTable dtBankDetails = new DataTable();
+    DataTable dtAttachments = new DataTable();
+    DataTable dtAmendments = new DataTable();
+
+    DataSet dsCategory = new DataSet();
+    DataSet dsResponsible = new DataSet();
+    DataSet dsRelationType = new DataSet();
+    DataSet dsItemCategory = new DataSet();
+    DataSet dsItemSubCategory = new DataSet();
+    DataTable dtTemp = new DataTable();
+
+    #endregion
+
+
+    #region EVENTS[==========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            HidePanel();
+            if (!IsPostBack)
+            {
+                ddlItemSubCategory.Items.Clear();
+                ddlItemSubCategory.Items.Insert(0, "Select");
+                ddlItemSubCategory.SelectedIndex = 0;
+
+                ClearSessions();
+
+                BindCategory();
+                BindResponsible();
+                BindRelationType();
+                BindItemCategory();                
+            }            
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+    }
+
+    protected void btnPreview_Click(object sender, EventArgs e)
+    {
+        PreviewVendor();
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        SaveVendor();
+    }
+    
+    protected void ddlItemCategory_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        BindItemSubCategorys();
+
+        DisplayNoneAllPanels();
+        pnlVendorOtherDetails.Style["display"] = "block";
+    }
+
+
+
+
+    protected void btnAddUpdateAddressToList_Click(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(hdBillingAddressUpdationFlag.Value) == 0)
+        {
+            AddBillingAddress();
+        }
+        else
+        {
+            UpdateBillingAddress();
+        }
+
+        DisplayNoneAllPanels();
+        pnlBillingAddress.Style["display"] = "block";
+    }
+
+    protected void gvBillingAddress_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvBillingAddress.Rows[rowindex].FindControl("lblSrNo") as Label;
+                Label lblAddress1 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress1") as Label;
+                Label lblAddress2 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress2") as Label;
+                Label lblAddress3 = gvBillingAddress.Rows[rowindex].FindControl("lblAddress3") as Label;
+                Label lblCity = gvBillingAddress.Rows[rowindex].FindControl("lblCity") as Label;
+                Label lblState = gvBillingAddress.Rows[rowindex].FindControl("lblState") as Label;
+                Label lblCountry = gvBillingAddress.Rows[rowindex].FindControl("lblCountry") as Label;
+                Label lblPhone = gvBillingAddress.Rows[rowindex].FindControl("lblPhone") as Label;
+                Label lblEmail = gvBillingAddress.Rows[rowindex].FindControl("lblEmail") as Label;
+                Label lblIsDefault = gvBillingAddress.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+
+                //hdRevNoText.Value = "";
+                //hdRevNoTextOld.Value = "";
+                //txtRevNoText.Enabled = false;
+
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+                {
+                    btnAddUpdateAddressToList.Text = "Update Address";
+
+                    hdBillingAddressUpdationFlag.Value = "1";
+
+                    if (!string.IsNullOrEmpty(lblSrNo.Text)) hdBillingAddressSRNo.Value = lblSrNo.Text;
+                    else hdBillingAddressSRNo.Value = "0";
+
+                    if (!string.IsNullOrEmpty(lblAddress1.Text)) txtAddress1.Text = lblAddress1.Text;
+                    else txtAddress1.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblAddress2.Text)) txtAddress2.Text = lblAddress2.Text;
+                    else txtAddress2.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblAddress3.Text)) txtAddress3.Text = lblAddress3.Text;
+                    else txtAddress3.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblCity.Text)) txtCity.Text = lblCity.Text;
+                    else txtCity.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblState.Text)) txtState.Text = lblState.Text;
+                    else txtState.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblCountry.Text)) txtCountry.Text = lblCountry.Text;
+                    else txtCountry.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblPhone.Text)) txtPhone.Text = lblPhone.Text;
+                    else txtPhone.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblEmail.Text)) txtEmail.Text = lblEmail.Text;
+                    else txtEmail.Text = string.Empty;
+
+                    if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultBillingAddress.Checked = true;
+
+                    mpeAddBillingAddress.Show();
+                }
+
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveBillingAddress(Convert.ToInt32(lblSrNo.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvBillingAddress_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+                CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+                if (Convert.ToInt32(lblIsDefault.Text) > 0)
+                    chkIsDefault.Checked = true;
+                else chkIsDefault.Checked = false;
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+
+    //protected void btnShowNewContactPersonWindow_Click(object sender, EventArgs e)
+    //{
+    //    btnAddUpdateContactPersonToList.Text = "Add Contact Person";
+    //    hdContactPersonUpdationFlag.Value = "0";
+
+    //    //EnableControls();
+    //    ResetContactPerson();
+
+    //    mpeAddContactPerson.Show();
+    //}
+
+    protected void btnAddUpdateContactPersonToList_Click(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(hdContactPersonUpdationFlag.Value) == 0)
+        {
+            AddContactPerson();
+        }
+        else
+        {
+            UpdateContactPerson();
+        }
+
+        DisplayNoneAllPanels();
+        pnlContactPerson.Style["display"] = "block";
+    }
+
+    protected void gvContactPerson_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvContactPerson.Rows[rowindex].FindControl("lblSrNo") as Label;
+                Label lblContactPersonName = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonName") as Label;
+                Label lblContactPersonMobile = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonMobile") as Label;
+                Label lblContactPersonPhone = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonPhone") as Label;
+                Label lblContactPersonEmail = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonEmail") as Label;
+                Label lblIsDefault = gvContactPerson.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+                {
+                    btnAddUpdateContactPersonToList.Text = "Update Contact Person";
+
+                    hdContactPersonUpdationFlag.Value = "1";
+
+                    if (!string.IsNullOrEmpty(lblSrNo.Text)) hdContactPersonSRNo.Value = lblSrNo.Text;
+                    else hdContactPersonSRNo.Value = "0";
+
+                    if (!string.IsNullOrEmpty(lblContactPersonName.Text)) txtContactPersonName.Text = lblContactPersonName.Text;
+                    else txtContactPersonName.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblContactPersonMobile.Text)) txtContactPersonMobile.Text = lblContactPersonMobile.Text;
+                    else txtContactPersonMobile.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblContactPersonPhone.Text)) txtContactPersonPhone.Text = lblContactPersonPhone.Text;
+                    else txtContactPersonPhone.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblContactPersonEmail.Text)) txtContactPersonEmail.Text = lblContactPersonEmail.Text;
+                    else txtContactPersonEmail.Text = string.Empty;
+
+                    if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultContactPerson.Checked = true;
+
+                    mpeAddContactPerson.Show();
+                }
+
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveContactPerson(Convert.ToInt32(lblSrNo.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvContactPerson_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+                CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+                if (Convert.ToInt32(lblIsDefault.Text) > 0)
+                    chkIsDefault.Checked = true;
+                else chkIsDefault.Checked = false;
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+
+    //protected void btnShowNewBankDetailsWindow_Click(object sender, EventArgs e)
+    //{
+    //    btnAddUpdateBankDetailsToList.Text = "Add Bank Details";
+    //    hdBankDetailsUpdationFlag.Value = "0";
+
+    //    //EnableControls();
+    //    ResetBankDetails();
+
+    //    mpeAddBankDetails.Show();
+    //}
+
+    protected void btnAddUpdateBankDetailsToList_Click(object sender, EventArgs e)
+    {
+        if (Convert.ToInt32(hdBankDetailsUpdationFlag.Value) == 0)
+        {
+            AddBankDetails();
+        }
+        else
+        {
+            UpdateBankDetails();
+        }
+
+        DisplayNoneAllPanels();
+        pnlBankDetails.Style["display"] = "block";
+    }
+
+    protected void gvBankDetails_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvBankDetails.Rows[rowindex].FindControl("lblSrNo") as Label;
+                Label lblBankName = gvBankDetails.Rows[rowindex].FindControl("lblBankName") as Label;
+                Label lblBranch = gvBankDetails.Rows[rowindex].FindControl("lblBranch") as Label;
+                Label lblSWIFTCode = gvBankDetails.Rows[rowindex].FindControl("lblSWIFTCode") as Label;
+                Label lblAccountNumber = gvBankDetails.Rows[rowindex].FindControl("lblAccountNumber") as Label;
+                Label lblRTGSOrIFSC = gvBankDetails.Rows[rowindex].FindControl("lblRTGSOrIFSC") as Label;
+                Label lblISBN = gvBankDetails.Rows[rowindex].FindControl("lblISBN") as Label;
+                Label lblIsDefault = gvBankDetails.Rows[rowindex].FindControl("lblIsDefault") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+                {
+                    btnAddUpdateBankDetailsToList.Text = "Update Bank Details";
+
+                    hdBankDetailsUpdationFlag.Value = "1";
+
+                    if (!string.IsNullOrEmpty(lblSrNo.Text)) hdBankDetailsSRNo.Value = lblSrNo.Text;
+                    else hdBankDetailsSRNo.Value = "0";
+
+                    if (!string.IsNullOrEmpty(lblBankName.Text)) txtBankName.Text = lblBankName.Text;
+                    else txtBankName.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblBranch.Text)) txtBranch.Text = lblBranch.Text;
+                    else txtBranch.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblSWIFTCode.Text)) txtSWIFTCode.Text = lblSWIFTCode.Text;
+                    else txtSWIFTCode.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblAccountNumber.Text)) txtAccountNumber.Text = lblAccountNumber.Text;
+                    else txtAccountNumber.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblRTGSOrIFSC.Text)) txtRTGSOrIFSC.Text = lblRTGSOrIFSC.Text;
+                    else txtRTGSOrIFSC.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblISBN.Text)) txtISBN.Text = lblISBN.Text;
+                    else txtISBN.Text = string.Empty;
+
+                    if (Convert.ToInt32(lblIsDefault.Text) > 0) chkIsDefaultBank.Checked = true;
+
+                    mpeAddBankDetails.Show();
+                }
+
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveBankDetails(Convert.ToInt32(lblSrNo.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvBankDetails_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblIsDefault = (Label)e.Row.FindControl("lblIsDefault");
+                CheckBox chkIsDefault = (CheckBox)e.Row.FindControl("chkIsDefault");
+
+                if (Convert.ToInt32(lblIsDefault.Text) > 0)
+                    chkIsDefault.Checked = true;
+                else chkIsDefault.Checked = false;
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+    //protected void btnShowNewAttachmentsWindow_Click(object sender, EventArgs e)
+    //{
+    //    btnAddUpdateAttachmentsToList.Text = "Add Attachments";
+    //    hdAttachmentsUpdationFlag.Value = "0";
+    //    //ResetContactPerson();
+    //    mpeAddAttachments.Show();
+    //}
+
+    //protected void btnAddUpdateAttachmentsToList_Click(object sender, EventArgs e)
+    //{
+    //    AddAttachments();
+    //}
+
+    protected void btnAddUpdateAttachmentToList_Click(object sender, EventArgs e)
+    {
+        AddAttachment();
+
+        DisplayNoneAllPanels();
+        pnlAttachments.Style["display"] = "block";
+    }
+
+    protected void gvAttachments_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblSrNo = gvAttachments.Rows[rowindex].FindControl("lblSrNo") as Label;
+
+                ViewState["SR_NO"] = Convert.ToInt32(lblSrNo.Text);
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveAttachments(Convert.ToInt32(lblSrNo.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvAttachments_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    #endregion
+
+
+    #region METHODS[=========================]
+
+    private void BindCategory()
+    {
+        try
+        {
+            dsCategory = objVCM.GetCategorys();
+            if (dsCategory.Tables.Count > 0 && dsCategory.Tables[0].Rows.Count > 0)
+            {
+                ddlCategory.DataSource = dsCategory.Tables[0];
+                ddlCategory.DataTextField = "NAME";
+                ddlCategory.DataValueField = "PID";
+                ddlCategory.DataBind();
+                ddlCategory.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindResponsible()
+    {
+        try
+        {
+            dsResponsible = objVCM.GetResponsibles();
+            if (dsResponsible.Tables.Count > 0 && dsResponsible.Tables[0].Rows.Count > 0)
+            {
+                ddlResponsible.DataSource = dsResponsible.Tables[0];
+                ddlResponsible.DataTextField = "NAME";
+                ddlResponsible.DataValueField = "PID";
+                ddlResponsible.DataBind();
+                ddlResponsible.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindRelationType()
+    {
+        try
+        {
+            dsRelationType = objVCM.GetRelationTypes();
+            if (dsRelationType.Tables.Count > 0 && dsRelationType.Tables[0].Rows.Count > 0)
+            {
+                ddlRelationType.DataSource = dsRelationType.Tables[0];
+                ddlRelationType.DataTextField = "NAME";
+                ddlRelationType.DataValueField = "PID";
+                ddlRelationType.DataBind();
+                ddlRelationType.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindItemCategory()
+    {
+        try
+        {
+            dsItemCategory = objVCM.GetItemCategorys();
+            if (dsItemCategory.Tables.Count > 0 && dsItemCategory.Tables[0].Rows.Count > 0)
+            {
+                ddlItemCategory.DataSource = dsItemCategory.Tables[0];
+                ddlItemCategory.DataTextField = "NAME";
+                ddlItemCategory.DataValueField = "PID";
+                ddlItemCategory.DataBind();
+                ddlItemCategory.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindItemSubCategorys()
+    {
+        try
+        {
+            ddlItemSubCategory.Items.Clear();
+            ddlItemSubCategory.Items.Insert(0, "Select");
+            ddlItemSubCategory.SelectedIndex = 0;
+
+            if (ddlItemCategory.SelectedIndex > 0)
+            {
+                dsItemSubCategory = objVCM.GetItemSubCategorys(Convert.ToInt32(ddlItemCategory.SelectedValue));
+                if (dsItemSubCategory.Tables.Count > 0 && dsItemSubCategory.Tables[0].Rows.Count > 0)
+                {
+                    ddlItemSubCategory.DataSource = dsItemSubCategory.Tables[0];
+                    ddlItemSubCategory.DataTextField = "NAME";
+                    ddlItemSubCategory.DataValueField = "PID";
+                    ddlItemSubCategory.DataBind();
+                    ddlItemSubCategory.Items.Insert(0, "Select");
+                    ddlItemSubCategory.SelectedIndex = 0;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void PreviewVendor()
+    {
+        try
+        {
+            Session["dtVendorDetails"] = null;
+
+            DataTable dtAddressTable = new DataTable();
+            DataTable dtBankTable = new DataTable();
+            DataTable dtContactPersonTable = new DataTable();
+
+            if (Session["dtBillingAddress"] != null)
+                dtAddressTable = (DataTable)Session["dtBillingAddress"];
+
+            if (Session["dtBankDetails"] != null)
+                dtBankTable = (DataTable)Session["dtBankDetails"];
+
+            if (Session["dtContactPerson"] != null)
+                dtContactPersonTable = (DataTable)Session["dtContactPerson"];
+
+            if (dtAddressTable.Rows.Count == 0 || dtAddressTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 billing address...!!!");
+                return;
+            }
+
+            if (dtContactPersonTable.Rows.Count == 0 || dtContactPersonTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 contact person...!!!");
+                return;
+            }
+
+            if (dtBankTable.Rows.Count == 0 || dtBankTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 bank detail...!!!");
+                return;
+            }
+
+            int entityId = 0;
+            string LOTTFSubitemIDs = string.Empty;
+
+            DataTable dtVendorDetails = new DataTable();
+            dtVendorDetails.Columns.Add("NAME", typeof(string));
+            dtVendorDetails.Columns.Add("CODE", typeof(string));
+            dtVendorDetails.Columns.Add("STATUS", typeof(string));
+            dtVendorDetails.Columns.Add("CATEGORY", typeof(string));
+            dtVendorDetails.Columns.Add("GSTIN", typeof(string));
+            dtVendorDetails.Columns.Add("PAN", typeof(string));
+            dtVendorDetails.Columns.Add("CREDIT_DAYS", typeof(string));
+            dtVendorDetails.Columns.Add("CREDIT_LIMIT", typeof(string));
+            dtVendorDetails.Columns.Add("IS_MSMED", typeof(string));
+            dtVendorDetails.Columns.Add("IS_ISO_CERTIFIED", typeof(string));
+            dtVendorDetails.Columns.Add("IS_TECHNICAL_DETAILS_RECEIVED", typeof(string));
+            dtVendorDetails.Columns.Add("IS_VISIT_BY_QA", typeof(string));
+            dtVendorDetails.Columns.Add("IS_GOVERNMENT", typeof(string));
+            dtVendorDetails.Columns.Add("RESPONSIBLE", typeof(string));
+            dtVendorDetails.Columns.Add("VENDOR_TYPE", typeof(string));
+            dtVendorDetails.Columns.Add("ITEM_CATEGORY", typeof(string));
+            dtVendorDetails.Columns.Add("ITEM_SUBCATEGORY", typeof(string));
+
+
+
+
+            DataRow dr = dtVendorDetails.NewRow();
+            dr["NAME"] = FormattedString(txtName.Text);
+            dr["CODE"] = FormattedString(txtCode.Text);
+            dr["STATUS"] = "Requested";
+            dr["CATEGORY"] = ddlCategory.SelectedItem.Text;
+            dr["GSTIN"] = FormattedString(txtGSTIn.Text); ;
+            dr["PAN"] = FormattedString(txtPANNumber.Text); ;
+            dr["CREDIT_DAYS"] = txtCreditDays.Text;
+            dr["CREDIT_LIMIT"] = txtCreditLimit.Text;
+
+            if (chkIsMSMED.Checked)
+                dr["IS_MSMED"] = "YES";
+            else dr["IS_MSMED"] = "NO";
+
+            if (chkIsISOCertified.Checked)
+                dr["IS_ISO_CERTIFIED"] = "YES";
+            else dr["IS_ISO_CERTIFIED"] = "NO";
+
+            if (chkIsTechnicalDetailsReceived.Checked)
+                dr["IS_TECHNICAL_DETAILS_RECEIVED"] = "YES";
+            else dr["IS_TECHNICAL_DETAILS_RECEIVED"] = "NO";
+
+            if (chkIsQAVisited.Checked)
+                dr["IS_VISIT_BY_QA"] = "YES";
+            else dr["IS_VISIT_BY_QA"] = "NO";
+
+            if (chkIsGovernment.Checked)
+                dr["IS_GOVERNMENT"] = "Government";
+            else dr["IS_GOVERNMENT"] = "Non-Government";
+
+            dr["RESPONSIBLE"] = ddlResponsible.SelectedItem.Text;
+            dr["VENDOR_TYPE"] = ddlRelationType.SelectedItem.Text;
+            dr["ITEM_CATEGORY"] = ddlItemCategory.SelectedItem.Text;
+            dr["ITEM_SUBCATEGORY"] = ddlItemSubCategory.SelectedItem.Text;
+
+
+            dtVendorDetails.Rows.Add(dr);
+
+            Session["dtVendorDetails"] = dtVendorDetails;
+            AddTempAmendmentsTable();
+
+
+            if (dtVendorDetails.Rows.Count > 0)
+            {
+                ModalPopupExtender4.Show();
+                iframeViewTravelStatementInPDF.Attributes.Add("src", "ViewVendorInPDF.aspx?pid=" + entityId);
+            }
+            else
+            {
+                ExceptionMessage("Please enter vendor details...!!!");
+                return;
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            //
+        }
+    }
+
+    private void SaveVendor()
+    {
+        try
+        {
+            string VendorName = string.Empty;
+            int CategoryId = 0;
+            string Gstin = string.Empty;
+            string Pan = string.Empty;
+            int CreditDays = 0;
+            double CreditLimit = 0;
+            int IsMsmed = 0;
+            int IsIsoCertified = 0;
+            int IsTechnicalDetailsReceived = 0;
+            int IsVisitByQa = 0;
+            int IsGovernment = 0;
+            int ResponsibleId = 0;
+            int VendorTypeId = 0;
+            int ItemCategoryFid = 0;
+            int ItemSubcategoryFid = 0;
+            int EntityTypeId = 0;
+            int SavingType = 0;
+            string Remarks = string.Empty;
+            int CreatedBy = Convert.ToInt32(Session["EMP_RECORD_ID"]);
+
+            if (!string.IsNullOrEmpty(txtName.Text))
+                VendorName = FormattedString(txtName.Text);
+
+            if (ddlCategory.SelectedIndex > 0)
+                CategoryId = Convert.ToInt32(ddlCategory.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtGSTIn.Text))
+                Gstin = FormattedString(txtGSTIn.Text);
+
+            if (!string.IsNullOrEmpty(txtPANNumber.Text))
+                Pan = FormattedString(txtPANNumber.Text);
+
+            if (!string.IsNullOrEmpty(txtCreditDays.Text))
+                CreditDays = Convert.ToInt32(txtCreditDays.Text);
+
+            if (!string.IsNullOrEmpty(txtCreditLimit.Text))
+                CreditLimit = Convert.ToDouble(txtCreditLimit.Text);
+
+            if (!string.IsNullOrEmpty(txtRemarks.Text))
+                Remarks = txtRemarks.Text;
+
+            IsMsmed = Convert.ToInt32(chkIsMSMED.Checked);
+            IsIsoCertified = Convert.ToInt32(chkIsISOCertified.Checked);
+            IsTechnicalDetailsReceived = Convert.ToInt32(chkIsTechnicalDetailsReceived.Checked);
+            IsVisitByQa = Convert.ToInt32(chkIsQAVisited.Checked);
+            IsGovernment = Convert.ToInt32(chkIsGovernment.Checked);
+
+            if (ddlResponsible.SelectedIndex > 0)
+                ResponsibleId = Convert.ToInt32(ddlResponsible.SelectedValue);
+
+            if (ddlRelationType.SelectedIndex > 0)
+                VendorTypeId = Convert.ToInt32(ddlRelationType.SelectedValue);
+
+            if (ddlItemCategory.SelectedIndex > 0)
+                ItemCategoryFid = Convert.ToInt32(ddlItemCategory.SelectedValue);
+
+            if (ddlItemSubCategory.SelectedIndex > 0)
+                ItemSubcategoryFid = Convert.ToInt32(ddlItemSubCategory.SelectedValue);
+
+            EntityTypeId = (int)StatusAndTypes.EnumEntityType.Vendor;
+            SavingType = Convert.ToInt32(rdSavingType.SelectedValue);
+
+            DataTable dtAddressTable = new DataTable();
+            DataTable dtBankTable = new DataTable();
+            DataTable dtContactPersonTable = new DataTable();
+            DataTable dtDOCsTable = new DataTable();
+
+
+            if (Session["dtBillingAddress"] != null)
+                dtAddressTable = (DataTable)Session["dtBillingAddress"];
+
+            if (Session["dtBankDetails"] != null)
+                dtBankTable = (DataTable)Session["dtBankDetails"];
+
+            if (Session["dtContactPerson"] != null)
+                dtContactPersonTable = (DataTable)Session["dtContactPerson"];
+
+
+            if (Session["dtAttachments"] != null)
+                dtDOCsTable = (DataTable)Session["dtAttachments"];
+
+            //DataTable dtDOCsTable = GetAttachments();
+
+            if (dtAddressTable.Rows.Count == 0 || dtAddressTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 billing address...!!!");
+                return;
+            }
+
+            if (dtContactPersonTable.Rows.Count == 0 || dtContactPersonTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 contact person...!!!");
+                return;
+            }
+
+            if (dtBankTable.Rows.Count == 0 || dtBankTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 bank detail...!!!");
+                return;
+            }
+
+            if (dtDOCsTable.Rows.Count == 0 || dtDOCsTable == null)
+            {
+                ExceptionMessage("Please add atleast 1 supporting document...!!!");
+                return;
+            }
+
+            dtAddressTable = RemoveDatatabeColumns(dtAddressTable);
+            dtContactPersonTable = RemoveDatatabeColumns(dtContactPersonTable);
+            dtBankTable = RemoveDatatabeColumns(dtBankTable);
+            dtDOCsTable = RemoveDatatabeColumns(dtDOCsTable);
+
+            BAL.VendorCustomerManagement objVCM = new BAL.VendorCustomerManagement();
+
+            int savedVendorPID = objVCM.RegisterVendorOLD
+                (
+                      VendorName
+                    , CategoryId
+                    , Gstin
+                    , Pan
+                    , CreditDays
+                    , CreditLimit
+                    , IsMsmed
+                    , IsIsoCertified
+                    , IsTechnicalDetailsReceived
+                    , IsVisitByQa
+                    , IsGovernment
+                    , ResponsibleId
+                    , VendorTypeId
+                    , ItemCategoryFid
+                    , ItemSubcategoryFid
+                    , EntityTypeId
+                    , dtAddressTable
+                    , dtBankTable
+                    , dtContactPersonTable
+                    , dtDOCsTable
+                    , SavingType
+                    , Remarks
+                    , CreatedBy
+                );
+
+
+
+            if (savedVendorPID > 0)
+            {
+                if (SavingType == Convert.ToInt32(StatusAndTypes.EnumSavingType.SaveAndSendForApproval))
+                {
+                    int sendMailValue = objMailService.ProcessMail(savedVendorPID, txtName.Text, (int)StatusAndTypes.EnumStatus.Requested_1);
+
+                    if (sendMailValue > 0)
+                    {
+                        int val = objVCM.UpdateMailStatus(sendMailValue, (int)StatusAndTypes.EnumStatus.Requested_1, CreatedBy);
+                        SuccessMessage("Vendor requested as '" + VendorName + "' and mail sent successfully.");
+                        Reset();
+                    }
+                    else
+                    {
+                        SuccessMessage("Vendor requested as '" + VendorName + "' successfully.");
+                        Reset();
+                    }
+                }
+                else
+                {
+                    SuccessMessage("Vendor requested as '" + VendorName + "' successfully.");
+                    Reset();
+                }
+
+                ResetAll();
+
+            }
+            else if (savedVendorPID < 0)
+            {
+                ExceptionMessage("Please try again! Vendor already exists with GSTIN: " + Gstin);
+                return;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private byte[] GetFileBytes(string fileName, Stream stream)
+    {
+        Byte[] GSTbytes = null;
+        #region
+        try
+        {
+            string GSTFilePath = fileName;
+            string GSTFileName = Path.GetFileName(GSTFilePath);
+            string GSText = Path.GetExtension(GSTFileName);
+            string GSTContentType = String.Empty;
+            switch (GSText)
+            {
+                case ".jpg":
+                    GSTContentType = "image/jpg";
+                    break;
+                case ".jpeg":
+                    GSTContentType = "image/jpeg";
+                    break;
+                case ".bmp":
+                    GSTContentType = "image/bmp";
+                    break;
+                case ".png":
+                    GSTContentType = "image/png";
+                    break;
+                case ".gif":
+                    GSTContentType = "image/gif";
+                    break;
+                case ".pdf":
+                    GSTContentType = "application/pdf";
+                    break;
+                case ".JPG":
+                    GSTContentType = "image/JPG";
+                    break;
+                case ".JPEG":
+                    GSTContentType = "image/JPEG";
+                    break;
+                case ".BMP":
+                    GSTContentType = "image/BMP";
+                    break;
+                case ".PNG":
+                    GSTContentType = "image/PNG";
+                    break;
+                case ".GIF":
+                    GSTContentType = "image/GIF";
+                    break;
+                case ".PDF":
+                    GSTContentType = "application/PDF";
+                    break;
+                case ".dxf":
+                    GSTContentType = "application/dxf";
+                    break;
+                case ".DXF":
+                    GSTContentType = "application/DXF";
+                    break;
+                case ".dwg":
+                    GSTContentType = "application/dwg";
+                    break;
+                case ".DWG":
+                    GSTContentType = "application/DWG";
+                    break;
+            }
+            Stream GSTfs = null;
+            BinaryReader GSTbr = null;
+            if (GSTContentType != String.Empty)
+            {
+                try
+                {
+                    GSTfs = stream;
+                    GSTfs.Position = 0;
+                    GSTbr = new BinaryReader(GSTfs);
+                    GSTbytes = GSTbr.ReadBytes((Int32)GSTfs.Length);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            else
+            {
+                ExceptionMessage("GST File format not recognised. Upload Image/PDF/DXF/DWG formats");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+        }
+        #endregion
+        return GSTbytes;
+    }
+
+    private void Reset()
+    {
+        //try
+        //{
+        //    ddlLOTMainItems.SelectedIndex = 0;
+        //    ddlLOTMainSubItems.SelectedIndex = 0;
+        //    txtCustomerCode.Text = string.Empty;
+        //    txtCustomerName.Text = string.Empty;
+        //    txtJOBNo.Text = string.Empty;
+        //    txtPONo.Text = string.Empty;
+        //    txtItemName.Text = string.Empty;
+        //    txtTFNo.Text = string.Empty;
+        //    txtNotes.Text = string.Empty;
+
+        //    gvJOBDetail.DataSource = null;
+        //    Session["dtSubitem"] = null;
+
+
+
+        //    dtTemp.Clear();
+        //    dtSubitem.Clear();
+        //    gvSubItem.DataSource = null;
+        //    gvSubItem.DataBind();
+
+
+        //    Session["dtAttachments"] = null;
+        //    dtTempAttachments.Clear();
+        //    gvAttachments.DataSource = null;
+        //    gvAttachments.DataBind();
+
+
+        //    ResetSubitems();
+        //}
+        //catch (Exception ex)
+        //{
+        //    ExceptionMessage(ex.ToString());
+        //    return;
+        //}
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void HidePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    private void ClearSessions()
+    {
+        Session["dtVendorDetails"] = null;
+        Session["dtBillingAddress"] = null;
+        Session["dtContactPerson"] = null;
+        Session["dtBankDetails"] = null;
+        Session["dtAmendments"] = null;
+        Session["dtAttachments"] = null;
+    }
+
+
+
+
+
+
+
+
+    private void RemoveBillingAddress(int srNo)
+    {
+        if (Session["dtBillingAddress"] != null)
+            dtTemp = (DataTable)Session["dtBillingAddress"];
+        else
+            AddTempBillingAddressTable();
+
+        dtTemp = (DataTable)Session["dtBillingAddress"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            foreach (DataRow dr in dtTemp.Select("SR_NO='" + srNo + "'"))
+            {
+                dtTemp.Rows.Remove(dr);
+            }
+        }
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            for (int i = 0; i < dtTemp.Rows.Count; i++)
+            {
+                dtTemp.Rows[i]["SR_NO"] = i + 1;
+            }
+        }
+
+        gvBillingAddress.DataSource = dtTemp;
+        gvBillingAddress.DataBind();
+
+        lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+    }
+
+    private void AddBillingAddress()
+    {
+        try
+        {
+            string Address1 = string.Empty;
+            string Address2 = string.Empty;
+            string Address3 = string.Empty;
+            string City = string.Empty;
+            string State = string.Empty;
+            string Country = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            if (dtTemp != null && Session["dtBillingAddress"] != null)
+                dtTemp = (DataTable)Session["dtBillingAddress"];
+            else
+                AddTempBillingAddressTable();
+
+            dtTemp = (DataTable)Session["dtBillingAddress"];
+
+            if (!string.IsNullOrEmpty(txtAddress1.Text))
+                Address1 = Convert.ToString(txtAddress1.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress2.Text))
+                Address2 = Convert.ToString(txtAddress2.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress3.Text))
+                Address3 = Convert.ToString(txtAddress3.Text);
+
+            if (!string.IsNullOrEmpty(txtCity.Text))
+                City = Convert.ToString(txtCity.Text);
+
+            if (!string.IsNullOrEmpty(txtState.Text))
+                State = Convert.ToString(txtState.Text);
+
+            if (!string.IsNullOrEmpty(txtCountry.Text))
+                Country = Convert.ToString(txtCountry.Text);
+
+            if (!string.IsNullOrEmpty(txtPhone.Text))
+                Phone = Convert.ToString(txtPhone.Text);
+
+            if (!string.IsNullOrEmpty(txtEmail.Text))
+                Email = Convert.ToString(txtEmail.Text);
+
+            if (chkIsDefaultBillingAddress.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+
+            DataRow dr = dtTemp.NewRow();
+
+            int index = gvBillingAddress.Rows.Count + 1;
+
+            dr["SR_NO"] = index;
+            dr["PID"] = 0;
+            dr["ADDRESS_LINE1"] = Address1;
+            dr["ADDRESS_LINE2"] = Address2;
+            dr["ADDRESS_LINE3"] = Address3;
+            dr["CITY"] = City;
+            dr["STATE"] = State;
+            dr["COUNTRY"] = Country;
+            dr["PHONE"] = Phone;
+            dr["EMAIL"] = Email;
+            dr["IS_DEFAULT"] = IsDefault;
+            dr["IS_DELETED"] = 0;
+            dr["IS_REVISED"] = 0;
+
+            dtTemp.Rows.Add(dr);
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                int count = 0;
+                foreach (DataRow item in dtTemp.Select("IS_DEFAULT=1"))
+                {
+                    count++;
+                    if (count > 0) break;
+                }
+
+                if (count == 0)
+                {
+                    dtTemp.Rows[0]["IS_DEFAULT"] = 1;
+                }
+            }
+
+            gvBillingAddress.DataSource = dtTemp;
+            gvBillingAddress.DataBind();
+            lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+
+            ResetBillingAddress();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void UpdateBillingAddress()
+    {
+        try
+        {
+            string Address1 = string.Empty;
+            string Address2 = string.Empty;
+            string Address3 = string.Empty;
+            string City = string.Empty;
+            string State = string.Empty;
+            string Country = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+
+            if (!string.IsNullOrEmpty(txtAddress1.Text))
+                Address1 = Convert.ToString(txtAddress1.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress2.Text))
+                Address2 = Convert.ToString(txtAddress2.Text);
+
+            if (!string.IsNullOrEmpty(txtAddress3.Text))
+                Address3 = Convert.ToString(txtAddress3.Text);
+
+            if (!string.IsNullOrEmpty(txtCity.Text))
+                City = Convert.ToString(txtCity.Text);
+
+            if (!string.IsNullOrEmpty(txtState.Text))
+                State = Convert.ToString(txtState.Text);
+
+            if (!string.IsNullOrEmpty(txtCountry.Text))
+                Country = Convert.ToString(txtCountry.Text);
+
+            if (!string.IsNullOrEmpty(txtPhone.Text))
+                Phone = Convert.ToString(txtPhone.Text);
+
+            if (!string.IsNullOrEmpty(txtEmail.Text))
+                Email = Convert.ToString(txtEmail.Text);
+
+            if (chkIsDefaultBillingAddress.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+
+            if (dtTemp != null && Session["dtBillingAddress"] != null)
+                dtTemp = (DataTable)Session["dtBillingAddress"];
+            else
+                AddTempBillingAddressTable();
+
+            dtTemp = (DataTable)Session["dtBillingAddress"];
+
+
+
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdBillingAddressSRNo.Value) + "'"))
+                {
+                    d["PID"] = "0";
+                    d["IS_DELETED"] = 0;
+                    d["IS_REVISED"] = 0;
+
+                    if (Convert.ToInt32(hdBillingAddressSRNo.Value) > 0)
+                        d["SR_NO"] = Convert.ToString(hdBillingAddressSRNo.Value);
+                    else d["SR_NO"] = "0";
+
+                    if (!string.IsNullOrEmpty(Address1))
+                        d["ADDRESS_LINE1"] = Address1;
+                    else d["ADDRESS_LINE1"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Address2))
+                        d["ADDRESS_LINE2"] = Address2;
+                    else d["ADDRESS_LINE2"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Address3))
+                        d["ADDRESS_LINE3"] = Address3;
+                    else d["ADDRESS_LINE3"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(City))
+                        d["CITY"] = City;
+                    else d["CITY"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(State))
+                        d["STATE"] = State;
+                    else d["STATE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Country))
+                        d["COUNTRY"] = Country;
+                    else d["COUNTRY"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Phone))
+                        d["PHONE"] = Phone;
+                    else d["PHONE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Email))
+                        d["EMAIL"] = Email;
+                    else d["EMAIL"] = string.Empty;
+
+                    if (IsDefault > 0)
+                        d["IS_DEFAULT"] = 1;
+                    else d["IS_DEFAULT"] = 0;
+                }
+            }
+
+            gvBillingAddress.DataSource = dtTemp;
+            gvBillingAddress.DataBind();
+
+            lblBillingAddressRecords.Text = "[" + gvBillingAddress.Rows.Count + "]";
+
+            ResetBillingAddress();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void AddTempBillingAddressTable()
+    {
+        dtBillingAddress.Columns.Add("SR_NO", typeof(int));
+        dtBillingAddress.Columns.Add("PID", typeof(int));
+        dtBillingAddress.Columns.Add("ADDRESS_LINE1", typeof(string));
+        dtBillingAddress.Columns.Add("ADDRESS_LINE2", typeof(string));
+        dtBillingAddress.Columns.Add("ADDRESS_LINE3", typeof(string));
+        dtBillingAddress.Columns.Add("CITY", typeof(string));
+        dtBillingAddress.Columns.Add("STATE", typeof(string));
+        dtBillingAddress.Columns.Add("COUNTRY", typeof(string));
+        dtBillingAddress.Columns.Add("PHONE", typeof(string));
+        dtBillingAddress.Columns.Add("EMAIL", typeof(string));
+        dtBillingAddress.Columns.Add("IS_DEFAULT", typeof(int));
+        dtBillingAddress.Columns.Add("IS_DELETED", typeof(int));
+        dtBillingAddress.Columns.Add("IS_REVISED", typeof(int));
+
+        Session["dtBillingAddress"] = dtBillingAddress;
+    }
+
+    private void ResetBillingAddress()
+    {
+        txtAddress1.Text = string.Empty;
+        txtAddress2.Text = string.Empty;
+        txtAddress3.Text = string.Empty;
+        txtCity.Text = string.Empty;
+        txtState.Text = string.Empty;
+        txtCountry.Text = string.Empty;
+        txtPhone.Text = string.Empty;
+        txtEmail.Text = string.Empty;
+        chkIsDefaultBillingAddress.Checked = false;
+    }
+
+
+
+
+
+
+    private void RemoveContactPerson(int srNo)
+    {
+        if (Session["dtContactPerson"] != null)
+            dtTemp = (DataTable)Session["dtContactPerson"];
+        else
+            AddTempContactPersonTable();
+
+        dtTemp = (DataTable)Session["dtContactPerson"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            foreach (DataRow dr in dtTemp.Select("SR_NO='" + srNo + "'"))
+            {
+                dtTemp.Rows.Remove(dr);
+            }
+        }
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            for (int i = 0; i < dtTemp.Rows.Count; i++)
+            {
+                dtTemp.Rows[i]["SR_NO"] = i + 1;
+            }
+        }
+
+        gvContactPerson.DataSource = dtTemp;
+        gvContactPerson.DataBind();
+
+        lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+    }
+
+    private void AddContactPerson()
+    {
+        try
+        {
+            string Name = string.Empty;
+            string Mobile = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            if (dtTemp != null && Session["dtContactPerson"] != null)
+                dtTemp = (DataTable)Session["dtContactPerson"];
+            else
+                AddTempContactPersonTable();
+
+            dtTemp = (DataTable)Session["dtContactPerson"];
+
+            if (!string.IsNullOrEmpty(txtContactPersonName.Text))
+                Name = Convert.ToString(txtContactPersonName.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonMobile.Text))
+                Mobile = Convert.ToString(txtContactPersonMobile.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonPhone.Text))
+                Phone = Convert.ToString(txtContactPersonPhone.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonEmail.Text))
+                Email = Convert.ToString(txtContactPersonEmail.Text);
+
+            if (chkIsDefaultContactPerson.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+
+            DataRow dr = dtTemp.NewRow();
+
+            int index = gvContactPerson.Rows.Count + 1;
+
+            dr["SR_NO"] = index;
+            dr["PID"] = 0;
+            dr["NAME"] = Name;
+            dr["MOBILE_NO"] = Mobile;
+            dr["PHONE"] = Phone;
+            dr["EMAIL"] = Email;
+            dr["IS_DEFAULT"] = IsDefault;
+            dr["IS_DELETED"] = 0;
+            dr["IS_REVISED"] = 0;
+
+            dtTemp.Rows.Add(dr);
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                int count = 0;
+                foreach (DataRow item in dtTemp.Select("IS_DEFAULT=1"))
+                {
+                    count++;
+                    if (count > 0) break;
+                }
+
+                if (count == 0)
+                {
+                    dtTemp.Rows[0]["IS_DEFAULT"] = 1;
+                }
+            }
+
+            gvContactPerson.DataSource = dtTemp;
+            gvContactPerson.DataBind();
+            lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+
+            ResetContactPerson();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void UpdateContactPerson()
+    {
+        try
+        {
+            string Name = string.Empty;
+            string Mobile = string.Empty;
+            string Phone = string.Empty;
+            string Email = string.Empty;
+            int IsDefault = 0;
+
+            if (!string.IsNullOrEmpty(txtContactPersonName.Text))
+                Name = Convert.ToString(txtContactPersonName.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonMobile.Text))
+                Mobile = Convert.ToString(txtContactPersonMobile.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonPhone.Text))
+                Phone = Convert.ToString(txtContactPersonPhone.Text);
+
+            if (!string.IsNullOrEmpty(txtContactPersonEmail.Text))
+                Email = Convert.ToString(txtContactPersonEmail.Text);
+
+            if (chkIsDefaultContactPerson.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+            if (dtTemp != null && Session["dtContactPerson"] != null)
+                dtTemp = (DataTable)Session["dtContactPerson"];
+            else
+                AddTempContactPersonTable();
+
+            dtTemp = (DataTable)Session["dtContactPerson"];
+
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdContactPersonSRNo.Value) + "'"))
+                {
+                    d["PID"] = "0";
+                    d["IS_DELETED"] = 0;
+                    d["IS_REVISED"] = 0;
+
+                    if (Convert.ToInt32(hdContactPersonSRNo.Value) > 0)
+                        d["SR_NO"] = Convert.ToString(hdContactPersonSRNo.Value);
+                    else d["SR_NO"] = "0";
+
+                    if (!string.IsNullOrEmpty(Name))
+                        d["NAME"] = Name;
+                    else d["NAME"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Mobile))
+                        d["MOBILE_NO"] = Mobile;
+                    else d["MOBILE_NO"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Phone))
+                        d["PHONE"] = Phone;
+                    else d["PHONE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Email))
+                        d["EMAIL"] = Email;
+                    else d["EMAIL"] = string.Empty;
+
+                    if (IsDefault > 0)
+                        d["IS_DEFAULT"] = 1;
+                    else d["IS_DEFAULT"] = 0;
+                }
+            }
+
+            gvContactPerson.DataSource = dtTemp;
+            gvContactPerson.DataBind();
+
+            lblContactPersonRecords.Text = "[" + gvContactPerson.Rows.Count + "]";
+
+            ResetContactPerson();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void AddTempContactPersonTable()
+    {
+        dtContactPerson.Columns.Add("SR_NO", typeof(int));
+        dtContactPerson.Columns.Add("PID", typeof(int));
+        dtContactPerson.Columns.Add("NAME", typeof(string));
+        dtContactPerson.Columns.Add("MOBILE_NO", typeof(string));
+        dtContactPerson.Columns.Add("PHONE", typeof(string));
+        dtContactPerson.Columns.Add("EMAIL", typeof(string));
+        dtContactPerson.Columns.Add("IS_DEFAULT", typeof(int));
+        dtContactPerson.Columns.Add("IS_DELETED", typeof(int));
+        dtContactPerson.Columns.Add("IS_REVISED", typeof(int));
+
+        Session["dtContactPerson"] = dtContactPerson;
+    }
+
+    private void ResetContactPerson()
+    {
+        txtContactPersonName.Text = string.Empty;
+        txtContactPersonMobile.Text = string.Empty;
+        txtContactPersonPhone.Text = string.Empty;
+        txtContactPersonEmail.Text = string.Empty;
+        chkIsDefaultContactPerson.Checked = false;
+    }
+
+
+
+
+
+
+
+    private void RemoveBankDetails(int srNo)
+    {
+        if (Session["dtBankDetails"] != null)
+            dtTemp = (DataTable)Session["dtBankDetails"];
+        else
+            AddTempContactPersonTable();
+
+        dtTemp = (DataTable)Session["dtBankDetails"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            foreach (DataRow dr in dtTemp.Select("SR_NO='" + srNo + "'"))
+            {
+                dtTemp.Rows.Remove(dr);
+            }
+        }
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            for (int i = 0; i < dtTemp.Rows.Count; i++)
+            {
+                dtTemp.Rows[i]["SR_NO"] = i + 1;
+            }
+        }
+
+        gvBankDetails.DataSource = dtTemp;
+        gvBankDetails.DataBind();
+
+        lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+    }
+
+    private void AddBankDetails()
+    {
+        try
+        {
+            string BankName = string.Empty;
+            string Branch = string.Empty;
+            string SWIFTCode = string.Empty;
+            string AccountNumber = string.Empty;
+            string RTGSOrIFSC = string.Empty;
+            string ISBN = string.Empty;
+            int IsDefault = 0;
+
+            if (dtTemp != null && Session["dtBankDetails"] != null)
+                dtTemp = (DataTable)Session["dtBankDetails"];
+            else
+                AddTempBankDetailsTable();
+
+            dtTemp = (DataTable)Session["dtBankDetails"];
+
+            if (!string.IsNullOrEmpty(txtBankName.Text))
+                BankName = Convert.ToString(txtBankName.Text);
+
+            if (!string.IsNullOrEmpty(txtBranch.Text))
+                Branch = Convert.ToString(txtBranch.Text);
+
+            if (!string.IsNullOrEmpty(txtSWIFTCode.Text))
+                SWIFTCode = Convert.ToString(txtSWIFTCode.Text);
+
+            if (!string.IsNullOrEmpty(txtAccountNumber.Text))
+                AccountNumber = Convert.ToString(txtAccountNumber.Text);
+
+            if (!string.IsNullOrEmpty(txtRTGSOrIFSC.Text))
+                RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSC.Text);
+
+            if (!string.IsNullOrEmpty(txtISBN.Text))
+                ISBN = Convert.ToString(txtISBN.Text);
+
+            if (chkIsDefaultBank.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+
+            DataRow dr = dtTemp.NewRow();
+
+            int index = gvBankDetails.Rows.Count + 1;
+
+            dr["SR_NO"] = index;
+            dr["PID"] = 0;
+            dr["BANK_NAME"] = BankName;
+            dr["BRANCH"] = Branch;
+            dr["SWIFT_CODE"] = SWIFTCode;
+            dr["ACCOUNT_NUMBER"] = AccountNumber;
+            dr["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+            dr["ISBN"] = ISBN;
+            dr["IS_DEFAULT"] = IsDefault;
+            dr["IS_DELETED"] = 0;
+            dr["IS_REVISED"] = 0;
+
+            dtTemp.Rows.Add(dr);
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                int count = 0;
+                foreach (DataRow item in dtTemp.Select("IS_DEFAULT=1"))
+                {
+                    count++;
+                    if (count > 0) break;
+                }
+
+                if (count == 0)
+                {
+                    dtTemp.Rows[0]["IS_DEFAULT"] = 1;
+                }
+            }
+
+            gvBankDetails.DataSource = dtTemp;
+            gvBankDetails.DataBind();
+            lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+            ResetBankDetails();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void UpdateBankDetails()
+    {
+        try
+        {
+            string BankName = string.Empty;
+            string Branch = string.Empty;
+            string SWIFTCode = string.Empty;
+            string AccountNumber = string.Empty;
+            string RTGSOrIFSC = string.Empty;
+            string ISBN = string.Empty;
+            int IsDefault = 0;
+
+            if (!string.IsNullOrEmpty(txtBankName.Text))
+                BankName = Convert.ToString(txtBankName.Text);
+
+            if (!string.IsNullOrEmpty(txtBranch.Text))
+                Branch = Convert.ToString(txtBranch.Text);
+
+            if (!string.IsNullOrEmpty(txtSWIFTCode.Text))
+                SWIFTCode = Convert.ToString(txtSWIFTCode.Text);
+
+            if (!string.IsNullOrEmpty(txtAccountNumber.Text))
+                AccountNumber = Convert.ToString(txtAccountNumber.Text);
+
+            if (!string.IsNullOrEmpty(txtRTGSOrIFSC.Text))
+                RTGSOrIFSC = Convert.ToString(txtRTGSOrIFSC.Text);
+
+            if (!string.IsNullOrEmpty(txtISBN.Text))
+                ISBN = Convert.ToString(txtISBN.Text);
+
+            if (chkIsDefaultBank.Checked)
+            {
+                IsDefault = 1;
+                foreach (DataRow drt in dtTemp.Rows)
+                {
+                    drt["IS_DEFAULT"] = 0;
+                }
+            }
+
+            if (dtTemp != null && Session["dtBankDetails"] != null)
+                dtTemp = (DataTable)Session["dtBankDetails"];
+            else
+                AddTempBankDetailsTable();
+
+            dtTemp = (DataTable)Session["dtBankDetails"];
+
+
+            if (dtTemp.Rows.Count > 0)
+            {
+                foreach (DataRow d in dtTemp.Select("SR_NO='" + Convert.ToInt32(hdBankDetailsSRNo.Value) + "'"))
+                {
+                    d["PID"] = "0";
+                    d["IS_DELETED"] = 0;
+                    d["IS_REVISED"] = 0;
+
+                    if (Convert.ToInt32(hdBankDetailsSRNo.Value) > 0)
+                        d["SR_NO"] = Convert.ToString(hdBankDetailsSRNo.Value);
+                    else d["SR_NO"] = "0";
+
+                    if (!string.IsNullOrEmpty(BankName))
+                        d["BANK_NAME"] = BankName;
+                    else d["BANK_NAME"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Branch))
+                        d["BRANCH"] = Branch;
+                    else d["BRANCH"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(SWIFTCode))
+                        d["SWIFT_CODE"] = SWIFTCode;
+                    else d["SWIFT_CODE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(AccountNumber))
+                        d["ACCOUNT_NUMBER"] = AccountNumber;
+                    else d["ACCOUNT_NUMBER"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(RTGSOrIFSC))
+                        d["RTGS_OR_IFSC_CODE"] = RTGSOrIFSC;
+                    else d["RTGS_OR_IFSC_CODE"] = string.Empty;
+
+                    if (!string.IsNullOrEmpty(ISBN))
+                        d["ISBN"] = ISBN;
+                    else d["ISBN"] = string.Empty;
+
+                    if (IsDefault > 0)
+                        d["IS_DEFAULT"] = 1;
+                    else d["IS_DEFAULT"] = 0;
+                }
+            }
+
+            gvBankDetails.DataSource = dtTemp;
+            gvBankDetails.DataBind();
+
+            lblBankDetailsRecords.Text = "[" + gvBankDetails.Rows.Count + "]";
+
+            ResetBankDetails();
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void AddTempBankDetailsTable()
+    {
+        dtBankDetails.Columns.Add("SR_NO", typeof(int));
+        dtBankDetails.Columns.Add("PID", typeof(int));
+        dtBankDetails.Columns.Add("BANK_NAME", typeof(string));
+        dtBankDetails.Columns.Add("BRANCH", typeof(string));
+        dtBankDetails.Columns.Add("SWIFT_CODE", typeof(string));
+        dtBankDetails.Columns.Add("ACCOUNT_NUMBER", typeof(string));
+        dtBankDetails.Columns.Add("RTGS_OR_IFSC_CODE", typeof(string));
+        dtBankDetails.Columns.Add("ISBN", typeof(string));
+        dtBankDetails.Columns.Add("IS_DEFAULT", typeof(int));
+        dtBankDetails.Columns.Add("IS_DELETED", typeof(int));
+        dtBankDetails.Columns.Add("IS_REVISED", typeof(int));
+
+        Session["dtBankDetails"] = dtBankDetails;
+    }
+
+    private void ResetBankDetails()
+    {
+        txtBankName.Text = string.Empty;
+        txtBranch.Text = string.Empty;
+        txtSWIFTCode.Text = string.Empty;
+        txtAccountNumber.Text = string.Empty;
+        txtRTGSOrIFSC.Text = string.Empty;
+        txtISBN.Text = string.Empty;
+        chkIsDefaultBank.Checked = false;
+    }
+
+    
+
+
+
+    private void RemoveAttachments(int srNo)
+    {
+        if (Session["dtAttachments"] != null)
+            dtTemp = (DataTable)Session["dtAttachments"];
+        else
+            AddTempAmendmentsTable();
+
+        dtTemp = (DataTable)Session["dtAttachments"];
+
+        if (dtTemp.Rows.Count > 0)
+        {
+            DataRow[] dr = dtTemp.Select("SR_NO_IN='" + srNo + "'");
+            dr[0]["IS_DELETED"] = 1;
+        }
+
+        Session["dtAttachments"] = dtTemp;
+
+        gvAttachments.DataSource = dtTemp;
+        gvAttachments.DataBind();
+
+        lblAttachmentsRecords.Text = "[" + gvAttachments.Rows.Count + "]";
+    }
+
+    private void AddAttachment()
+    {
+        try
+        {
+            if (dtTemp != null && Session["dtAttachments"] != null)
+                dtTemp = (DataTable)Session["dtAttachments"];
+            else
+                AddTempAttachmentsTable();
+
+            dtTemp = (DataTable)Session["dtAttachments"];
+
+            Byte[] FileBytes = null;
+            string FileName = string.Empty;
+
+
+            if (fileUploadAttachment.HasFile)
+            {
+                if (!string.IsNullOrEmpty(fileUploadAttachment.PostedFile.FileName))
+                {
+                    string[] str = fileUploadAttachment.PostedFile.FileName.Split('\\');
+                    int length = str.Length;
+                    FileName = str[str.Length - 1];
+                    FileBytes = GetFileBytes(fileUploadAttachment.PostedFile.FileName, fileUploadAttachment.PostedFile.InputStream);
+                }
+            }
+
+            int index = 0;
+            foreach (DataRow dr in dtTemp.Select("DOC_TYPE_FID = " + Convert.ToInt32(ddlAttachmentType.SelectedValue)))
+            {
+                if (Convert.ToInt32(dr["DOC_TYPE_FID"]) != (int)StatusAndTypes.EnumDOCTypes.Other1)
+                {
+                    dtTemp.Rows.Remove(dr);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(Convert.ToString(FileName)) && FileBytes != null)
+            {
+                index = dtTemp.Rows.Count + 1;
+                DataRow dr = dtTemp.NewRow();
+                dr["SR_NO"] = index;
+                dr["PID"] = 0;
+                dr["DOC_TYPE_FID"] = Convert.ToInt32(ddlAttachmentType.SelectedValue);
+                dr["DOC_TYPE"] = Convert.ToString(ddlAttachmentType.SelectedItem.Text);
+                dr["DOC_NAME"] = FileName;
+                dr["DOC"] = FileBytes;
+                dr["IS_DELETED"] = 0;
+                dr["IS_REVISED"] = 0;
+                dtTemp.Rows.Add(dr);
+            }
+
+            Session["dtAttachments"] = dtTemp;
+
+            gvAttachments.DataSource = dtTemp;
+            gvAttachments.DataBind();
+            lblAttachmentsRecords.Text = "Files [" + gvAttachments.Rows.Count + "]";
+
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void AddTempAttachmentsTable()
+    {
+        dtAttachments.Columns.Add("SR_NO", typeof(int));
+        dtAttachments.Columns.Add("PID", typeof(int));
+        dtAttachments.Columns.Add("DOC_TYPE_FID", typeof(int));
+        dtAttachments.Columns.Add("DOC_TYPE", typeof(string));
+        dtAttachments.Columns.Add("DOC_NAME", typeof(string));
+        dtAttachments.Columns.Add("DOC", typeof(byte[]));
+        dtAttachments.Columns.Add("IS_DELETED", typeof(int));
+        dtAttachments.Columns.Add("IS_REVISED", typeof(int));
+
+        Session["dtAttachments"] = dtAttachments;
+    }
+
+
+
+
+    private string FormattedString(string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+            return text.ToUpper().Trim();
+
+        return "";
+    }
+
+    private void AddTempAmendmentsTable()
+    {
+        dtAmendments.Columns.Add("ENTITY_FID", typeof(int));
+        dtAmendments.Columns.Add("STATUS_FID", typeof(int));
+        dtAmendments.Columns.Add("ACTION_BY_ID", typeof(int));
+        dtAmendments.Columns.Add("DOCACTION_BY_NAME", typeof(string));
+        dtAmendments.Columns.Add("ACTION_ON", typeof(string));
+        dtAmendments.Columns.Add("REMARKS", typeof(string));
+
+        Session["dtAmendments"] = dtAmendments;
+    }
+
+    private DataTable RemoveDatatabeColumns(DataTable dataTable)
+    {
+        if (dataTable.Columns.Contains("SR_NO"))
+            dataTable.Columns.Remove("SR_NO");
+
+        if (dataTable.Columns.Contains("SR_NO_IN"))
+            dataTable.Columns.Remove("SR_NO_IN");
+
+        if (dataTable.Columns.Contains("DOC_TYPE"))
+            dataTable.Columns.Remove("DOC_TYPE");
+
+        if (dataTable.Columns.Contains("ENTITY_FID"))
+            dataTable.Columns.Remove("ENTITY_FID");
+
+        if (dataTable.Columns.Contains("ENTITY_TYPE_FID"))
+            dataTable.Columns.Remove("ENTITY_TYPE_FID");
+
+        return dataTable;
+    }
+
+    private void ResetAll()
+    {
+        txtName.Text = string.Empty;
+        txtCode.Text = string.Empty;
+        txtPANNumber.Text = string.Empty;
+        txtGSTIn.Text = string.Empty;
+        txtCreditDays.Text = "0";
+        txtCreditLimit.Text = "0";
+        ddlCategory.SelectedIndex = 0;
+        chkIsMSMED.Checked = false;
+
+
+        gvBillingAddress.DataSource = null;
+        gvBillingAddress.DataBind();
+        lblBillingAddressRecords.Text = "[0]";
+
+        txtAddress1.Text = string.Empty;
+        txtAddress2.Text = string.Empty;
+        txtAddress3.Text = string.Empty;
+        txtCity.Text = string.Empty;
+        txtState.Text = string.Empty;
+        txtCountry.Text = string.Empty;
+        txtPhone.Text = string.Empty;
+        txtEmail.Text = string.Empty;
+        chkIsDefaultBillingAddress.Checked = false;
+
+
+        gvContactPerson.DataSource = null;
+        gvContactPerson.DataBind();
+        lblContactPersonRecords.Text = "[0]";
+
+
+        gvBankDetails.DataSource = null;
+        gvBankDetails.DataBind();
+        lblBankDetailsRecords.Text = "[0]";
+
+        chkIsTechnicalDetailsReceived.Checked = false;
+        chkIsISOCertified.Checked = false;
+        chkIsQAVisited.Checked = false;
+        chkIsGovernment.Checked = false;
+        ddlResponsible.SelectedIndex = 0;
+        ddlRelationType.SelectedIndex = 0;
+        ddlItemCategory.SelectedIndex = 0;
+        ddlItemSubCategory.SelectedIndex = 0;
+
+
+        gvAttachments.DataSource = null;
+        gvAttachments.DataSource = null;
+        gvAttachments.DataBind();
+        lblAttachmentsRecords.Text = "[0]";
+
+        txtRemarks.Text = string.Empty;
+
+        DisplayNoneAllPanels();
+        pnlVendorDetails.Style["display"] = "block";
+
+    }
+
+    private void DisplayNoneAllPanels()
+    {
+        pnlVendorDetails.Style["display"] = "none";
+        pnlBillingAddress.Style["display"] = "none";
+        pnlContactPerson.Style["display"] = "none";
+        pnlBankDetails.Style["display"] = "none";
+        pnlVendorOtherDetails.Style["display"] = "none";
+        pnlAttachments.Style["display"] = "none";
+    }
+
+    #endregion
+
+}

@@ -1,0 +1,2626 @@
+﻿<%@ Page Title="CIPLTMS-Register Vendor"
+    Language="C#" MasterPageFile="~/HOME.master"
+    AutoEventWireup="true"
+    CodeFile="RegisterVendorOLD3.aspx.cs"
+    Inherits="VENDOR_CUSTOMER_MGMT_VENDOR_RegisterVendorOLD3" %>
+
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+
+    <link rel="icon" href="../Images/Icons/Icon04.png" />
+    <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/NumericValidation.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        .modalBackground {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+
+        .textboxdrawings {
+            padding: 5px 2px 5px 2px;
+            margin: 0px 5px 0px 5px;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 5px;
+            background-color: lightpink;
+        }
+
+        .textboxtagno {
+            padding: 5px 2px 5px 2px;
+            margin: 0px 5px 0px 5px;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            background-color: whitesmoke;
+        }
+
+        .textboxleft {
+            padding: 5px 2px 5px 2px;
+            margin: 0px 5px 0px 5px;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            background-color: transparent;
+        }
+
+        .textboxcenter {
+            padding: 5px 2px 5px 2px;
+            margin: 0px 5px 0px 5px;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: center;
+            border-radius: 4px;
+            background-color: transparent;
+        }
+
+        .textboxright {
+            padding: 5px 2px 5px 2px;
+            margin: 0px 5px 0px 5px;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            background-color: transparent;
+        }
+
+        /* File Upload Design  */
+        .file-upload {
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            vertical-align: middle;
+            /* Cosmetics */
+            /*border: 1px solid #5C005C;*/
+            /*background: #5C005C;*/
+            background: #003a5cba;
+            color: #fff;
+            /* browser can do it */
+            border-radius: 6px;
+            -moz-border-radius: 6px;
+            /*text-shadow: #000 1px 1px 2px;*/
+            -webkit-border-radius: 6px;
+        }
+
+        /* The button size */
+        .file-upload {
+            height: 2.3em;
+        }
+
+            .file-upload, .file-upload span {
+                /*width: 3.5em;*/
+                width: 100%;
+            }
+
+                .file-upload input {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    margin: 0;
+                    font-size: 11px;
+                    /* Loses tab index in webkit if width is set to 0 */
+                    opacity: 0;
+                    filter: alpha(opacity=0);
+                }
+
+                .file-upload strong {
+                    font: normal 12px Tahoma,sans-serif;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+                .file-upload span {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: inline-block;
+                    /* Adjust button text vertical alignment */
+                    padding-top: .5em;
+                    background: #003a5cba;
+                }
+
+
+
+        .myGrid {
+            background-color: #fff;
+            margin: 5px 0 10px 0;
+            border: solid 1px #525252;
+            border-collapse: collapse;
+        }
+
+            .myGrid td {
+                padding: 2px;
+                border: solid 1px #c1c1c1;
+                color: #717171;
+            }
+
+            .myGrid th {
+                padding: 4px 2px;
+                color: #fff;
+                background-color: #424242;
+                border-left: solid 1px #525252;
+                font-size: 0.9em;
+            }
+
+            .myGrid .alt {
+                background-color: #EFEFEF;
+            }
+    </style>
+
+
+    <%--/*Supporting Functions=================================================================*/--%>
+    <script type="text/Javascript">
+
+        function preventInput(event) {
+            if (event.which != 9) {
+                event.preventDefault();
+            }
+        }
+
+        function stopEnterKey(evt) {
+            var evt = (evt) ? evt : ((event) ? event : null);
+            var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+            if (evt.keyCode == 13) {
+                return false;
+            }
+        }
+
+        document.onkeypress = stopEnterKey;
+
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+
+
+    <%--/*Validation Functions=================================================================*/--%>
+    <script type="text/Javascript">
+
+        /*Vendor Details=================================================================*/
+
+        function ValidateName() {
+            var val = document.getElementById('<%=txtNameToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtNameToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtNameToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidatePANNumber() {
+
+            var country = document.getElementById('<%= ddlCountryToS.ClientID %>').value;
+            var val = document.getElementById('<%=txtPANNumberToS.ClientID %>').value.toUpperCase();
+
+            var panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+            if (country == '95') {
+                if (val == '') {
+                    document.getElementById('<%=txtPANNumberToS.ClientID %>').style.borderColor = "#F7627F";
+                    return true;
+                }
+                else {
+                    if (!panPattern.test(val)) {
+                        alert("Invalid PAN Number");
+                        document.getElementById('<%=txtPANNumberToS.ClientID %>').style.borderColor = "#F7627F";
+                        return true;
+                    }
+                    else {
+                        document.getElementById('<%=txtPANNumberToS.ClientID %>').style.borderColor = "";
+                        return false;
+                    }
+                }
+            }
+
+        }
+
+        function ValidateCategory() {
+            var val = document.getElementById('<%=ddlCategoryToS.ClientID %>').selectedIndex;
+            if (val == '' || val == 0) {
+                document.getElementById('<%=ddlCategoryToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlCategoryToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateMSMEStatus() {
+            var val = document.getElementById('<%=ddlMSMEStatusToS.ClientID %>').selectedIndex;
+            if (val == '' || val == 0) {
+                document.getElementById('<%=ddlMSMEStatusToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlMSMEStatusToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+        /*Billing Address=================================================================*/
+
+        function ValidateGSTIn() {
+            var PAN = document.getElementById('<%=txtPANNumberToS.ClientID %>').value.toUpperCase();
+            var val = document.getElementById('<%=txtGSTInToS.ClientID %>').value.toUpperCase();
+
+
+
+            var gstPattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+            if (val == '') {
+                <%--document.getElementById('<%=txtGSTInToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;--%>
+                return false;
+            }
+            else {
+
+                var PANText = val.substring(2, 12);
+
+                if (!gstPattern.test(val)) {
+                    alert("Invalid GSTIN");
+                    return true;
+                }
+                else if (PANText != PAN) {
+                    alert("PAN number does not match the PAN embedded in GSTIN.");
+                    return true;
+                }
+                document.getElementById('<%=txtGSTInToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateAddress1() {
+            var val = document.getElementById('<%=txtAddress1ToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtAddress1ToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtAddress1ToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateCity() {
+            var val = document.getElementById('<%=txtCityToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtCityToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtCityToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateCountry() {
+            var val = document.getElementById('<%=ddlCountryToS.ClientID %>').selectedIndex;
+            if (val == '') {
+                document.getElementById('<%=ddlCountryToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlCountryToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateState() {
+            var countryId = document.getElementById('<%=ddlCountryToS.ClientID %>').selectedIndex;
+
+            var val = document.getElementById('<%=ddlStateToS.ClientID %>').selectedIndex;
+
+            if (countryId == '95') {
+                if (val == '' || val == 0) {
+                    document.getElementById('<%=ddlStateToS.ClientID %>').style.borderColor = "#F7627F";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=ddlStateToS.ClientID %>').style.borderColor = "";
+                    return false;
+                }
+            }
+            else {
+                document.getElementById('<%=ddlStateToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateOtherState() {
+            var countryId = document.getElementById('<%=ddlCountryToS.ClientID %>').selectedIndex;
+
+            var val = document.getElementById('<%=txtOtherStateToS.ClientID %>').value;
+
+            if (countryId != 95) {
+                if (val == '') {
+                    document.getElementById('<%=txtOtherStateToS.ClientID %>').style.borderColor = "#F7627F";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=txtOtherStateToS.ClientID %>').style.borderColor = "";
+                    return false;
+                }
+            }
+            else {
+                document.getElementById('<%=txtOtherStateToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidatePhone() {
+            var val = document.getElementById('<%=txtPhoneToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtPhoneToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtPhoneToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateEmail() {
+            var val = document.getElementById('<%=txtEmailToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtEmailToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtEmailToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+        /*Contact Person Details=================================================================*/
+
+        function ValidateContactPersonName() {
+            var val = document.getElementById('<%=txtContactPersonNameToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtContactPersonNameToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtContactPersonNameToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateContactPersonMobile() {
+            var val = document.getElementById('<%=txtContactPersonMobileToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtContactPersonMobileToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtContactPersonMobileToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateContactPersonPhone() {
+            var val = document.getElementById('<%=txtContactPersonPhoneToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtContactPersonPhoneToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtContactPersonPhoneToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateContactPersonEmail() {
+            var val = document.getElementById('<%=txtContactPersonEmailToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtContactPersonEmailToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtContactPersonEmailToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+        /*Bank Details=================================================================*/
+
+        function ValidateBankName() {
+            var val = document.getElementById('<%=txtBankNameToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtBankNameToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtBankNameToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateBranch() {
+            var val = document.getElementById('<%=txtBranchToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtBranchToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtBranchToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateSWIFTCode() {
+
+            var countryId = document.getElementById('<%=ddlCountryToS.ClientID %>').selectedIndex;
+
+            var val = document.getElementById('<%=txtSWIFTCodeToS.ClientID %>').value;
+
+            if (countryId != 95) {
+                if (val == '') {
+                    document.getElementById('<%=txtSWIFTCodeToS.ClientID %>').style.borderColor = "#F7627F";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=txtSWIFTCodeToS.ClientID %>').style.borderColor = "";
+                    return false;
+                }
+            }
+            else {
+                document.getElementById('<%=txtSWIFTCodeToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+
+        }
+
+        function ValidateAccountNumber() {
+            var val = document.getElementById('<%=txtAccountNumberToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtAccountNumberToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtAccountNumberToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateRTGSOrIFSC() {
+            var val = document.getElementById('<%=txtRTGSOrIFSCToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtRTGSOrIFSCToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtRTGSOrIFSCToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateISBN() {
+            var val = document.getElementById('<%=txtISBNToS.ClientID %>').value;
+            if (val == '') {
+                document.getElementById('<%=txtISBNToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtISBNToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+        /*Other Details=================================================================*/
+
+        function ValidateResponsible() {
+            var val = document.getElementById('<%=ddlResponsibleToS.ClientID %>').selectedIndex;
+            if (val == '' || val == 0) {
+                document.getElementById('<%=ddlResponsibleToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlResponsibleToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateRelationType() {
+            var val = document.getElementById('<%=ddlRelationTypeToS.ClientID %>').selectedIndex;
+            if (val == '' || val == 0) {
+                document.getElementById('<%=ddlRelationTypeToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlRelationTypeToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateItemCategory() {
+            var val = document.getElementById('<%=ddlItemCategoryToS.ClientID %>').selectedIndex;
+            if (val == '' || val == 0) {
+                document.getElementById('<%=ddlItemCategoryToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlItemCategoryToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateItemSubCategory() {
+            var val = document.getElementById('<%=ddlItemSubCategoryToS.ClientID %>').selectedIndex;
+            if (val == '' || val == 0) {
+                document.getElementById('<%=ddlItemSubCategoryToS.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlItemSubCategoryToS.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+        /*Attachment=================================================================*/
+
+        function ValidatefileAttachmentVRF() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment = document.getElementById('<%=fileUploadAttachmentVRF.ClientID %>').value;
+            var divfileAttachment = document.getElementById("divfileAttachmentVRF");
+            var lblfileAttachment = document.getElementById('<%=lblfileAttachmentVRF.ClientID %>');
+
+            if (fileAttachment == '') {
+                document.getElementById('<%=fileUploadAttachmentVRF.ClientID %>').style.borderColor = "";
+                divfileAttachment.style.display = "none";
+                lblfileAttachment.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment = fileAttachment.split(" ").join("")
+                fileAttachment = fileAttachment.split("(").join("")
+                fileAttachment = fileAttachment.split(")").join("")
+
+                if (!regex.test(fileAttachment.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentVRF.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment.style.display = "block";
+                    lblfileAttachment.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentVRF.ClientID %>').style.borderColor = "";
+                    divfileAttachment.style.display = "none";
+                    lblfileAttachment.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentGSTIN() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment4 = document.getElementById('<%=fileUploadAttachmentGSTIN.ClientID %>').value;
+            var divfileAttachment4 = document.getElementById("divfileAttachmentGSTIN");
+            var lblfileAttachment4 = document.getElementById('<%=lblfileAttachmentGSTIN.ClientID %>');
+
+            if (fileAttachment4 == '') {
+                document.getElementById('<%=fileUploadAttachmentGSTIN.ClientID %>').style.borderColor = "";
+                divfileAttachment4.style.display = "none";
+                lblfileAttachment4.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment4 = fileAttachment4.split(" ").join("")
+                fileAttachment4 = fileAttachment4.split("(").join("")
+                fileAttachment4 = fileAttachment4.split(")").join("")
+
+                if (!regex.test(fileAttachment4.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentGSTIN.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment4.style.display = "block";
+                    lblfileAttachment4.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentGSTIN.ClientID %>').style.borderColor = "";
+                    divfileAttachment4.style.display = "none";
+                    lblfileAttachment4.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentPAN() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment4 = document.getElementById('<%=fileUploadAttachmentPAN.ClientID %>').value;
+            var divfileAttachment4 = document.getElementById("divfileAttachmentPAN");
+            var lblfileAttachment4 = document.getElementById('<%=lblfileAttachmentPAN.ClientID %>');
+
+            if (fileAttachment4 == '') {
+                document.getElementById('<%=fileUploadAttachmentPAN.ClientID %>').style.borderColor = "";
+                divfileAttachment4.style.display = "none";
+                lblfileAttachment4.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment4 = fileAttachment4.split(" ").join("")
+                fileAttachment4 = fileAttachment4.split("(").join("")
+                fileAttachment4 = fileAttachment4.split(")").join("")
+
+                if (!regex.test(fileAttachment4.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentPAN.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment4.style.display = "block";
+                    lblfileAttachment4.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentPAN.ClientID %>').style.borderColor = "";
+                    divfileAttachment4.style.display = "none";
+                    lblfileAttachment4.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentCancelledCheque() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment4 = document.getElementById('<%=fileUploadAttachmentCancelledCheque.ClientID %>').value;
+            var divfileAttachment4 = document.getElementById("divfileAttachmentCancelledCheque");
+            var lblfileAttachment4 = document.getElementById('<%=lblfileAttachmentCancelledCheque.ClientID %>');
+
+            if (fileAttachment4 == '') {
+                document.getElementById('<%=fileUploadAttachmentCancelledCheque.ClientID %>').style.borderColor = "";
+                divfileAttachment4.style.display = "none";
+                lblfileAttachment4.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment4 = fileAttachment4.split(" ").join("")
+                fileAttachment4 = fileAttachment4.split("(").join("")
+                fileAttachment4 = fileAttachment4.split(")").join("")
+
+                if (!regex.test(fileAttachment4.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentCancelledCheque.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment4.style.display = "block";
+                    lblfileAttachment4.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentCancelledCheque.ClientID %>').style.borderColor = "";
+                    divfileAttachment4.style.display = "none";
+                    lblfileAttachment4.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentOther1() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment = document.getElementById('<%=fileUploadAttachmentOther1.ClientID %>').value;
+            var divfileAttachment = document.getElementById("divfileAttachmentOther1");
+            var lblfileAttachment = document.getElementById('<%=lblfileAttachmentOther1.ClientID %>');
+
+            if (fileAttachment == '') {
+                document.getElementById('<%=fileUploadAttachmentOther1.ClientID %>').style.borderColor = "";
+                divfileAttachment.style.display = "none";
+                lblfileAttachment.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment = fileAttachment.split(" ").join("")
+                fileAttachment = fileAttachment.split("(").join("")
+                fileAttachment = fileAttachment.split(")").join("")
+
+                if (!regex.test(fileAttachment.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentOther1.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment.style.display = "block";
+                    lblfileAttachment.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentOther1.ClientID %>').style.borderColor = "";
+                    divfileAttachment.style.display = "none";
+                    lblfileAttachment.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentOther2() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment = document.getElementById('<%=fileUploadAttachmentOther2.ClientID %>').value;
+            var divfileAttachment = document.getElementById("divfileAttachmentOther2");
+            var lblfileAttachment = document.getElementById('<%=lblfileAttachmentOther2.ClientID %>');
+
+            if (fileAttachment == '') {
+                document.getElementById('<%=fileUploadAttachmentOther2.ClientID %>').style.borderColor = "";
+                divfileAttachment.style.display = "none";
+                lblfileAttachment.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment = fileAttachment.split(" ").join("")
+                fileAttachment = fileAttachment.split("(").join("")
+                fileAttachment = fileAttachment.split(")").join("")
+
+                if (!regex.test(fileAttachment.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentOther2.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment.style.display = "block";
+                    lblfileAttachment.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentOther2.ClientID %>').style.borderColor = "";
+                    divfileAttachment.style.display = "none";
+                    lblfileAttachment.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentOther3() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment = document.getElementById('<%=fileUploadAttachmentOther3.ClientID %>').value;
+            var divfileAttachment = document.getElementById("divfileAttachmentOther3");
+            var lblfileAttachment = document.getElementById('<%=lblfileAttachmentOther3.ClientID %>');
+
+            if (fileAttachment == '') {
+                document.getElementById('<%=fileUploadAttachmentOther3.ClientID %>').style.borderColor = "";
+                divfileAttachment.style.display = "none";
+                lblfileAttachment.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment = fileAttachment.split(" ").join("")
+                fileAttachment = fileAttachment.split("(").join("")
+                fileAttachment = fileAttachment.split(")").join("")
+
+                if (!regex.test(fileAttachment.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentOther3.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment.style.display = "block";
+                    lblfileAttachment.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentOther3.ClientID %>').style.borderColor = "";
+                    divfileAttachment.style.display = "none";
+                    lblfileAttachment.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileAttachmentOther4() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment = document.getElementById('<%=fileUploadAttachmentOther4.ClientID %>').value;
+            var divfileAttachment = document.getElementById("divfileAttachmentOther4");
+            var lblfileAttachment = document.getElementById('<%=lblfileAttachmentOther4.ClientID %>');
+
+            if (fileAttachment == '') {
+                document.getElementById('<%=fileUploadAttachmentOther4.ClientID %>').style.borderColor = "";
+                divfileAttachment.style.display = "none";
+                lblfileAttachment.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment = fileAttachment.split(" ").join("")
+                fileAttachment = fileAttachment.split("(").join("")
+                fileAttachment = fileAttachment.split(")").join("")
+
+                if (!regex.test(fileAttachment.toLowerCase())) {
+                    document.getElementById('<%=fileUploadAttachmentOther4.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment.style.display = "block";
+                    lblfileAttachment.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadAttachmentOther4.ClientID %>').style.borderColor = "";
+                    divfileAttachment.style.display = "none";
+                    lblfileAttachment.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+    </script>
+
+
+
+    <%--/*Apply Validation Functions===========================================================*/--%>
+    <script type="text/Javascript">
+
+        <%--function ValidateVendorBasicDetails() {
+
+            displayNoneAllPanels();
+
+            var check = true;
+
+            if (ValidateName()) { check = false; }
+            if (ValidatePANNumber()) { check = false; }
+            if (ValidateCategory()) { check = false; }
+            if (ValidateMSMEStatus()) { check = false; }
+
+            if (check) {
+                document.getElementById('<%= imgBtnShowPnl2.ClientID %>').src = '<%= ResolveUrl("~/Images/VCM/a_pnl2.png") %>';
+                document.getElementById('<%= pnlBillingAddress.ClientID %>').style.display = 'block';
+            }
+            else {
+                document.getElementById('<%= pnlVendorDetails.ClientID %>').style.display = 'block';
+            }
+
+            return false;
+        }--%>
+
+
+
+        function ValidateBillingAddress() {
+            var check = true;
+
+            if (ValidateGSTIn()) { check = false; }
+            if (ValidateAddress1()) { check = false; }
+            if (ValidateCity()) { check = false; }
+            if (ValidateState()) { check = false; }
+            if (ValidateCountry()) { check = false; }
+            if (ValidateOtherState()) { check = false; }
+            if (ValidatePhone()) { check = false; }
+            if (ValidateEmail()) { check = false; }
+
+            if (check) {
+
+                return true;
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+        function ValidateBillingAddressGrid() {
+
+            document.getElementById('<%= lblBillingAddressMsg.ClientID %>').innerText = ''
+            var check = false;
+            var grid = document.getElementById('<%= gvBillingAddress.ClientID %>');
+            if (grid != null) {
+
+                var rows = grid.getElementsByTagName('tr');
+                if (rows.length > 1) {
+                    check = true;
+                }
+            }
+
+            if (check) {
+                return true;
+            }
+            else {
+                return false;
+                document.getElementById('<%= lblBillingAddressMsg.ClientID %>').innerText = 'Please add at least one billing address.'
+            }
+
+            return false;
+        }
+
+
+        function ValidateContactPerson() {
+            var check = true;
+
+            if (ValidateContactPersonName()) { check = false; }
+            if (ValidateContactPersonMobile()) { check = false; }
+            if (ValidateContactPersonPhone()) { check = false; }
+            if (ValidateContactPersonEmail()) { check = false; }
+
+            if (check) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+        function ValidateContactPersonGrid() {
+
+            displayNoneAllPanels();
+
+            document.getElementById('<%= lblContactPersonMsg.ClientID %>').innerText = ''
+            var check = false;
+            var grid = document.getElementById('<%= gvContactPerson.ClientID %>');
+            if (grid != null) {
+
+                var rows = grid.getElementsByTagName('tr');
+                if (rows.length > 1) {
+                    check = true;
+                }
+            }
+
+            if (check) {
+                return true;
+            }
+            else {
+                return false;
+                document.getElementById('<%= lblContactPersonMsg.ClientID %>').innerText = 'Please add at least one contact person.'
+            }
+
+            return false;
+        }
+
+
+        function ValidateBankDetails() {
+            var check = true;
+
+            if (ValidateBankName()) { check = false; }
+            if (ValidateBranch()) { check = false; }
+            //if (ValidateSWIFTCode()) { check = false; }
+            if (ValidateAccountNumber()) { check = false; }
+            //if (ValidateRTGSOrIFSC()) { check = false; }
+            //if (ValidateISBN()) { check = false; }
+
+            if (check) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+        function ValidateBankDetailsGrid() {
+
+            displayNoneAllPanels();
+
+            document.getElementById('<%= lblBankDetailsMsg.ClientID %>').innerText = ''
+            var check = false;
+            var grid = document.getElementById('<%= gvBankDetails.ClientID %>');
+            if (grid != null) {
+
+                var rows = grid.getElementsByTagName('tr');
+                if (rows.length > 1) {
+                    check = true;
+                }
+            }
+
+            if (check) {
+                return true;
+            }
+            else {
+                return false;
+                document.getElementById('<%= lblBankDetailsMsg.ClientID %>').innerText = 'Please add at least one bank detail.'
+            }
+
+            return false;
+        }
+
+        function ValidateAllAttachment() {
+            var check = true;
+
+            if (ValidatefileAttachmentVRF()) { check = false; }
+            if (ValidatefileAttachmentGSTIN()) { check = false; }
+            if (ValidatefileAttachmentPAN()) { check = false; }
+            if (ValidatefileAttachmentCancelledCheque()) { check = false; }
+            if (ValidatefileAttachmentOther1()) { check = false; }
+            if (ValidatefileAttachmentOther2()) { check = false; }
+            if (ValidatefileAttachmentOther3()) { check = false; }
+            if (ValidatefileAttachmentOther4()) { check = false; }
+
+            return check;
+        }
+
+
+
+
+        <%--function ValidateAll() {
+            var check = true;
+
+            if (ValidateName()) { check = false; }
+            if (ValidatePANNumber()) { check = false; }
+            
+            if (ValidateCategory()) { check = false; }
+            if (ValidateMSMEStatus()) { check = false; }
+
+            if (ValidateGSTIn()) { check = false; }
+            if (ValidateAddress1()) { check = false; }
+            if (ValidateCity()) { check = false; }
+
+            if (ValidateCountry()) { check = false; }
+            if (ValidateState()) { check = false; }
+            if (ValidateOtherState()) { check = false; }
+
+            if (ValidatePhone()) { check = false; }
+            if (ValidateEmail()) { check = false; }
+
+            if (ValidateContactPersonName()) { check = false; }
+            if (ValidateContactPersonMobile()) { check = false; }
+            if (ValidateContactPersonPhone()) { check = false; }
+            if (ValidateContactPersonEmail()) { check = false; }
+
+            if (ValidateBankName()) { check = false; }
+            if (ValidateBranch()) { check = false; }
+            if (ValidateSWIFTCode()) { check = false; }
+            if (ValidateAccountNumber()) { check = false; }
+            if (ValidateRTGSOrIFSC()) { check = false; }
+            //if (ValidateISBN()) { check = false; }
+
+            if (ValidateResponsible()) { check = false; }
+            if (ValidateRelationType()) { check = false; }
+            if (ValidateItemCategory()) { check = false; }
+            if (ValidateItemSubCategory()) { check = false; }
+
+            if (ValidatefileAttachmentVRF()) { check = false; }
+            if (ValidatefileAttachmentGSTIN()) { check = false; }
+            if (ValidatefileAttachmentPAN()) { check = false; }
+            if (ValidatefileAttachmentCancelledCheque()) { check = false; }
+            if (ValidatefileAttachmentOther1()) { check = false; }
+            if (ValidatefileAttachmentOther2()) { check = false; }
+            if (ValidatefileAttachmentOther3()) { check = false; }
+            if (ValidatefileAttachmentOther4()) { check = false; }
+
+            if (check) {
+                if (confirm("Would you like to save Vendor?")) {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }--%>
+
+        //window.onload = function () {
+        //    window.scrollTo(0, sessionStorage.getItem('scrollPos') || 0);
+        //};
+
+        //window.onscroll = function () {
+        //    sessionStorage.setItem('scrollPos', window.scrollY);
+        //};
+
+        function ValidateAll() {
+            var check = true;
+
+            if (ValidateName()) { check = false; }
+            if (ValidatePANNumber()) { check = false; }
+            if (ValidateCategory()) { check = false; }
+
+            if (ValidateResponsible()) { check = false; }
+            if (ValidateRelationType()) { check = false; }
+            if (ValidateItemCategory()) { check = false; }
+            if (ValidateItemSubCategory()) { check = false; }
+
+            if (check) {
+                if (confirm("Would you like to save Vendor?")) {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+        function ValidateAllForPreview() {
+            var check = true;
+
+            if (ValidateName()) { check = false; }
+            if (ValidatePANNumber()) { check = false; }
+            if (ValidateCategory()) { check = false; }
+
+            if (ValidateResponsible()) { check = false; }
+            if (ValidateRelationType()) { check = false; }
+            if (ValidateItemCategory()) { check = false; }
+            if (ValidateItemSubCategory()) { check = false; }
+
+            if (check) {
+                if (confirm("Would you like to preview vendor details?")) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        window.onload = function () {
+
+            var div = document.getElementById("scrollDiv");
+
+            // Restore scroll position
+            var scrollPos = sessionStorage.getItem("divScroll");
+
+            if (scrollPos !== null) {
+                div.scrollTop = scrollPos;
+            }
+
+            // Save scroll position
+            div.onscroll = function () {
+                sessionStorage.setItem("divScroll", div.scrollTop);
+            };
+        };
+
+    </script>
+
+
+
+    <%--/*Paneling Functions===================================================================*/--%>
+    <script type="text/Javascript">
+
+        function ShowBillingAddressPopup() {
+
+
+            var panNo = document.getElementById('<%= txtPANNumberToS.ClientID %>').value;
+
+
+            if (panNo != '') {
+                document.getElementById('<%= txtPANToSS.ClientID %>').value = panNo;
+
+                //document.getElementById('<%= ddlCountryToS.ClientID %>').value = "95";
+
+                document.getElementById('<%= hdBillingAddressUpdationFlag.ClientID %>').value = '0';
+                document.getElementById('<%= btnAddUpdateAddressToList.ClientID %>').value = 'Add Address';
+                $find('<%= mpeAddBillingAddress.ClientID %>').show();
+            }
+            else {
+                alert('Please enter PAN No. !')
+            }
+
+
+        }
+
+        function ShowContactPersonPopup() {
+            document.getElementById('<%= hdContactPersonUpdationFlag.ClientID %>').value = '0';
+            document.getElementById('<%= btnAddUpdateContactPersonToList.ClientID %>').value = 'Add Contact Person';
+            $find('<%= mpeAddContactPerson.ClientID %>').show();
+        }
+
+        function ShowBankDetailPopup() {
+            document.getElementById('<%= hdBankDetailsUpdationFlag.ClientID %>').value = '0';
+            document.getElementById('<%= btnAddUpdateBankDetailsToList.ClientID %>').value = 'Add Bank Detail';
+            $find('<%= mpeAddBankDetails.ClientID %>').show();
+        }
+
+        function GenerateGSTIN() {
+
+            var panNo = document.getElementById('<%= txtPANToSS.ClientID %>').value.trim();
+            var runningNo = document.getElementById('<%= txtGSTInRunningNoToS.ClientID %>').value.trim();
+
+            var ddlState = document.getElementById('<%= ddlStateToS.ClientID %>');
+            var state = ddlState.options[ddlState.selectedIndex].text;
+
+            var stateCode = state.substring(state.indexOf('[') + 1, state.indexOf(']'));
+
+            if (!stateCode || !panNo || !runningNo) {
+                return;
+            }
+
+            document.getElementById('<%= txtGSTInToS.ClientID %>').value = stateCode + panNo + runningNo;
+        }
+
+        function FillPANNo() {
+            var country = document.getElementById('<%= ddlCountryToS.ClientID %>').value;
+            if (country == '95') {
+                document.getElementById('<%= ddlStateToS.ClientID %>').disabled = false;
+
+                var otherState = document.getElementById('<%= txtOtherStateToS.ClientID %>');
+                otherState.disabled = true;
+                otherState.value = '';
+
+
+                var GSTInRunningNo = document.getElementById('<%= txtGSTInRunningNoToS.ClientID %>');
+                GSTInRunningNo.disabled = false;
+                GSTInRunningNo.value = '';
+
+                var GSTIn = document.getElementById('<%= txtGSTInToS.ClientID %>');
+                GSTIn.disabled = false;
+                GSTIn.value = '';
+
+
+
+                document.getElementById('<%= txtPANNumberToS.ClientID %>').value = '';
+            }
+            else {
+                var ddlState = document.getElementById('<%= ddlStateToS.ClientID %>');
+                ddlState.disabled = true;
+                ddlState.selectedIndex = 0; // Optional: reset selection
+
+                var otherState = document.getElementById('<%= txtOtherStateToS.ClientID %>');
+                otherState.disabled = false;
+                otherState.value = '';
+
+
+                var GSTInRunningNo = document.getElementById('<%= txtGSTInRunningNoToS.ClientID %>');
+                GSTInRunningNo.disabled = true;
+                GSTInRunningNo.value = '';
+
+                var GSTIn = document.getElementById('<%= txtGSTInToS.ClientID %>');
+                GSTIn.disabled = true;
+                GSTIn.value = '';
+
+
+
+                document.getElementById('<%= txtPANNumberToS.ClientID %>').value = 'PANNOTAVBL';
+            }
+        }
+
+    </script>
+
+
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </ajax:ToolkitScriptManager>
+    <asp:HiddenField ID="hdConfirmValue" runat="server" />
+    <asp:HiddenField ID="hdSubitemConfirmValue" runat="server" />
+
+
+    <%--<asp:UpdatePanel runat="server" ID="uppanel">
+        <ContentTemplate>--%>
+
+    <div style='margin-top: 20px;' align="center">
+        <%--<fieldset style="width: 60%;">--%>
+        <fieldset style="width: 90%;">
+            <legend style="text-align: center;">Register Vendor</legend>
+
+            <%--<div style='width: 100%; border: 1px solid lightgray; border-radius: 10px; overflow-y: scroll; overflow-x: hidden; height: 700px;'>--%>
+
+
+            <div id="scrollDiv" style="width: 100%; border: 1px solid lightgray; border-radius: 10px; overflow-y: scroll; overflow-x: hidden; height: 700px;">
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Basic Details</i></legend>
+
+                    <table width="90%">
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Name:</td>
+                            <td colspan="4">
+
+                                <table width="100%">
+                                    <tr>
+                                        <td style="width: 70%">
+                                            <asp:TextBox ID="txtNameToS" runat="server" Width="100%" />
+                                        </td>
+
+                                        <td style="width: 30%">
+                                            <asp:TextBox ID="txtCodeToS" runat="server" Width="100%" Enabled="false" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Country:</td>
+                            <td style="width: 30%">
+
+                                <asp:DropDownList ID="ddlCountryToS" runat="server" Width="100%" Height="26px"
+                                    onchange="FillPANNo();">
+                                </asp:DropDownList>
+                            </td>
+                            <td>&nbsp;</td>
+
+
+                            <td style="width: 15%;">PAN Number:</td>
+                            <td style="width: 30%;">
+                                <asp:TextBox ID="txtPANNumberToS" runat="server" Width="100%" />
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+
+                            <td style="width: 15%;">Credit Days:</td>
+                            <td style="width: 30%;">
+                                <asp:TextBox ID="txtCreditDaysToS" runat="server" Width="100%" Text="0"
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Credit Limit:</td>
+                            <td style="width: 30%;">
+                                <asp:TextBox ID="txtCreditLimitToS" runat="server" Width="100%" Text="0"
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+
+                            <td style="width: 15%;">Category:</td>
+                            <td style="width: 30%;">
+                                <asp:DropDownList ID="ddlCategoryToS" runat="server" Width="100%" Height="26px">
+                                </asp:DropDownList>
+                            </td>
+
+                            <td>&nbsp;</td>
+
+                            <td style="width: 15%;">MSME Status:</td>
+                            <td style="width: 30%;">
+                                <asp:DropDownList ID="ddlMSMEStatusToS" runat="server" Width="100%" Height="26px">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">Do you have any relation work in our company as employee?</td>
+                            <td style="width: 30%;">
+                                <%--<asp:CheckBox ID="chkIsAssociatedToS" runat="server" />--%>
+                                <asp:RadioButtonList ID="rdAssociatedToS" runat="server" RepeatDirection="Horizontal" Width="30%">
+                                    <asp:ListItem Value="0" Selected="True">No</asp:ListItem>
+                                    <asp:ListItem Value="1">Yes</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Is One Time Vendor?</td>
+                            <td style="width: 30%;">
+                                <asp:RadioButtonList ID="rdIsOneTimeVendorToS" runat="server" RepeatDirection="Horizontal" Width="30%">
+                                    <asp:ListItem Value="0" Selected="True">No</asp:ListItem>
+                                    <asp:ListItem Value="1">Yes</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                    </table>
+
+                </fieldset>
+
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Billing Address
+                        <asp:Label ID="lblBillingAddressRecords" runat="server" Text="[0]" />
+                    </i>
+                    </legend>
+                    <asp:ImageButton ImageUrl="~/Images/VCM/add.png" runat="server"
+                        OnClientClick="ShowBillingAddressPopup(); return false;"
+                        ToolTip="Add new billing address"
+                        Width="25px" Height="25px" />
+
+                    <asp:HiddenField ID="hdBillingAddressSRNo" runat="server" />
+                    <asp:HiddenField ID="hdBillingAddressUpdationFlag" runat="server" />
+                    <asp:HiddenField ID="hdBillingAddressLastSUID" runat="server" />
+
+                    <div style="width: 100%; margin-left: 0px;">
+
+                        <%--<table style="width: 100%; height: 400px;">
+                            <tr>
+                                <td>
+                                    <div align="center">--%>
+
+                        <div style='overflow-y: scroll; overflow-x: scroll; width: 95%; height: 200px; border: 1px solid lightgray;'>
+
+                            <asp:GridView ID="gvBillingAddress"
+                                runat="server"
+                                AutoGenerateColumns="false"
+                                CellPadding="4"
+                                CssClass="myGrid"
+                                ForeColor="#333333" GridLines="Both" Width="100%"
+                                HorizontalAlign="Center"
+                                OnRowCommand="gvBillingAddress_RowCommand"
+                                OnRowDataBound="gvBillingAddress_RowDataBound">
+
+                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#7C6F57" />
+                                <AlternatingRowStyle BackColor="White" />
+
+
+                                <Columns>
+                                    <asp:TemplateField ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server"
+                                                ToolTip="Edit" ImageUrl="~/Images/VCM/edit.png"
+                                                Width="30px" Height="30px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="imgRemove" CommandArgument="REMOVE" runat="server"
+                                                ToolTip="Remove" ImageUrl="~/Images/VCM/delete.png"
+                                                Width="30px" Height="30px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Sr.No.">
+                                        <ItemTemplate>
+
+                                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
+                                            <asp:Label ID="lblGSTIN" runat="server" Text='<%# Eval("GSTIN") %>' Visible="false" />
+                                            <asp:Label ID="lblAddress1" runat="server" Text='<%# Eval("ADDRESS_LINE1") %>' Visible="false" />
+                                            <asp:Label ID="lblAddress2" runat="server" Text='<%# Eval("ADDRESS_LINE2") %>' Visible="false" />
+                                            <asp:Label ID="lblAddress3" runat="server" Text='<%# Eval("ADDRESS_LINE3") %>' Visible="false" />
+                                            <asp:Label ID="lblCity" runat="server" Text='<%# Eval("CITY") %>' Visible="false" />
+                                            <asp:Label ID="lblState" runat="server" Text='<%# Eval("STATE") %>' Visible="false" />
+                                            <asp:Label ID="lblOtherState" runat="server" Text='<%# Eval("OTHER_STATE") %>' Visible="false" />
+                                            <asp:Label ID="lblCountry" runat="server" Text='<%# Eval("COUNTRY") %>' Visible="false" />
+                                            <asp:Label ID="lblPINCode" runat="server" Text='<%# Eval("PIN_CODE") %>' Visible="false" />
+                                            <asp:Label ID="lblPhone" runat="server" Text='<%# Eval("PHONE") %>' Visible="false" />
+                                            <asp:Label ID="lblEmail" runat="server" Text='<%# Eval("EMAIL") %>' Visible="false" />
+                                            <asp:Label ID="lblIsDefault" runat="server" Text='<%# Eval("IS_DEFAULT") %>' Visible="false" />
+
+                                            <asp:Label ID="lblStateID" runat="server" Text='<%# Eval("STATE_ID") %>' Visible="false" />
+                                            <asp:Label ID="lblCountryID" runat="server" Text='<%# Eval("COUNTRY_ID") %>' Visible="false" />
+
+                                            <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Width="30PX"
+                                                onkeyDown="javascript:preventInput(event);" CssClass="textboxcenter"></asp:TextBox>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+
+                                    <asp:BoundField DataField="ADDRESS_LINE1" HeaderText="Address1" />
+                                    <asp:BoundField DataField="ADDRESS_LINE2" HeaderText="Address2" />
+                                    <asp:BoundField DataField="ADDRESS_LINE3" HeaderText="Address3" />
+                                    <asp:BoundField DataField="CITY" HeaderText="City" />
+                                    <asp:BoundField DataField="COUNTRY" HeaderText="Country" />
+                                    <asp:BoundField DataField="STATE" HeaderText="State" />
+                                    <asp:BoundField DataField="OTHER_STATE" HeaderText="Other State" />
+                                    <asp:BoundField DataField="GSTIN" HeaderText="GSTIN" />
+                                    <asp:BoundField DataField="PIN_CODE" HeaderText="PIN Code" />
+
+                                    <asp:BoundField DataField="PHONE" HeaderText="Phone" />
+                                    <asp:BoundField DataField="EMAIL" HeaderText="Email" />
+
+
+                                    <asp:TemplateField HeaderText="Is Default?">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="chkIsDefault" runat="server" Enabled="false" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                </Columns>
+                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#7C6F57" />
+                                <AlternatingRowStyle BackColor="White" />
+                            </asp:GridView>
+                        </div>
+                        <%--</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>--%>
+
+                        <div align="center">
+                            <asp:Label ID="lblBillingAddressMsg" runat="server" ForeColor="Red" />
+                        </div>
+                        <br />
+                    </div>
+
+                </fieldset>
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Contact Person Details
+                        <asp:Label ID="lblContactPersonRecords" runat="server" Text="[0]" />
+                    </i></legend>
+                    <asp:ImageButton ImageUrl="~/Images/VCM/add.png" runat="server"
+                        OnClientClick="ShowContactPersonPopup(); return false;"
+                        ToolTip="Add new contact person"
+                        Width="25px" Height="25px" />
+
+                    <asp:HiddenField ID="hdContactPersonSRNo" runat="server" />
+                    <asp:HiddenField ID="hdContactPersonUpdationFlag" runat="server" />
+                    <asp:HiddenField ID="hdContactPersonLastSUID" runat="server" />
+
+                    <div style="width: 100%; margin-left: 0px;">
+
+                        <%--<table width="90%">
+                            <tr>
+                                <td style="width: 15%;">Name:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtContactPersonNameToS" runat="server" Width="100%" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td style="width: 15%;">Email:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtContactPersonEmailToS" runat="server" Width="100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 15%;">Mobile:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtContactPersonMobileToS" runat="server" Width="100%"
+                                        onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td style="width: 15%;">Phone:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtContactPersonPhoneToS" runat="server" Width="100%"
+                                        onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                        </table>--%>
+
+                        <%--<table style="width: 100%;">
+
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div align="center">
+                                        <fieldset style="width: 100%;">
+                                            <legend style="text-align: center;"></legend>--%>
+
+                        <div style='overflow-y: scroll; overflow-x: scroll; width: 950px; height: 200px; border: 1px solid lightgray;'>
+
+                            <asp:GridView ID="gvContactPerson"
+                                runat="server"
+                                AutoGenerateColumns="false"
+                                CellPadding="4"
+                                CssClass="myGrid"
+                                ForeColor="#333333" GridLines="Both" Width="100%"
+                                HorizontalAlign="Center"
+                                OnRowCommand="gvContactPerson_RowCommand"
+                                OnRowDataBound="gvContactPerson_RowDataBound">
+
+                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#7C6F57" />
+                                <AlternatingRowStyle BackColor="White" />
+
+                                <Columns>
+                                    <asp:TemplateField ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES"
+                                                runat="server" ToolTip="Edit" ImageUrl="~/Images/VCM/edit.png"
+                                                Width="30px" Height="30px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="imgRemove" CommandArgument="REMOVE" runat="server"
+                                                ToolTip="Remove" ImageUrl="~/Images/VCM/delete.png"
+                                                Width="30px" Height="30px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Sr.No.">
+                                        <ItemTemplate>
+
+                                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
+                                            <asp:Label ID="lblContactPersonName" runat="server" Text='<%# Eval("NAME") %>' Visible="false" />
+                                            <asp:Label ID="lblContactPersonMobile" runat="server" Text='<%# Eval("MOBILE_NO") %>' Visible="false" />
+                                            <asp:Label ID="lblContactPersonPhone" runat="server" Text='<%# Eval("PHONE") %>' Visible="false" />
+                                            <asp:Label ID="lblContactPersonEmail" runat="server" Text='<%# Eval("EMAIL") %>' Visible="false" />
+                                            <asp:Label ID="lblIsDefault" runat="server" Text='<%# Eval("IS_DEFAULT") %>' Visible="false" />
+
+
+                                            <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Width="30PX"
+                                                onkeyDown="javascript:preventInput(event);" CssClass="textboxcenter"></asp:TextBox>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:BoundField DataField="NAME" HeaderText="Name" />
+                                    <asp:BoundField DataField="MOBILE_NO" HeaderText="Mobile No." />
+                                    <asp:BoundField DataField="PHONE" HeaderText="Phone No." />
+                                    <asp:BoundField DataField="EMAIL" HeaderText="Email" />
+
+                                    <asp:TemplateField HeaderText="Is Default?">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="chkIsDefault" runat="server" Enabled="false" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                </Columns>
+                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#7C6F57" />
+                                <AlternatingRowStyle BackColor="White" />
+                            </asp:GridView>
+                        </div>
+
+                        <%--</fieldset>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="center"></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                        </table>--%>
+
+
+
+                        <div align="center">
+                            <asp:Label ID="lblContactPersonMsg" runat="server" ForeColor="Red" />
+                        </div>
+                    </div>
+                    <br />
+
+                </fieldset>
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Bank Details
+                        <asp:Label ID="lblBankDetailsRecords" runat="server" Text="[0]" />
+                    </i></legend>
+                    <asp:ImageButton ImageUrl="~/Images/VCM/add.png" runat="server"
+                        OnClientClick="ShowBankDetailPopup(); return false;"
+                        ToolTip="Add new bank detail"
+                        Width="25px" Height="25px" />
+
+                    <asp:HiddenField ID="hdBankDetailsSRNo" runat="server" />
+                    <asp:HiddenField ID="hdBankDetailsUpdationFlag" runat="server" />
+                    <asp:HiddenField ID="hdBankDetailsLastSUID" runat="server" />
+                    <div style="width: 100%; margin-left: 0px;">
+
+                        <%--<table width="90%">
+
+                            <tr>
+                                <td style="width: 15%;">Bank Name:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtBankNameToS" runat="server" Width="100%" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td style="width: 15%;">Branch:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtBranchToS" runat="server" Width="100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
+                                <td style="width: 15%;">RTGS/IFSC:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtRTGSOrIFSCToS" runat="server" Width="100%" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td style="width: 15%;">Account Number:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtAccountNumberToS" runat="server" Width="100%" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 15%;">SWIFT Code:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtSWIFTCodeToS" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td style="width: 15%;">ISBN:</td>
+                                <td style="width: 30%">
+                                    <asp:TextBox ID="txtISBNToS" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+
+
+                        </table>--%>
+
+                        <%--<table style="width: 100%;">
+
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div align="center">
+                                        <fieldset style="width: 100%;">
+                                            <legend style="text-align: center;"></legend>--%>
+
+                        <div style='overflow-y: scroll; overflow-x: scroll; width: 950px; height: 200px; border: 1px solid lightgray;'>
+
+                            <asp:GridView ID="gvBankDetails"
+                                runat="server"
+                                AutoGenerateColumns="false"
+                                CellPadding="4"
+                                CssClass="myGrid"
+                                ForeColor="#333333" GridLines="Both" Width="100%"
+                                HorizontalAlign="Center"
+                                OnRowCommand="gvBankDetails_RowCommand"
+                                OnRowDataBound="gvBankDetails_RowDataBound">
+
+                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#7C6F57" />
+                                <AlternatingRowStyle BackColor="White" />
+
+
+                                <Columns>
+                                    <asp:TemplateField ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                                        <ItemTemplate>
+
+                                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES"
+                                                runat="server" ToolTip="Edit" ImageUrl="~/Images/VCM/edit.png"
+                                                Width="30px" Height="30px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="imgRemove" CommandArgument="REMOVE"
+                                                runat="server" ToolTip="Remove" ImageUrl="~/Images/VCM/delete.png"
+                                                Width="30px" Height="30px" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField HeaderText="Sr.No.">
+                                        <ItemTemplate>
+
+                                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
+                                            <asp:Label ID="lblBankName" runat="server" Text='<%# Eval("BANK_NAME") %>' Visible="false" />
+                                            <asp:Label ID="lblBranch" runat="server" Text='<%# Eval("BRANCH") %>' Visible="false" />
+                                            <asp:Label ID="lblSWIFTCode" runat="server" Text='<%# Eval("SWIFT_CODE") %>' Visible="false" />
+                                            <asp:Label ID="lblAccountNumber" runat="server" Text='<%# Eval("ACCOUNT_NUMBER") %>' Visible="false" />
+                                            <asp:Label ID="lblRTGSOrIFSC" runat="server" Text='<%# Eval("RTGS_OR_IFSC_CODE") %>' Visible="false" />
+                                            <asp:Label ID="lblISBN" runat="server" Text='<%# Eval("ISBN") %>' Visible="false" />
+                                            <asp:Label ID="lblIsDefault" runat="server" Text='<%# Eval("IS_DEFAULT") %>' Visible="false" />
+
+                                            <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Width="30PX"
+                                                onkeyDown="javascript:preventInput(event);" CssClass="textboxcenter"></asp:TextBox>
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:BoundField DataField="BANK_NAME" HeaderText="Bank Name" />
+                                    <asp:BoundField DataField="BRANCH" HeaderText="Branch" />
+                                    <asp:BoundField DataField="SWIFT_CODE" HeaderText="SWIFT Code" />
+                                    <asp:BoundField DataField="ACCOUNT_NUMBER" HeaderText="Account No." />
+                                    <asp:BoundField DataField="RTGS_OR_IFSC_CODE" HeaderText="RTGS/IFSC" />
+                                    <asp:BoundField DataField="ISBN" HeaderText="ISBN" />
+
+                                    <asp:TemplateField HeaderText="Is Default?">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="chkIsDefault" runat="server" Enabled="false" />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                </Columns>
+                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                <EditRowStyle BackColor="#7C6F57" />
+                                <AlternatingRowStyle BackColor="White" />
+                            </asp:GridView>
+                        </div>
+
+                        <%--</fieldset>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="center"></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>--%>
+
+                        <div align="center">
+                            <asp:Label ID="lblBankDetailsMsg" runat="server" ForeColor="Red" />
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Other Details</i></legend>
+
+                    <table width="90%">
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Is Technical Details Received?</td>
+                            <td style="width: 30%;">
+                                <%--<asp:CheckBox ID="chkIsTechnicalDetailsReceivedToS" runat="server" />--%>
+                                <asp:RadioButtonList ID="rdIsTechnicalDetailsReceivedToS" runat="server" RepeatDirection="Horizontal" Width="30%">
+                                    <asp:ListItem Value="0" Selected="True">No</asp:ListItem>
+                                    <asp:ListItem Value="1">Yes</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </td>
+
+                            <td>&nbsp;</td>
+
+                            <td style="width: 15%;">Is ISO Certified?</td>
+                            <td style="width: 30%;">
+                                <%--<asp:CheckBox ID="chkIsISOCertifiedToS" runat="server" />--%>
+                                <asp:RadioButtonList ID="rdIsISOCertifiedToS" runat="server" RepeatDirection="Horizontal" Width="30%">
+                                    <asp:ListItem Value="0" Selected="True">No</asp:ListItem>
+                                    <asp:ListItem Value="1">Yes</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Is QA Visited?</td>
+                            <td style="width: 30%;">
+                                <%--<asp:CheckBox ID="chkIsQAVisitedToS" runat="server" />--%>
+                                <asp:RadioButtonList ID="rdIsQAVisitedToS" runat="server" RepeatDirection="Horizontal" Width="30%">
+                                    <asp:ListItem Value="0" Selected="True">No</asp:ListItem>
+                                    <asp:ListItem Value="1">Yes</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Is Government?</td>
+                            <td style="width: 30%;">
+                                <%--<asp:CheckBox ID="chkIsGovernmentToS" runat="server" />--%>
+                                <asp:RadioButtonList ID="rdIsGovernmentToS" runat="server" RepeatDirection="Horizontal" Width="30%">
+                                    <asp:ListItem Value="0" Selected="True">No</asp:ListItem>
+                                    <asp:ListItem Value="1">Yes</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Responsible:</td>
+                            <td style="width: 30%;">
+                                <asp:DropDownList ID="ddlResponsibleToS" runat="server" Width="100%" Height="26px">
+                                </asp:DropDownList>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Type:</td>
+                            <td style="width: 30%;">
+                                <asp:DropDownList ID="ddlRelationTypeToS" runat="server" Width="100%" Height="26px">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Item Category:</td>
+                            <td style="width: 30%;">
+                                <asp:DropDownList ID="ddlItemCategoryToS" runat="server" Width="100%" Height="26px"
+                                    OnSelectedIndexChanged="ddlItemCategory_SelectedIndexChanged" AutoPostBack="true">
+                                </asp:DropDownList>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Item Sub-Category:</td>
+                            <td style="width: 30%;">
+                                <asp:DropDownList ID="ddlItemSubCategoryToS" runat="server" Width="100%" Height="26px">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                    </table>
+
+                </fieldset>
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Attachments</i>
+                    </legend>
+                    <table style="width: 90%;">
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 15%;">VRF:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentVRF" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                            <td>&nbsp;</td>
+
+                            <td style="width: 15%;">GSTIN:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentGSTIN" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentVRF" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentVRF" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentGSTIN" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentGSTIN" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 15%;">PAN:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentPAN" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Cancelled Cheque:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentCancelledCheque" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentPAN" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentPAN" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentCancelledCheque" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentCancelledCheque" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 15%;">Other 1:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentOther1" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Other 2:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentOther2" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentOther1" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentOther1" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentOther2" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentOther2" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td style="width: 15%;">Other 3:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentOther3" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Other 4:</td>
+                            <td style="width: 30%;">
+                                <asp:FileUpload ID="fileUploadAttachmentOther4" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentOther3" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentOther3" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;"></td>
+                            <td style="width: 30%;">
+                                <div id="divfileAttachmentOther4" style="display: none;">
+                                    <asp:Label ID="lblfileAttachmentOther4" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table>
+
+                </fieldset>
+
+                <br />
+                <fieldset style="width: 90%;">
+                    <legend style="text-align: center; font-size: 15px;"><i>Saving</i></legend>
+
+                    <table width="90%">
+                        <tr>
+                            <td>&nbsp;</td>
+
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Remarks:</td>
+                            <td>
+                                <asp:TextBox ID="txtRemarksToS" runat="server" Width="100%" Rows="3" TextMode="MultiLine" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Saving Type:</td>
+                            <td>
+                                <asp:RadioButtonList ID="rdSavingType" runat="server" RepeatDirection="Horizontal" Width="50%">
+                                    <asp:ListItem Text="Save for later" Value="0" Selected="True" />
+                                    <asp:ListItem Text="Save & send for approval" Value="1" />
+                                </asp:RadioButtonList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+
+                        </tr>
+                    </table>
+
+                </fieldset>
+
+            </div>
+            <table>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <asp:Button ID="btnSave" runat="server" Width="100%" Text="Save" CssClass="button"
+                            OnClick="btnSave_Click" OnClientClick="return ValidateAll();" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <tr>
+                    <td>&nbsp;</td>
+                    <td align="center">
+                        <asp:Panel ID="pnlMsg" Visible="false" runat="server" Height="50px">
+                            <asp:Label ID="lblMsg" runat="server" Font-Bold="True" Font-Size="Large" />
+                        </asp:Panel>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+
+    <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
+
+
+
+    <%--ADD BILLING ADDRESS START--%>
+    <asp:Button ID="btnShowPopupAddBillingAddress" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeAddBillingAddress" runat="server" TargetControlID="btnShowPopupAddBillingAddress"
+        PopupControlID="pnlPopupAddBillingAddress" CancelControlID="imgBtnCancelAddBillingAddress" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupAddBillingAddress" runat="server" BackColor="White" Height="650px" Width="900px"
+        Style="display: block; border-radius: 10px; padding: 20px;">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelAddBillingAddress" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+
+        <div align="center">
+
+            <fieldset style="width: 90%; margin-left: 0px; margin-top: 10px;">
+                <legend style="text-align: center;">Billing Address</legend>
+                <asp:HiddenField ID="HiddenField1" runat="server" />
+                <asp:HiddenField ID="HiddenField2" runat="server" />
+                <asp:HiddenField ID="HiddenField3" runat="server" />
+                <div style="width: 100%; margin-left: 0px;">
+
+                    <table width="90%">
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Address Line 1:</td>
+                            <td colspan="4">
+                                <asp:TextBox ID="txtAddress1ToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Address Line 2:</td>
+                            <td colspan="4">
+                                <asp:TextBox ID="txtAddress2ToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Address Line 3:</td>
+                            <td colspan="4">
+                                <asp:TextBox ID="txtAddress3ToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                        <tr>
+
+                            <td style="width: 15%;">State:</td>
+                            <td style="width: 30%">
+                                <asp:DropDownList ID="ddlStateToS" runat="server" Width="100%" Height="26px"
+                                    onchange="GenerateGSTIN();">
+                                </asp:DropDownList>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Other State:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtOtherStateToS" runat="server" Width="100%" Enabled="false" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">City:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtCityToS" runat="server" Width="100%" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">PIN Code:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtPINCodeToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Phone:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtPhoneToS" runat="server" Width="100%"
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Email:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtEmailToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                        <tr>
+
+                            <td style="width: 15%;">PAN:</td>
+                            <td style="width: 30%;">
+                                <asp:TextBox ID="txtPANToSS" runat="server" Width="100%" ReadOnly="true" />
+                            </td>
+                            <td>&nbsp;</td>
+
+                            <td style="width: 15%;">GSTIn Running No.:</td>
+                            <td style="width: 30%;">
+                                <asp:TextBox ID="txtGSTInRunningNoToS" runat="server" Width="100%" onkeyup="GenerateGSTIN();" />
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">GSTIn:</td>
+                            <td style="width: 30%;">
+                                <asp:TextBox ID="txtGSTInToS" runat="server" Width="100%" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Is Default?:</td>
+                            <td style="width: 30%">
+                                <asp:CheckBox ID="chkIsDefaultBillingAddressToS" runat="server" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <div align="center">
+                                    <asp:Label ID="lblBillingAddressWindowMsg" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <asp:Button ID="btnAddUpdateAddressToList" CssClass="button" runat="server" Text="Add Address"
+                                    Width="100%" OnClick="btnAddUpdateAddressToList_Click"
+                                    OnClientClick="return ValidateBillingAddress();" /></td>
+                        </tr>
+
+                    </table>
+
+
+
+                </div>
+            </fieldset>
+
+        </div>
+    </asp:Panel>
+    <%--ADD BILLING ADDRESS END--%>
+
+
+    <%--ADD CONTACT PERSON START--%>
+    <asp:Button ID="btnShowPopupAddContactPerson" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeAddContactPerson" runat="server" TargetControlID="btnShowPopupAddContactPerson"
+        PopupControlID="pnlPopupAddContactPerson" CancelControlID="imgBtnCancelAddContactPerson" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupAddContactPerson" runat="server" BackColor="White" Height="340px" Width="900px"
+        Style="display: block; border-radius: 10px; padding: 20px;">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelAddContactPerson" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+
+        <div align="center">
+
+            <fieldset style="width: 90%; margin-left: 0px; margin-top: 10px;">
+                <legend style="text-align: center;">Add Contact Person</legend>
+                <asp:HiddenField ID="HiddenField4" runat="server" />
+                <asp:HiddenField ID="HiddenField5" runat="server" />
+                <asp:HiddenField ID="HiddenField6" runat="server" />
+                <div style="width: 100%; margin-left: 0px;">
+
+                    <table width="750px">
+                        <tr>
+                            <td style="width: 15%;">Name:</td>
+                            <td colspan="4">
+                                <asp:TextBox ID="txtContactPersonNameToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 15%;">Mobile:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtContactPersonMobileToS" runat="server" Width="100%"
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Phone:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtContactPersonPhoneToS" runat="server" Width="100%"
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Email:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtContactPersonEmailToS" runat="server" Width="100%" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Is Default?:</td>
+                            <td style="width: 30%">
+                                <asp:CheckBox ID="chkIsDefaultContactPersonToS" runat="server" />
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <asp:Button ID="btnAddUpdateContactPersonToList" CssClass="button" runat="server" Text="Add Contact Person"
+                                    Width="100%" OnClick="btnAddUpdateContactPersonToList_Click"
+                                    OnClientClick="return ValidateContactPerson();" /></td>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
+
+        </div>
+
+    </asp:Panel>
+    <%--ADD CONTACT PERSON END--%>
+
+
+    <%--ADD BANK DETAILS START--%>
+    <asp:Button ID="btnShowPopupAddBankDetails" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeAddBankDetails" runat="server" TargetControlID="btnShowPopupAddBankDetails"
+        PopupControlID="pnlPopupAddBankDetails" CancelControlID="imgBtnCancelAddBankDetails" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupAddBankDetails" runat="server" BackColor="White" Height="390px" Width="900px"
+        Style="display: block; border-radius: 10px; padding: 20px;">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelAddBankDetails" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+
+        <div align="center">
+
+            <fieldset style="width: 90%; margin-left: 0px; margin-top: 10px;">
+                <legend style="text-align: center;">Add Billing Details</legend>
+                <asp:HiddenField ID="HiddenField7" runat="server" />
+                <asp:HiddenField ID="HiddenField8" runat="server" />
+                <asp:HiddenField ID="HiddenField9" runat="server" />
+                <div style="width: 100%; margin-left: 0px;">
+
+                    <table width="750px">
+
+                        <tr>
+                            <td style="width: 15%;">Bank Name:</td>
+                            <td colspan="4">
+                                <asp:TextBox ID="txtBankNameToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 15%;">Branch:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtBranchToS" runat="server" Width="100%" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">SWIFT Code:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtSWIFTCodeToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">Account Number:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtAccountNumberToS" runat="server" Width="100%" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">RTGS/IFSC:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtRTGSOrIFSCToS" runat="server" Width="100%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 15%;">ISBN:</td>
+                            <td style="width: 30%">
+                                <asp:TextBox ID="txtISBNToS" runat="server" Width="100%" />
+                            </td>
+                            <td>&nbsp;</td>
+                            <td style="width: 15%;">Is Default?:</td>
+                            <td style="width: 30%">
+                                <asp:CheckBox ID="chkIsDefaultBankToS" runat="server" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <asp:Button ID="btnAddUpdateBankDetailsToList" CssClass="button" runat="server" Text="Add Bank Details"
+                                    Width="100%" OnClick="btnAddUpdateBankDetailsToList_Click"
+                                    OnClientClick="return ValidateBankDetails();" /></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+            </fieldset>
+
+        </div>
+
+    </asp:Panel>
+    <%--ADD BANK DETAILS END--%>
+
+
+
+
+
+
+    <%-- SHOW IMAGE FILE START --%>
+    <asp:Button ID="btnShowImgFile" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeViewImgFileAttachment" runat="server" TargetControlID="btnShowImgFile"
+        PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server" BackColor="White" Height="640px"
+        Width="1050px" Style="display: block; border-radius: 10px; padding: 20px;">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelImgFile" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <div style='overflow: auto; width: 1000px; height: 560px; border: 1px solid lightgray; margin-left: 25px;'>
+            <asp:Image ID="imgFile" runat="server" />
+        </div>
+    </asp:Panel>
+    <%-- SHOW IMAGE FILE END --%>
+
+    <%-- SHOW PDF FILE START--%>
+    <asp:Button ID="btnShowPDFFile" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeViewPDFFileAttachment" runat="server" TargetControlID="btnShowPDFFile"
+        PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" BackColor="White" Height="640px"
+        Width="1050px" Style="display: block; border-radius: 10px; padding: 20px;">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelPDFFile" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <iframe style="margin-left: 25px; width: 1000px; height: 560px;" id="iframeViewPDFFile"
+            runat="server">
+            <div style='overflow: auto; width: 1000px; height: 560px; border: 1px solid lightgray; margin-left: 25px;'>
+            </div>
+        </iframe>
+    </asp:Panel>
+    <%-- SHOW PDF FILE END--%>
+
+    <%-- VIEW DETAIL IN PDF START--%>
+    <asp:Button ID="btnViewInPDF" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="ModalPopupExtender4" runat="server" TargetControlID="btnViewInPDF"
+        PopupControlID="pnlbtnViewInPDFPopup" CancelControlID="imgBtnViewInPDFPopup"
+        BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server" BackColor="White" Height="640px"
+        Width="1050px" Style="display: block; border-radius: 10px; padding: 20px;">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnViewInPDFPopup" ImageUrl="~/Images/cancelled_img.png"
+                        runat="server" />
+                </td>
+            </tr>
+        </table>
+        <iframe style="margin-left: 25px; width: 1000px; height: 560px;" id="iframeViewTravelStatementInPDF"
+            runat="server">
+            <div style='overflow: auto; width: 1000px; height: 560px; border: 1px solid lightgray; margin-left: 25px;'>
+            </div>
+        </iframe>
+    </asp:Panel>
+    <%-- VIEW DETAIL IN PDF END--%>
+</asp:Content>
