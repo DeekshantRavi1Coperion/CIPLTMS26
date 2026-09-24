@@ -1,0 +1,734 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class USGAAP_BILLING_PostedBillsInDetails : System.Web.UI.Page
+{
+
+    #region VARIABLES[=======================]
+
+
+    BAL.TourAndTravels objTourAndTravels = new BAL.TourAndTravels();
+    BAL.Posting objPosting = new BAL.Posting();
+    BAL.Common objCommon = new BAL.Common();
+    DataSet dsPostedList = new DataSet();
+    DataSet dsUnit = new DataSet();
+    DataSet dsCountry = new DataSet();
+    DataSet dsCurrency = new DataSet();
+    DataSet dsEndMarket = new DataSet();
+    DataSet dsRevenueType = new DataSet();
+    DataSet dsType = new DataSet();
+    string fromDate = string.Empty;
+    string toDate = string.Empty;
+    string billNo = string.Empty;
+    string unitName = string.Empty;
+
+    string customerName = string.Empty;
+    string revenueAccount = string.Empty;
+
+    #endregion
+
+
+    #region EVENTS[==========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+
+                Session["POSTED_LIST_IN_DETAIL"] = null;
+
+                hdStartDateSearch.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtStartDateSearch.Text = hdStartDateSearch.Value;
+
+                hdEndDateSearch.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtEndDateSearch.Text = hdEndDateSearch.Value;
+                BindUnit();
+                BindPostingCurrency();
+                BindType();
+                GetPostedList();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        lblMsg.Text = string.Empty;
+        pnlMsg.Visible = false;
+        GetPostedList();
+    }
+
+    protected void gvPostedList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblInvoiceNo = (Label)e.Row.FindControl("lblInvoiceNo");
+                Label lblCustomerName = (Label)e.Row.FindControl("lblCustomerName");
+                Label lblJobNo = (Label)e.Row.FindControl("lblJobNo");
+
+                e.Row.ToolTip = "Invoice No.:" + lblInvoiceNo.Text + ", Customer Name:" + lblCustomerName.Text + ", JOB No.:" + lblJobNo.Text;
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvPostedList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        int recordID = 0;
+        string invoiceNo = string.Empty;
+        double invoiceAmount = 0;
+        int endMarketID = 0;
+        int countryID = 0;
+        string postingMonth = string.Empty;
+        int postingYear = 0;
+        double postingValue = 0;
+        int postingCurrencyID = 0;
+        double unpostedValue = 0;
+        double postedValue = 0;
+        string udf1 = string.Empty;
+        string udf2 = string.Empty;
+        string udf3 = string.Empty;
+        string udf4 = string.Empty;
+        string udf5 = string.Empty;
+
+
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (e.CommandArgument == "PROPERTIES" || e.CommandArgument == "DELETE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblRecordID = (Label)gvPostedList.Rows[rowindex].FindControl("lblRecordID");
+                Label lblInvoiceNo = (Label)gvPostedList.Rows[rowindex].FindControl("lblInvoiceNo");
+                Label lblInvoiceDate = (Label)gvPostedList.Rows[rowindex].FindControl("lblInvoiceDate");
+                Label lblCustomerCode = (Label)gvPostedList.Rows[rowindex].FindControl("lblCustomerCode");
+                Label lblCustomerName = (Label)gvPostedList.Rows[rowindex].FindControl("lblCustomerName");
+                Label lblJobNo = (Label)gvPostedList.Rows[rowindex].FindControl("lblJobNo");
+                Label lblBusinessUnit = (Label)gvPostedList.Rows[rowindex].FindControl("lblBusinessUnit");
+                Label lblProductCode = (Label)gvPostedList.Rows[rowindex].FindControl("lblProductCode");
+                Label lblRevenueAccount = (Label)gvPostedList.Rows[rowindex].FindControl("lblRevenueAccount");
+                Label lblRevenueAccountDesc = (Label)gvPostedList.Rows[rowindex].FindControl("lblRevenueAccountDesc");
+                Label lblRevenueAccountType = (Label)gvPostedList.Rows[rowindex].FindControl("lblRevenueAccountType");
+                Label lblQuantity = (Label)gvPostedList.Rows[rowindex].FindControl("lblQuantity");
+                Label lblProductRate = (Label)gvPostedList.Rows[rowindex].FindControl("lblProductRate");
+                Label lblInvoiceAmount = (Label)gvPostedList.Rows[rowindex].FindControl("lblInvoiceAmount");
+                Label lblLocation = (Label)gvPostedList.Rows[rowindex].FindControl("lblLocation");
+                Label lblPostedValue = (Label)gvPostedList.Rows[rowindex].FindControl("lblPostedValue");
+                Label lblPostedDate = (Label)gvPostedList.Rows[rowindex].FindControl("lblPostedDate");
+                Label lblUnpostedValue = (Label)gvPostedList.Rows[rowindex].FindControl("lblUnpostedValue");
+
+                Label lblEndMarket = (Label)gvPostedList.Rows[rowindex].FindControl("lblEndMarket");
+                Label lblGeogrophy = (Label)gvPostedList.Rows[rowindex].FindControl("lblGeogrophy");
+
+                Label lblPostingMonth = (Label)gvPostedList.Rows[rowindex].FindControl("lblPostingMonth");
+                Label lblPostingYear = (Label)gvPostedList.Rows[rowindex].FindControl("lblPostingYear");
+                Label lblPostingCurrencyID = (Label)gvPostedList.Rows[rowindex].FindControl("lblPostingCurrencyID");
+                Label lblPostingCurrency = (Label)gvPostedList.Rows[rowindex].FindControl("lblPostingCurrency");
+                Label lblUnPostedValue = (Label)gvPostedList.Rows[rowindex].FindControl("lblUnPostedValue");
+                Label lblActualUnpostedValue = (Label)gvPostedList.Rows[rowindex].FindControl("lblActualUnpostedValue");
+
+                Label lblTypeID = (Label)gvPostedList.Rows[rowindex].FindControl("lblTypeID");
+                Label lblRevenueTypeID = (Label)gvPostedList.Rows[rowindex].FindControl("lblRevenueTypeID");
+
+
+                Label lblUDF1 = (Label)gvPostedList.Rows[rowindex].FindControl("lblUDF1");
+                Label lblUDF2 = (Label)gvPostedList.Rows[rowindex].FindControl("lblUDF2");
+                Label lblUDF3 = (Label)gvPostedList.Rows[rowindex].FindControl("lblUDF3");
+                Label lblUDF4 = (Label)gvPostedList.Rows[rowindex].FindControl("lblUDF4");
+                Label lblUDF5 = (Label)gvPostedList.Rows[rowindex].FindControl("lblUDF5");
+
+                //PublicValuesToUpdatePostingDetails.recordID = Convert.ToInt32(lblRecordID.Text);
+                //PublicValuesToUpdatePostingDetails.invoiceNo = Convert.ToString(lblInvoiceNo.Text);
+
+                ViewState["recordID"]= Convert.ToInt32(lblRecordID.Text);
+                ViewState["invoiceNo"] = Convert.ToString(lblInvoiceNo.Text);
+
+                if (e.CommandArgument == "PROPERTIES")
+                {
+                    lblLegend.Text = "Invoice No.[" + Convert.ToString(lblInvoiceNo.Text) + "]-[" + Convert.ToString(lblLocation.Text) + "]";
+                    txtInvoiceDate.Text = Convert.ToString(lblInvoiceDate.Text);
+                    txtJobNo.Text = Convert.ToString(lblJobNo.Text);
+                    txtCustName.Text = Convert.ToString(lblCustomerName.Text);
+                    txtCustCode.Text = Convert.ToString(lblCustomerCode.Text);
+                    txtBusinessUnit.Text = Convert.ToString(lblBusinessUnit.Text);
+                    txtProductCode.Text = Convert.ToString(lblProductCode.Text);
+                    txtRevAccount.Text = Convert.ToString(lblRevenueAccount.Text);
+                    txtAccountDesc.Text = Convert.ToString(lblRevenueAccountDesc.Text);
+                    txtAccountType.Text = Convert.ToString(lblRevenueAccountType.Text);
+                    txtQuantity.Text = Convert.ToString(lblQuantity.Text);
+                    txtProductRate.Text = Convert.ToString(lblProductRate.Text);
+                    txtInvoiceAmount.Text = Convert.ToString(lblInvoiceAmount.Text);
+                    txtPostedValue.Text = Convert.ToString(lblPostedValue.Text);
+                    hdPostedValue.Value = Convert.ToString(lblPostedValue.Text);
+                    //hdNextPostingValue.Value = Convert.ToString(lblNextPostingValue.Text);
+                    ddlPostingCurrency.SelectedValue = Convert.ToString(lblPostingCurrencyID.Text);
+                    //txtPostedDate.Text = Convert.ToString(lblPostedDate.Text);
+                    txtUnpostedValue.Text = Convert.ToString(lblUnpostedValue.Text);
+                    hdUnpostedValue.Value = Convert.ToString(lblUnpostedValue.Text);
+
+                    hdActualUnpostedValue.Value = Convert.ToString(lblActualUnpostedValue.Text);
+
+                    BindEndMarket();
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblEndMarket.Text)))
+                        ddlEndMarket.SelectedValue = Convert.ToString(lblEndMarket.Text);
+                    else
+                        ddlEndMarket.SelectedIndex = 0;
+
+                    BindCountry();
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblGeogrophy.Text)))
+                        ddlCountry.SelectedValue = Convert.ToString(lblGeogrophy.Text);
+                    else
+                        ddlCountry.SelectedIndex = 0;
+
+                    ddlPostingMonth.SelectedValue = Convert.ToString(lblPostingMonth.Text);
+                    ddlPostingYear.SelectedValue = Convert.ToString(lblPostingYear.Text);
+
+                    ddlType.SelectedValue = Convert.ToString(lblTypeID.Text);
+                    BindRevenueType(Convert.ToInt32(lblTypeID.Text));
+                    ddlRevenueType.SelectedValue = Convert.ToString(lblRevenueTypeID.Text);
+
+                    txtUDF1.Text = Convert.ToString(lblUDF1.Text);
+                    txtUDF2.Text = Convert.ToString(lblUDF2.Text);
+                    txtUDF3.Text = Convert.ToString(lblUDF3.Text);
+                    txtUDF4.Text = Convert.ToString(lblUDF4.Text);
+                    txtUDF5.Text = Convert.ToString(lblUDF5.Text);
+
+                    ModalPopupExtender1.Show();
+                }
+
+                else if (e.CommandArgument == "DELETE")
+                {
+
+                    lblLedendDelete.Text = "Invoice No.[" + Convert.ToString(lblInvoiceNo.Text) + "]-[" + Convert.ToString(lblLocation.Text) + "]";
+                    txtInvoiceDateDelete.Text = Convert.ToString(lblInvoiceDate.Text);
+                    txtJobNoDelete.Text = Convert.ToString(lblJobNo.Text);
+                    txtCustNameDelete.Text = Convert.ToString(lblCustomerName.Text);
+                    txtCustCodeDelete.Text = Convert.ToString(lblCustomerCode.Text);
+                    txtProductCodeDelete.Text = Convert.ToString(lblProductCode.Text);
+                    txtInvoiceAmountDelete.Text = Convert.ToString(lblInvoiceAmount.Text);
+                    txtPostedValueDelete.Text = Convert.ToString(lblPostedValue.Text);
+                    txtPostingCurrencyDelete.Text = Convert.ToString(lblPostingCurrency.Text);
+                    txtPostedDateDelete.Text = Convert.ToString(lblPostedDate.Text);
+                    txtUnpostedValueDelete.Text = Convert.ToString(lblUnpostedValue.Text);
+
+                    ModalPopupExtender2.Show();
+
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+
+    }
+
+    protected void ddlType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ModalPopupExtender1.Show();
+        if (ddlType.SelectedIndex > 0)
+        {
+            BindRevenueType(Convert.ToInt32(ddlType.SelectedValue));
+        }
+        else
+        {
+            ddlRevenueType.Items.Insert(0, "Select");
+            ddlRevenueType.SelectedIndex = 0;
+        }
+    }
+
+    protected void btnUpdate_Click(object sender, EventArgs e)
+    {
+        lblMsg.Text = string.Empty;
+        pnlMsg.Visible = false;
+
+        UpdatePostedBill(Convert.ToInt32(ViewState["recordID"]), Convert.ToString(ViewState["invoiceNo"]));// PublicValuesToUpdatePostingDetails.recordID,PublicValuesToUpdatePostingDetails.invoiceNo
+
+    }
+
+    protected void btnDelete_Click(object sender, EventArgs e)
+    {
+        lblMsg.Text = string.Empty;
+        pnlMsg.Visible = false;
+        DeletePostedBill(Convert.ToInt32(ViewState["recordID"]));//PublicValuesToUpdatePostingDetails.recordID
+    }
+
+    protected void btnExport_Click(object sender, EventArgs e)
+    {
+        if (gvPostedList.Rows.Count > 0)
+        {
+            DataSet ds = (DataSet)Session["POSTED_LIST_IN_DETAIL"];
+            ToCSVNew01(ds.Tables[0]);
+        }
+    }
+
+    #endregion
+
+
+    #region METHODS[=========================]
+
+    private void BindUnit()
+    {
+        try
+        {
+            dsUnit = objCommon.GetUnit();
+            if (dsUnit.Tables.Count > 0 && dsUnit.Tables[0].Rows.Count > 0)
+            {
+                ddlCompany.DataSource = dsUnit.Tables[0];
+                ddlCompany.DataTextField = "UNIT_NAME";
+                ddlCompany.DataValueField = "UNIT_ID";
+                ddlCompany.DataBind();
+                ddlCompany.Items.Insert(0, "All");
+                ddlCompany.SelectedIndex = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindPostingCurrency()
+    {
+        try
+        {
+            dsCurrency = objTourAndTravels.GetPrimaryDetails("sp_get_currency_list");
+            if (dsCurrency.Tables.Count > 0 && dsCurrency.Tables[0].Rows.Count > 0)
+            {
+                ddlPostingCurrency.DataSource = dsCurrency.Tables[0];
+                ddlPostingCurrency.DataTextField = "CURRENCY_CODE";
+                ddlPostingCurrency.DataValueField = "CURRENCY_ID";
+                ddlPostingCurrency.DataBind();
+                ddlPostingCurrency.Items.Insert(0, "Select");
+                ddlPostingCurrency.SelectedIndex = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindEndMarket()
+    {
+        try
+        {
+            dsEndMarket = objPosting.GetEndMarketForUnpostedGL();
+            if (dsEndMarket.Tables.Count > 0 && dsEndMarket.Tables[0].Rows.Count > 0)
+            {
+                ddlEndMarket.DataSource = dsEndMarket.Tables[0];
+                ddlEndMarket.DataTextField = "END_MARKET";
+                ddlEndMarket.DataValueField = "END_MARKET_CODE";
+                ddlEndMarket.DataBind();
+                ddlEndMarket.Items.Insert(0, "Select");
+                ddlEndMarket.SelectedIndex = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindCountry()
+    {
+        try
+        {
+            dsCountry = objPosting.GetCountryForUnpostedGL();
+            if (dsCountry.Tables.Count > 0 && dsCountry.Tables[0].Rows.Count > 0)
+            {
+                ddlCountry.DataSource = dsCountry.Tables[0];
+                ddlCountry.DataTextField = "COUNTRY";
+                ddlCountry.DataValueField = "COUNTRY_ISO_CODE";
+                ddlCountry.DataBind();
+                ddlCountry.Items.Insert(0, "Select");
+                ddlCountry.SelectedIndex = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void BindType()
+    {
+        try
+        {
+            dsType = objTourAndTravels.GetPrimaryDetails("sp_get_type");
+            if (dsType.Tables.Count > 0 && dsType.Tables[0].Rows.Count > 0)
+            {
+                ddlType.DataSource = dsType.Tables[0];
+                ddlType.DataTextField = "TYPE";
+                ddlType.DataValueField = "TYPE_ID";
+                ddlType.DataBind();
+                ddlType.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void GetPostedList()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(Convert.ToString(hdStartDateSearch.Value)))
+                fromDate = Convert.ToDateTime(hdStartDateSearch.Value).ToString("yyyy-MM-dd");
+            else
+                fromDate = string.Empty;
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdEndDateSearch.Value)))
+                toDate = Convert.ToDateTime(hdEndDateSearch.Value).ToString("yyyy-MM-dd");
+            else
+                toDate = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtBillNo.Text))
+                billNo = txtBillNo.Text;
+            else
+                billNo = string.Empty;
+
+            if (ddlCompany.SelectedIndex > 0)
+                unitName = Convert.ToString(ddlCompany.SelectedItem.Text);
+            else
+                unitName = string.Empty;
+
+
+            if (!string.IsNullOrEmpty(txtCustomerName.Text))
+                customerName = txtCustomerName.Text;
+            else
+                customerName = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtRevenueAccount.Text))
+                revenueAccount = txtRevenueAccount.Text;
+            else
+                revenueAccount = string.Empty;
+
+
+            dsPostedList = objPosting.GetPostedListInDetails(fromDate, toDate, billNo, unitName, customerName, revenueAccount);
+
+            if (dsPostedList.Tables.Count > 0 && dsPostedList.Tables[0].Rows.Count > 0)
+            {
+                Session["POSTED_LIST_IN_DETAIL"] = dsPostedList;
+                gvPostedList.DataSource = dsPostedList.Tables[0];
+                gvPostedList.DataBind();
+            }
+            else
+            {
+                Session["POSTED_LIST_IN_DETAIL"] = null;
+                gvPostedList.DataSource = null;
+                gvPostedList.DataBind();
+            }
+            lblRecords.Text = "Records[" + dsPostedList.Tables[0].Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindRevenueType(int typeID)
+    {
+        try
+        {
+            dsRevenueType = objPosting.GetRevenueType(typeID);
+            if (dsRevenueType.Tables.Count > 0 && dsRevenueType.Tables[0].Rows.Count > 0)
+            {
+                ddlRevenueType.DataSource = dsRevenueType.Tables[0];
+                ddlRevenueType.DataTextField = "REVENUE_TYPE";
+                ddlRevenueType.DataValueField = "REVENUE_TYPE_ID";
+                ddlRevenueType.DataBind();
+                ddlRevenueType.Items.Insert(0, "Select");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void UpdatePostedBill(int recordId, string invoiceNo)
+    {
+        try
+        {
+            string customerCode = string.Empty;
+            string jobNo = string.Empty;
+
+            string revenueAccount = string.Empty;
+            string productCode = string.Empty;            
+            string postingValue = string.Empty;
+            int postingCurrencyID = 0;
+            double unpostedValue = 0;
+            string endMarketCode = string.Empty;
+            string countryCode = string.Empty;
+            string postingMonth = string.Empty;
+            int postingYear = 0;
+            string postingDate = string.Empty;
+            int typeID = 0;
+            int revenueTypeID = 0;
+
+            string udf1 = string.Empty;
+            string udf2 = string.Empty;
+            string udf3 = string.Empty;
+            string udf4 = string.Empty;
+            string udf5 = string.Empty;
+
+            revenueAccount = txtRevAccount.Text;
+
+            if (!string.IsNullOrEmpty(txtProductCode.Text))
+                productCode = Convert.ToString(txtProductCode.Text);
+            else
+                productCode = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtCustCode.Text))
+                customerCode = Convert.ToString(txtCustCode.Text);
+            else
+                customerCode = string.Empty;
+
+
+            if (!string.IsNullOrEmpty(txtJobNo.Text))
+                jobNo = Convert.ToString(txtJobNo.Text);
+            else
+                jobNo = string.Empty;          
+
+            if (Convert.ToDouble(txtPostedValue.Text) == 0)
+                postingValue = "0";
+            else
+                postingValue = Convert.ToString(txtPostedValue.Text);
+
+            if (Convert.ToInt32(ddlPostingCurrency.SelectedValue) > 0)
+                postingCurrencyID = Convert.ToInt32(ddlPostingCurrency.SelectedValue);
+            else
+                postingCurrencyID = 0;
+
+            if (Convert.ToDouble(txtUnpostedValue.Text) > 0)
+                unpostedValue = Convert.ToDouble(txtUnpostedValue.Text);
+            else
+                unpostedValue = 0;
+
+            if (Convert.ToInt32(ddlEndMarket.SelectedIndex) > 0)
+                endMarketCode = Convert.ToString(ddlEndMarket.SelectedValue);
+            else
+                endMarketCode = string.Empty;
+
+            if (Convert.ToInt32(ddlCountry.SelectedIndex) > 0)
+                countryCode = Convert.ToString(ddlCountry.SelectedValue);
+            else
+                countryCode = string.Empty;
+
+            if (!string.IsNullOrEmpty(Convert.ToString(ddlPostingMonth.SelectedValue)))
+                postingMonth = Convert.ToString(ddlPostingMonth.SelectedValue);
+            else
+                postingMonth = string.Empty;
+
+            if (Convert.ToInt32(ddlPostingYear.SelectedValue) > 0)
+                postingYear = Convert.ToInt32(ddlPostingYear.SelectedValue);
+            else
+                postingYear = 0;
+
+            postingDate = Convert.ToDateTime(postingYear + "-" + postingMonth + "-01").ToString("yyyy-MM-dd");
+
+            if (ddlType.SelectedIndex > 0)
+                typeID = Convert.ToInt32(ddlType.SelectedValue);
+            else
+                typeID = 0;
+
+            if (ddlRevenueType.SelectedIndex > 0)
+                revenueTypeID = Convert.ToInt32(ddlRevenueType.SelectedValue);
+            else
+                revenueTypeID = 0;
+
+            if (!string.IsNullOrEmpty(txtUDF1.Text))
+                udf1 = txtUDF1.Text;
+            else
+                udf1 = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtUDF2.Text))
+                udf2 = txtUDF2.Text;
+            else
+                udf2 = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtUDF3.Text))
+                udf3 = txtUDF3.Text;
+            else
+                udf3 = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtUDF4.Text))
+                udf4 = txtUDF4.Text;
+            else
+                udf4 = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtUDF5.Text))
+                udf5 = txtUDF5.Text;
+            else
+                udf5 = string.Empty;
+
+
+            double postedValue = 0;
+            double editedValue = 0;
+            double newPostingValue = 0;
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdPostedValue.Value)))
+                postedValue = Convert.ToDouble(hdPostedValue.Value);
+            else
+                postedValue = 0;
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdEditedValue.Value)))
+                editedValue = Convert.ToDouble(hdEditedValue.Value);
+            else
+                editedValue = 0;
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdNewPostingValue.Value)))
+                newPostingValue = Convert.ToDouble(hdNewPostingValue.Value);
+            else
+                newPostingValue = 0;
+
+
+            int value = objPosting.UpdatePostedBillNew(recordId,revenueAccount, invoiceNo, customerCode, jobNo, productCode, postingValue,
+                                        postingCurrencyID, unpostedValue, endMarketCode, countryCode, postingMonth, postingYear, postingDate, typeID, revenueTypeID,
+                                        udf1, udf2, udf3, udf4, udf5, Convert.ToInt32(Session["EMP_RECORD_ID"]),
+                                        postedValue, editedValue, newPostingValue);
+            if (value > 0)
+            {
+                SuccessMessage("Invoice no. " + invoiceNo + " updated successfully.");
+                GetPostedList();
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void DeletePostedBill(int recordID)
+    {
+        try
+        {
+            string deletedReason = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtDeletedReason.Text))
+                deletedReason = txtDeletedReason.Text;
+            else
+                deletedReason = string.Empty;
+
+            int value = objPosting.DeletePostedBill(recordID, Convert.ToInt32(Session["EMP_RECORD_ID"]), deletedReason);
+            if (value > 0)
+            {
+                SuccessMessage("Posted record delted successfully.");
+                GetPostedList();
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void ToCSVNew01(DataTable dt)
+    {
+        try
+        {
+            string csv = string.Empty;
+            foreach (DataColumn column in dt.Columns)
+            {
+                csv += column.ColumnName + ',';
+            }
+            csv += "\r\n";
+
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach (DataColumn column in dt.Columns)
+                {
+                    csv += row[column.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+                csv += "\r\n";
+            }
+
+            string fileName = "Posted_Invoices_In_Detail" + DateTime.Now.ToString("dd_MMM_yyyy");
+            Response.Clear();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
+            Response.Charset = "";
+            Response.ContentType = "application/text";
+            Response.Output.Write(csv);
+            Response.Flush();
+            Response.End();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    #endregion
+
+}
+
+//public static class PublicValuesToUpdatePostingDetails
+//{
+//    public static int recordID = 0;
+//    public static string invoiceNo = string.Empty;
+//}
