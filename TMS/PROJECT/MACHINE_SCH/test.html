@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <link href="../../Styles/LOT.css" rel="stylesheet" />
+</head>
+<body>
+
+    <h2 class='headerStyle'>MACHINE SCHEDULING</h2>
+    <hr />
+    <table class='tblheader'>
+        <tr>
+            <td class='td1header'>Unit:</td>
+            <td class='td2header'>{#unitName#}</td>
+            <td class='td1header'>Assigned Code:</td>
+            <td class='td2header'><b>{#assignedDrawingCode#}</b></td>
+        </tr>
+        <tr>
+            <td class='td1header'>JOB Number:</td>
+            <td class='td2header'>{#jobNo#}</td>
+            <td class='td1header'>Drawing Number:</td>
+            <td class='td2header'><b>{#drawingNo#}</b></td>
+        </tr>
+        <tr>
+            <td class='td1header'>Equipment Number:</td>
+            <td class='td2header'>{#equipmentNo#}</td>
+            <td class='td1header'>Tag No:</td>
+            <td class='td2header'>{#tagNo#}</td>
+        </tr>
+        <tr>
+            <td class='td1header'>Item Name:</td>
+            <td class='td2header'>{#itemName#}</td>
+            <td class='td1header'>Quantity:</td>
+            <td class='td2header'>{#quantity#}</td>
+        </tr>
+        <tr>
+            <td class='td1header'>Item Detail:</td>
+            <td class='td2header' colspan='3'>{#itemDetail#}</td>
+        </tr>
+        <tr>
+            <td class='td1header'>ED Of Completion By Planning/Production:</td>
+            <td class='td2header'>{#expectedDateOfCompByPlanning#}</td>
+            <td class='td1header'>&nbsp;</td>
+            <td class='td2header'>&nbsp;</td>
+        </tr>
+    </table>
+    <hr />
+    <h3 class='header2'>Scheduling Details</h3>
+    <table class='tblsuitems'>
+        <tr class='trsubitems'>
+            <th class='tdsrno'>Sr.No.</th>
+            <th class='tdtag'>Activity</th>
+            <th class='tddesc'>Machine</th>
+            <th class='tdtag'>Scheduled From</th>
+            <th class='tdtag'>Scheduled To</th>
+            <th class='tdquantity'>Quantity</th>
+        </tr>
+        <tr>
+            <td class='tdsrno'>{#srNo#}</td>
+            <td class='tdtag'>{#activity#}</td>
+            <td class='tddesc'>{#machine#}</td>
+            <td class='tdtag'>{#scheduledFrom#}</td>
+            <td class='tdtag'>{#scheduledTo#}</td>
+            <td class='tdquantity'>{#Quantity#}</td>
+        </tr>
+    </table>
+
+
+    <hr class='hrsignatories' />
+    <h3 class='header2'>Signatories</h3>
+    <hr />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Assigned</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Assigned Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#assignedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Assigned By:</td>
+                <td class='tdsignatories2'>{#assignedBy#}</td>
+                <td class='tdsignatories1'>Assigned On:</td>
+                <td class='tdsignatories2'>{#assignedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Rejected</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Rejected Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#rejectedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Rejected By:</td>
+                <td class='tdsignatories2'>{#rejectedBy#}</td>
+                <td class='tdsignatories1'>Rejected On:</td>
+                <td class='tdsignatories2'>{#rejectedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Accepted</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Accepted Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#acceptedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Accepted By:</td>
+                <td class='tdsignatories2'>{#acceptedBy#}</td>
+                <td class='tdsignatories1'>Accepted On:</td>
+                <td class='tdsignatories2'>{#acceptedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+    <hr class='hrsignatories' />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Scheduled</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Scheduled Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#scheduledRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Scheduled By:</td>
+                <td class='tdsignatories2'>{#scheduledBy#}</td>
+                <td class='tdsignatories1'>Scheduled On:</td>
+                <td class='tdsignatories2'>{#scheduledOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+
+    <hr class='hrsignatories' />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Quality Inspection</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='4'><b><u>Quality Inspection</u></b></td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td colspan='3'>Accepted Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#acceptedRemarks#}</td>
+            </tr>
+
+            <tr>
+                <td class='tdsignatories1'>Accepted Quantity:</td>
+                <td class='tdsignatories2'>{#acceptedQuantity#}</td>
+                <td class='tdsignatories1'>Accepted On:</td>
+                <td class='tdsignatories2'>{#qaAcceptedOn#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td colspan='3'>Rejected Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#rejectedRemarks#}</td>
+            </tr>
+            <tr>
+                <td class='tdsignatories1'>Rejected Quantity:</td>
+                <td class='tdsignatories2'>{#rejectedQuantity#}</td>
+                <td class='tdsignatories1'>Rejected On:</td>
+                <td class='tdsignatories2'>{#qaRejectedOn#}</td>
+            </tr>
+
+            <tr>
+                <td colspan='4'><hr class='hrsignatories' /></td>
+            </tr>
+
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Inspected By:</td>
+                <td class='tdsignatories2'>{#inspectedBy#}</td>
+                <td class='tdsignatories1'>Total Accepted Quantity:</td>
+                <td class='tdsignatories2'>{#totalAcceptedQuantity#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+</body>
+</html>

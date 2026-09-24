@@ -1,0 +1,877 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.IO;
+using System.Net.Mail;
+
+public partial class PROJECT_MACHINE_SCH_ScheduledMachinesList : System.Web.UI.Page
+{
+
+    #region VARIABLES[=====================]
+
+    BAL.MachineScheduling objMS = new BAL.MachineScheduling();
+    BAL.Common objCommon = new BAL.Common();
+
+    DataSet dsAssignedItemsList = new DataSet();
+    DataSet dsJobNo = new DataSet();
+    DataSet dsDrawing = new DataSet();
+    DataSet dsUnit = new DataSet();
+
+    int companyID = 0;
+    string LOTNo = string.Empty;
+    string jobNo = string.Empty;
+    string drawingNo = string.Empty;
+    string equipment = string.Empty;
+
+    #endregion
+
+
+    #region EVENTS[========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+                Session["dtSubitemDetails"] = null;
+                HideMessagePanel();
+                hdDateToA.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtDateToA.Text = hdDateToA.Value;
+                BindUnit();
+
+                GetAssignedItemsList();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+    }
+
+    protected void ddlCompanyToA_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        mpeUpdateDetails.Show();
+        Reset();
+    }
+
+
+
+    // JOB DETAILS
+    protected void btnGetJOBNo_Click(object sender, EventArgs e)
+    {
+        GetJOBDetail();
+        mpeJOBDetail.Show();
+        mpeUpdateDetails.Show();
+    }
+
+    protected void btnSearchJOBNo_Click(object sender, EventArgs e)
+    {
+        mpeJOBDetail.Show();
+        GetJOBDetail();
+        //mpeUpdateDetails.Show();
+    }
+
+    protected void gvJOBDetail_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                mpeUpdateDetails.Show();
+                int rowindex = 0;
+                GridViewRow rowSelect = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
+                rowindex = rowSelect.RowIndex;
+
+                Label lblLOTTFID = gvJOBDetail.Rows[rowindex].FindControl("lblLOTTFID") as Label;
+                Label lblJOBNo = gvJOBDetail.Rows[rowindex].FindControl("lblJOBNo") as Label;
+                Label lblLOTno = gvJOBDetail.Rows[rowindex].FindControl("lblLOTno") as Label;
+
+                hdLOTTFID.Value = Convert.ToString(lblLOTTFID.Text);
+                hdLOTNo.Value = Convert.ToString(lblLOTno.Text);
+                txtJOBNoToA.Text = Convert.ToString(lblJOBNo.Text).Trim();
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+
+    protected void btnGetDrawingNo_Click(object sender, EventArgs e)
+    {
+
+        txtJOBNoInDr.Text = txtJOBNoToA.Text;
+        txtLOTNoInDr.Text = Convert.ToString(hdLOTNo.Value);
+        txtDrawingNoInDr.Text = string.Empty;
+        txtEquipmentInDr.Text = string.Empty;
+        mpeDrawingDetail.Show();
+        GetDrawingDetail();
+        mpeUpdateDetails.Show();
+    }
+
+    protected void btnSearchDrawingNo_Click(object sender, EventArgs e)
+    {
+
+        mpeDrawingDetail.Show();
+        GetDrawingDetail();
+        mpeUpdateDetails.Show();
+    }
+
+    protected void gvDrawingDetail_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                mpeUpdateDetails.Show();
+                int rowindex = 0;
+                GridViewRow rowSelect = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
+                rowindex = rowSelect.RowIndex;
+
+                Label lblLOTTFSubitemID = gvDrawingDetail.Rows[rowindex].FindControl("lblLOTTFSubitemID") as Label;
+                Label lblDrawingNo = gvDrawingDetail.Rows[rowindex].FindControl("lblDrawingNo") as Label;
+                Label lblEquipment = gvDrawingDetail.Rows[rowindex].FindControl("lblEquipment") as Label;
+                TextBox txtQuantity = gvDrawingDetail.Rows[rowindex].FindControl("txtQuantity") as TextBox;
+
+                hdLOTTFSubitemID.Value = Convert.ToString(lblLOTTFSubitemID.Text);
+                txtDrawingNoToA.Text = Convert.ToString(lblDrawingNo.Text).Trim();
+                txtDrawingNoToA.ToolTip = Convert.ToString(lblDrawingNo.Text).Trim();
+                txtEquipmentToA.Text = Convert.ToString(lblEquipment.Text).Trim();
+                txtQuantityToA.Text = txtQuantity.Text;
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+
+
+    protected void gvSubitemsList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            Label lblAdditinoalDrawingFilePath = (Label)e.Row.FindControl("lblAdditinoalDrawingFilePath");
+            ImageButton imgBtnViewAdditionalDrawing = (ImageButton)e.Row.FindControl("imgBtnViewAdditionalDrawing");
+
+            imgBtnViewAdditionalDrawing.Visible = false;
+            if (!string.IsNullOrEmpty(lblAdditinoalDrawingFilePath.Text))
+            {
+                imgBtnViewAdditionalDrawing.Visible = true;
+                imgBtnViewAdditionalDrawing.ToolTip = lblAdditinoalDrawingFilePath.Text;
+            }
+        }
+    }
+
+    protected void gvSubitemsList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            hdIsNewRecord.Value = "0";
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "EDIT" ||
+                    Convert.ToString(e.CommandArgument) == "ViewADDDRAWING")
+                {
+
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+
+                TextBox txtSrNo = gvSubitemsList.Rows[rowindex].FindControl("txtSrNo") as TextBox;
+
+                Label lblRecordID = gvSubitemsList.Rows[rowindex].FindControl("lblRecordID") as Label;
+                Label lblLOTTFID = gvSubitemsList.Rows[rowindex].FindControl("lblLOTTFID") as Label;
+                Label lblLOTTFSubitemID = gvSubitemsList.Rows[rowindex].FindControl("lblLOTTFSubitemID") as Label;
+                Label lblUnitID = gvSubitemsList.Rows[rowindex].FindControl("lblUnitID") as Label;
+
+                TextBox txtUnit = gvSubitemsList.Rows[rowindex].FindControl("txtUnit") as TextBox;
+                TextBox txtJOBNo = gvSubitemsList.Rows[rowindex].FindControl("txtJOBNo") as TextBox;
+                TextBox txtDrawingNo = gvSubitemsList.Rows[rowindex].FindControl("txtDrawingNo") as TextBox;
+                TextBox txtEquipment = gvSubitemsList.Rows[rowindex].FindControl("txtEquipment") as TextBox;
+                TextBox txtItemDesc = gvSubitemsList.Rows[rowindex].FindControl("txtItemDesc") as TextBox;
+                TextBox txtExpectedDateofComp = gvSubitemsList.Rows[rowindex].FindControl("txtExpectedDateofComp") as TextBox;
+                TextBox txtQuantity = gvSubitemsList.Rows[rowindex].FindControl("txtQuantity") as TextBox;
+                TextBox txtRemarks = gvSubitemsList.Rows[rowindex].FindControl("txtRemarks") as TextBox;
+                Label lblAdditinoalDrawingFilePath = gvSubitemsList.Rows[rowindex].FindControl("lblAdditinoalDrawingFilePath") as Label;
+
+
+
+
+                if (Convert.ToString(e.CommandArgument) == "EDIT")
+                {
+                    ViewState["RECORD_ID"] = Convert.ToInt32(lblRecordID.Text);
+                    hdLOTTFID.Value = Convert.ToString(lblLOTTFID.Text);
+                    hdLOTTFSubitemID.Value = Convert.ToString(lblLOTTFSubitemID.Text);
+                    ddlCompanyToA.SelectedValue = Convert.ToString(lblUnitID.Text);
+                    txtJOBNoToA.Text = Convert.ToString(txtJOBNo.Text);
+                    txtDrawingNoToA.Text = Convert.ToString(txtDrawingNo.Text);
+                    txtEquipmentToA.Text = Convert.ToString(txtEquipment.Text);
+                    txtItemDescriptionToA.Text = Convert.ToString(txtItemDesc.Text);
+                    txtExpectedDateofComp.Text = Convert.ToString(txtExpectedDateofComp.Text);
+                    txtQuantityToA.Text = Convert.ToString(txtQuantity.Text);
+                    txtRemarkstoA.Text = Convert.ToString(txtRemarks.Text);
+                    mpeUpdateDetails.Show();
+                }
+
+                else if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    DataTable dtToRemoveRecord = (DataTable)Session["dtSubitemDetails"];
+                    RemoveRecords(dtToRemoveRecord, Convert.ToString(txtSrNo.Text));
+                }
+
+                else if (Convert.ToString(e.CommandArgument) == "ViewADDDRAWING")
+                    ViewDrawingFiles(Convert.ToInt32(txtSrNo.Text), "ADD_DRAWING");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    protected void btnSaveDetails_Click(object sender, EventArgs e)
+    {
+        HideMessagePanel();
+        SaveItemsDetails();
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        HideMessagePanel();
+        GetAssignedItemsList();
+    }
+
+
+
+
+    #endregion
+
+
+    #region METHODS[=======================]
+
+
+
+    private void BindUnit()
+    {
+        try
+        {
+            dsUnit = objCommon.GetUnit();
+            if (dsUnit.Tables.Count > 0 && dsUnit.Tables[0].Rows.Count > 0)
+            {
+                ddlCompany.DataSource = dsUnit.Tables[0];
+                ddlCompany.DataTextField = "UNIT_NAME";
+                ddlCompany.DataValueField = "UNIT_ID";
+                ddlCompany.DataBind();
+                ddlCompany.Items.Insert(0, "All");
+                ddlCompany.SelectedIndex = 0;
+
+
+                ddlCompanyToA.DataSource = dsUnit.Tables[0];
+                ddlCompanyToA.DataTextField = "UNIT_NAME";
+                ddlCompanyToA.DataValueField = "UNIT_ID";
+                ddlCompanyToA.DataBind();
+                ddlCompanyToA.SelectedIndex = 0;
+            }
+            else
+            {
+                ddlCompany.Items.Clear();
+                ddlCompany.Items.Insert(0, "All");
+                ddlCompany.SelectedIndex = 0;
+
+                ddlCompanyToA.Items.Clear();
+                ddlCompanyToA.Items.Insert(0, "Select");
+                ddlCompanyToA.SelectedIndex = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void GetAssignedItemsList()
+    {
+        try
+        {
+            companyID = 0;
+            LOTNo = string.Empty;
+            jobNo = string.Empty;
+            drawingNo = string.Empty;
+            equipment = string.Empty;
+
+            if (ddlCompany.SelectedIndex > 0)
+                companyID = Convert.ToInt32(ddlCompany.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtLOTNo.Text))
+                LOTNo = txtLOTNo.Text;
+
+            if (!string.IsNullOrEmpty(txtJOBNo.Text))
+                jobNo = txtJOBNo.Text;
+
+            if (!string.IsNullOrEmpty(txtDrawingNo.Text))
+                drawingNo = txtDrawingNo.Text;
+
+            if (!string.IsNullOrEmpty(txtEquipment.Text))
+                equipment = txtEquipment.Text;
+
+            dsAssignedItemsList = objMS.GetAssignedItemsList(companyID, LOTNo, jobNo, drawingNo, equipment);
+            if (dsAssignedItemsList.Tables.Count > 0 && dsAssignedItemsList.Tables[0].Rows.Count > 0)
+            {
+                Session["dtSubitemDetails"] = dsAssignedItemsList.Tables[0];
+                gvSubitemsList.DataSource = dsAssignedItemsList.Tables[0];
+                gvSubitemsList.DataBind();
+            }
+            else
+            {
+                Session["dtSubitemDetails"] = null;
+                ExceptionMessage("No datat found...!!!");
+            }
+
+            lblRecords.Text = "Records[" + gvSubitemsList.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    //JOB Details Start------------------------
+    private DataSet GetJOBData()
+    {
+        try
+        {
+            companyID = 0;
+            LOTNo = string.Empty;
+            jobNo = string.Empty;
+
+            companyID = Convert.ToInt32(ddlCompanyToA.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtLOTNoSearch.Text))
+                LOTNo = txtLOTNoSearch.Text;
+
+
+            if (!string.IsNullOrEmpty(txtJOBNoSearch.Text))
+                jobNo = txtJOBNoSearch.Text;
+
+
+            dsJobNo = objMS.GetJOBDetailsForLMS(companyID, jobNo, LOTNo);
+
+            if (dsJobNo.Tables.Count > 0)
+            {
+                return dsJobNo;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+
+
+    private void GetJOBDetail()
+    {
+        try
+        {
+            dsJobNo = GetJOBData();
+            if (dsJobNo.Tables.Count > 0 && dsJobNo.Tables[0].Rows.Count > 0)
+            {
+                lblJOBMsg.Visible = false;
+                lblJOBMsg.Text = string.Empty;
+                gvJOBDetail.DataSource = dsJobNo.Tables[0];
+                gvJOBDetail.DataBind();
+            }
+            else
+            {
+                lblJOBMsg.Visible = true;
+                lblJOBMsg.Text = "No data found!";
+                gvJOBDetail.DataSource = null;
+                gvJOBDetail.DataBind();
+            }
+            lblJOBRecords.Text = "Records[" + gvJOBDetail.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+        }
+    }
+
+
+
+
+    //Drawing Details Start------------------------
+    private DataSet GetDrawingData()
+    {
+        try
+        {
+            LOTNo = string.Empty;
+            jobNo = string.Empty;
+            drawingNo = string.Empty;
+            equipment = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtLOTNoInDr.Text))
+                LOTNo = txtLOTNoInDr.Text;
+
+            if (!string.IsNullOrEmpty(txtJOBNoInDr.Text))
+                jobNo = txtJOBNoInDr.Text;
+
+            if (!string.IsNullOrEmpty(txtDrawingNoInDr.Text))
+                drawingNo = txtDrawingNoInDr.Text;
+
+            if (!string.IsNullOrEmpty(txtEquipmentInDr.Text))
+                equipment = txtEquipmentInDr.Text;
+
+
+            dsDrawing = objMS.GetDrawingDetailsForLMS(jobNo, LOTNo, drawingNo, equipment);
+
+            if (dsDrawing.Tables.Count > 0)
+            {
+                return dsDrawing;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+
+
+    private void GetDrawingDetail()
+    {
+        try
+        {
+            dsDrawing = GetDrawingData();
+            if (dsDrawing.Tables.Count > 0 && dsDrawing.Tables[0].Rows.Count > 0)
+            {
+                lblDrawingMsg.Visible = false;
+                lblDrawingMsg.Text = string.Empty;
+                gvDrawingDetail.DataSource = dsDrawing.Tables[0];
+                gvDrawingDetail.DataBind();
+            }
+            else
+            {
+                lblDrawingMsg.Visible = true;
+                lblDrawingMsg.Text = "No data found!";
+                gvDrawingDetail.DataSource = null;
+                gvDrawingDetail.DataBind();
+            }
+            lblDrawingRecords.Text = "Records[" + gvDrawingDetail.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+        }
+    }
+
+
+
+    private void SaveItemsDetails()
+    {
+        try
+        {
+            DataTable dtSubitems = new DataTable();
+
+            dtSubitems.Columns.Add("LOT_TF_ID", typeof(int));
+            dtSubitems.Columns.Add("LOT_TF_SUBITEM_ID", typeof(int));
+            dtSubitems.Columns.Add("UNIT_ID", typeof(int));
+            dtSubitems.Columns.Add("JOB_NO", typeof(string));
+            dtSubitems.Columns.Add("DRAWING_NO", typeof(string));
+            dtSubitems.Columns.Add("EQUIPMENT", typeof(string));
+            dtSubitems.Columns.Add("ITEM_DESCRIPTION", typeof(string));
+            dtSubitems.Columns.Add("EXPECTED_DATE_OF_COMP_BY_PLANNING", typeof(string));
+            dtSubitems.Columns.Add("ALLOCATED_QUANTITY", typeof(int));
+            dtSubitems.Columns.Add("REMARKS", typeof(string));
+            dtSubitems.Columns.Add("ADD_DRAWING_FILE_NAME", typeof(string));
+            dtSubitems.Columns.Add("ADD_DRAWING_FILE_BYTES", typeof(byte[]));
+
+            int recordID = 0;
+            int lotTFID = 0;
+            int lotTFSubitemID = 0;
+            int unitID = 0;
+            string jobNo = string.Empty;
+            string drawingNo = string.Empty;
+            string equipmentNo = string.Empty;
+            string itemDesc = string.Empty;
+            string expectedDateOfCompByPlanning = string.Empty;
+            int quantity = 0;
+            string remarks = string.Empty;
+            string additionalDrawingFileName = string.Empty;
+            Byte[] additionalDrawingBytes = null;
+
+
+            recordID = Convert.ToInt32(ViewState["RECORD_ID"]);
+            unitID = Convert.ToInt32(ddlCompanyToA.SelectedValue);
+
+            if (!string.IsNullOrEmpty(txtJOBNoToA.Text))
+            {
+                lotTFID = Convert.ToInt32(hdLOTTFID.Value);
+                jobNo = txtJOBNoToA.Text.Trim().ToUpper();
+            }
+
+            if (chkNA.Checked == false)
+            {
+                if (!string.IsNullOrEmpty(txtDrawingNoToA.Text))
+                    drawingNo = txtDrawingNoToA.Text.Trim().ToUpper();
+
+                if (!string.IsNullOrEmpty(txtEquipmentToA.Text))
+                {
+                    equipmentNo = txtEquipmentToA.Text.Trim().ToUpper();
+                    lotTFSubitemID = Convert.ToInt32(hdLOTTFSubitemID.Value);
+                }
+                quantity = Convert.ToInt32(txtQuantityToA.Text);
+            }
+
+            if (!string.IsNullOrEmpty(txtItemDescriptionToA.Text))
+                itemDesc = txtItemDescriptionToA.Text.Trim();
+
+            expectedDateOfCompByPlanning = txtDateToA.Text;
+
+            if (!string.IsNullOrEmpty(txtRemarkstoA.Text))
+                remarks = txtRemarkstoA.Text.Trim();
+
+
+            if (uploadFileAttachment1.HasFile)
+            {
+                if (!string.IsNullOrEmpty(uploadFileAttachment1.PostedFile.FileName))
+                {
+                    additionalDrawingFileName = uploadFileAttachment1.PostedFile.FileName;
+                    additionalDrawingBytes = GetFileBytes(uploadFileAttachment1.PostedFile.FileName, uploadFileAttachment1.PostedFile.InputStream);
+                }
+                else
+                {
+                    additionalDrawingFileName = string.Empty;
+                    additionalDrawingBytes = null;
+                }
+            }
+            else
+            {
+                additionalDrawingFileName = string.Empty;
+                additionalDrawingBytes = null;
+            }
+
+            DataRow drn = dtSubitems.NewRow();
+            drn["LOT_TF_ID"] = lotTFID;
+            drn["LOT_TF_SUBITEM_ID"] = lotTFSubitemID;
+            drn["UNIT_ID"] = unitID;
+            drn["JOB_NO"] = jobNo;
+            drn["DRAWING_NO"] = drawingNo;
+            drn["EQUIPMENT"] = equipmentNo;
+            drn["ITEM_DESCRIPTION"] = itemDesc;
+            drn["EXPECTED_DATE_OF_COMP_BY_PLANNING"] = expectedDateOfCompByPlanning;
+            drn["ALLOCATED_QUANTITY"] = quantity;
+            drn["REMARKS"] = remarks;
+            drn["ADD_DRAWING_FILE_NAME"] = additionalDrawingFileName;
+            drn["ADD_DRAWING_FILE_BYTES"] = additionalDrawingBytes;
+
+            dtSubitems.Rows.Add(drn);
+
+
+
+            if (dtSubitems.Rows.Count > 0)
+            {
+                int value = 0;
+                value = objMS.InsertAssignedItemsForMachineSch(recordID, dtSubitems, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+
+                if (value > 0)
+                {
+                    SuccessMessage(dtSubitems.Rows.Count + " Records assigned successfully...!!!");
+                    Reset();
+                    GetAssignedItemsList();
+                    return;
+                }
+                else
+                {
+                    ExceptionMessage("Please try again...!!!");
+                    return;
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private byte[] GetFileBytes(string fileName, Stream stream)
+    {
+        Byte[] GSTbytes = null;
+        #region
+        try
+        {
+            string GSTFilePath = fileName;
+            string GSTFileName = Path.GetFileName(GSTFilePath);
+            string GSText = Path.GetExtension(GSTFileName);
+            string GSTContentType = String.Empty;
+            switch (GSText)
+            {
+                case ".jpg":
+                    GSTContentType = "image/jpg";
+                    break;
+                case ".jpeg":
+                    GSTContentType = "image/jpeg";
+                    break;
+                case ".bmp":
+                    GSTContentType = "image/bmp";
+                    break;
+                case ".png":
+                    GSTContentType = "image/png";
+                    break;
+                case ".gif":
+                    GSTContentType = "image/gif";
+                    break;
+                case ".pdf":
+                    GSTContentType = "application/pdf";
+                    break;
+                case ".JPG":
+                    GSTContentType = "image/JPG";
+                    break;
+                case ".JPEG":
+                    GSTContentType = "image/JPEG";
+                    break;
+                case ".BMP":
+                    GSTContentType = "image/BMP";
+                    break;
+                case ".PNG":
+                    GSTContentType = "image/PNG";
+                    break;
+                case ".GIF":
+                    GSTContentType = "image/GIF";
+                    break;
+                case ".PDF":
+                    GSTContentType = "application/PDF";
+                    break;
+                case ".dxf":
+                    GSTContentType = "application/dxf";
+                    break;
+                case ".DXF":
+                    GSTContentType = "application/DXF";
+                    break;
+                case ".dwg":
+                    GSTContentType = "application/dwg";
+                    break;
+                case ".DWG":
+                    GSTContentType = "application/DWG";
+                    break;
+            }
+            Stream GSTfs = null;
+            BinaryReader GSTbr = null;
+            if (GSTContentType != String.Empty)
+            {
+                try
+                {
+                    GSTfs = stream;
+                    GSTfs.Position = 0;
+                    GSTbr = new BinaryReader(GSTfs);
+                    GSTbytes = GSTbr.ReadBytes((Int32)GSTfs.Length);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            else
+            {
+                ExceptionMessage("GST File format not recognised. Upload Image/PDF/DXF/DWG formats");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+        }
+        #endregion
+        return GSTbytes;
+    }
+
+
+    private void RemoveRecords(DataTable dtToRemoveRecord, string serialNos)
+    {
+        string[] strSerialNo = serialNos.Split(',');
+        if (dtToRemoveRecord.Rows.Count > 0)
+        {
+            foreach (string sr in strSerialNo)
+            {
+                if (!string.IsNullOrEmpty(sr))
+                {
+                    foreach (DataRow drremove in dtToRemoveRecord.Select("SR_NO='" + sr + "'"))
+                    {
+                        dtToRemoveRecord.Rows.Remove(drremove);
+                    }
+                }
+            }
+
+            if (dtToRemoveRecord.Rows.Count > 0)
+            {
+                int count = 1;
+                foreach (DataRow drs in dtToRemoveRecord.Rows)
+                {
+                    drs["SR_NO"] = count++;
+                }
+
+
+                Session["dtSubitemDetails"] = dtToRemoveRecord;
+                gvSubitemsList.DataSource = dtToRemoveRecord;
+                gvSubitemsList.DataBind();
+            }
+            else
+            {
+                Session["dtSubitemDetails"] = null;
+                gvSubitemsList.DataSource = null;
+                gvSubitemsList.DataBind();
+            }
+        }
+        else
+        {
+            Session["dtSubitemDetails"] = null;
+        }
+        lblRecords.Text = "Records[" + gvSubitemsList.Rows.Count + "]";
+    }
+
+
+    private void ViewDrawingFiles(int recordID, string fileType)
+    {
+        try
+        {
+            byte[] bytes = null;
+            string fileName = string.Empty;
+
+            DataSet dsFiles = new DataSet();
+            dsFiles = objMS.GetDrawingFiles(recordID);
+
+            if (dsFiles.Tables.Count > 0 && dsFiles.Tables[0].Rows.Count > 0)
+            {
+                if (fileType == "ADD_DRAWING")
+                {
+                    bytes = (byte[])dsFiles.Tables[0].Rows[0]["ADD_DRAWING_FILE_BYTES"];
+                    fileName = Convert.ToString(dsFiles.Tables[0].Rows[0]["ADD_DRAWING_FILE_NAME"]);
+                }
+
+
+                if (bytes != null)
+                {
+                    string[] stringParts = fileName.Split(new char[] { '.' });
+                    string strType = stringParts[1];
+                    Response.Clear();
+                    Response.ClearContent();
+                    Response.ClearHeaders();
+                    Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+                    Response.ContentType = strType;
+                    Response.BinaryWrite(bytes);
+                    Response.End();
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            if (ex.ToString().Contains("Timeout expired"))
+            {
+                ExceptionMessage("The process of downloading is too longer, please try again...!!!");
+                return;
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
+
+
+    private void Reset()
+    {
+        chkNA.Checked = false;
+        //ddlCompanyToA.SelectedIndex = 0;
+        txtJOBNoToA.Text = string.Empty;
+        txtDrawingNoToA.Text = string.Empty;
+        txtEquipmentToA.Text = string.Empty;
+        txtItemDescriptionToA.Text = string.Empty;
+        hdDateToA.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+        txtDateToA.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+        txtQuantityToA.Text = "0";
+        txtRemarkstoA.Text = string.Empty;
+
+        hdLOTTFID.Value = string.Empty;
+        hdLOTTFSubitemID.Value = string.Empty;
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+
+    private void HideMessagePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    #endregion
+
+
+}

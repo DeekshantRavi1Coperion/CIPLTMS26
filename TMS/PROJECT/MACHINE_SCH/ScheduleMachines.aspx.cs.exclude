@@ -1,0 +1,1285 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.IO;
+using System.Net.Mail;
+
+public partial class PROJECT_MACHINE_SCH_ScheduleMachines : System.Web.UI.Page
+{
+
+    #region VARIABLES[=====================]
+
+    BAL.MachineScheduling objMS = new BAL.MachineScheduling();
+    BAL.Common objCommon = new BAL.Common();
+
+    DataSet dsWorker = new DataSet();
+    DataSet dsJOBNo = new DataSet();
+    DataSet dsSubitems = new DataSet();
+
+    DataSet dsCompany = new DataSet();
+    DataSet dsEmployeeList = new DataSet();
+    DataTable dt = new DataTable();
+
+
+    DataSet dsProjectSupervisor = new DataSet();
+    DataSet dsProjectWorker = new DataSet();
+
+
+    DataSet dsUnit = new DataSet();
+    DataSet dsMachine = new DataSet();
+    DataSet dsType = new DataSet();
+    DataSet dsActivity = new DataSet();
+
+    bool chk = false;
+
+    #endregion
+
+
+    #region EVENTS[========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+                HideMessagePanel();
+                //hdIsNewRecord.Value = "0";
+                //Session["dtJOBNo"] = null;
+                //Session["dtSubitems"] = null;
+                //Session["dsEmployeeList"] = null;
+                //Session["dtChanged"] = null;
+                //Session["dtTemp"] = null;
+
+                //hdCurrentDate.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+
+                //hdDate.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                //txtDate.Text = hdDate.Value;
+
+                ////BindJOBNo();
+                //BindUnit();                
+                ////dsEmployeeList = objCommon.GetEmployeeByEmpRecordID(0);
+                //Session["dsEmployeeList"] = dsEmployeeList;
+
+                //ddlJOBNo.Items.Insert(0, "Select");
+                //ddlJOBNo.SelectedIndex = 0;
+
+                //ddlProjectSupervisor.Items.Insert(0, "All");
+                //ddlProjectSupervisor.SelectedIndex = 0;
+
+                //ddlProjectWorker.Items.Insert(0, "All");
+                //ddlProjectWorker.SelectedIndex = 0;
+
+                Session["dtTemp"] = null;
+                Session["dtUnit"] = null;
+                Session["dtMachine"] = null;
+                Session["dtType"] = null;
+
+                GetUnitData();
+                GetMachineData();
+                GetTypeData();
+
+                BindFirstRowInList();
+
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+    }
+
+    private void BindFirstRowInList()
+    {
+        try
+        {
+            DataTable dtTemp = new DataTable();
+
+            dtTemp.Columns.Add("UNIT_FID", typeof(int));
+            dtTemp.Columns.Add("MACHINE_FID", typeof(int));
+            dtTemp.Columns.Add("SCHEDULED_TYPE_FID", typeof(int));
+            dtTemp.Columns.Add("JOB_NO", typeof(string));
+            dtTemp.Columns.Add("DRAWING_NO", typeof(string));
+            dtTemp.Columns.Add("EQUIPMENT", typeof(string));
+            dtTemp.Columns.Add("ITEM_DESCRIPTION", typeof(string));
+            dtTemp.Columns.Add("QUANTITY", typeof(int));
+            dtTemp.Columns.Add("DATE_OF_RECEIPT_OF_MATERIAL", typeof(string));
+            dtTemp.Columns.Add("ED_OF_COMP_BY_PLANNING", typeof(string));
+            dtTemp.Columns.Add("ED_OF_COMP_BY_PRODUCTION", typeof(string));
+            dtTemp.Columns.Add("ACTIVITY_FID", typeof(int));
+            dtTemp.Columns.Add("SCHEDULED_FROM", typeof(string));
+            dtTemp.Columns.Add("SCHEDULED_TO", typeof(string));
+            dtTemp.Columns.Add("ACTUAL_COMP_DATE", typeof(string));
+            dtTemp.Columns.Add("REMARKS", typeof(string));
+
+            
+
+            if (Session["dtTemp"] != null)
+            {
+                DataTable dtNew = new DataTable();
+                dtNew = dtTemp.Copy();
+                dtNew = (DataTable)Session["dtTemp"];
+
+                DataRow dr0 = dtNew.NewRow();
+                dr0["UNIT_FID"] = 0;
+                dr0["MACHINE_FID"] = 0;
+                dr0["SCHEDULED_TYPE_FID"] = 0;
+                dr0["JOB_NO"] = string.Empty;
+                dr0["DRAWING_NO"] = string.Empty;
+                dr0["EQUIPMENT"] = string.Empty;
+                dr0["ITEM_DESCRIPTION"] = string.Empty;
+                dr0["QUANTITY"] = 0;
+                dr0["DATE_OF_RECEIPT_OF_MATERIAL"] = string.Empty;
+                dr0["ED_OF_COMP_BY_PLANNING"] = string.Empty;
+                dr0["ED_OF_COMP_BY_PRODUCTION"] = string.Empty;
+                dr0["ACTIVITY_FID"] = 0;
+                dr0["SCHEDULED_FROM"] = string.Empty;
+                dr0["SCHEDULED_TO"] = string.Empty;
+                dr0["ACTUAL_COMP_DATE"] = string.Empty;
+                dr0["REMARKS"] = string.Empty;
+
+                dtNew.Rows.Add(dr0);
+                Session["dtTemp"] = dtNew;
+                gvMachineDetail.DataSource = dtNew;
+                gvMachineDetail.DataBind();
+            }
+            else
+            {
+                DataRow dr0 = dtTemp.NewRow();
+                dr0["UNIT_FID"] = 0;
+                dr0["MACHINE_FID"] = 0;
+                dr0["SCHEDULED_TYPE_FID"] = 0;
+                dr0["JOB_NO"] = string.Empty;
+                dr0["DRAWING_NO"] = string.Empty;
+                dr0["EQUIPMENT"] = string.Empty;
+                dr0["ITEM_DESCRIPTION"] = string.Empty;
+                dr0["QUANTITY"] = 0;
+                dr0["DATE_OF_RECEIPT_OF_MATERIAL"] = string.Empty;
+                dr0["ED_OF_COMP_BY_PLANNING"] = string.Empty;
+                dr0["ED_OF_COMP_BY_PRODUCTION"] = string.Empty;
+                dr0["ACTIVITY_FID"] = 0;
+                dr0["SCHEDULED_FROM"] = string.Empty;
+                dr0["SCHEDULED_TO"] = string.Empty;
+                dr0["ACTUAL_COMP_DATE"] = string.Empty;
+                dr0["REMARKS"] = string.Empty;
+
+                dtTemp.Rows.Add(dr0);
+                Session["dtTemp"] = dtTemp;
+                gvMachineDetail.DataSource = dtTemp;
+                gvMachineDetail.DataBind();
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    //protected void btnAddNewRow_Click(object sender, EventArgs e)
+    //{
+    //    hdIsNewRecord.Value = "0";
+    //    HideMessagePanel();
+    //    BindWorkerTimesheet();
+    //}
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        hdIsNewRecord.Value = "0";
+        HideMessagePanel();
+        //AddWorkerTimesheetNewOne();
+    }
+
+    protected void ddlMachine_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (gvMachineDetail.Rows.Count > 0)
+        {
+            GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+            DropDownList ddlMachine = (DropDownList)gvr.FindControl("ddlMachine");
+            DropDownList ddlActivity = (DropDownList)gvr.FindControl("ddlActivity");
+
+            if (ddlMachine.SelectedIndex > 0)
+            {
+                dsActivity = objMS.GetMachineActivity(Convert.ToInt32(ddlMachine.SelectedValue));
+                if (dsActivity.Tables.Count > 0 && dsActivity.Tables[0].Rows.Count > 0)
+                {
+                    ddlActivity.DataSource = dsActivity.Tables[0];
+                    ddlActivity.DataBind();
+                    ddlActivity.DataTextField = "ACTIVITY_NAME";
+                    ddlActivity.DataValueField = "ACTIVITY_FID";
+                    ddlActivity.Items.Insert(0, "Select");
+                    ddlActivity.SelectedIndex = 0;
+                }
+                else
+                {
+                    ddlActivity.Items.Clear();
+                    ddlActivity.Items.Insert(0, "Select");
+                    ddlActivity.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                ddlActivity.Items.Clear();
+                ddlActivity.Items.Insert(0, "Select");
+                ddlActivity.SelectedIndex = 0;
+            }
+
+        }
+    }
+
+    protected void gvMachineDetail_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            int hrs = 0;
+            int mns = 0;
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DropDownList ddlUnit = (DropDownList)e.Row.FindControl("ddlUnit");
+                DropDownList ddlMachine = (DropDownList)e.Row.FindControl("ddlMachine");
+                DropDownList ddlType = (DropDownList)e.Row.FindControl("ddlType");
+                DropDownList ddlActivity = (DropDownList)e.Row.FindControl("ddlActivity");
+
+                TextBox txtJOBNo = (TextBox)e.Row.FindControl("txtJOBNo");
+                TextBox txtDrawingNo = (TextBox)e.Row.FindControl("txtDrawingNo");
+                TextBox txtEquipment = (TextBox)e.Row.FindControl("txtEquipment");
+                TextBox txtItemDesc = (TextBox)e.Row.FindControl("txtItemDesc");
+                TextBox txtQuantity = (TextBox)e.Row.FindControl("txtQuantity");
+                TextBox txtDateofReceiptofMaterial = (TextBox)e.Row.FindControl("txtDateofReceiptofMaterial");
+                TextBox txtEDofCompbyPlanning = (TextBox)e.Row.FindControl("txtEDofCompbyPlanning");
+                TextBox txtEDofCompbyProduction = (TextBox)e.Row.FindControl("txtEDofCompbyProduction");
+
+                TextBox txtScheduledFrom = (TextBox)e.Row.FindControl("txtScheduledFrom");
+                TextBox txtScheduledTo = (TextBox)e.Row.FindControl("txtScheduledTo");
+                TextBox txtActualDateofComp = (TextBox)e.Row.FindControl("txtActualDateofComp");
+                TextBox txtRemarks = (TextBox)e.Row.FindControl("txtRemarks");
+
+                txtDateofReceiptofMaterial.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtEDofCompbyPlanning.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtEDofCompbyProduction.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtScheduledFrom.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtScheduledTo.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtActualDateofComp.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+
+
+                Session["dtUnit"] = null;
+                Session["dtMachine"] = null;
+                Session["dtType"] = null;
+
+                DataTable dtUnit = new DataTable();
+                DataTable dtMachine = new DataTable();
+                DataTable dtType = new DataTable();
+
+                if (Session["dtUnit"] != null)
+                    dtUnit = (DataTable)Session["dtUnit"];
+                else
+                {
+                    GetUnitData();
+                    dtUnit = (DataTable)Session["dtUnit"];
+                }
+
+                if (Session["dtMachine"] != null)
+                    dtMachine = (DataTable)Session["dtMachine"];
+                else
+                {
+                    GetMachineData();
+                    dtMachine = (DataTable)Session["dtMachine"];
+                }
+
+                if (Session["dtType"] != null)
+                    dtType = (DataTable)Session["dtType"];
+                else
+                {
+                    GetTypeData();
+                    dtType = (DataTable)Session["dtType"];
+                }
+
+                if (dtUnit.Rows.Count > 0)
+                {
+                    ddlUnit.DataSource = dtUnit;
+                    ddlUnit.DataTextField = "UNIT_NAME";
+                    ddlUnit.DataValueField = "UNIT_ID";
+                    ddlUnit.DataBind();
+                    ddlUnit.Items.Insert(0, "Select");
+                    ddlUnit.SelectedIndex = 0;
+                }
+                else
+                {
+                    ddlUnit.Items.Clear();
+                    ddlUnit.Items.Insert(0, "Select");
+                    ddlUnit.SelectedIndex = 0;
+                }
+
+                if (dtMachine.Rows.Count > 0)
+                {
+                    ddlMachine.DataSource = dtMachine;
+                    ddlMachine.DataTextField = "MACHINE_NAME";
+                    ddlMachine.DataValueField = "MACHINE_PID";
+                    ddlMachine.DataBind();
+                    ddlMachine.Items.Insert(0, "Select");
+                    ddlMachine.SelectedIndex = 0;
+                }
+                else
+                {
+                    ddlMachine.Items.Clear();
+                    ddlMachine.Items.Insert(0, "Select");
+                    ddlMachine.SelectedIndex = 0;
+                }
+
+
+                if (dtType.Rows.Count > 0)
+                {
+                    ddlType.DataSource = dtType;
+                    ddlType.DataTextField = "TYPE_NAME";
+                    ddlType.DataValueField = "TYPE_PID";
+                    ddlType.DataBind();
+                    ddlType.Items.Insert(0, "Select");
+                    ddlType.SelectedIndex = 0;
+                }
+                else
+                {
+                    ddlType.Items.Clear();
+                    ddlType.Items.Insert(0, "Select");
+                    ddlType.SelectedIndex = 0;
+                }
+
+
+                ddlActivity.Items.Clear();
+                ddlActivity.Items.Insert(0, "Select");
+                ddlActivity.SelectedIndex = 0;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvMachineDetail_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            hdIsNewRecord.Value = "0";
+
+            DataTable dt = new DataTable();
+            hdTotalMinuts.Value = "0";
+            dt.Columns.Add("MAIN_RECORD_FLAG", typeof(int));
+            dt.Columns.Add("SERIAL_NO", typeof(string));
+            dt.Columns.Add("PUNCH_MISSED", typeof(int));
+            dt.Columns.Add("EMPLOYEE_NAME", typeof(string));
+            dt.Columns.Add("EMPLOYEE_CODE", typeof(string));
+            dt.Columns.Add("UNIT", typeof(string));
+            dt.Columns.Add("JOB_NO", typeof(string));
+            dt.Columns.Add("JOB_NO1", typeof(string));
+            dt.Columns.Add("ITEM_NAME", typeof(string));
+            dt.Columns.Add("SUBITEM_DESC", typeof(string));
+            //dt.Columns.Add("ACTIVITY_MATRIX", typeof(string));
+
+            dt.Columns.Add("ENTRY_DATE", typeof(string));
+            dt.Columns.Add("IN_TIME", typeof(string));
+            dt.Columns.Add("OUT_TIME", typeof(string));
+            dt.Columns.Add("WORKING_HOURS", typeof(string));
+            dt.Columns.Add("WORKING_MINUTS", typeof(string));
+            dt.Columns.Add("ADJUSTED_WORKING_HOURS", typeof(string));
+            dt.Columns.Add("OT_HOURS", typeof(string));
+            dt.Columns.Add("BAL_WRK_HRS", typeof(string));
+
+
+            dt.Columns.Add("SAVED_TIMESHEET_HOURS", typeof(string));
+            dt.Columns.Add("BAL_TIMESHEET_HRS", typeof(string));
+            dt.Columns.Add("REMARKS", typeof(string));
+
+            int rindex = 0;
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "ADD" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                if (Convert.ToString(e.CommandArgument) == "ADD")
+                {
+                    BindFirstRowInList();
+
+                    //hdIsNewRecord.Value = "1";
+                    //int hoursOfCurrentRowAdjustedHours = 0;
+                    //int minutsOfCurrentRowAdjustedHours = 0;
+                    //int totalMinutsOfCurrentRowAdjustedHours = 0;
+
+                    //TextBox txtCurrentRowAdjustedWorkingHours = (TextBox)gvMachineDetail.Rows[rowindex].FindControl("txtAdjustedWorkingHours");
+                    //ImageButton imgBtnAddNewRecord = (ImageButton)gvMachineDetail.Rows[rowindex].FindControl("imgBtnAddNewRecord");
+                    //if (!string.IsNullOrEmpty(txtCurrentRowAdjustedWorkingHours.Text))
+                    //{
+                    //    if (txtCurrentRowAdjustedWorkingHours.Text.Contains(':'))
+                    //    {
+                    //        string[] strCurrentRowAdjustedHours = txtCurrentRowAdjustedWorkingHours.Text.Split(':');
+
+                    //        if (Convert.ToInt32(strCurrentRowAdjustedHours[0]) > 0)
+                    //            hoursOfCurrentRowAdjustedHours = Convert.ToInt32(strCurrentRowAdjustedHours[0]);
+                    //        else
+                    //            hoursOfCurrentRowAdjustedHours = 0;
+
+                    //        if (Convert.ToInt32(strCurrentRowAdjustedHours[1]) > 0)
+                    //            minutsOfCurrentRowAdjustedHours = Convert.ToInt32(strCurrentRowAdjustedHours[1]);
+                    //        else
+                    //            minutsOfCurrentRowAdjustedHours = 0;
+                    //    }
+                    //    else
+                    //    {
+                    //        if (!string.IsNullOrEmpty(txtCurrentRowAdjustedWorkingHours.Text) && Convert.ToInt32(txtCurrentRowAdjustedWorkingHours.Text) > 0)
+                    //            hoursOfCurrentRowAdjustedHours = Convert.ToInt32(txtCurrentRowAdjustedWorkingHours.Text);
+                    //        else
+                    //            hoursOfCurrentRowAdjustedHours = 0;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    hoursOfCurrentRowAdjustedHours = 0;
+                    //    minutsOfCurrentRowAdjustedHours = 0;
+                    //}
+
+                    //totalMinutsOfCurrentRowAdjustedHours = (hoursOfCurrentRowAdjustedHours * 60 + minutsOfCurrentRowAdjustedHours);
+
+                    //if (totalMinutsOfCurrentRowAdjustedHours > 0)
+                    //{
+                    //    foreach (GridViewRow gr in gvMachineDetail.Rows)
+                    //    {
+                    //        DataRow dr = dt.NewRow();
+                    //        rindex++;
+
+                    //        Label lblMainRecordFlag = (Label)gr.FindControl("lblMainRecordFlag");
+                    //        Label lblPunchMissed = (Label)gr.FindControl("lblPunchMissed");
+                    //        Label lblEmployeeName = (Label)gr.FindControl("lblEmployeeName");
+                    //        Label lblEmpCode = (Label)gr.FindControl("lblEmpCode");
+                    //        Label lblUnit = (Label)gr.FindControl("lblUnit");
+                    //        DropDownList ddlJOBNo = (DropDownList)gr.FindControl("ddlJOBNo");
+                    //        TextBox txtJOBNo = (TextBox)gr.FindControl("txtJOBNo");
+                    //        TextBox txtItemName = (TextBox)gr.FindControl("txtItemName");
+
+                    //        DropDownList ddlSubitems = (DropDownList)gr.FindControl("ddlSubitems");
+                    //        //TextBox txtActivityMatrix = (TextBox)gr.FindControl("txtActivityMatrix");
+
+                    //        Label lblEntryDate = (Label)gr.FindControl("lblEntryDate");
+                    //        Label lblInTime = (Label)gr.FindControl("lblInTime");
+                    //        Label lblOutTime = (Label)gr.FindControl("lblOutTime");
+                    //        Label lblWorkingHours = (Label)gr.FindControl("lblWorkingHours");
+                    //        Label lblWorkingMinuts = (Label)gr.FindControl("lblWorkingMinuts");
+                    //        TextBox txtAdjustedWorkingHours = (TextBox)gr.FindControl("txtAdjustedWorkingHours");
+                    //        Label lblOTHours = (Label)gr.FindControl("lblOTHours");
+                    //        Label lblBalanceWorkingHours = (Label)gr.FindControl("lblBalanceWorkingHours");
+                    //        DropDownList ddlHours = (DropDownList)gr.FindControl("ddlHours");
+                    //        DropDownList ddlMins = (DropDownList)gr.FindControl("ddlMins");
+
+
+                    //        TextBox txtSavedTimesheetHours = (TextBox)gr.FindControl("txtSavedTimesheetHours");
+                    //        TextBox txtBalTimesheetHours = (TextBox)gr.FindControl("txtBalTimesheetHours");
+
+                    //        TextBox txtRemarks = (TextBox)gr.FindControl("txtRemarks");
+
+                    //        dr["MAIN_RECORD_FLAG"] = Convert.ToInt32(lblMainRecordFlag.Text);
+
+                    //        dr["SERIAL_NO"] = Convert.ToString(rindex);
+
+                    //        if (!string.IsNullOrEmpty(lblPunchMissed.Text))
+                    //            dr["PUNCH_MISSED"] = lblPunchMissed.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblEmployeeName.Text))
+                    //            dr["EMPLOYEE_NAME"] = lblEmployeeName.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblEmpCode.Text))
+                    //            dr["EMPLOYEE_CODE"] = lblEmpCode.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblUnit.Text))
+                    //            dr["UNIT"] = lblUnit.Text;
+
+                    //        if (ddlJOBNo.SelectedIndex > 0)
+                    //            dr["JOB_NO"] = Convert.ToString(ddlJOBNo.SelectedValue);
+
+                    //        if (!string.IsNullOrEmpty(txtJOBNo.Text))
+                    //            dr["JOB_NO1"] = Convert.ToString(txtJOBNo.Text).ToUpper().Trim();
+
+                    //        if (!string.IsNullOrEmpty(txtItemName.Text))
+                    //            dr["ITEM_NAME"] = Convert.ToString(txtItemName.Text).Trim();
+
+                    //        if (ddlSubitems.SelectedIndex > 0)
+                    //            dr["SUBITEM_DESC"] = Convert.ToString(ddlSubitems.SelectedValue);
+
+                    //        //if (!string.IsNullOrEmpty(txtActivityMatrix.Text))
+                    //        //    dr["ACTIVITY_MATRIX"] = txtActivityMatrix.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblEntryDate.Text))
+                    //            dr["ENTRY_DATE"] = lblEntryDate.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblInTime.Text))
+                    //            dr["IN_TIME"] = lblInTime.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblOutTime.Text))
+                    //            dr["OUT_TIME"] = lblOutTime.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+                    //            dr["WORKING_HOURS"] = lblWorkingHours.Text;
+
+                    //        if (!string.IsNullOrEmpty(txtBalTimesheetHours.Text))
+                    //        {
+                    //            int balTimesheetHours = 0;
+                    //            int balTimesheetMins = 0;
+                    //            int totalMins = 0;
+
+                    //            balTimesheetHours = Convert.ToInt32(txtBalTimesheetHours.Text.Split(':')[0]);
+                    //            balTimesheetMins = Convert.ToInt32(txtBalTimesheetHours.Text.Split(':')[1]);
+                    //            totalMins = (balTimesheetHours * 60 + balTimesheetMins);
+
+                    //            dr["WORKING_MINUTS"] = Convert.ToString(totalMins);
+                    //        }
+                    //        else
+                    //        {
+                    //            if (!string.IsNullOrEmpty(lblWorkingMinuts.Text))
+                    //                dr["WORKING_MINUTS"] = lblWorkingMinuts.Text;
+                    //        }
+
+
+
+                    //        if (!string.IsNullOrEmpty(txtAdjustedWorkingHours.Text))
+                    //            dr["ADJUSTED_WORKING_HOURS"] = txtAdjustedWorkingHours.Text;
+
+                    //        if (!string.IsNullOrEmpty(lblOTHours.Text))
+                    //            dr["OT_HOURS"] = lblOTHours.Text;
+
+
+                    //        if (!string.IsNullOrEmpty(txtSavedTimesheetHours.Text))
+                    //            dr["SAVED_TIMESHEET_HOURS"] = txtSavedTimesheetHours.Text;
+
+                    //        if (!string.IsNullOrEmpty(txtBalTimesheetHours.Text))
+                    //            dr["BAL_TIMESHEET_HRS"] = txtBalTimesheetHours.Text;
+
+
+                    //        if (!string.IsNullOrEmpty(txtRemarks.Text))
+                    //            dr["REMARKS"] = txtRemarks.Text;
+
+                    //        dt.Rows.Add(dr);
+                    //    }
+
+                    //    if (dt.Rows.Count > 0)
+                    //    {
+                    //        int totalWorkingMinuts = 0;
+
+                    //        DataRow drnew = dt.NewRow();
+
+
+                    //        drnew["MAIN_RECORD_FLAG"] = Convert.ToInt32(dt.Rows[rowindex]["MAIN_RECORD_FLAG"]) + 1;
+                    //        drnew["SERIAL_NO"] = Convert.ToString(Convert.ToInt32(dt.Rows[rowindex]["SERIAL_NO"]) + Convert.ToInt32(gvMachineDetail.Rows.Count));
+                    //        drnew["PUNCH_MISSED"] = Convert.ToString(dt.Rows[rowindex]["PUNCH_MISSED"]);
+                    //        drnew["EMPLOYEE_NAME"] = Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_NAME"]);
+                    //        drnew["EMPLOYEE_CODE"] = Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_CODE"]);
+                    //        drnew["ENTRY_DATE"] = Convert.ToString(dt.Rows[rowindex]["ENTRY_DATE"]);
+                    //        drnew["IN_TIME"] = Convert.ToString(dt.Rows[rowindex]["IN_TIME"]);
+                    //        drnew["OUT_TIME"] = Convert.ToString(dt.Rows[rowindex]["OUT_TIME"]);
+
+                    //        drnew["WORKING_HOURS"] = Convert.ToString(dt.Rows[rowindex]["WORKING_HOURS"]);
+
+                    //        //drnew["SAVED_TIMESHEET_HOURS"] = Convert.ToString(dt.Rows[rowindex]["SAVED_TIMESHEET_HOURS"]);
+                    //        drnew["BAL_TIMESHEET_HRS"] = Convert.ToString(dt.Rows[rowindex]["BAL_TIMESHEET_HRS"]);
+
+                    //        drnew["WORKING_MINUTS"] = Convert.ToString(dt.Rows[rowindex]["WORKING_MINUTS"]);
+                    //        drnew["OT_HOURS"] = Convert.ToString(dt.Rows[rowindex]["OT_HOURS"]);
+
+                    //        int adjustedWorkingHours = 0;
+                    //        int adjustedWorkingMins = 0;
+                    //        int adjustedWorkingTotalMins = 0;
+
+                    //        foreach (DataRow dr in dt.Select("EMPLOYEE_NAME='" + Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_NAME"]) + "' AND EMPLOYEE_CODE='" + Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_CODE"]) + "'"))
+                    //        {
+                    //            if (!string.IsNullOrEmpty(Convert.ToString(dr["ADJUSTED_WORKING_HOURS"])))
+                    //            {
+                    //                if (Convert.ToString(dr["ADJUSTED_WORKING_HOURS"]).Contains(':'))
+                    //                {
+                    //                    string[] strAdjustedWorkingHours = Convert.ToString(dr["ADJUSTED_WORKING_HOURS"]).Split(':');
+
+                    //                    if (Convert.ToInt32(strAdjustedWorkingHours[0]) > 0)
+                    //                        adjustedWorkingHours = Convert.ToInt32(strAdjustedWorkingHours[0]);
+                    //                    else
+                    //                        adjustedWorkingHours = 0;
+
+                    //                    if (Convert.ToInt32(strAdjustedWorkingHours[1]) > 0)
+                    //                        adjustedWorkingMins = Convert.ToInt32(strAdjustedWorkingHours[1]);
+                    //                    else
+                    //                        adjustedWorkingMins = 0;
+                    //                }
+                    //                else
+                    //                {
+                    //                    adjustedWorkingHours = Convert.ToInt32(Convert.ToString(dr["ADJUSTED_WORKING_HOURS"]));
+                    //                    adjustedWorkingMins = 0;
+                    //                }
+                    //            }
+                    //            else
+                    //            {
+                    //                adjustedWorkingHours = 0;
+                    //                adjustedWorkingMins = 0;
+                    //            }
+
+                    //            adjustedWorkingTotalMins += adjustedWorkingHours * 60 + adjustedWorkingMins;
+                    //        }
+
+                    //        if (!string.IsNullOrEmpty(Convert.ToString(drnew["WORKING_MINUTS"])) && Convert.ToInt32(drnew["WORKING_MINUTS"]) > 0)
+                    //            totalWorkingMinuts = Convert.ToInt32(drnew["WORKING_MINUTS"]);
+                    //        else
+                    //            totalWorkingMinuts = 0;
+
+
+                    //        int balanceWorkingMinuts = 0;
+
+                    //        balanceWorkingMinuts = totalWorkingMinuts - adjustedWorkingTotalMins;
+
+                    //        if (!string.IsNullOrEmpty(Convert.ToString(balanceWorkingMinuts)))
+                    //        {
+                    //            string balWorkingHrs = string.Empty;
+                    //            string balWorkingMins = string.Empty;
+
+                    //            if (Convert.ToInt32(balanceWorkingMinuts / 60) < 10)
+                    //                balWorkingHrs = Convert.ToString("0" + Convert.ToInt32(balanceWorkingMinuts / 60));
+                    //            else
+                    //                balWorkingHrs = Convert.ToString(balanceWorkingMinuts / 60);
+
+                    //            if (Convert.ToInt32(balanceWorkingMinuts % 60) < 10)
+                    //                balWorkingMins = Convert.ToString("0" + Convert.ToInt32(balanceWorkingMinuts % 60));
+                    //            else
+                    //                balWorkingMins = Convert.ToString(balanceWorkingMinuts % 60);
+
+                    //            drnew["ADJUSTED_WORKING_HOURS"] = (balWorkingHrs + ":" + balWorkingMins);
+                    //        }
+                    //        else
+                    //        {
+                    //            drnew["ADJUSTED_WORKING_HOURS"] = string.Empty;
+                    //        }
+
+                    //        if (balanceWorkingMinuts > 0)
+                    //        {
+                    //            dt.Rows.InsertAt(drnew, rowindex + 1);
+                    //        }
+
+
+                    //        imgBtnAddNewRecord.Visible = false;
+                    //        if (dt.Rows.Count > 0)
+                    //        {
+                    //            chk = true;
+                    //            Session["dtChanged"] = dt;
+                    //            gvMachineDetail.DataSource = dt.DefaultView;
+                    //            gvMachineDetail.DataBind();
+                    //        }
+                    //        else
+                    //        {
+                    //            chk = false;
+                    //            Session["dtChanged"] = null;
+                    //            gvMachineDetail.DataSource = null;
+                    //            gvMachineDetail.DataBind();
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //
+                    //}
+                }
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    Label lblSerialNo = gvMachineDetail.Rows[rowindex].FindControl("lblSerialNo") as Label;
+                    DropDownList ddlHours = gvMachineDetail.Rows[rowindex].FindControl("ddlHours") as DropDownList;
+                    int hours = Convert.ToInt32(ddlHours.SelectedValue);
+                    if (hours == 0)
+                    {
+                        DataTable dtTextChanged = (DataTable)Session["dtChanged"];
+                        RemoveRecords(dtTextChanged, Convert.ToString(lblSerialNo.Text));
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    #endregion
+
+
+    #region METHODS[=======================]
+
+
+
+    private void GetUnitData()
+    {
+        try
+        {
+            dsUnit = objCommon.GetUnit();
+            if (dsUnit.Tables.Count > 0 && dsUnit.Tables[0].Rows.Count > 0)
+            {
+                Session["dtUnit"] = dsUnit.Tables[0];
+            }
+            else
+            {
+                Session["dtUnit"] = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void GetMachineData()
+    {
+        try
+        {
+            dsMachine = objMS.GetMachines("");
+            if (dsMachine.Tables.Count > 0 && dsMachine.Tables[0].Rows.Count > 0)
+            {
+                Session["dtMachine"] = dsMachine.Tables[0];
+            }
+            else
+            {
+                Session["dtMachine"] = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void GetTypeData()
+    {
+        try
+        {
+            dsType = objMS.GetScheduleType();
+            if (dsType.Tables.Count > 0 && dsType.Tables[0].Rows.Count > 0)
+            {
+                Session["dtType"] = dsType.Tables[0];
+            }
+            else
+            {
+                Session["dtType"] = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    //private void GetActivityData(int machineID)
+    //{
+    //    try
+    //    {
+    //        dsActivity = objMS.GetMachineActivity(machineID);
+    //        if (dsActivity.Tables.Count > 0 && dsActivity.Tables[0].Rows.Count > 0)
+    //        {
+    //            Session["dtActivity"] = dsActivity.Tables[0];
+    //        }
+    //        else
+    //        {
+    //            Session["dtActivity"] = null;
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+
+    //private void BindWorkerTimesheet()
+    //{
+    //    try
+    //    {
+    //        DataTable dtTemp = new DataTable();
+
+    //        dtTemp.Columns.Add("MAIN_RECORD_FLAG", typeof(int));
+    //        dtTemp.Columns.Add("SERIAL_NO", typeof(string));
+    //        dtTemp.Columns.Add("PUNCH_MISSED", typeof(int));
+    //        dtTemp.Columns.Add("EMPLOYEE_NAME", typeof(string));
+    //        dtTemp.Columns.Add("EMPLOYEE_CODE", typeof(string));
+    //        dtTemp.Columns.Add("UNIT", typeof(string));
+    //        dtTemp.Columns.Add("JOB_NO", typeof(string));
+    //        dtTemp.Columns.Add("JOB_NO1", typeof(string));
+    //        dtTemp.Columns.Add("ITEM_NAME", typeof(string));
+
+    //        dtTemp.Columns.Add("SUBITEM_DESC", typeof(string));
+    //        //dtTemp.Columns.Add("ACTIVITY_MATRIX", typeof(string));
+
+    //        dtTemp.Columns.Add("ENTRY_DATE", typeof(string));
+    //        dtTemp.Columns.Add("IN_TIME", typeof(string));
+    //        dtTemp.Columns.Add("OUT_TIME", typeof(string));
+    //        dtTemp.Columns.Add("WORKING_HOURS", typeof(string));
+    //        dtTemp.Columns.Add("WORKING_MINUTS", typeof(string));
+    //        dtTemp.Columns.Add("ADJUSTED_WORKING_HOURS", typeof(string));
+    //        dtTemp.Columns.Add("OT_HOURS", typeof(string));
+    //        dtTemp.Columns.Add("BAL_WRK_HRS", typeof(string));
+
+    //        dtTemp.Columns.Add("SAVED_TIMESHEET_HOURS", typeof(string));
+    //        dtTemp.Columns.Add("BAL_TIMESHEET_HRS", typeof(string));
+
+    //        dtTemp.Columns.Add("REMARKS", typeof(string));
+
+    //        string entryDate = string.Empty;
+    //        int unitID = 0;
+    //        int supervisorID = 0;
+    //        int projectWorkerID = 0;
+    //        int companyID = 0;
+    //        int excludeMissedPunch = 0;
+
+    //        entryDate = Convert.ToDateTime(hdDate.Value).ToString("yyyy-MM-dd");
+
+    //        if (ddlUnit.SelectedIndex > 0)
+    //            unitID = Convert.ToInt32(ddlUnit.SelectedValue);
+    //        else
+    //            unitID = 0;
+
+    //        if (ddlProjectSupervisor.SelectedIndex > 0)
+    //            supervisorID = Convert.ToInt32(ddlProjectSupervisor.SelectedValue);
+    //        else
+    //            supervisorID = 0;
+
+    //        if (ddlProjectWorker.SelectedIndex > 0)
+    //            projectWorkerID = Convert.ToInt32(ddlProjectWorker.SelectedValue);
+    //        else
+    //            projectWorkerID = 0;
+
+    //        if (ddlCompany.SelectedIndex > 0)
+    //            companyID = Convert.ToInt32(ddlCompany.SelectedValue);
+    //        else
+    //            companyID = 0;
+
+    //        if (chkExcludeMissedPunch.Checked)
+    //            excludeMissedPunch = 1;
+    //        else
+    //            excludeMissedPunch = 0;
+
+    //        dsWorker = objTimesheet.GetWorkerListAll(entryDate, unitID, supervisorID, projectWorkerID, companyID, excludeMissedPunch,
+    //                                                 Convert.ToInt32(Session["EMP_RECORD_ID"]));
+
+    //        if (dsWorker.Tables.Count > 0 && dsWorker.Tables[0].Rows.Count > 0)
+    //        {
+    //            foreach (DataRow drWorder in dsWorker.Tables[0].Rows)
+    //            {
+    //                DataRow drTemp = dtTemp.NewRow();
+
+    //                drTemp["MAIN_RECORD_FLAG"] = 1;
+    //                drTemp["SERIAL_NO"] = drWorder["SERIAL_NO"];
+    //                drTemp["PUNCH_MISSED"] = drWorder["PUNCH_MISSED"];
+    //                drTemp["EMPLOYEE_NAME"] = drWorder["EMPLOYEE_NAME"];
+    //                drTemp["EMPLOYEE_CODE"] = drWorder["EMPLOYEE_CODE"];
+    //                drTemp["UNIT"] = drWorder["UNIT_NAME"];
+    //                drTemp["JOB_NO"] = Convert.ToString(ddlJOBNo.SelectedValue);
+    //                drTemp["JOB_NO1"] = string.Empty;
+    //                drTemp["ITEM_NAME"] = string.Empty;
+
+    //                drTemp["SUBITEM_DESC"] = string.Empty;
+    //                //drTemp["ACTIVITY_MATRIX"] = string.Empty;
+
+    //                drTemp["ENTRY_DATE"] = drWorder["ENTRY_DATE"];
+    //                drTemp["IN_TIME"] = drWorder["IN_TIME"];
+    //                drTemp["OUT_TIME"] = drWorder["OUT_TIME"];
+    //                drTemp["WORKING_HOURS"] = drWorder["WORKING_HOURS"];
+    //                drTemp["WORKING_MINUTS"] = drWorder["WORKING_MINUTS"];
+
+    //                drTemp["BAL_TIMESHEET_HRS"] = drWorder["BAL_TIMESHEET_HRS"];
+    //                if (drTemp["BAL_TIMESHEET_HRS"] != DBNull.Value && !string.IsNullOrEmpty(Convert.ToString(drTemp["BAL_TIMESHEET_HRS"])))
+    //                {
+    //                    drTemp["ADJUSTED_WORKING_HOURS"] = drWorder["BAL_TIMESHEET_HRS"];
+    //                }
+    //                else
+    //                {
+    //                    drTemp["ADJUSTED_WORKING_HOURS"] = drWorder["ADJUSTED_WORKING_HOURS"];
+    //                }
+
+
+    //                drTemp["OT_HOURS"] = drWorder["OT_HOURS"];
+    //                drTemp["BAL_WRK_HRS"] = drWorder["BAL_WRK_HRS"];
+
+    //                drTemp["SAVED_TIMESHEET_HOURS"] = drWorder["SAVED_TIMESHEET_HOURS"];
+
+
+    //                drTemp["REMARKS"] = drWorder["REMARKS"];
+
+    //                dtTemp.Rows.Add(drTemp);
+    //            }
+
+    //            if (dtTemp.Rows.Count > 0)
+    //            {
+    //                Session["dtTemp"] = dtTemp;
+    //                Session["dtChanged"] = dtTemp;
+    //                gvMachineDetail.DataSource = dtTemp.DefaultView;
+    //                gvMachineDetail.DataBind();
+
+    //            }
+    //            else
+    //            {
+    //                Session["dtTemp"] = null;
+    //                Session["dtChanged"] = null;
+    //                gvMachineDetail.DataSource = null;
+    //                gvMachineDetail.DataBind();
+
+    //            }
+    //            lblRecords.Text = "Records[" + gvMachineDetail.Rows.Count + "]";
+    //        }
+    //        else
+    //        {
+    //            Session["dtTemp"] = null;
+    //            gvMachineDetail.DataSource = null;
+    //            gvMachineDetail.DataBind();
+    //            lblRecords.Text = "Records[" + gvMachineDetail.Rows.Count + "]";
+
+    //            SuccessMessage("No attendance found or timesheet hours saved successfully of " + Convert.ToString(hdDate.Value) + "...!!");
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    //private void AddWorkerTimesheetNewOne()
+    //{
+    //    try
+    //    {
+    //        string employeeCode = string.Empty;
+    //        string jobNo = string.Empty;
+
+    //        string subitemDesc = string.Empty;
+    //        string activityMatrix = string.Empty;
+
+    //        string entryDate = string.Empty;
+    //        string inTime = string.Empty;
+    //        string outTime = string.Empty;
+    //        string hours = string.Empty;
+    //        string workingHours = string.Empty;
+    //        string workingHoursh = string.Empty;
+    //        string workingHoursm = string.Empty;
+    //        string otHours = string.Empty;
+    //        string remarks = string.Empty;
+    //        int count = 0;
+    //        string serialNos = string.Empty;
+    //        string serialNo = string.Empty;
+
+    //        DataTable dt = new DataTable();
+    //        DataTable dtTextChanged = new DataTable();
+
+    //        if (Session["dtTemp"] != null)
+    //            dt = (DataTable)Session["dtTemp"];
+
+    //        if (Session["dtChanged"] != null)
+    //            dtTextChanged = (DataTable)Session["dtChanged"];
+
+    //        string dtEmployeeName = string.Empty;
+    //        string dtEmployeeCode = string.Empty;
+    //        if (dt.Rows.Count > 0)
+    //        {
+    //            foreach (DataRow dr in dt.Rows)
+    //            {
+    //                string insertQuery = string.Empty;
+    //                if (dr["EMPLOYEE_NAME"] != DBNull.Value)
+    //                    dtEmployeeName = Convert.ToString(dr["EMPLOYEE_NAME"]);
+
+    //                if (dr["EMPLOYEE_CODE"] != DBNull.Value)
+    //                    dtEmployeeCode = Convert.ToString(dr["EMPLOYEE_CODE"]);
+
+    //                if (gvMachineDetail.Rows.Count > 0)
+    //                {
+    //                    foreach (GridViewRow gr in gvMachineDetail.Rows)
+    //                    {
+    //                        DropDownList ddlJOBNo = gr.FindControl("ddlJOBNo") as DropDownList;
+    //                        TextBox txtJOBNo = gr.FindControl("txtJOBNo") as TextBox;
+    //                        Label lblPunchMissed = gr.FindControl("lblPunchMissed") as Label;
+
+    //                        if (ddlJOBNo.SelectedIndex > 0 || !string.IsNullOrEmpty(txtJOBNo.Text))
+    //                        {
+    //                            ddlJOBNo.BackColor = System.Drawing.Color.Transparent;
+    //                            txtJOBNo.BackColor = System.Drawing.Color.LightYellow;
+
+    //                        }
+    //                        else
+    //                        {
+    //                            if (Convert.ToInt32(lblPunchMissed.Text) == 0)
+    //                            {
+    //                                ExceptionMessage("Please select or enter JOB no...!!");
+    //                                ddlJOBNo.BackColor = System.Drawing.Color.LightPink;
+    //                                ddlJOBNo.Focus();
+    //                                return;
+    //                            }
+    //                            else
+    //                            {
+    //                                ddlJOBNo.BackColor = System.Drawing.Color.Transparent;
+    //                                txtJOBNo.BackColor = System.Drawing.Color.LightYellow;
+    //                            }
+    //                        }
+    //                    }
+
+    //                    foreach (GridViewRow gr in gvMachineDetail.Rows)
+    //                    {
+    //                        Label lblSerialNo = gr.FindControl("lblSerialNo") as Label;
+    //                        Label lblPunchMissed = gr.FindControl("lblPunchMissed") as Label;
+    //                        Label lblEmpCode = gr.FindControl("lblEmpCode") as Label;
+    //                        Label lblEmployeeName = gr.FindControl("lblEmployeeName") as Label;
+    //                        DropDownList ddlJOBNo = gr.FindControl("ddlJOBNo") as DropDownList;
+    //                        TextBox txtJOBNo = gr.FindControl("txtJOBNo") as TextBox;
+    //                        DropDownList ddlHours = gr.FindControl("ddlHours") as DropDownList;
+    //                        DropDownList ddlSubitems = gr.FindControl("ddlSubitems") as DropDownList;
+    //                        //TextBox txtActivityMatrix = gr.FindControl("txtActivityMatrix") as TextBox;
+    //                        TextBox txtItemName = gr.FindControl("txtItemName") as TextBox;
+    //                        Label lblEntryDate = gr.FindControl("lblEntryDate") as Label;
+    //                        Label lblInTime = gr.FindControl("lblInTime") as Label;
+    //                        Label lblOutTime = gr.FindControl("lblOutTime") as Label;
+    //                        Label lblWorkingHours = gr.FindControl("lblWorkingHours") as Label;
+    //                        Label lblOTHours = gr.FindControl("lblOTHours") as Label;
+
+    //                        TextBox txtAdjustedWorkingHours = gr.FindControl("txtAdjustedWorkingHours") as TextBox;
+
+    //                        Label lblBalanceWorkingHours = gr.FindControl("lblBalanceWorkingHours") as Label;
+    //                        TextBox txtRemarks = gr.FindControl("txtRemarks") as TextBox;
+
+    //                        if (lblEmpCode.Text == dtEmployeeCode && lblEmployeeName.Text == dtEmployeeName && Convert.ToInt32(lblPunchMissed.Text) == 0)
+    //                        {
+    //                            if (!string.IsNullOrEmpty(lblEmpCode.Text))
+    //                                employeeCode = Convert.ToString(lblEmpCode.Text);
+    //                            else
+    //                                employeeCode = string.Empty;
+
+    //                            if (!string.IsNullOrEmpty(lblEntryDate.Text))
+    //                                entryDate = Convert.ToDateTime(lblEntryDate.Text).ToString("yyyy-MM-dd");
+    //                            else
+    //                                entryDate = string.Empty;
+
+    //                            if (ddlJOBNo.SelectedIndex > 0 || !string.IsNullOrEmpty(txtJOBNo.Text))
+    //                            {
+    //                                if (ddlJOBNo.SelectedIndex > 0)
+    //                                {
+    //                                    jobNo = Convert.ToString(ddlJOBNo.SelectedValue);
+    //                                }
+    //                                else if (!string.IsNullOrEmpty(txtJOBNo.Text))
+    //                                {
+    //                                    jobNo = Convert.ToString(txtJOBNo.Text).ToUpper().Trim();
+    //                                }
+    //                                ddlJOBNo.BackColor = System.Drawing.Color.Transparent;
+    //                            }
+    //                            else
+    //                            {
+    //                                jobNo = string.Empty;
+    //                                ExceptionMessage("Please select or enter JOB no...!!");
+    //                                ddlJOBNo.BackColor = System.Drawing.Color.LightPink;
+    //                                ddlJOBNo.Focus();
+    //                                return;
+    //                            }
+
+
+
+    //                            if (ddlSubitems.SelectedIndex > 0)
+    //                                subitemDesc = Convert.ToString(ddlSubitems.SelectedItem.Text);
+    //                            else if (!string.IsNullOrEmpty(txtItemName.Text))
+    //                                subitemDesc = Convert.ToString(txtItemName.Text);
+    //                            else
+    //                                subitemDesc = string.Empty;
+
+    //                            //if (!string.IsNullOrEmpty(txtActivityMatrix.Text))
+    //                            //    activityMatrix = Convert.ToString(txtActivityMatrix.Text);
+    //                            //else
+    //                            //    activityMatrix = string.Empty;
+
+    //                            if (!string.IsNullOrEmpty(lblInTime.Text))
+    //                                inTime = Convert.ToString(lblInTime.Text);
+    //                            else
+    //                                inTime = string.Empty;
+
+    //                            if (!string.IsNullOrEmpty(lblOutTime.Text))
+    //                                outTime = Convert.ToString(lblOutTime.Text);
+    //                            else
+    //                                outTime = string.Empty;
+
+    //                            if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+    //                                hours = Convert.ToString(lblWorkingHours.Text);
+    //                            else
+    //                                hours = string.Empty;
+
+
+    //                            if (!string.IsNullOrEmpty(lblOTHours.Text))
+    //                                otHours = Convert.ToString(lblOTHours.Text);
+    //                            else
+    //                                otHours = string.Empty;
+
+    //                            if (!string.IsNullOrEmpty(txtAdjustedWorkingHours.Text))
+    //                            {
+    //                                if (Convert.ToString(txtAdjustedWorkingHours.Text).Contains(':'))
+    //                                {
+    //                                    string[] strtext = Convert.ToString(txtAdjustedWorkingHours.Text).Split(':');
+    //                                    if (Convert.ToInt32(strtext[0]) > 0)
+    //                                        workingHoursh = Convert.ToString(strtext[0]);
+    //                                    else
+    //                                        workingHoursh = "00";
+
+    //                                    if (Convert.ToInt32(strtext[1]) > 0)
+    //                                        workingHoursm = Convert.ToString(strtext[1]);
+    //                                    else
+    //                                        workingHoursm = "00";
+    //                                }
+    //                                else
+    //                                {
+    //                                    if (Convert.ToInt32(txtAdjustedWorkingHours.Text) > 0)
+    //                                        workingHoursh = Convert.ToString(txtAdjustedWorkingHours.Text);
+    //                                    else
+    //                                        workingHoursh = "00";
+
+    //                                    workingHoursm = "00";
+    //                                }
+    //                                workingHours = workingHoursh + ":" + workingHoursm;
+    //                            }
+    //                            else
+    //                                workingHours = "00:00";
+
+    //                            if (!string.IsNullOrEmpty(txtRemarks.Text))
+    //                                remarks = Convert.ToString(txtRemarks.Text);
+    //                            else
+    //                                remarks = string.Empty;
+
+    //                            if (ddlHours.SelectedIndex > 0)
+    //                            {
+    //                                if (!string.IsNullOrEmpty(employeeCode) && !string.IsNullOrEmpty(workingHours) && workingHours != "00:00")
+    //                                {
+    //                                    insertQuery += "('" + employeeCode + "','" +
+    //                                                          entryDate + "','" +
+    //                                                          jobNo + "','" +
+    //                                                          subitemDesc + "','" +
+    //                                                          activityMatrix + "','" +
+    //                                                          inTime + "','" +
+    //                                                          outTime + "','" +
+    //                                                          hours + "','" +
+    //                                                          otHours + "','" +
+    //                                                          workingHours + "','" +
+    //                                                          remarks + "'," +
+    //                                                          Convert.ToInt32(Session["EMP_RECORD_ID"]) + ",GETDATE()),";
+    //                                    serialNo += lblSerialNo.Text + ",";
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+
+    //                    if (!string.IsNullOrEmpty(insertQuery))
+    //                    {
+    //                        insertQuery = insertQuery.TrimEnd(',');
+    //                        int value = objTimesheet.AddWorkerTimesheet(employeeCode, entryDate, insertQuery);
+    //                        if (value > 0)
+    //                        {
+    //                            count++;
+    //                            serialNos = serialNo.TrimEnd(',');
+    //                        }
+    //                    }
+    //                    //else
+    //                    //{
+    //                    //    ExceptionMessage("Please try again..!");
+    //                    //    return;
+    //                    //}
+    //                }
+    //            }
+
+    //            BindWorkerTimesheet();
+
+    //            //if (!string.IsNullOrEmpty(serialNos))
+    //            //{
+    //            //    serialNos = serialNos.TrimEnd(',');
+    //            //    RemoveRecords(dtTextChanged, serialNos);
+    //            //}
+
+    //        }
+    //        else
+    //        {
+    //            ExceptionMessage("Please try again..!");
+    //            return;
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+
+    private void RemoveRecords(DataTable dtTextChanged, string serialNos)
+    {
+        string[] strSerialNo = serialNos.Split(',');
+        if (dtTextChanged.Rows.Count > 0)
+        {
+            foreach (string sr in strSerialNo)
+            {
+                if (!string.IsNullOrEmpty(sr))
+                {
+                    foreach (DataRow drremove in dtTextChanged.Select("SERIAL_NO='" + sr + "'"))
+                    {
+                        dtTextChanged.Rows.Remove(drremove);
+                    }
+                }
+            }
+
+            if (dtTextChanged.Rows.Count > 0)
+            {
+                Session["dtChanged"] = dtTextChanged;
+                gvMachineDetail.DataSource = dtTextChanged;
+                gvMachineDetail.DataBind();
+            }
+            else
+            {
+                Session["dtChanged"] = null;
+                gvMachineDetail.DataSource = null;
+                gvMachineDetail.DataBind();
+            }
+        }
+        else
+        {
+            Session["dtChanged"] = null;
+        }
+        lblRecords.Text = "Records[" + gvMachineDetail.Rows.Count + "]";
+    }
+
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void HideMessagePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    #endregion
+
+}

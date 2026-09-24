@@ -1,0 +1,1230 @@
+<%@ Page Title="CIPLTMS- Assign Items To Machines" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    MaintainScrollPositionOnPostback="true" CodeFile="AssignItemsForMS - Copy.aspx.cs"
+    Inherits="PROJECT_MACHINE_SCH_AssignItemsForMS" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link rel="icon" href="../../Images/Icon04.png" />
+    <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .modalBackground {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+
+        .style1 {
+            width: 10px;
+        }
+    </style>
+
+    <style type="text/css">
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+
+    <style type="text/css">
+        .textboxleft {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            /*background-color: #D8D8D8;*/
+            background-color: transparent;
+        }
+
+        .textboxleftyellow {
+            padding: 5px 10px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            /*background-color: #D8D8D8;*/
+            background-color: lightyellow;
+        }
+
+        .textboxleftgreen {
+            padding: 5px 10px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            /*background-color: #D8D8D8;*/
+            background-color: lightgreen;
+        }
+
+        .textboxcenter {
+            width: 50px;
+            padding: 5px 10px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: center;
+            border-radius: 4px;
+            /*background-color: #D8D8D8;*/
+            background-color: transparent;
+        }
+
+        .textboxright {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            background-color: transparent;
+        }
+
+        .textboxrightsmall {
+            width: 90px;
+            padding: 5px 10px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            background-color: lightyellow;
+        }
+
+        .textboxleftsmall {
+            width: 90px;
+            padding: 5px 10px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            background-color: lightyellow;
+        }
+
+        .textfiles {
+            padding: 5px 2px 5px 2px;
+            margin: 0px 5px 0px 5px;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            background-color: lightgreen;
+        }
+    </style>
+
+    <script type="text/Javascript">
+        function preventInput(event) {
+            if (event.which != 9) {
+                event.preventDefault();
+            }
+        }
+    </script>
+
+
+    <script type="text/javascript">
+
+        function pageLoad() {
+            document.getElementById('<%=txtDateToA.ClientID %>').value = document.getElementById('<%=hdDateToA.ClientID %>').value;
+        }
+
+        function clientChangedDate(sender, args) {
+            document.getElementById('<%=hdDateToA.ClientID %>').value = document.getElementById('<%=txtDateToA.ClientID %>').value;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+
+
+        function ValidateJOBNo() {
+            var JOBNo = document.getElementById('<%=txtJOBNoToA.ClientID %>').value;
+            if (JOBNo == '') {
+                document.getElementById('<%=txtJOBNoToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtJOBNoToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateDrawingNo() {
+            var DrawingNo = document.getElementById('<%=txtDrawingNoToA.ClientID %>').value;
+            if (DrawingNo == '') {
+                document.getElementById('<%=txtDrawingNoToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtDrawingNoToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateEquipment() {
+            var Equipment = document.getElementById('<%=txtEquipmentToA.ClientID %>').value;
+            if (Equipment == '') {
+                document.getElementById('<%=txtEquipmentToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtEquipmentToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateTagNo() {
+            var TagNo = document.getElementById('<%=txtTagNoToA.ClientID %>').value;
+            if (TagNo == '') {
+                document.getElementById('<%=txtTagNoToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtTagNoToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+
+        function ValidateItemName() {
+            var ItemName = document.getElementById('<%=txtItemNameToA.ClientID %>').value;
+            if (ItemName == '') {
+                document.getElementById('<%=txtItemNameToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtItemNameToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateItemDetail() {
+            var ItemDescription = document.getElementById('<%=txtItemDetailToA.ClientID %>').value;
+            if (ItemDescription == '') {
+                document.getElementById('<%=txtItemDetailToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtItemDetailToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateQuantity() {
+            var Quantity = document.getElementById('<%=txtQuantityToA.ClientID %>').value;
+            if (Quantity == '' || Quantity == 0) {
+                document.getElementById('<%=txtQuantityToA.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtQuantityToA.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidatefileAttachment1() {
+            var allowedFiles = [".jpg", ".jpeg", ".bmp", ".png", ".gif", ".pdf", ".JPG", ".JPEG", ".BMP", ".PNG", ".GIF", ".PDF", ".dxf", ".dwg", ".DXF", ".DWG"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileAttachment1 = document.getElementById('<%=uploadFileAttachment1.ClientID %>').value;
+            var divfileAttachment1 = document.getElementById("divfileAttachment1");
+            var lblfileAttachment1 = document.getElementById('<%=lblfileAttachment1.ClientID %>');
+
+
+            if (fileAttachment1 == '') {
+                document.getElementById('<%=uploadFileAttachment1.ClientID %>').style.borderColor = "";
+                divfileAttachment1.style.display = "none";
+                lblfileAttachment1.innerHTML = "";
+                return false;
+            }
+            else {
+
+                fileAttachment1 = fileAttachment1.split(" ").join("")
+                fileAttachment1 = fileAttachment1.split("(").join("")
+                fileAttachment1 = fileAttachment1.split(")").join("")
+
+                if (!regex.test(fileAttachment1.toLowerCase())) {
+                    document.getElementById('<%=uploadFileAttachment1.ClientID %>').style.borderColor = "#F7627F";
+                    divfileAttachment1.style.display = "block";
+                    lblfileAttachment1.innerHTML = "Please enter only .pdf, .jpg, .jpeg, .bmp, .png, .gif, .dwg, .dxf file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=uploadFileAttachment1.ClientID %>').style.borderColor = "";
+                    divfileAttachment1.style.display = "none";
+                    lblfileAttachment1.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        function ValidateAllToList() {
+            var check = true;
+            <%--var chkVal = document.getElementById('<%=chkNA.ClientID %>').checked;--%>
+
+            if (ValidateJOBNo()) {
+                check = false;
+            }
+
+
+            <%--if (chkVal == false) {
+
+                if (ValidateDrawingNo()) {
+                    check = false;
+                }
+
+                if (ValidateEquipment()) {
+                    check = false;
+                }
+
+                if (ValidateTagNo()) {
+                    check = false;
+                }
+            }
+            else {
+                document.getElementById('<%=txtDrawingNoToA.ClientID %>').style.borderColor = "";
+                document.getElementById('<%=txtEquipmentToA.ClientID %>').style.borderColor = "";
+            }--%>
+
+            if (ValidateDrawingNo()) {
+                check = false;
+            }
+
+            if (ValidateEquipment()) {
+                check = false;
+            }
+
+            if (ValidateTagNo()) {
+                check = false;
+            }
+
+            if (ValidateQuantity()) {
+                check = false;
+            }
+
+
+            if (ValidateItemName()) {
+                check = false;
+            }
+
+            if (ValidateItemDetail()) {
+                check = false;
+            }
+
+
+
+            if (ValidatefileAttachment1()) {
+                check = false;
+            }
+
+            return check;
+        }
+
+        function ValidateAllFromList() {
+            var check = true;
+
+            if (check) {
+                if (confirm("Would you like to save assignment?")) {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+
+        function ValidateAll() {
+            var check = true;
+            <%--var chkVal = document.getElementById('<%=chkNA.ClientID %>').checked;--%>
+
+            if (ValidateJOBNo()) {
+                check = false;
+            }
+
+
+            <%--if (chkVal == false) {
+
+                if (ValidateDrawingNo()) {
+                    check = false;
+                }
+
+                if (ValidateEquipment()) {
+                    check = false;
+                }
+
+                if (ValidateTagNo()) {
+                    check = false;
+                }
+            }
+            else {
+                document.getElementById('<%=txtDrawingNoToA.ClientID %>').style.borderColor = "";
+                document.getElementById('<%=txtEquipmentToA.ClientID %>').style.borderColor = "";
+            }--%>
+
+
+            if (ValidateDrawingNo()) {
+                check = false;
+            }
+
+            if (ValidateEquipment()) {
+                check = false;
+            }
+
+            if (ValidateTagNo()) {
+                check = false;
+            }
+
+            if (ValidateQuantity()) {
+                check = false;
+            }
+
+
+            if (ValidateItemName()) {
+                check = false;
+            }
+
+            if (ValidateItemDetail()) {
+                check = false;
+            }
+
+
+
+            if (ValidatefileAttachment1()) {
+                check = false;
+            }
+
+
+            if (check) {
+                if (confirm("Would you like to save assignment?")) {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        function ValidateAllJobNo() {
+            var check = true;
+
+            if (ValidateJOBNo()) {
+                check = false;
+            }
+
+
+            return check;
+        }
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        function stopEnterKey(evt) {
+            var evt = (evt) ? evt : ((event) ? event : null);
+            var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+            if (evt.keyCode == 13) {
+                return false;
+            }
+        }
+        document.onkeypress = stopEnterKey;
+
+    </script>
+
+    <script type="text/javascript">
+
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+
+    </script>
+
+
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var div = document.getElementById("dvScroll");
+            var div_position = document.getElementById("div_position");
+            var position = parseInt('<%=Request.Form["div_position"] %>');
+            if (isNaN(position)) {
+                position = 0;
+            }
+            div.scrollTop = position;
+            div.onscroll = function () {
+                div_position.value = div.scrollTop;
+            };
+        };
+    </script>
+
+    <script type="text/javascript">
+        function IncreaseQuantity() {
+            var quantity = document.getElementById('<%=txtQuantityToA.ClientID %>').value;
+
+            document.getElementById('<%=txtQuantityToA.ClientID %>').value = parseInt(quantity) + 1;
+        }
+
+        function DecreaseQuantity() {
+            var quantity = document.getElementById('<%=txtQuantityToA.ClientID %>').value;
+
+            if (quantity > 0) {
+                document.getElementById('<%=txtQuantityToA.ClientID %>').value = parseInt(quantity) - 1;
+            }
+            else {
+                document.getElementById('<%=txtQuantityToA.ClientID %>').value = "0";
+            }
+
+        }
+
+
+
+        <%--function EnableDisableDrawingValues() {
+
+            var chkVal = document.getElementById('<%=chkNA.ClientID %>').checked;
+
+            document.getElementById('<%=hdLOTTFSubitemID.ClientID %>').value = "0";
+            document.getElementById('<%=txtDrawingNoToA.ClientID %>').value = "";
+            document.getElementById('<%=txtEquipmentToA.ClientID %>').value = "";
+            document.getElementById('<%=txtTagNoToA.ClientID %>').value = "";
+            document.getElementById('<%=txtQuantityToA.ClientID %>').value = "0";
+
+            if (chkVal) {
+                document.getElementById('<%=btnGetDrawingNo.ClientID %>').style.visibility = 'hidden';
+            }
+            else {
+                document.getElementById('<%=btnGetDrawingNo.ClientID %>').style.visibility = 'visible';
+            }
+
+        }--%>
+    </script>
+
+    <style type="text/css">
+        .boxcss {
+            width: 70%;
+            border-radius: 10px;
+            background-color: whitesmoke;
+            /*opacity: 0.9;*/
+        }
+    </style>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </ajax:ToolkitScriptManager>
+    <asp:HiddenField ID="hdConfirmValue" runat="server" />
+    <%--<asp:UpdatePanel runat="server" ID="uppanel1">
+        <ContentTemplate>--%>
+    <asp:HiddenField ID="hdIsNewRecord" Value="0" runat="server" />
+    <div align="center" style="margin-top: 20px;">
+        <fieldset style="width: 70%">
+            <legend style="text-align: center;">Assign Items To Machine Shop</legend>
+        </fieldset>
+    </div>
+    <br />
+    <div align="center">
+        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+        </asp:Panel>
+    </div>
+    <div align="center">
+        <div class="boxcss">
+            <fieldset style="width: 90%;">
+                <table width="100%">
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 15%;">Unit:</td>
+                        <td style="width: 30%;">
+                            <asp:DropDownList ID="ddlCompanyToA" runat="server" Width="100%" Height="26px"
+                                AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyToA_SelectedIndexChanged" />
+
+                        </td>
+                        <td>&nbsp;</td>
+                        <td style="width: 15%;">JOB Number:</td>
+                        <td style="width: 30%;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="width: 90%">
+                                        <asp:HiddenField ID="hdLOTTFID" runat="server" />
+                                        <asp:TextBox ID="txtJOBNoToA" runat="server" Width="100%" Enabled="false" onblur="return ValidateJOBNo();" />
+                                    </td>
+
+                                    <td style="width: 10%">
+                                        <asp:Button ID="btnGetJOBNo" runat="server" Width="100%" Text="Get" CssClass="button"
+                                            OnClick="btnGetJOBNo_Click" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td style="width: 15%;">Drawing Number:</td>
+                        <td style="width: 30%;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="width: 85%">
+
+                                        <asp:TextBox ID="txtDrawingNoToA" runat="server" Width="100%" Enabled="false" onblur="return ValidateDrawingNo();" />
+                                    </td>
+
+                                    <td style="width: 10%">
+                                        <asp:Button ID="btnGetDrawingNo" runat="server" Width="100%" Text="Get" CssClass="button"
+                                            OnClientClick="return ValidateAllJobNo();" OnClick="btnGetDrawingNo_Click" />
+                                    </td>
+                                    <%--<td>&nbsp;</td>
+                                    <td style="width: 10%">
+                                        <asp:CheckBox ID="chkNA" runat="server" Text="NA" onChange="EnableDisableDrawingValues();" />
+                                    </td>--%>
+                                </tr>
+                            </table>
+
+
+                        </td>
+                        <td>&nbsp;</td>
+
+                        <td style="width: 15%;">Additional Drawing:</td>
+                        <td style="width: 20%;">
+
+                            <asp:Panel ID="pnlViewAddDrawing" runat="server" Visible="false">
+                                <table width="100%">
+                                    <tr>
+                                        <td style="width: 75%;">
+                                            <%--<asp:HiddenField ID="hdSiDrawing1" runat="server" Value="0" />--%>
+                                            <asp:Label runat="server" Visible="false" ID="lblSRNoToA" Text="0" />
+                                            <asp:TextBox ID="txtAddDrawingFilePathToA" runat="server" Width="100%" Enabled="false" CssClass="textboxleftgreen" />
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td style="width: 10%;">
+                                            <asp:ImageButton ID="imgBtnViewAddDrawing" runat="server" Height="30px" Width="30px"
+                                                ImageUrl="~/Images/pdficon1.png" ToolTip="View"
+                                                OnClick="imgBtnViewAddDrawing_Click" />
+                                        </td>
+                                        <td style="width: 10%;">
+                                            <asp:ImageButton ID="imgBtnRemoveAddDrawing" runat="server" Height="25px" Width="25px"
+                                                ImageUrl="~/Images/NEWICONS/Deleted01.png" ToolTip="Remove"
+                                                OnClick="imgBtnRemoveAddDrawing_Click" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+                            <asp:Panel ID="pnlUploadAddDrawing" runat="server" Visible="true">
+                                <table width="100%">
+                                    <tr>
+                                        <td style="width: 90%;">
+                                            <%--<asp:HiddenField ID="hdUploadSiDrawing1" runat="server" Value="0" />--%>
+                                            <asp:FileUpload ID="uploadFileAttachment1" runat="server" Width="100%"
+                                                Height="29px" BorderStyle="Groove" />
+
+                                        </td>
+                                        <td style="width: 10%;">
+                                            <asp:ImageButton ID="imgBtnUndoAddDrawing" runat="server" Height="30px" Width="30px"
+                                                ImageUrl="~/Images/Icon05.png" ToolTip="Undo" Visible="false"
+                                                OnClick="imgBtnUndoAddDrawing_Click" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </asp:Panel>
+
+
+
+
+
+                            <%-- 
+                           <asp:Panel runat="server" Visible="false" ID="pnlViewAddDrawing">
+                            <table width="100%">
+                                <tr>
+                                    <td style="width: 80%;">
+                                        <asp:TextBox ID="txtAddDrawingFilePath" runat="server" Width="100%" Enabled="false" CssClass="textboxleftgreen" />
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <asp:ImageButton ID="btnViewAddDrawing" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                            Width="35px" Height="35px" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </asp:Panel>
+                           
+                           <asp:Panel runat="server" ID="pnlUploadAddDrawing">
+                            <asp:FileUpload ID="uploadFileAttachment1" runat="server" Width="100%"
+                                Height="29px" BorderStyle="Groove" />
+                        </asp:Panel>
+
+                            --%>
+                        </td>
+
+                        <%--<td style="width: 10%;">
+                        <asp:ImageButton ID="imbBtnUploadAddDrawingFile" runat="server" ImageUrl="~/Images/pdficon1.png"
+                            Width="35px" Height="35px" />
+
+                        <asp:ImageButton ID="imbBtnUndoAddDrawingFile" runat="server" Height="35px" Width="35px"
+                            ImageUrl="~/Images/Icon05.png" ToolTip="Undo" Visible="false" />
+                    </td>--%>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 15%;">Equipment:</td>
+                        <td style="width: 30%;">
+                            <%--<asp:HiddenField ID="hdLOTNo" runat="server" />--%>
+                            <asp:HiddenField ID="hdLOTTFSubitemID" runat="server" />
+                            <%--<asp:HiddenField ID="hdLOTTFSubitemDrawing1" runat="server" />
+                        <asp:HiddenField ID="hdLOTTFSubitemDrawing2" runat="server" />--%>
+
+                            <asp:Label runat="server" ID="lblLOTNo" Visible="false" />
+                            <%--<asp:Label runat="server" ID="lblLOTTFSubitemID" Visible="true" Text="0" />--%>
+                            <asp:Label runat="server" ID="lblSIDrawing1" Visible="false" />
+                            <asp:Label runat="server" ID="lblSIDrawing2" Visible="false" />
+
+                            <asp:TextBox ID="txtEquipmentToA" runat="server" Width="100%" Enabled="false" onblur="return ValidateEquipment();" />
+                        </td>
+                        <td>&nbsp;</td>
+                        <td style="width: 15%;">Tag No.:</td>
+                        <td style="width: 30%;">
+                            <asp:TextBox ID="txtTagNoToA" runat="server" Width="100%" Enabled="false" onblur="return ValidateTagNo();" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td style="width: 15%;">Item Name:</td>
+                        <td style="width: 30%;">
+                            <asp:TextBox ID="txtItemNameToA" runat="server" Width="100%" onblur="return ValidateItemName();" />
+                        </td>
+                        <td>&nbsp;</td>
+                        <td style="width: 15%;">Item Detail:</td>
+                        <td style="width: 30%;">
+                            <asp:TextBox ID="txtItemDetailToA" runat="server" Width="100%" onblur="return ValidateItemDetail();" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 15%;">ED of Comp. by Planning/Production:</td>
+                        <td style="width: 30%;">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtDateToA" runat="server" onkeyDown="javascript:preventInput(event);" Width="100%"></asp:TextBox>
+                                        <asp:HiddenField ID="hdDateToA" runat="server" />
+                                        <ajax:CalendarExtender ID="calendarDate" PopupButtonID="imgBtnDate" runat="server"
+                                            TargetControlID="txtDateToA" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedDate">
+                                        </ajax:CalendarExtender>
+                                    </td>
+                                    <td>
+                                        <asp:ImageButton ID="imgBtnDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                            ToolTip="Calendar" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td style="width: 15%;">Allocated Quantity:</td>
+                        <td style="width: 30%;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="width: 80%;">
+                                        <asp:TextBox ID="txtQuantityToA" runat="server" Width="100%" Text="0" onblur="return ValidateQuantity();"
+                                            onkeyDown="javascript:preventInput(event);" />
+                                    </td>
+                                    <td style="width: 10%;">
+                                        <img src="../../Images/Icons/ADD05.png" onclick="IncreaseQuantity()" style="width: 35px; height: 35px;" alt="" />
+                                    </td>
+                                    <td style="width: 10%;">
+                                        <img src="../../Images/Icons/Remove01.png" onclick="DecreaseQuantity()" style="width: 30px; height: 30px;" alt="" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td>Remarks:</td>
+                        <td colspan="4">
+                            <asp:TextBox ID="txtRemarkstoA" runat="server" Width="100%" onblur="return ValidateItemName();" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td style="width: 45%;">
+                                        <asp:Button ID="btnAddToList" runat="server" Width="100%" Text="Add To List" CssClass="button"
+                                            OnClientClick="return ValidateAllToList();" OnClick="btnAddToList_Click" />
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td style="width: 45%;">
+                                        <asp:Button ID="btnSaveDetails" runat="server" Width="100%" Text="Assign" CssClass="button"
+                                            OnClientClick="return ValidateAll();" OnClick="btnSaveDetails_Click" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td colspan="2">&nbsp;</td>
+
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td style="width: 45%;">
+                                        <asp:Button ID="btnSaveFromList" runat="server" Width="100%" Text="Assign Below List" CssClass="button"
+                                            OnClick="btnSaveFromList_Click" OnClientClick="return ValidateAllFromList();" />
+                                    </td>
+                                    <td>&nbsp;</td>
+                                    <td style="width: 45%;">
+                                        <asp:Button ID="btnAssignedList" runat="server" Width="100%" Text="Assigned Items List" CssClass="button"
+                                            PostBackUrl="~/PROJECT/MACHINE_SCH/AssignedItemsListForMS.aspx" />
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="5">
+                            <div id="divfileAttachment1" style="display: none;">
+                                <asp:Label ID="lblfileAttachment1" runat="server" ForeColor="Red" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+
+        </div>
+
+
+        <fieldset style="width: 95%;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+            <div id="dvScroll" style='overflow: scroll; width: 100%; height: 380px; border: 1px solid lightgray;'>
+                <%--<asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>--%>
+                <asp:GridView ID="gvSubitemsList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvSubitemsList_RowCommand"
+                    OnRowDataBound="gvSubitemsList_RowDataBound">
+                    <%--<RowStyle BackColor="#E3EAEB" HorizontalAlign="Left"/>--%>
+                    <Columns>
+                        <asp:TemplateField HeaderText="Sr No">
+                            <ItemTemplate>
+
+                                <asp:TextBox ID="txtSrNo" runat="server" Enabled="false" CssClass="textboxcenter" Text='<%# Eval("SR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
+                                <asp:Label ID="lblLOTTFSubitemIDInList" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' />
+                                <asp:Label ID="lblLOTSIDrawigName1" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT1_NAME") %>' />
+                                <asp:Label ID="lblLOTSIDrawigName2" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT2_NAME") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+
+                                <asp:ImageButton ID="imgBtnAddNewRecord" ImageUrl="~/Images/LOT/edit5.png" ToolTip="Edit Record"
+                                    runat="server" CommandArgument="EDIT" Width="35px" Height="35px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnRemoveRecord" ImageUrl="~/Images/Icons/REMOVE02.png" ToolTip="Remove Record"
+                                    runat="server" CommandArgument="REMOVE" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Add. Drawing" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
+                            ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                            <ItemTemplate>
+
+                                <asp:TextBox ID="txtAdditinoalDrawingFilePath" runat="server" CssClass="textfiles" Width="200px"
+                                    Visible="false" Enabled="false" Text='<%# Eval("ADD_DRAWING_FILE_NAME") %>'></asp:TextBox>
+
+                                <asp:ImageButton ID="imgBtnViewAdditionalDrawing" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewADDDRAWING"
+                                    Width="35px" Height="35px" />
+                                <%--<table width="100%">
+                                    <tr>
+                                        <td style="width: 80%;">
+                                            <asp:TextBox ID="txtAdditinoalDrawingFilePath" runat="server" CssClass="textfiles" Width="200px"
+                                                Enabled="false" Text='<%# Eval("ADD_DRAWING_File_NAME") %>'></asp:TextBox>
+                                        </td>
+                                        <td style="width: 20%;">
+                                            <asp:ImageButton ID="imgBtnViewAdditionalDrawing" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                                CommandArgument="ViewADDDRAWING"
+                                                Width="35px" Height="35px" />
+                                        </td>
+                                    </tr>
+                                </table>--%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Drawing (.pdf)" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
+                            ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                            <ItemTemplate>
+
+                                <asp:ImageButton ID="imgBtnViewDrawing1" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewSIDRAWING1"
+                                    Width="35px" Height="35px" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Drawing (.dwg/.dxf)" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
+                            ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                            <ItemTemplate>
+
+                                <asp:ImageButton ID="imgBtnViewDrawing2" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewSIDRAWING2"
+                                    Width="35px" Height="35px" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Unit">
+                            <ItemTemplate>
+
+                                <asp:TextBox ID="txtUnit" Width="70px" runat="server" Enabled="false" CssClass="textboxleftyellow" Text='<%# Eval("UNIT_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="JOB No">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtJOBNo" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("JOB_NO") %>'
+                                    ToolTip='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Drawing No">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtDrawingNo" Width="200px" TextMode="MultiLine" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("DRAWING_NO") %>'
+                                    ToolTip='<%# Eval("DRAWING_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Equipment">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtEquipment" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("EQUIPMENT") %>'
+                                    ToolTip='<%# Eval("EQUIPMENT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Tag No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtTagNo" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("TAG_NO") %>'
+                                    ToolTip='<%# Eval("TAG_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Item Name">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemName" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ITEM_NAME") %>'
+                                    ToolTip='<%# Eval("ITEM_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Item Detail">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemDetail" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ITEM_DETAIL") %>'
+                                    ToolTip='<%# Eval("ITEM_DETAIL") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Expected Date of Completion by Planning/Production">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtExpectedDateofComp" runat="server" Width="100%"
+                                    Text='<%# Eval("EXPECTED_DATE_OF_COMP_BY_PLANNING") %>'
+                                    Enabled="false" CssClass="textboxleftsmall"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Quantity">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" Width="70px" runat="server" Enabled="false" CssClass="textboxrightsmall"
+                                    Text='<%# Eval("ALLOCATED_QUANTITY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Remarks">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtRemarks" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("REMARKS") %>'
+                                    ToolTip='<%# Eval("REMARKS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+                <%-- </ContentTemplate>
+                </asp:UpdatePanel>--%>
+            </div>
+            <input type="hidden" id="div_position" name="div_position" />
+        </fieldset>
+    </div>
+
+
+    <%--JOB DETAIL START--%>
+    <asp:Button ID="btnShowPopupJOBDetail" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
+        PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupJOBDetail" runat="server" BackColor="White" Height="600px" Width="1100px"
+        Style="display: block">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelJOBDetail" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <fieldset style="width: 90%; margin-left: 5%; margin-top: 10px;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
+            <br />
+            <asp:Label ID="lblJOBMsg" runat="server" />
+            <br />
+            <table style="width: 100%; margin-left: 0px;">
+                <tr>
+                    <td>JOB Number:</td>
+                    <td>
+                        <asp:TextBox ID="txtJOBNoSearch" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>LOT No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtLOTNoSearch" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
+                            Width="100%" OnClick="btnSearchJOBNo_Click" />
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div style='overflow: auto; width: 99%; height: 390px; border: 1px solid lightgray; margin-left: 5px;'>
+                <div align="center">
+                    <asp:GridView ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <Columns>
+                            <asp:TemplateField HeaderText="Get JOB">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
+                                    <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                    <asp:Label ID="lblLOTno" runat="server" Visible="false" Text='<%# Eval("TF_NO") %>' />
+
+                                    <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No." Width="100%"
+                                        runat="server" Text="Get JOB No." CssClass="cancelbutton" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="TF_NO" HeaderText="LOT_NO" />
+                            <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        </Columns>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
+                </div>
+            </div>
+        </fieldset>
+    </asp:Panel>
+    <%--JOB DETAIL END--%>
+
+
+    <%--DRAWING DETAIL START--%>
+    <asp:Button ID="btnShowPopupDrawingDetail" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeDrawingDetail" runat="server" TargetControlID="btnShowPopupDrawingDetail"
+        PopupControlID="pnlPopupDrawingDetail" CancelControlID="imgBtnCancelDrawingDetail" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupDrawingDetail" runat="server" BackColor="White" Height="600px" Width="1100px"
+        Style="display: block">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelDrawingDetail" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <fieldset style="width: 90%; margin-left: 5%; margin-top: 10px;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" /></legend>
+            <br />
+            <asp:Label ID="lblDrawingMsg" runat="server" />
+            <br />
+            <table style="width: 100%; margin-left: 0px;">
+                <tr>
+                    <td>JOB Number:</td>
+                    <td>
+                        <asp:TextBox ID="txtJOBNoInDr" runat="server" Width="100%" Enabled="false" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>LOT No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtLOTNoInDr" runat="server" Width="100%" Enabled="false" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Drawing No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtDrawingNoInDr" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>Equipment:</td>
+                    <td>
+                        <asp:TextBox ID="txtEquipmentInDr" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <asp:Button ID="btnSearchDrawingNo" CssClass="button" runat="server" Text="Search"
+                            Width="100%" OnClick="btnSearchDrawingNo_Click" />
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div style='overflow: auto; width: 99%; height: 340px; border: 1px solid lightgray; margin-left: 5px;'>
+                <div align="center">
+                    <asp:GridView ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvDrawingDetail_RowCommand">
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <Columns>
+                            <asp:TemplateField HeaderText="Get">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblLOTTFSubitemIDInList" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' />
+                                    <asp:Label ID="lblLOTSIDrawigName1" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT1_NAME") %>' />
+                                    <asp:Label ID="lblLOTSIDrawigName2" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT2_NAME") %>' />
+                                    <asp:Label ID="lblDrawingNo" runat="server" Visible="false" Text='<%# Eval("DRAWING_NO") %>' />
+                                    <asp:Label ID="lblEquipment" runat="server" Visible="false" Text='<%# Eval("EQUIPMENT") %>' />
+                                    <asp:Label ID="lblTagNo" runat="server" Visible="false" Text='<%# Eval("TAG_NO") %>' />
+
+                                    <asp:Button ID="btnGetDrawingDetail" CommandArgument="GET" ToolTip="Get Drawing Details" Width="100%"
+                                        runat="server" Text="Get" CssClass="cancelbutton" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="JOB_NO" HeaderText="JOB No." />
+                            <asp:BoundField DataField="TF_NO" HeaderText="LOT No." />
+                            <asp:BoundField DataField="PRODUCTION_ORDER_NO" HeaderText="Production Order No." />
+                            <asp:BoundField DataField="DRAWING_NO" HeaderText="Drawing No." />
+                            <asp:BoundField DataField="EQUIPMENT" HeaderText="Equipment" />
+                            <asp:BoundField DataField="TAG_NO" HeaderText="Tag No." />
+
+                            <asp:TemplateField HeaderText="Quantity">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtQuantity" Width="100%" runat="server" Enabled="false" CssClass="textboxrightsmall" Text='<%# Eval("QUANTITY") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
+                </div>
+            </div>
+        </fieldset>
+    </asp:Panel>
+    <%--DRAWING DETAIL END--%>
+
+    <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
+</asp:Content>
