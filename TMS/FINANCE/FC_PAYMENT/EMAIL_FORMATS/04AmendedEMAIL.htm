@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div>
+        <h2>
+            Dear {#toName#},
+        </h2>
+
+        <p>
+            Please find attached amended FC Vendor Payment Request with below details and click on below link to Approve/Send to Amendment.
+        </p>
+        <br />
+        <br />
+        <table width="70%" border="1" cellpadding="5" cellspacing="5" style="border-collapse:collapse;">
+            <tr>
+                <th align="left" width="30%">Payment Request No.</th>
+                <td>{#paymentRequestNo#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Date of Request</th>
+                <td>{#dateOfRequest#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">JOB No.</th>
+                <td>{#jobNo#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Vendor Code</th>
+                <td>{#vendorCode#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Vendor Name</th>
+                <td>{#vendorName#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Vendor Address</th>
+                <td>{#vendorAddress#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">PO No.</th>
+                <td>{#poNo#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">PO Amount</th>
+                <td>{#poAmount#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Amount To Be Released</th>
+                <td>{#amountToBeReleased#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Currency</th>
+                <td>{#currency#}</td>
+            </tr>
+            <tr>
+                <th align="left" width="30%">Remarks</th>
+                <td>{#remarks#}</td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <br />
+        <table width="70%" border="1" cellpadding="5" cellspacing="5" style="border-collapse:collapse;">
+            <tr>
+                <td>{#link#}</td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        Thanks And Regards
+        <br />
+        {#fromName#}
+        <br />
+        <br />
+        <br />
+    </div>
+</body>
+</html>
