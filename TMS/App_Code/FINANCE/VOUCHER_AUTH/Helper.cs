@@ -4,17 +4,17 @@ using System.Data;
 using BAL;
 using System.Net.Mail;
 using System.IO;
-using Ionic.Zip;
+//using Ionic.Zip;
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.HtmlControls;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
+//using System.Linq;
+//using System.Web;
+//using System.Web.UI;
+//using System.Web.UI.WebControls;
+//using System.Web.UI.HtmlControls;
+//using iTextSharp.text;
+//using iTextSharp.text.pdf;
+//using iTextSharp.tool.xml;
 
 public class Helper
 {

@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Net.Mail;
-using System.Text;
-using System.Web;
+//using System.Text;
+//using System.Web;
 using BAL;
-using System.Web.UI;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
+//using System.Web.UI;
+//using iTextSharp.text;
+//using iTextSharp.text.pdf;
+//using iTextSharp.tool.xml;
 
 
 public class LOTSendMailToPrint

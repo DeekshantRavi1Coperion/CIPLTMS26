@@ -185,3 +185,10 @@ C:\Users\Gupta-minni\Desktop\New Code Merged\TMS20260918.1\TMS\BAL\obj\Debug\BAL
 C:\Users\Gupta-minni\Desktop\New Code Merged\TMS20260918.1\TMS\BAL\obj\Debug\BAL.csproj.CopyComplete
 C:\Users\Gupta-minni\Desktop\New Code Merged\TMS20260918.1\TMS\BAL\obj\Debug\BAL.dll
 C:\Users\Gupta-minni\Desktop\New Code Merged\TMS20260918.1\TMS\BAL\obj\Debug\BAL.pdb
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\bin\Debug\BAL.dll
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\bin\Debug\BAL.pdb
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.csproj.CoreCompileInputs.cache
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.csproj.CopyComplete
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.dll
+C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.pdb

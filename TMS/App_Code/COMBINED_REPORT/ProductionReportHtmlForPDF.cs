@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Web;
 
 using System.Text;
-using System.Net.Mime;
-using iTextSharp.tool.xml.pipeline.css;
-using iTextSharp.tool.xml;
-using iTextSharp.tool.xml.pipeline.html;
-using iTextSharp.tool.xml.pipeline.end;
-using iTextSharp.tool.xml.parser;
-using System.Xml;
-using iTextSharp.tool.xml.css;
+//using System.Net.Mime;
+//using iTextSharp.tool.xml.pipeline.css;
+//using iTextSharp.tool.xml;
+//using iTextSharp.tool.xml.pipeline.html;
+//using iTextSharp.tool.xml.pipeline.end;
+//using iTextSharp.tool.xml.parser;
+//using System.Xml;
+//using iTextSharp.tool.xml.css;
 using System.Data;
 
 

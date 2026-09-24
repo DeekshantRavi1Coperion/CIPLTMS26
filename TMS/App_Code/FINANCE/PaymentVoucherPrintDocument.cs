@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Web;
-using System.Management;
-using iTextSharp.text;
+//using System.Collections.Generic;
+//using System.Drawing.Printing;
+//using System.Linq;
+//using System.Web;
+//using System.Management;
+//using iTextSharp.text;
 using System.IO;
 //using Spire.Pdf;
-using System.Data;
+//using System.Data;
 using BAL;
 
 public class PaymentVoucherPrintDocument
