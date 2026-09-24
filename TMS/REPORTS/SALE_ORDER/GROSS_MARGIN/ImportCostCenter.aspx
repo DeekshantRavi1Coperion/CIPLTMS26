@@ -1,0 +1,430 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ImportCostCenter.aspx.cs"
+    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_ImportCostCenter" Title="Untitled Page" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    
+    <link href="../../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="../Images/Icons/Icon04.png" />
+    <link href="../../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="../../../Scripts/NumericValidation.js"></script>
+    <script type="text/javascript" src="../../../Scripts/NegNumericValidation.js"></script>
+
+    <style type="text/css">
+        .textbox {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            background-color: #D8D8D8;
+        }
+
+        .textbox1 {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            /*background-color: #ebdef0;*/
+        }
+
+        .textbox2 {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            /*background-color: #fadbd8;*/
+        }
+
+        .textbox3 {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            background-color: #D8D8D8;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function pageLoad() {
+            document.getElementById('<%=txtPostingMonth.ClientID %>').value = document.getElementById('<%=hdPostingMonth.ClientID %>').value;
+        }
+
+        function clientChangedPostingMonth(sender, args) {
+            document.getElementById('<%=hdPostingMonth.ClientID %>').value = document.getElementById('<%=txtPostingMonth.ClientID %>').value;
+        }
+
+        function ValidateCompany() {
+            if (document.getElementById('<%=ddlCompany.ClientID %>').disabled == false) {
+                var Company = document.getElementById('<%=ddlCompany.ClientID %>').selectedIndex;
+                if (Company == '' || Company == '0') {
+                    document.getElementById('<%=ddlCompany.ClientID %>').style.borderColor = "#F7627F";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=ddlCompany.ClientID %>').style.borderColor = "";
+                    return false;
+                }
+            }
+        }
+
+        function ValidatefileUploadCostCenter() {
+            var allowedFiles = [".csv", ".CSV"];
+            var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+            var fileUploadCostCenter = document.getElementById('<%=fileUploadCostCenter.ClientID %>').value;
+            var divfileUploadCostCenter = document.getElementById("divfileUploadCostCenter");
+            var lblfileUploadCostCenter = document.getElementById('<%=lblfileUploadCostCenter.ClientID %>');
+
+            if (fileUploadCostCenter == '') {
+                document.getElementById('<%=fileUploadCostCenter.ClientID %>').style.borderColor = "#F7627F";
+                divfileUploadCostCenter.style.display = "block";
+                lblfileUploadCostCenter.innerHTML = "";
+                return true;
+            }
+            else {
+                if (!regex.test(fileUploadCostCenter.toLowerCase())) {
+                    document.getElementById('<%=fileUploadCostCenter.ClientID %>').style.borderColor = "#F7627F";
+                    divfileUploadCostCenter.style.display = "block";
+                    lblfileUploadCostCenter.innerHTML = "Please choose only .csv or .CSV file!";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=fileUploadCostCenter.ClientID %>').style.borderColor = "#F7627F";
+                    divfileUploadCostCenter.style.display = "none";
+                    lblfileUploadCostCenter.innerHTML = "";
+                    return false;
+                }
+            }
+        }
+
+        function Confirm() {
+            var existedRecordsCount = document.getElementById('<%=hdExistedRecords.ClientID %>').value;
+            var month = document.getElementById('<%=txtPostingMonth.ClientID %>').value;
+
+            if (parseInt(existedRecordsCount) > 0) {
+                var confirm_value = document.createElement("input");
+                confirm_value.type = "hidden";
+                confirm_value.name = "Confirm Value";
+                if (confirm("There are " + existedRecordsCount + " records exist in system with " + month + " month.Do you want to replace?")) {
+                    document.getElementById('<%=hdReplacementFlag.ClientID %>').value = 1;
+                }
+                else {
+                    document.getElementById('<%=hdReplacementFlag.ClientID %>').value = 0;
+                }
+            }
+            else {
+                document.getElementById('<%=hdReplacementFlag.ClientID %>').value = 0;
+            }
+        }
+    </script>
+
+    <script type="text/javascript" language="javascript">
+
+        function ValidateAll() {
+            var check = true;
+
+            if (ValidateCompany()) { return false; }
+            if (ValidatefileUploadCostCenter()) { return false; }
+
+            return check;
+        }
+
+    </script>
+
+    <script type="text/javascript" language="javascript">
+        function onCalendarShown() {
+            var cal = $find("calendarPostingMonth");
+            cal._switchMode("months", true);
+            if (cal._monthsBody) {
+                for (var i = 0; i < cal._monthsBody.rows.length; i++) {
+                    var row = cal._monthsBody.rows[i];
+                    for (var j = 0; j < row.cells.length; j++) {
+                        Sys.UI.DomEvent.addHandler(row.cells[j].firstChild, "click", call);
+                    }
+                }
+            }
+        }
+
+        function onCalendarHidden() {
+            var cal = $find("calendarPostingMonth");
+            if (cal._monthsBody) {
+                for (var i = 0; i < cal._monthsBody.rows.length; i++) {
+                    var row = cal._monthsBody.rows[i];
+                    for (var j = 0; j < row.cells.length; j++) {
+                        Sys.UI.DomEvent.removeHandler(row.cells[j].firstChild, "click", call);
+                    }
+                }
+            }
+        }
+
+        function call(eventElement) {
+            var target = eventElement.target;
+            switch (target.mode) {
+                case "month":
+                    var cal = $find("calendarPostingMonth");
+                    cal.set_selectedDate(target.date);
+                    cal._blur.post(true);
+                    cal.raiseDateSelectionChanged(); break;
+                    break;
+            }
+        }
+
+        function preventInput(event) {
+            if (event.which != 9) {
+                event.preventDefault();
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var div = document.getElementById("dvScroll");
+            var div_position = document.getElementById("div_position");
+            var position = parseInt('<%=Request.Form["div_position"] %>');
+            if (isNaN(position)) {
+                position = 0;
+            }
+            div.scrollTop = position;
+            div.onscroll = function () {
+                div_position.value = div.scrollTop;
+            };
+        };
+    </script>
+
+    <script type="text/Javascript">
+        function checkDec1(el) {
+            var ex = /^[0-9]+\.?[0-9]*$/;
+
+            if (ex.test(el.value) == false) {
+
+            }
+            var row = el.parentNode.parentNode;
+            var costCenterAmount;
+            var directBilling;
+            var partialBilling;
+
+            if (row.cells[3].getElementsByTagName("input")[0].value != '')
+                costCenterAmount = parseFloat(row.cells[3].getElementsByTagName("input")[0].value);
+            else
+                costCenterAmount = 0;
+
+            if (row.cells[4].getElementsByTagName("input")[0].value != '')
+                directBilling = parseFloat(row.cells[4].getElementsByTagName("input")[0].value);
+            else
+                directBilling = 0;
+
+            if (row.cells[5].getElementsByTagName("input")[0].value != '' && row.cells[5].getElementsByTagName("input")[0].value != '-')
+                partialBilling = parseFloat(row.cells[5].getElementsByTagName("input")[0].value);
+            else
+                partialBilling = 0;
+
+
+            var netBilling = costCenterAmount + directBilling - partialBilling
+            row.cells[6].getElementsByTagName("input")[0].value = parseFloat(netBilling);
+        }
+    </script>
+
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </ajax:ToolkitScriptManager>
+    <%--<asp:UpdatePanel runat="server" ID="uppanel">
+        <ContentTemplate>--%>
+    <div align="center" style="margin-top: 50px;">
+        <fieldset style="width: 80%">
+            <legend style="text-align: center;">Import Cost Center</legend>
+            <table width="100%">
+                <tr>
+                    <td >
+                        <asp:HiddenField ID="hdExistedRecords" runat="server" />
+                        <asp:HiddenField ID="hdReplacementFlag" runat="server" />
+                        <asp:Button ID="btnGetFormat" CssClass="button" Width="100%" runat="server"
+                            Text="Download Format" OnClick="btnGetFormat_Click" />
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td>Month:</td>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);" Width="100%"></asp:TextBox>
+                                    <asp:HiddenField ID="hdPostingMonth" runat="server" />
+                                    <ajax:CalendarExtender ID="calendarPostingMonth" runat="server" OnClientHidden="onCalendarHidden"
+                                        PopupButtonID="imgbtnPostingMonth" OnClientShown="onCalendarShown" Format="MM/yyyy"
+                                        BehaviorID="calendarPostingMonth" TargetControlID="txtPostingMonth" OnClientDateSelectionChanged="clientChangedPostingMonth">
+                                    </ajax:CalendarExtender>
+                                    <ajax:FilteredTextBoxExtender ID="FilteredTextBoxExtender1" runat="server" TargetControlID="txtPostingMonth"
+                                        FilterType="Custom, Numbers" ValidChars="/" Enabled="True" />
+                                </td>
+                                <td align="right">
+                                    <asp:ImageButton ID="imgbtnPostingMonth" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                        ToolTip="Posting Month Calendar" Width="20px" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td>Company:</td>
+                    <td>
+                        <asp:DropDownList ID="ddlCompany" runat="server" Width="100px" Height="26px" onblur="return ValidateCompany();" />
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td>Browse:</td>
+                    <td style="width: 35%;">
+                        <asp:FileUpload ID="fileUploadCostCenter" runat="server" Width="100%" Height="29px"
+                            BorderStyle="Groove" onblur="return ValidatefileUploadCostCenter();" />
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td >
+                        <asp:Button ID="btnGetCostCenterFile" CssClass="button" Width="100%" runat="server"
+                            Text="Get Detail" OnClientClick="return ValidateAll();" OnClick="btnGetCostCenterFile_Click" />
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td >
+                        <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server"
+                            Text="Save" OnClick="btnSave_Click"
+                            OnClientClick="Confirm();" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">&nbsp;
+                    </td>
+                    <td>
+                        <div id="divfileUploadCostCenter" style="display: none;">
+                            <asp:Label ID="lblfileUploadCostCenter" runat="server" ForeColor="Red" />
+                        </div>
+                    </td>
+                    <td>&nbsp;
+                    </td>
+                </tr>
+               
+            </table>
+        </fieldset>
+    </div>
+    <br />
+    <div align="center">
+        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+        </asp:Panel>
+    </div>
+    <br />
+    <div align="center">
+        <fieldset style="width: 85%;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]"></asp:Label></legend>
+            <%--<div style='overflow: auto; width: 100%; height: 450px; border: 1px solid lightgray;'>--%>
+            <div id="dvScroll" style='overflow-y: scroll; width: 100%; height: 430px; border: 1px solid lightgray;'>
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView ID="gvCostCenter" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                            HorizontalAlign="Center" OnRowDataBound="gvCostCenter_RowDataBound">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+                                <asp:BoundField DataField="ORDER_NO" HeaderText="ORDER_NO" />
+
+                                <asp:TemplateField HeaderText="COST_CENTER_CODE">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCostCenterID" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_ID" ) %>' />
+
+                                        <asp:Label ID="lblCostCenterCode" runat="server" Visible="true" Text='<%# Eval("COST_CENTER_CODE" ) %>' />
+                                        <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("ORDER_NO" ) %>' />
+                                        <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID" ) %>' />
+                                        <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="COST_CENTER_NAME">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCostCenterName" runat="server" Visible="true" Text='<%# Eval("COST_CENTER_NAME" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="COST_CENTER_AMOUNT" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtCostCenterAmount" runat="server" Text='<%# Eval("COST_CENTER_AMOUNT" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textbox"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="DIRECT_BILLING" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtDirectBilling" runat="server" Text='<%# Eval("DIRECT_BILLING" ) %>' Width="100%"
+                                            onKeyUp="checkDec1(this)" onkeypress="return inNumberKeyWithDecimal(this, event);"
+                                            CssClass="textbox1"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="PARTIAL_BILLING" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtPartialBilling" runat="server" Text='<%# Eval("PARTIAL_BILLING" ) %>' Width="100%"
+                                            onKeyUp="checkDec1(this)" onkeypress="return negNumberKeyWithDecimal(this, event);"
+                                            CssClass="textbox2"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="NET_AMOUNT" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtNetAmount" runat="server" Text='<%# Eval("NET_AMOUNT" ) %>'
+                                            Width="100%" onkeyDown="javascript:preventInput(event);" CssClass="textbox3"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="MONTH">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblMonth" runat="server" Visible="true" Text='<%# Eval("MONTH" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="UNIT">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblUnitName" runat="server" Visible="true" Text='<%# Eval("UNIT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+        </fieldset>
+    </div>
+    <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
+</asp:Content>
