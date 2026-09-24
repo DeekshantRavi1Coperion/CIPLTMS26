@@ -1,0 +1,524 @@
+﻿body {
+}
+
+.headerStyle {
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-family: Calibri;
+    font-size: x-large;
+    text-align: center;
+}
+
+.pStyle {
+    margin-bottom: 10px;    
+    font-family: Calibri;    
+    text-align: center;
+}
+
+.header2 {
+    text-align: center;
+    font-family: Calibri;
+    margin-bottom: 10px;
+}
+
+.headerleft {
+    text-align: left;
+    font-family: Calibri;
+    margin-bottom: 10px;
+}
+
+
+
+.tblheader {
+    padding: 10px;
+    border-color: black;
+    width: 100%;
+    font-family: Calibri;
+    font-size: small;
+}
+
+.td1header {
+    width: 20%;
+}
+
+.td2header {
+    width: 30%;
+}
+
+
+
+
+.tblsuitems {
+    width: 100%;
+    font-family: Calibri;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: small;
+}
+.tblsubitems {
+    width: 100%;
+    font-family: Calibri;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: small;
+}
+
+.trsubitems {
+    background-color: lightblue;
+}
+
+.td1subitems {
+    width: 6%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.td2subitems {
+    width: 48%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.td3subitems {
+    width: 7%;
+    padding: 5px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.td4subitems {
+    width: 25%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.tdsrno {
+    width: 5%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.tdamount {
+    width: 10%;
+    padding: 5px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+
+.tdpono {
+    width: 10%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.tdexpdateno {
+    width: 15%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+
+
+.tddesc {
+    width: 20%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdtag {
+    width: 10%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.tdlotfor {
+    width: 10%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tddrgno {
+    width: 15%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdrev {
+    width: 5%;
+    padding: 5px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdcate {
+    width: 5%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdquantity {
+    width: 5%;
+    padding: 5px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+
+
+.pdffieldset {    
+    border:1px solid green;
+}
+.pdflegend {
+    font-family: Calibri;
+}
+
+
+
+
+
+
+
+
+
+
+
+.tblcategory {
+    width: 100%;
+    font-family: Calibri;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.td1category {
+    font-family: Calibri;
+    background-color: lightblue;
+    width: 5%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.td2category {
+    font-family: Calibri;
+    width: 25%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.headerimpnotes {
+    text-align: center;
+    font-family: Calibri;
+    margin-bottom: 5px;
+}
+
+.tblimpnotes {
+    width: 100%;
+    font-family: Calibri;
+    font-size: small;
+}
+
+.tdimpnotes {
+    text-align: left;
+    padding: 5px;
+}
+
+
+
+
+
+
+.tblsignatories {
+    width: 100%;
+    font-family: Calibri;
+    /*border: 1px solid black;*/
+    border-collapse: collapse;
+    font-size: small;
+}
+
+.tdsignatories {
+    text-align: center;
+    padding: 5px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 50%;
+}
+
+.td1signatories {
+    text-align: center;
+    padding: 5px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 15%;
+}
+
+.td2signatories {
+    text-align: center;
+    padding: 5px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 35%;
+}
+
+
+
+
+
+
+
+
+
+.tdsignatories1 {
+    text-align: left;
+    /*padding: 5px;*/
+    border-collapse: collapse;
+    width: 15%;
+}
+
+
+.tdsignatories2 {
+    text-align: left;
+    /*padding: 5px;*/
+    border-collapse: collapse;
+    width: 35%;
+}
+
+
+.hrsignatories {
+    margin-top: 30px;
+}
+
+
+.tdleft {
+    /*width: 6%;*/
+    padding: 2px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdright {
+    /*width: 6%;*/
+    padding: 2px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tfcenter {
+    /*width: 6%;*/
+    padding: 2px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+
+
+
+
+
+
+.tblDMS {
+    width: 100%;
+    font-family: Calibri;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: small;
+}
+
+
+
+.trDMS {
+    background-color: lightblue;
+}
+
+
+
+
+.tdJOBNoDMS {
+    width: 200px;
+    padding: 2px;    
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.tdDrawingNoDMS {
+    width: 300px;
+    padding: 2px;    
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdDescriptionDMS {
+    width: 400px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdRevNoDMS {
+    width: 100px;
+    padding: 2px;
+    text-align:right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdCategoryDMS {
+    width: 200px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdUOMDMS {
+    width: 100px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdQuantityDMS {
+    width: 100px;
+    padding: 2px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdRDProjectTeamDMS {
+    width: 150px;
+    padding: 2px;    
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdPDDesignTeamDMS {
+    width: 150px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdDocumentLinkDMS {
+    width: 250px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdDesignEnggDMS {
+    width: 250px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdEDCompletionDMS {
+    width: 150px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdWorkingStatusDMS {
+    width: 250px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdHourSpentDMS {
+    width: 250px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdDesignCheckerDMS {
+    width: 200px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdStatusDMS {
+    width: 200px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdRemarksDMS {
+    width: 400px;
+    padding: 2px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+.tdpaymentvoucher {
+    width: 10%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+
+.td1tc {
+    width: 6%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.td2tc {
+    width: 15%;
+    padding: 5px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
