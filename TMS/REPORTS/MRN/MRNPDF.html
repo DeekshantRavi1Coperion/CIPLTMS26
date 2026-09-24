@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="../../Scripts/html2canvas.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/pdfmake.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function Export() {
+            html2canvas(document.getElementById('tblPDF'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("MRN.pdf");
+                    alert("Admit Card Downloading Started");
+                }
+            });
+        }
+
+/**/</script>
+    <style type="text/css">
+        table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: inherit;
+            border: 1px solid #ddd;
+            padding: 0px;
+            font-size: 10pt;
+            width: 100%;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 0px;
+            
+        }
+
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+
+        .auto-style1 {
+            width: 197px;
+            height: 81px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form2" runat="server">
+        <table>
+            <tr>
+                <td>
+                    <input type="button" id="btnExport" value="Export" onclick="Export()" class="auto-style5" />
+                </td>
+            </tr>
+        </table>
+
+        <table id="tblPDF">
+            <tr>
+                <td rowspan="2" colspan="3">
+                    <img src="../../Images/COPERION/coperion_logo.jpg" alt="" class="auto-style1" />
+                </td>
+                <th rowspan="2" colspan="5" style="text-align: center;">
+                    <h3>INCOMING INSPECTION REPORT</h3>
+                </th>
+                <td>FMT NO.: </td>
+                <td colspan="3">FT/QA/02/00</td>
+            </tr>
+            <tr>
+                <td>Rev.:00</td>
+                <td colspan="3">Date: 17.05.2018</td>
+            </tr>
+            <tr>
+
+                <td colspan="3">PO NO./DATE</td>
+                <td>SDFSDF</td>
+                <td colspan="4">VENDOR NAME:</td>
+                <td colspan="4">SSDFSDFFDDF</td>
+            </tr>
+            <tr>
+                <td colspan="3">QTY.</td>
+                <td>10000</td>
+                <td colspan="4">PART NAME:</td>
+                <td colspan="4">SSDFSDFFDDF</td>
+            </tr>
+            <tr>
+
+                <td colspan="3">SAMPLE SIZE:DIMENSIONAL</td>
+                <td>
+                    <input type="text" style="width: 99%;" />
+                </td>
+                <td colspan="4">INSPECTION DATE:</td>
+                <td colspan="4">SSDFSDFFDDF</td>
+            </tr>
+            <tr>
+
+                <td colspan="3">VISUAL</td>
+                <td>
+                    <input type="text" style="width: 99%;" />
+                </td>
+                <td colspan="4">MRN NO.:</td>
+                <td colspan="4">SSDFSDFFDDF</td>
+            </tr>
+            <tr>
+
+                <th colspan="3">Sr. No</th>
+                <th>Characterstic</th>
+                <th colspan="4">Ovservation</th>
+                <th>Status</th>
+                <th colspan="3">Remarks</th>
+            </tr>
+            <tr>
+
+                <td colspan="3">1</td>
+                <td>dsfsd</td>
+                <td colspan="4">sdf</td>
+                <td>sdf</td>
+                <td colspan="3">df</td>
+            </tr>
+            <tr>
+                <td>Disposition</td>
+                <td colspan="2">&nbsp;</td>
+                <td>Accepted</td>
+                <td colspan="2">Accepted U/D</td>
+                <td colspan="2">&nbsp;</td>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>Quantity</td>
+                <td colspan="2">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td colspan="2">&nbsp;</td>
+                <td colspan="2">&nbsp;</td>
+                <td>Segrigration</td>
+                <td colspan="2">Rework</td>
+                <td>Return to Source</td>
+            </tr>
+            <tr>
+                <td colspan="12">Note: Forward the inspection report to H.O.D.(Q.A.) in case of non-conformance with inspection standard and copy to purchase for supplier evealuation. </td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+                <td colspan="3">&nbsp;</td>
+                <td colspan="2">&nbsp;</td>
+                <td colspan="3">&nbsp;</td>
+                <td colspan="2" rowspan="2">Comments:- </td>
+            </tr>
+            <tr>
+                <td colspan="2">Inspected By</td>
+                <td colspan="3">Date</td>
+                <td colspan="2">H.O.D.(Q.A.)</td>
+                <td colspan="3">Date</td>
+            </tr>
+        </table>
+
+    </form>
+</body>
+</html>
