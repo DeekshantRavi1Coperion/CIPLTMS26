@@ -1,0 +1,352 @@
+﻿using System;
+using System.Text;
+using System.Data;
+
+
+public class STVouchersHtmlForPDF
+{
+    #region Variables
+
+    string VoucherNo = string.Empty;
+    string VoucherDate = string.Empty;
+    string VoucherCreatedBy = string.Empty;
+    string VoucherType = string.Empty;
+    string Unit = string.Empty;
+
+    int AuthorizedById = 0;
+    string AuthorizedBy = string.Empty;
+    string AuthorizedOn = string.Empty;
+    string AuthorizedRemarks = string.Empty;
+
+    int ApprovedById = 0;
+    string ApprovedBy = string.Empty;
+    string ApprovedOn = string.Empty;
+    string ApprovedRemarks = string.Empty;
+    //private string type = string.Empty;
+    private string ReceiptAmountFC = string.Empty;
+    private string PaymentAmountFC = string.Empty;
+    private string ReceiptAmountINR = string.Empty;
+    //private string PaidToOrReceivedFrom = string.Empty;
+    private string DOCClass = string.Empty;
+    private string PaymentAmountINR = string.Empty;
+    private string NetAmount = "0";
+
+    private string CustomerCode = string.Empty;
+    private string CustomerName = string.Empty;
+    private string CurrencyDesc = string.Empty;
+    private string CurrencyRate = "0";
+
+    private string INRBasicAmount = "0";
+    private string INROtherAmount = "0";
+
+    private string FCBasicAmount = "0";
+    private string FCOtherAmount = "0";
+    private string FromDocClass;
+    private string ToDocClass;
+    private string FromWarehouseCode;
+    private string ToWarehouseCode;
+    private string Remarks;
+    private string StockTransferOrderNo;
+
+
+
+    #endregion
+
+
+    public string GetHtmlForPDF(DataSet dsDetails)
+    {
+        try
+        {
+            if (dsDetails.Tables.Count > 0 && dsDetails.Tables[0].Rows.Count > 0)
+            {
+                DataRow dr0 = dsDetails.Tables[0].Rows[0];
+
+                if (dr0["VOUCHER_NO"] != DBNull.Value) VoucherNo = Convert.ToString(dr0["VOUCHER_NO"]).Trim();
+                if (dr0["VOUCHER_DATE"] != DBNull.Value) VoucherDate = Convert.ToString(dr0["VOUCHER_DATE"]).Trim();
+
+                if (dr0["STOCK_TRASFER_ORDER_NO"] != DBNull.Value) StockTransferOrderNo = Convert.ToString(dr0["STOCK_TRASFER_ORDER_NO"]).Trim();
+
+                if (dr0["CUSTOMER_CODE"] != DBNull.Value) CustomerCode = Convert.ToString(dr0["CUSTOMER_CODE"]).Trim();
+                if (dr0["CUSTOMER_NAME"] != DBNull.Value) CustomerName = Convert.ToString(dr0["CUSTOMER_NAME"]).Trim();
+                
+                if (dr0["FROM_DOC_CLASS"] != DBNull.Value) FromDocClass = Convert.ToString(dr0["FROM_DOC_CLASS"]).Trim();
+                if (dr0["TO_DOC_CLASS"] != DBNull.Value) ToDocClass = Convert.ToString(dr0["TO_DOC_CLASS"]).Trim();
+
+                if (dr0["TO_WAREHOUSE_CODE"] != DBNull.Value) FromWarehouseCode = Convert.ToString(dr0["TO_WAREHOUSE_CODE"]).Trim();
+                if (dr0["TO_WAREHOUSE_CODE"] != DBNull.Value) ToWarehouseCode = Convert.ToString(dr0["TO_WAREHOUSE_CODE"]).Trim();
+                if (dr0["REMARKS"] != DBNull.Value) Remarks = Convert.ToString(dr0["REMARKS"]).Trim();
+
+                if (dr0["VOUCHER_TYPE"] != DBNull.Value) VoucherType = Convert.ToString(dr0["VOUCHER_TYPE"]).Trim();
+                if (dr0["VOUCHER_CREATED_BY"] != DBNull.Value) VoucherCreatedBy = Convert.ToString(dr0["VOUCHER_CREATED_BY"]).Trim();
+                if (dr0["UNIT_NAME"] != DBNull.Value) Unit = Convert.ToString(dr0["UNIT_NAME"]).Trim();
+
+                if (dr0["AUTHORIZED_BY_ID"] != DBNull.Value) AuthorizedById = Convert.ToInt32(dr0["AUTHORIZED_BY_ID"]);
+                if (dr0["AUTHORIZED_BY"] != DBNull.Value) AuthorizedBy = Convert.ToString(dr0["AUTHORIZED_BY"]).Trim();
+                if (dr0["AUTHORIZED_ON"] != DBNull.Value) AuthorizedOn = Convert.ToString(dr0["AUTHORIZED_ON"]).Trim();
+                if (dr0["AUTHORIZED_REMARKS"] != DBNull.Value) AuthorizedRemarks = Convert.ToString(dr0["AUTHORIZED_REMARKS"]);
+
+                if (dr0["APPROVED_BY_ID"] != DBNull.Value) ApprovedById = Convert.ToInt32(dr0["APPROVED_BY_ID"]);
+                if (dr0["APPROVED_BY"] != DBNull.Value) ApprovedBy = Convert.ToString(dr0["APPROVED_BY"]).Trim();
+                if (dr0["APPROVED_ON"] != DBNull.Value) ApprovedOn = Convert.ToString(dr0["APPROVED_ON"]).Trim();
+                if (dr0["APPROVED_REMARKS"] != DBNull.Value) ApprovedRemarks = Convert.ToString(dr0["APPROVED_REMARKS"]).Trim();
+            }
+
+            string htmlText = string.Empty;
+            htmlText = string.Empty;
+            StringBuilder sb = new StringBuilder();
+
+
+            sb.Append("<h2 class='headerStyle'><u>STOCK TRANSFER VOUCHER COPY</u></h2>\n");
+            sb.Append("<hr />\n");
+            sb.Append("<table class='tblheader'>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Voucher No.:</td>\n");
+            sb.Append("<td class='td2header'><b>{#VoucherNo#}</b></td>\n");
+            sb.Append("<td class='td1header'>Voucher Date:</td>\n");
+            sb.Append("<td class='td2header'>{#VoucherDate#}</td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Stock Transfer Order No.:</td>\n");
+            sb.Append("<td class='td2header'>{#StockTransferOrderNo#}</td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Customer Code:</td>\n");
+            sb.Append("<td class='td2header'><b>{#CustomerCode#}</b></td>\n");
+            sb.Append("<td class='td1header'>Customer Name:</td>\n");
+            sb.Append("<td class='td2header'>{#CustomerName#}</td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>From DOC Class:</td>\n");
+            sb.Append("<td class='td2header'><b>{#FromDocClass#}</b></td>\n");
+            sb.Append("<td class='td1header'>To DOC Class:</td>\n");
+            sb.Append("<td class='td2header'>{#ToDocClass#}</td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>From Warehouse:</td>\n");
+            sb.Append("<td class='td2header'><b>{#FromWarehouseCode#}</b></td>\n");
+            sb.Append("<td class='td1header'>To Warehouse:</td>\n");
+            sb.Append("<td class='td2header'>{#ToWarehouseCode#}</td>\n");
+            sb.Append("</tr>\n");            
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Unit:</td>\n");
+            sb.Append("<td class='td2header'>{#Unit#}</td>\n");
+            sb.Append("<td class='td1header'>Voucher Created By:</td>\n");
+            sb.Append("<td class='td2header'><b>{#VoucherCreatedBy#}</b></td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Remarks:</td>\n");
+            sb.Append("<td class='td2header'>{#Remarks#}</td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("</table>\n");
+
+            sb.Replace("{#VoucherNo#}", VoucherNo);
+            sb.Replace("{#VoucherDate#}", VoucherDate);
+            sb.Replace("{#StockTransferOrderNo#}", StockTransferOrderNo);
+            sb.Replace("{#CustomerCode#}", CustomerCode);
+            sb.Replace("{#CustomerName#}", CustomerName); 
+            
+            sb.Replace("{#FromDocClass#}", FromDocClass);
+            sb.Replace("{#ToDocClass#}", ToDocClass);
+            sb.Replace("{#FromWarehouseCode#}", FromWarehouseCode);
+            sb.Replace("{#ToWarehouseCode#}", ToWarehouseCode);
+            sb.Replace("{#Remarks#}", Remarks);            
+            sb.Replace("{#VoucherCreatedBy#}", VoucherCreatedBy);
+            sb.Replace("{#Unit#}", Unit);
+
+
+            //VOUCHER DETAILS START[===========================]
+
+            int srNo = 0;
+
+            if (dsDetails.Tables[1].Rows.Count > 0)
+            {
+                sb.Append("<h3 class='header2'>Voucher Details</h3>\n");
+
+                sb.Append("<table class='tblsubitems'>\n");
+
+                sb.Append("<tr class='trsubitems'>\n");
+
+                sb.Append("<th class='tdsrno'>Sr.No.</th>\n");
+                sb.Append("<th class='tdtag'>Product Code</th>\n");
+                sb.Append("<th class='tddesc'>Product Description</th>\n");
+
+                sb.Append("<th class='tdtag'>From WH</th>\n");
+                sb.Append("<th class='tdtag'>From Class</th>\n");
+                sb.Append("<th class='tdtag'>To WH</th>\n");
+                sb.Append("<th class='tdtag'>To Class</th>\n");                
+                sb.Append("<th class='tdtag'>Quantity</th>\n");
+                sb.Append("<th class='tdtag'>UOM</th>\n");
+
+                sb.Append("</tr>\n");
+
+                foreach (DataRow dr in dsDetails.Tables[1].Rows)
+                {
+                    srNo++;
+                    sb.Append("<tr>\n");
+
+                    sb.Append("<td class='tdsrno'>{#SRNo#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#ProductCode#}</td>\n");
+                    sb.Append("<td class='tddesc'>{#ProductDescription#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#FromWH#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#FromClass#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#ToWH#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#ToClass#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#Quantity#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#UOM#}</td>\n");
+
+                    sb.Append("</tr>\n");
+
+
+                    sb.Replace("{#SRNo#}", Convert.ToString(srNo));
+                    sb.Replace("{#ProductCode#}", Convert.ToString(dr["PRODUCT_CODE"]));
+                    sb.Replace("{#ProductDescription#}", Convert.ToString(dr["PRODUCT_DESCRIPTION"]));
+                    sb.Replace("{#FromWH#}", Convert.ToString(dr["FROM_WAREHOUSE"]));
+                    sb.Replace("{#FromClass#}", Convert.ToString(dr["FROM_CLASS"]));
+                    sb.Replace("{#ToWH#}", Convert.ToString(dr["TO_WAREHOUSE"]));
+                    sb.Replace("{#ToClass#}", Convert.ToString(dr["TO_CLASS"]));
+                    sb.Replace("{#Quantity#}", Convert.ToString(dr["QUANTITY"]));
+                    sb.Replace("{#UOM#}", Convert.ToString(dr["UOM"]));
+
+                }
+                sb.Append("</table>\n");
+            }
+
+
+            //VOUCHER DETAILS END[===========================]
+
+
+            //SIGNATORIES DETAILS START[===========================]
+
+            sb.Append("<hr class='hrsignatories' />\n");
+            //sb.Append("<h3 class='header'>Signatories</h3>\n");
+            sb.Append("<h4 class='headerStyle'><u>Signatories</u></h4>\n");
+
+            if (AuthorizedById > 0)
+            {
+                sb.Append("<hr class='hrsignatories' />\n");
+                sb.Append("<fieldset class='pdffieldset'>\n");
+                sb.Append("<legend class='pdflegend'>Authorized</legend>\n");
+                sb.Append("<table class='tblsignatories'>\n");
+                sb.Append("<tr>\n");
+                sb.Append("<td colspan='3'>Authorized Remarks:</td>\n");
+                sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                sb.Append("</tr>\n");
+                sb.Append("<tr>\n");
+                sb.Append("<td colspan='4'>{#AuthorizedRemarks#}</td>\n");
+                sb.Append("</tr>\n");
+                sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                sb.Append("<tr>\n");
+                sb.Append("<td class='tdsignatories1'>Authorized By:</td>\n");
+                sb.Append("<td class='tdsignatories2'>{#AuthorizedBy#}</td>\n");
+                sb.Append("<td class='tdsignatories1'>Authorized On:</td>\n");
+                sb.Append("<td class='tdsignatories2'>{#AuthorizedOn#}</td>\n");
+                sb.Append("</tr>\n");
+                sb.Append("</table>\n");
+                sb.Append("</fieldset>\n");
+
+                sb.Replace("{#AuthorizedRemarks#}", AuthorizedRemarks);
+                sb.Replace("{#AuthorizedBy#}", AuthorizedBy);
+                sb.Replace("{#AuthorizedOn#}", AuthorizedOn);
+
+            }
+
+
+            if (dsDetails.Tables[2].Rows.Count > 0)
+            {
+                srNo = 0;
+
+                sb.Append("<h3 class='header2'>Reauthorization Details</h3>\n");
+
+                sb.Append("<table class='tblsubitems'>\n");
+
+                sb.Append("<tr class='trsubitems'>\n");
+
+                sb.Append("<th class='tdsrno'>Sr.No.</th>\n");
+                sb.Append("<th class='tdtag'>Sent To Reauthorization By</th>\n");
+                sb.Append("<th class='tdtag'>Sent To Reauthorization On</th>\n");
+                sb.Append("<th class='tddesc'>Sent To Reauthorization Remarks</th>\n");
+                sb.Append("<th class='tdtag'>Reauthorize By</th>\n");
+                sb.Append("<th class='tdtag'>Reauthorize On</th>\n");
+                sb.Append("<th class='tddesc'>Reauthorize Remarks</th>\n");
+
+                sb.Append("</tr>\n");
+
+                foreach (DataRow dr in dsDetails.Tables[2].Rows)
+                {
+                    srNo++;
+                    sb.Append("<tr>\n");
+                    sb.Append("<td class='tdsrno'>{#SRNo#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#SentToReauthorizationBy#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#SentToReauthorizationOn#}</td>\n");
+                    sb.Append("<td class='tddesc'>{#SentToReauthorizationRemarks#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#ReauthorizeBy#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#ReauthorizeOn#}</td>\n");
+                    sb.Append("<td class='tddesc'>{#ReauthorizRemarks#}</td>\n");
+
+                    sb.Append("</tr>\n");
+
+                    sb.Replace("{#SRNo#}", Convert.ToString(srNo));
+                    sb.Replace("{#SentToReauthorizationBy#}", Convert.ToString(dr["SEND_TO_REAUTHORIZATION_BY"]));
+                    sb.Replace("{#SentToReauthorizationOn#}", Convert.ToString(dr["SEND_TO_REAUTHORIZATION_ON"]));
+                    sb.Replace("{#SentToReauthorizationRemarks#}", Convert.ToString(dr["SEND_TO_REAUTHORIZATION_REMARKS"]));
+
+                    sb.Replace("{#ReauthorizeBy#}", Convert.ToString(dr["REAUTHORIZED_BY"]));
+                    sb.Replace("{#ReauthorizeOn#}", Convert.ToString(dr["REAUTHORIZED_ON"]));
+                    sb.Replace("{#ReauthorizRemarks#}", Convert.ToString(dr["REAUTHORIZED_REMARKS"]));
+
+                }
+                sb.Append("</table>\n");
+            }
+
+
+            if (ApprovedById > 0)
+            {
+                sb.Append("<hr class='hrsignatories' />\n");
+                sb.Append("<fieldset class='pdffieldset'>\n");
+                sb.Append("<legend class='pdflegend'>Approved</legend>\n");
+                sb.Append("<table class='tblsignatories'>\n");
+                sb.Append("<tr>\n");
+                sb.Append("<td colspan='3'>Approved Remarks:</td>\n");
+                sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                sb.Append("</tr>\n");
+                sb.Append("<tr>\n");
+                sb.Append("<td colspan='4'>{#ApprovedRemarks#}</td>\n");
+                sb.Append("</tr>\n");
+                sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                sb.Append("<tr>\n");
+                sb.Append("<td class='tdsignatories1'>Approved By:</td>\n");
+                sb.Append("<td class='tdsignatories2'>{#ApprovedBy#}</td>\n");
+                sb.Append("<td class='tdsignatories1'>Approved On:</td>\n");
+                sb.Append("<td class='tdsignatories2'>{#ApprovedOn#}</td>\n");
+                sb.Append("</tr>\n");
+                sb.Append("</table>\n");
+                sb.Append("</fieldset>\n");
+
+                sb.Replace("{#ApprovedRemarks#}", ApprovedRemarks);
+                sb.Replace("{#ApprovedBy#}", ApprovedBy);
+                sb.Replace("{#ApprovedOn#}", ApprovedOn);
+
+            }
+
+            //SIGNATORIES DETAILS END[===========================]
+
+
+            htmlText = sb.ToString();
+            return htmlText;
+
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+}
+
