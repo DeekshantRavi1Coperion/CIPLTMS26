@@ -1,0 +1,592 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class REPORTS_PURCHASE_ORDER_POReportPivotGroupWise : System.Web.UI.Page
+{
+
+    #region VARIABLES[=======================]
+
+    BAL.Reports objReports = new BAL.Reports();
+
+    DataSet dsUnit = new DataSet();
+    DataSet dsPGReport = new DataSet();
+
+    DataSet dsPOReport = new DataSet();
+    DataSet dsPOItemReport = new DataSet();
+
+
+    int unitID = 0;
+    string JOBNo = string.Empty;
+    string pivotGroupName = string.Empty;
+    string PONo = string.Empty;
+
+    #endregion
+
+
+    #region EVENTS[==========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+                Session["PIVOT_GROUP_REPORT"] = null;
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        lblMsg.Text = string.Empty;
+        pnlMsg.Visible = false;
+        GetPGReport();
+    }
+
+
+
+    double totalPOBudgetINR = 0;
+    double totalSaleEstimateBudgetINR = 0;
+
+    double totalPOValueINR = 0;
+
+    double totalDeltaAsPerPOBudgetINR = 0;
+    double totalDeltaAsPerSaleEstimateBudgetINR = 0;
+
+    protected void gvPGReport_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (Convert.ToInt32(rdType.SelectedValue) == 0)
+            {
+                for (int i = 0; i < gvPGReport.Columns.Count; i++)
+                {
+                    if (gvPGReport.Columns[i].HeaderText == "PO_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+
+                    if (gvPGReport.Columns[i].HeaderText == "DELTA_AS_PER_PO_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+
+
+                    if (gvPGReport.Columns[i].HeaderText == "SALE_ESTIMATE_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+
+                    if (gvPGReport.Columns[i].HeaderText == "DELTA_AS_PER_SALE_ESTIMATE_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+                }
+            }
+            else if (Convert.ToInt32(rdType.SelectedValue) == 1)
+            {
+                for (int i = 0; i < gvPGReport.Columns.Count; i++)
+                {
+                    if (gvPGReport.Columns[i].HeaderText == "PO_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+
+                    if (gvPGReport.Columns[i].HeaderText == "DELTA_AS_PER_PO_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+
+
+
+                    if (gvPGReport.Columns[i].HeaderText == "SALE_ESTIMATE_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = false;
+                    }
+
+                    if (gvPGReport.Columns[i].HeaderText == "DELTA_AS_PER_SALE_ESTIMATE_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = false;
+                    }
+                }
+            }
+            else if (Convert.ToInt32(rdType.SelectedValue) == 2)
+            {
+                for (int i = 0; i < gvPGReport.Columns.Count; i++)
+                {
+                    if (gvPGReport.Columns[i].HeaderText == "PO_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = false;
+                    }
+
+                    if (gvPGReport.Columns[i].HeaderText == "DELTA_AS_PER_PO_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = false;
+                    }
+
+
+
+                    if (gvPGReport.Columns[i].HeaderText == "SALE_ESTIMATE_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+
+                    if (gvPGReport.Columns[i].HeaderText == "DELTA_AS_PER_SALE_ESTIMATE_BUDGET")
+                    {
+                        gvPGReport.Columns[i].Visible = true;
+                    }
+                }
+            }
+
+
+
+
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblTotalBudgetINR = (Label)e.Row.FindControl("lblTotalBudgetINR");
+                Label lblSaleEstimateBudgetINR = (Label)e.Row.FindControl("lblSaleEstimateBudgetINR");
+
+                Label lblTotalPOValueINR = (Label)e.Row.FindControl("lblTotalPOValueINR");
+
+                Label lblTotalDeltaAsPerPOBudgetINR = (Label)e.Row.FindControl("lblTotalDeltaAsPerPOBudgetINR");
+                Label lblTotalDeltaAsPerSaleEstimateBudgetINR = (Label)e.Row.FindControl("lblTotalDeltaAsPerSaleEstimateBudgetINR");
+                ImageButton btnViewDetail = (ImageButton)e.Row.FindControl("btnViewDetail");
+
+                btnViewDetail.Visible = false;
+
+                if (Convert.ToDouble(lblTotalPOValueINR.Text) > 0)
+                {
+                    btnViewDetail.Visible = true;
+                }
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(lblTotalBudgetINR.Text)))
+                    totalPOBudgetINR += Convert.ToDouble(lblTotalBudgetINR.Text);
+
+                txtTotalPOBudgetINR.Text = Convert.ToString(totalPOBudgetINR);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(lblSaleEstimateBudgetINR.Text)))
+                    totalSaleEstimateBudgetINR += Convert.ToDouble(lblSaleEstimateBudgetINR.Text);
+
+                txtTotalSaleEstimateBudgetINR.Text = Convert.ToString(totalSaleEstimateBudgetINR);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(lblTotalPOValueINR.Text)))
+                    totalPOValueINR += Convert.ToDouble(lblTotalPOValueINR.Text);
+
+                txtTotalPOValueINR1.Text = Convert.ToString(totalPOValueINR);
+                txtTotalPOValueINR2.Text = Convert.ToString(totalPOValueINR);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(lblTotalDeltaAsPerPOBudgetINR.Text)))
+                    totalDeltaAsPerPOBudgetINR += Convert.ToDouble(lblTotalDeltaAsPerPOBudgetINR.Text);
+
+                txtTotalDeltaAsPerPOBudgetINR.Text = Convert.ToString(totalDeltaAsPerPOBudgetINR);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(lblTotalDeltaAsPerSaleEstimateBudgetINR.Text)))
+                    totalDeltaAsPerSaleEstimateBudgetINR += Convert.ToDouble(lblTotalDeltaAsPerSaleEstimateBudgetINR.Text);
+
+                txtTotalDeltaAsPerSaleEstimateBudgetINR.Text = Convert.ToString(totalDeltaAsPerSaleEstimateBudgetINR);
+
+            }
+
+            for (int i = 0; i < e.Row.Cells.Count; i++)
+            {
+                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvPGReport_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "ViewDETAIL")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                    Label lblPivotGroupDesc = gvPGReport.Rows[rowindex].FindControl("lblPivotGroupDesc") as Label;
+                    Label lblPivotGroup = gvPGReport.Rows[rowindex].FindControl("lblPivotGroup") as Label;
+                    Label lblTotalPOValueINR = gvPGReport.Rows[rowindex].FindControl("lblTotalPOValueINR") as Label;
+
+
+                    mpePOList.Show();
+                    txtPivotGroupInPOList.Text = Convert.ToString(lblPivotGroupDesc.Text);
+                    txtTotalPOValueINRInPOList.Text = Convert.ToString(lblTotalPOValueINR.Text);
+                    BindPOList(Convert.ToString(txtJOBNo.Text).Trim(), Convert.ToString(lblPivotGroupDesc.Text).Trim());
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+    double totalPOValueINRInPOList = 0;
+    double totalBudgetINRInPOList = 0;
+    double totalDeltaINRInPOList = 0;
+
+    protected void gvPOList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblAmount = (Label)e.Row.FindControl("lblAmount");
+                Label lblBudget = (Label)e.Row.FindControl("lblBudget");
+                Label lblDelta = (Label)e.Row.FindControl("lblDelta");
+                
+                
+                totalPOValueINRInPOList += Convert.ToDouble(lblAmount.Text);
+                txtTotalPOValueINRInPOList.Text = Convert.ToString(totalPOValueINRInPOList);
+
+                totalBudgetINRInPOList += Convert.ToDouble(lblBudget.Text);
+                txtTotalBudgetInPOList.Text = Convert.ToString(totalBudgetINRInPOList);
+
+                totalDeltaINRInPOList += Convert.ToDouble(lblDelta.Text);
+                txtTotalDeltaInPOList.Text = Convert.ToString(totalDeltaINRInPOList);
+
+                
+            }
+
+            for (int i = 0; i < e.Row.Cells.Count; i++)
+            {
+                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvPOList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "ViewDETAIL")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                    Label lblLocation = gvPOList.Rows[rowindex].FindControl("lblLocation") as Label;
+                    Label lblPONo = gvPOList.Rows[rowindex].FindControl("lblPONo") as Label;
+                    Label lblDocClass = gvPOList.Rows[rowindex].FindControl("lblDocClass") as Label;
+
+                    mpePOList.Show();
+                    mpePOItemList.Show();
+                    BindPOItemList(Convert.ToString(lblLocation.Text), Convert.ToString(lblPONo.Text), Convert.ToString(lblDocClass.Text));
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    double totalPOValue = 0;
+    double totalPOQuantity = 0;
+    double totalMRNQuantity = 0;
+    protected void gvPOItemList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblPOValue = (Label)e.Row.FindControl("lblPOValue");
+                Label lblPOQuantity = (Label)e.Row.FindControl("lblPOQuantity");
+                Label lblMRNQuantity = (Label)e.Row.FindControl("lblMRNQuantity");
+
+                totalPOValue += Convert.ToDouble(lblPOValue.Text);
+                txtTotalPOValue.Text = Convert.ToString(totalPOValue);
+
+                totalPOQuantity += Convert.ToDouble(lblPOQuantity.Text);
+                txtTotalPOQuantity.Text = Convert.ToString(totalPOQuantity);
+
+                totalMRNQuantity += Convert.ToDouble(lblMRNQuantity.Text);
+                txtTotalMRNQuantity.Text = Convert.ToString(totalMRNQuantity);
+
+            }
+
+            for (int i = 0; i < e.Row.Cells.Count; i++)
+            {
+                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    protected void rdType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        txtTotalPOBudgetINR.Text = string.Empty;
+        txtTotalDeltaAsPerPOBudgetINR.Text = string.Empty;
+
+        txtTotalPOValueINR1.Text = string.Empty;
+        txtTotalPOValueINR2.Text = string.Empty;
+
+        txtTotalSaleEstimateBudgetINR.Text = string.Empty;
+        txtTotalDeltaAsPerSaleEstimateBudgetINR.Text = string.Empty;
+
+        gvPGReport.DataSource = null;
+        gvPGReport.DataBind();
+        lblRecords.Text = "Records[0]";
+
+        trAsPerPOBudget.Visible = true;
+        trAsPerSaleEstimateBudget.Visible = true;
+
+        if (Convert.ToInt32(rdType.SelectedValue) == 1)
+        {
+            trAsPerSaleEstimateBudget.Visible = false;
+        }
+        else if (Convert.ToInt32(rdType.SelectedValue) == 2)
+        {
+            trAsPerPOBudget.Visible = false;
+        }
+    }
+
+    protected void btnExport_Click(object sender, EventArgs e)
+    {
+        if (gvPGReport.Rows.Count > 0)
+        {
+            DataSet ds = (DataSet)Session["PIVOT_GROUP_REPORT"];
+            ToCSVNew01(ds.Tables[0]);
+        }
+    }
+
+    #endregion
+
+
+    #region METHODS[=========================]
+
+    private void GetPGReport()
+    {
+        try
+        {
+            JOBNo = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtJOBNo.Text))
+                JOBNo = txtJOBNo.Text;
+
+            dsPGReport = objReports.GetPGReport(JOBNo);
+
+            if (dsPGReport.Tables.Count > 0 && dsPGReport.Tables[0].Rows.Count > 0)
+            {
+                Session["PIVOT_GROUP_REPORT"] = dsPGReport;
+                gvPGReport.DataSource = dsPGReport.Tables[0];
+                gvPGReport.DataBind();
+            }
+            else
+            {
+                Session["PIVOT_GROUP_REPORT"] = null;
+                gvPGReport.DataSource = null;
+                gvPGReport.DataBind();
+
+                txtTotalPOBudgetINR.Text = string.Empty;
+                txtTotalDeltaAsPerPOBudgetINR.Text = string.Empty;
+
+                txtTotalPOValueINR1.Text = string.Empty;
+                txtTotalPOValueINR2.Text = string.Empty;
+
+                txtTotalSaleEstimateBudgetINR.Text = string.Empty;
+                txtTotalDeltaAsPerSaleEstimateBudgetINR.Text = string.Empty;
+
+            }
+            lblRecords.Text = "Records[" + dsPGReport.Tables[0].Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void BindPOList(string JOBNo, string pivotGroup)
+    {
+        try
+        {
+            dsPOReport = objReports.GetPOReportPivotGroupWise(JOBNo, pivotGroup);
+
+            if (dsPOReport.Tables.Count > 0 && dsPOReport.Tables[0].Rows.Count > 0)
+            {
+                gvPOList.DataSource = dsPOReport.Tables[0];
+                gvPOList.DataBind();
+            }
+            else
+            {
+                gvPOList.DataSource = null;
+                gvPOList.DataBind();
+            }
+            lblRecords.Text = "Records[" + dsPOReport.Tables[0].Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private void BindPOItemList(string unit, string poNo, string docClass)
+    {
+        try
+        {
+            DataSet dsDetail = new DataSet();
+            dsDetail = objReports.GetPODetail(unit, poNo, docClass);
+            if (dsDetail.Tables.Count > 0)
+            {
+                if (dsDetail.Tables[0].Rows.Count > 0)
+                {
+                    if (dsDetail.Tables[0].Rows[0]["PO_NO"] != DBNull.Value)
+                        txtPONo.Text = Convert.ToString(dsDetail.Tables[0].Rows[0]["PO_NO"]);
+                    else
+                        txtPONo.Text = string.Empty;
+
+                    if (dsDetail.Tables[0].Rows[0]["PO_DATE"] != DBNull.Value)
+                        txtPODate.Text = Convert.ToDateTime(dsDetail.Tables[0].Rows[0]["PO_DATE"]).ToString("dd-MMM-yyyy");
+                    else
+                        txtPODate.Text = string.Empty;
+
+                    if (dsDetail.Tables[0].Rows[0]["VENDOR_NAME"] != DBNull.Value)
+                        txtVendorName.Text = Convert.ToString(dsDetail.Tables[0].Rows[0]["VENDOR_NAME"]);
+                    else
+                        txtVendorName.Text = string.Empty;
+
+                    if (dsDetail.Tables[0].Rows[0]["VENDOR_CODE"] != DBNull.Value)
+                        txtVendorCode.Text = Convert.ToString(dsDetail.Tables[0].Rows[0]["VENDOR_CODE"]);
+                    else
+                        txtVendorCode.Text = string.Empty;
+
+                    if (dsDetail.Tables[0].Rows[0]["INVOICE_VALUE"] != DBNull.Value)
+                        txtTotalInvoiceValue.Text = Convert.ToString(dsDetail.Tables[0].Rows[0]["INVOICE_VALUE"]);
+                    else
+                        txtTotalInvoiceValue.Text = string.Empty;
+                }
+
+                if (dsDetail.Tables[1].Rows.Count > 0)
+                {
+                    gvPOItemList.DataSource = dsDetail.Tables[1];
+                    gvPOItemList.DataBind();
+                }
+            }
+            else
+            {
+                gvPOItemList.DataSource = null;
+                gvPOItemList.DataBind();
+                Response.Redirect("~/PROJECT_MGMT/ProductList.aspx");
+            }
+            lblRecords.Text = "Records[" + gvPOItemList.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+            return;
+        }
+    }
+
+
+    private void ToCSVNew01(DataTable dt)
+    {
+        try
+        {
+            string csv = string.Empty;
+            foreach (DataColumn column in dt.Columns)
+            {
+                csv += column.ColumnName + ',';
+            }
+            csv += "\r\n";
+
+            foreach (DataRow row in dt.Rows)
+            {
+                foreach (DataColumn column in dt.Columns)
+                {
+                    csv += row[column.ColumnName].ToString().Replace(",", ";") + ',';
+                }
+                csv += "\r\n";
+            }
+
+            string fileName = "Pivot_Group_Report_of_" + txtJOBNo.Text;
+            Response.Clear();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
+            Response.Charset = "";
+            Response.ContentType = "application/text";
+            Response.Output.Write(csv);
+            Response.Flush();
+            Response.End();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    #endregion
+
+}

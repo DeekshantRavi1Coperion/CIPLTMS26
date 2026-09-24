@@ -1,0 +1,454 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="POReportPivotGroupWise.aspx.cs"
+    Inherits="REPORTS_PURCHASE_ORDER_POReportPivotGroupWise" Title="PO Report- Pivot Group Wise" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link rel="icon" href="../Images/Icon04.png" />
+    <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+
+
+    <style type="text/css">
+        .modalBackground {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+    </style>
+
+    <script type="text/javascript" language="javascript">
+
+        function ValidateJOBNo() {
+            var jobNo = document.getElementById('<%=txtJOBNo.ClientID %>').value;
+            if (jobNo == '') {
+                document.getElementById('<%=txtJOBNo.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtJOBNo.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateAll() {
+
+            if (ValidateJOBNo()) {
+                return false;
+            }
+            return true;
+        }
+
+    </script>
+
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <asp:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </asp:ToolkitScriptManager>
+    <%--<asp:UpdatePanel runat="server" ID="uppanel">
+        <ContentTemplate>--%>
+    <div align="center" style="margin-top: 20px;">
+        <fieldset style="width: 90%">
+            <legend style="text-align: center;">Pivot Group Report</legend>
+            <table width="80%">
+                <tr>
+                    <td>JOB No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtJOBNo" runat="server" Width="100%"></asp:TextBox>
+                    </td>
+                    <td colspan="2">&nbsp;</td>
+                    <td colspan="3">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <asp:RadioButtonList ID="rdType" runat="server" RepeatDirection="Horizontal" Width="100%"
+                                        OnSelectedIndexChanged="rdType_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="Both" Value="0" Selected="True" />
+                                        <asp:ListItem Text="As Per PO Budget" Value="1" />
+                                        <asp:ListItem Text="As Per Sale Estimate Budget" Value="2" />
+                                    </asp:RadioButtonList>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                                        OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
+                                </td>
+                                <td>&nbsp;
+                                </td>
+                                <td>
+                                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                                        OnClick="btnExport_Click" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr runat="server" id="trAsPerPOBudget">
+                    <td>Total PO Budget[INR]:</td>
+                    <td>
+                        <asp:TextBox ID="txtTotalPOBudgetINR" runat="server" Width="100%" Enabled="false"></asp:TextBox>
+                    </td>
+                    <td>&nbsp;</td>
+
+                    <td>Total PO Value[INR]:</td>
+                    <td>
+                        <asp:TextBox ID="txtTotalPOValueINR1" runat="server" Width="100%" Enabled="false"></asp:TextBox>
+                    </td>
+                    <td>&nbsp;</td>
+
+                    <td>Total Delta As Per PO Budget[INR]:</td>
+                    <td>
+                        <asp:TextBox ID="txtTotalDeltaAsPerPOBudgetINR" runat="server" Width="100%" Enabled="false"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr runat="server" id="trAsPerSaleEstimateBudget">
+                    <td>Total Sale Estimate Budget[INR]:</td>
+                    <td>
+                        <asp:TextBox ID="txtTotalSaleEstimateBudgetINR" runat="server" Width="100%" Enabled="false"></asp:TextBox>
+                    </td>
+                    <td>&nbsp;</td>
+
+                    <td>Total PO Value[INR]:</td>
+                    <td>
+                        <asp:TextBox ID="txtTotalPOValueINR2" runat="server" Width="100%" Enabled="false"></asp:TextBox>
+                    </td>
+                    <td>&nbsp;</td>
+
+                    <td>Total Delta As Per Sale Estimate Budget[INR]:</td>
+                    <td>
+                        <asp:TextBox ID="txtTotalDeltaAsPerSaleEstimateBudgetINR" runat="server" Width="100%" Enabled="false"></asp:TextBox>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <br />
+    <div align="center">
+        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+        </asp:Panel>
+    </div>
+    <div align="center">
+        <fieldset style="width: 80%;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+            <div style='overflow: auto; width: 100%; height: 450px; border: 1px solid lightgray;'>
+                <asp:GridView ID="gvPGReport" runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvPGReport_RowDataBound"
+                    OnRowCommand="gvPGReport_RowCommand">
+                    <columns>
+                        <asp:TemplateField HeaderText="ZOOM" HeaderStyle-HorizontalAlign="Center"
+                            HeaderStyle-VerticalAlign="Middle" ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle"                            >
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" Height="20px" Width="20px" CommandArgument="ViewDETAIL" runat="server" ImageUrl="~/Images/viewdetails.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PIVOT_GROUP_DESC">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPivotGroupDesc" runat="server" Visible="true" Text='<%# Eval("PIVOT_GROUP_DESC") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PIVOT_GROUP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPivotGroup" runat="server" Visible="true" Text='<%# Eval("PIVOT_GROUP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO_BUDGET">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTotalBudgetINR" runat="server" Visible="true" Text='<%# Eval("PO_BUDGET") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="SALE_ESTIMATE_BUDGET">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSaleEstimateBudgetINR" runat="server" Visible="true" Text='<%# Eval("SALE_ESTIMATE_BUDGET") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>      
+                        
+                        <asp:TemplateField HeaderText="PO_VALUE_INR">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTotalPOValueINR" runat="server" Visible="true" Text='<%# Eval("PO_VALUE_INR") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>      
+
+                        <asp:TemplateField HeaderText="DELTA_AS_PER_PO_BUDGET">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTotalDeltaAsPerPOBudgetINR" runat="server" Visible="true" Text='<%# Eval("DELTA_AS_PER_PO_BUDGET") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>      
+
+                        <asp:TemplateField HeaderText="DELTA_AS_PER_SALE_ESTIMATE_BUDGET">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTotalDeltaAsPerSaleEstimateBudgetINR" runat="server" Visible="true" Text='<%# Eval("DELTA_AS_PER_SALE_ESTIMATE_BUDGET") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>      
+                    </columns>
+                    <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
+                    <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
+                    <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
+                    <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
+                    <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
+                    <editrowstyle backcolor="#7C6F57" />
+                    <alternatingrowstyle backcolor="White" />
+                </asp:GridView>
+            </div>
+
+
+            <asp:Button ID="btnShowPOListPopup" runat="server" Style="display: none" />
+            <asp:ModalPopupExtender ID="mpePOList" runat="server" TargetControlID="btnShowPOListPopup"
+                PopupControlID="pnlPOListPopup" CancelControlID="imgBtnPOListCancel" BackgroundCssClass="modalBackground">
+            </asp:ModalPopupExtender>
+            <asp:Panel ID="pnlPOListPopup" runat="server" BackColor="White" Height="600px" Width="1000px"
+                Style="display: block">
+                <table width="100%">
+                    <tr>
+                        <td align="right">
+                            <asp:ImageButton ID="imgBtnPOListCancel" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                        </td>
+                    </tr>
+                </table>
+
+                <div align="center" style="margin-top: 20px;">
+                    <fieldset style="width: 80%;">
+                        <legend style="text-align: center;">PO List</legend>
+                        <table width="100%">
+                            <tr>
+                                <td>&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pivot Group:</td>
+                                <td>
+                                    <asp:TextBox ID="txtPivotGroupInPOList" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>Total Budget [INR]:</td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalBudgetInPOList" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>Total PO Value [INR]:</td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalPOValueINRInPOList" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>Total Delta [INR]:</td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalDeltaInPOList" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <br />
+                    <fieldset style="width: 95%;">
+                        <legend style="text-align: center;">
+                            <asp:Label ID="Label2" runat="server" Text="Records[0]" />
+                        </legend>
+                        <div style='overflow: auto; width: 100%; height: 300px; border: 1px solid lightgray;'>
+                            <asp:GridView ID="gvPOList" runat="server" CellPadding="4" ForeColor="#333333"
+                                AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
+                                OnRowDataBound="gvPOList_RowDataBound"
+                                OnRowCommand="gvPOList_RowCommand">
+                                <columns>
+                                    <asp:TemplateField HeaderText="ZOOM">
+                                        <ItemTemplate>
+                                            <asp:ImageButton ID="btnViewDetail" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
+                                                runat="server" ImageUrl="~/Images/viewdetails.png" />
+                                            <asp:Label ID="lblAmount" runat="server" Visible="false" Text='<%# Eval("PO_VALUE_INR") %>' />
+                                            <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("LOCATION") %>' />
+                                            <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
+                                            <asp:Label ID="lblDocClass" runat="server" Visible="false" Text='<%# Eval("DOC_CLASS") %>' />
+
+                                            <asp:Label ID="lblBudget" runat="server" Visible="false" Text='<%# Eval("BUDGET") %>' />
+                                            <asp:Label ID="lblDelta" runat="server" Visible="false" Text='<%# Eval("DELTA") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                    <asp:BoundField HeaderText="PIVOT_GROUP" DataField="PIVOT_GROUP" />
+                                    <asp:BoundField HeaderText="PO_NO" DataField="PO_NO" />
+                                    <asp:BoundField HeaderText="PO_DATE" DataField="PO_DATE" />
+                                    <asp:BoundField HeaderText="EXPECTED_DATE" DataField="EXPECTED_DATE" />
+                                    <asp:BoundField HeaderText="VENDOR_CODE" DataField="VENDOR_CODE" />
+                                    <asp:BoundField HeaderText="VENDOR_NAME" DataField="VENDOR_NAME" />
+
+                                    <asp:BoundField HeaderText="PO_VALUE[FC]" DataField="PO_VALUE" />
+                                    <asp:BoundField HeaderText="CURR_DESC" DataField="CURR_DESC" />
+                                    <asp:BoundField HeaderText="CURR_RATE" DataField="CURR_RATE" />
+
+                                    <asp:BoundField HeaderText="BUDGET" DataField="BUDGET" />
+                                    <asp:BoundField HeaderText="PO_VALUE_INR" DataField="PO_VALUE_INR" />
+                                    <asp:BoundField HeaderText="DELTA" DataField="DELTA" />
+
+                                    <asp:BoundField HeaderText="DOC_CLASS" DataField="DOC_CLASS" />
+                                    <asp:BoundField HeaderText="PO_STATUS" DataField="PO_STATUS" />
+                                    <asp:BoundField HeaderText="REVISION" DataField="REVISION" />
+
+                                    <asp:BoundField HeaderText="LOCATION" DataField="LOCATION" />
+                                </columns>
+                                <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
+                                <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
+                                <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
+                                <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
+                                <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
+                                <editrowstyle backcolor="#7C6F57" />
+                                <alternatingrowstyle backcolor="White" />
+                            </asp:GridView>
+                        </div>
+                    </fieldset>
+                </div>
+
+            </asp:Panel>
+
+
+
+            <asp:Button ID="btnShowPOItemListPopup" runat="server" Style="display: none" />
+            <asp:ModalPopupExtender ID="mpePOItemList" runat="server" TargetControlID="btnShowPOItemListPopup"
+                PopupControlID="pnlPOItemListPopup" CancelControlID="imgBtnPOItemListCancel" BackgroundCssClass="modalBackground">
+            </asp:ModalPopupExtender>
+            <asp:Panel ID="pnlPOItemListPopup" runat="server" BackColor="White" Height="700px" Width="1100px"
+                Style="display: block">
+                <table width="100%">
+                    <tr>
+                        <td align="right">
+                            <asp:ImageButton ID="imgBtnPOItemListCancel" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                        </td>
+                    </tr>
+                </table>
+
+                <div align="center" style="margin-top: 20px;">
+                    <fieldset style="width: 80%;">
+                        <legend style="text-align: center;">PO Detail</legend>
+                        <table width="100%">
+                            <tr>
+                                <td>&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>PO No.:
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtPONo" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                                <td>&nbsp;
+                                </td>
+                                <td>PO Date:
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtPODate" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Vendor:
+                                </td>
+                                <td colspan="4">
+                                    <table width="100%">
+                                        <tr>
+                                            <td width="80%">
+                                                <asp:TextBox ID="txtVendorName" runat="server" Width="100%" Enabled="false" />
+                                            </td>
+                                            <td width="80%">
+                                                <asp:TextBox ID="txtVendorCode" runat="server" Width="100%" Enabled="false" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Total PO Value:
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalPOValue" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                                <td>&nbsp;
+                                </td>
+                                <td>Total Invoice Value:
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalInvoiceValue" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Total PO Quantity:
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalPOQuantity" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                                <td>&nbsp;
+                                </td>
+                                <td>Total MRN Quantity:
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="txtTotalMRNQuantity" runat="server" Width="100%" Enabled="false" />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <br />
+                    <fieldset style="width: 95%;">
+                        <legend style="text-align: center;">
+                            <asp:Label ID="Label1" runat="server" Text="Records[0]" />
+                        </legend>
+                        <div style='overflow: auto; width: 100%; height: 300px; border: 1px solid lightgray;'>
+                            <asp:GridView ID="gvPOItemList" runat="server" CellPadding="4" ForeColor="#333333"
+                                AutoGenerateColumns="true" Width="100%" HorizontalAlign="Center"
+                                OnRowDataBound="gvPOItemList_RowDataBound  ">
+                                <columns>
+                                    <asp:TemplateField Visible="false">
+                                        <ItemTemplate>
+                                            <asp:Label ID="lblPOValue" runat="server" Visible="false" Text='<%# Eval("PO_VALUE") %>' />
+                                            <asp:Label ID="lblPOQuantity" runat="server" Visible="false" Text='<%# Eval("PO_QUANTITY") %>' />
+                                            <asp:Label ID="lblMRNQuantity" runat="server" Visible="false" Text='<%# Eval("MRN_QUANTITY") %>' />
+                                        </ItemTemplate>
+                                    </asp:TemplateField>
+                                </columns>
+                                <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
+                                <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
+                                <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
+                                <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
+                                <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
+                                <editrowstyle backcolor="#7C6F57" />
+                                <alternatingrowstyle backcolor="White" />
+                            </asp:GridView>
+                        </div>
+                    </fieldset>
+                </div>
+            </asp:Panel>
+
+        </fieldset>
+    </div>
+    <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
+</asp:Content>

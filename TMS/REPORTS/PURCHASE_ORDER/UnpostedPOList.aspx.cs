@@ -1,0 +1,569 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class REPORTS_PURCHASE_ORDER_UnpostedPOList : System.Web.UI.Page
+{
+
+    #region VARIABLES[=======================]
+
+    BAL.Project objProject = new BAL.Project();
+    BAL.Purchase objPurchase = new BAL.Purchase();
+    BAL.Common objCommon = new BAL.Common();
+
+    DataSet dsFactPivotGroupList = new DataSet();
+    DataSet dsPivotGroup = new DataSet();
+    DataSet dsPoPostingStatus = new DataSet();
+    DataSet dsUnpostedPOList = new DataSet();
+    DataSet dsUnit = new DataSet();
+    string fromDate = string.Empty;
+    string toDate = string.Empty;
+    string poNo = string.Empty;
+    string unitName = string.Empty;
+
+    #endregion
+
+
+    #region EVENTS[==========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+                Session["PO_REPORT"] = null;
+                Session["dtPivotGroup"] = null;
+                Session["dtPoPostingStatus"] = null;
+
+                dsPivotGroup = objProject.GetDetailsBySP("sp_get_pivot_group");
+                Session["dtPivotGroup"] = dsPivotGroup.Tables[0];
+
+                dsPoPostingStatus = objProject.GetDetailsBySP("sp_get_po_posting_status");
+                Session["dtPoPostingStatus"] = dsPoPostingStatus.Tables[0];
+
+                hdStartDateSearch.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtStartDateSearch.Text = hdStartDateSearch.Value;
+
+                hdEndDateSearch.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtEndDateSearch.Text = hdEndDateSearch.Value;
+                BindUnit();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        HidePanel();
+        GetUnpostedPOList();
+    }
+
+    protected void gvUnpostedPOList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            DataTable dtPivotGroup = (DataTable)Session["dtPivotGroup"];
+            DataTable dtPoPostingStatus = (DataTable)Session["dtPoPostingStatus"];
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Label lblPONo = (Label)e.Row.FindControl("lblPONo");
+                Label lblPOValueINR = (Label)e.Row.FindControl("lblPOValueINR");
+                Label lblExistingPoValueINR = (Label)e.Row.FindControl("lblExistingPoValueINR");
+                Label lblPurchaseID = (Label)e.Row.FindControl("lblPurchaseID");
+                Label lblIsOrderSubjectTo = (Label)e.Row.FindControl("lblIsOrderSubjectTo");
+
+                DropDownList ddlPostingStatus = (DropDownList)e.Row.FindControl("ddlPostingStatus");
+                DropDownList ddlSalesPivotGroup = (DropDownList)e.Row.FindControl("ddlSalesPivotGroup");
+                
+                if (dtPivotGroup.Rows.Count > 0)
+                {
+                    ddlSalesPivotGroup.DataSource = dtPivotGroup;
+                    ddlSalesPivotGroup.DataTextField = "PIVOT_GROUP";
+                    ddlSalesPivotGroup.DataValueField = "PIVOT_GROUP_ID";
+                    ddlSalesPivotGroup.DataBind();
+                    ddlSalesPivotGroup.Items.Insert(0, "SELECT");
+                    ddlSalesPivotGroup.SelectedIndex = 0;
+
+                    if (dsFactPivotGroupList.Tables.Count > 0 && dsFactPivotGroupList.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dsFactPivotGroupList.Tables[0].Select("PO_NO='" + Convert.ToString(lblPONo.Text) + "'"))
+                        {
+                            if (!string.IsNullOrEmpty(Convert.ToString(dr["PIVOT_GROUP_ID"])) && Convert.ToInt32(dr["PIVOT_GROUP_ID"]) > 0 && dr["PIVOT_GROUP_ID"] != DBNull.Value)
+                                ddlSalesPivotGroup.SelectedValue = Convert.ToString(dr["PIVOT_GROUP_ID"]);
+                            else
+                                ddlSalesPivotGroup.SelectedValue = "0";
+                        }
+                    }
+                    else
+                        ddlSalesPivotGroup.SelectedValue = "0";
+                }
+
+                
+                if (dtPoPostingStatus.Rows.Count > 0)
+                {
+                    ddlPostingStatus.DataSource = dtPoPostingStatus;
+                    ddlPostingStatus.DataTextField = "STATUS_NAME";
+                    ddlPostingStatus.DataValueField = "STATUS_ID";
+                    ddlPostingStatus.DataBind();
+                    ddlPostingStatus.Items.Insert(0, "SELECT");
+                    ddlPostingStatus.SelectedIndex = 0;
+                }                
+            }
+
+            for (int i = 0; i < e.Row.Cells.Count; i++)
+            {
+                e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void btnPost_Click(object sender, EventArgs e)
+    {
+        HidePanel();
+        PostUnpostedPO();
+    }
+
+    #endregion
+
+
+    #region METHODS[=========================]
+
+    private void BindUnit()
+    {
+        try
+        {
+            dsUnit = objCommon.GetUnit();
+            if (dsUnit.Tables.Count > 0 && dsUnit.Tables[0].Rows.Count > 0)
+            {
+                ddlCompany.DataSource = dsUnit.Tables[0];
+                ddlCompany.DataTextField = "UNIT_NAME";
+                ddlCompany.DataValueField = "UNIT_ID";
+                ddlCompany.DataBind();
+                ddlCompany.Items.Insert(0, "All");
+                ddlCompany.SelectedIndex = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void GetUnpostedPOList()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(Convert.ToString(hdStartDateSearch.Value)))
+                fromDate = Convert.ToDateTime(hdStartDateSearch.Value).ToString("yyyy-MM-dd");
+            else
+                fromDate = string.Empty;
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdEndDateSearch.Value)))
+                toDate = Convert.ToDateTime(hdEndDateSearch.Value).ToString("yyyy-MM-dd");
+            else
+                toDate = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtPONo.Text))
+                poNo = txtPONo.Text.ToUpper();
+            else
+                poNo = string.Empty;
+
+            if (ddlCompany.SelectedIndex > 0)
+                unitName = Convert.ToString(ddlCompany.SelectedItem.Text);
+            else
+                unitName = string.Empty;
+
+            dsFactPivotGroupList = objPurchase.GetFactPivotGroupListForPosting(unitName);
+
+            dsUnpostedPOList = objPurchase.GetUnpostedPOList(fromDate, toDate, poNo);
+
+            if (dsUnpostedPOList.Tables.Count > 0 && dsUnpostedPOList.Tables[0].Rows.Count > 0)
+            {
+                gvUnpostedPOList.DataSource = dsUnpostedPOList.Tables[0];
+                gvUnpostedPOList.DataBind();
+            }
+            else
+            {
+                gvUnpostedPOList.DataSource = null;
+                gvUnpostedPOList.DataBind();
+            }
+            lblRecords.Text = "Records[" + gvUnpostedPOList.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void PostUnpostedPO()
+    {
+        try
+        {
+            bool chk = false;
+            int serialNo = 0;
+            int recordID = 0;
+            string poNo = string.Empty;
+            string poDate = string.Empty;
+            string vendorCode = string.Empty;
+            string vendorName = string.Empty;
+            double poValueINR = 0;
+            double poPostingValueINR = 0;
+            string postingStatus = string.Empty;
+            string docClass = string.Empty;
+            int salesPivotGroup = 0;
+            string location = string.Empty;
+
+            int count = 0;
+            if (gvUnpostedPOList.Rows.Count > 0)
+            {
+                foreach (GridViewRow gr in gvUnpostedPOList.Rows)
+                {
+                    chk = true;
+
+                    Label lblSerialNo = (Label)gr.FindControl("lblSerialNo");
+                    Label lblRecordID = (Label)gr.FindControl("lblRecordID");
+                    Label lblPONo = (Label)gr.FindControl("lblPONo");
+                    Label lblPODate = (Label)gr.FindControl("lblPODate");
+                    Label lblVendorCode = (Label)gr.FindControl("lblVendorCode");
+                    Label lblVendorName = (Label)gr.FindControl("lblVendorName");
+                    Label lblPOValueINR = (Label)gr.FindControl("lblPOValueINR");
+                    TextBox txtPostingValue = (TextBox)gr.FindControl("txtPostingValue");
+                    Label lblPostedValue = (Label)gr.FindControl("lblPostedValue");
+                    Label lblPendingPostingValue = (Label)gr.FindControl("lblPendingPostingValue");
+                    DropDownList ddlPostingStatus = (DropDownList)gr.FindControl("ddlPostingStatus");
+                    Label lblDocClass = (Label)gr.FindControl("lblDocClass");
+                    DropDownList ddlSalesPivotGroup = (DropDownList)gr.FindControl("ddlSalesPivotGroup");
+                    Label lblLocation = (Label)gr.FindControl("lblLocation");
+
+
+                    serialNo = Convert.ToInt32(lblSerialNo.Text);
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblRecordID.Text)))
+                        recordID = Convert.ToInt32(lblRecordID.Text);
+                    else
+                        recordID = 0;
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblPONo.Text)))
+                        poNo = Convert.ToString(lblPONo.Text);
+                    else
+                        poNo = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblPODate.Text)))
+                        poDate = Convert.ToDateTime(lblPODate.Text).ToString("yyyy-MM-dd");
+                    else
+                        poDate = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblVendorCode.Text)))
+                        vendorCode = Convert.ToString(lblVendorCode.Text);
+                    else
+                        vendorCode = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblVendorName.Text)))
+                        vendorName = Convert.ToString(lblVendorName.Text);
+                    else
+                        vendorName = string.Empty;
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblPOValueINR.Text)))
+                        poValueINR = Convert.ToDouble(lblPOValueINR.Text);
+                    else
+                        poValueINR = 0;
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(txtPostingValue.Text)))
+                        poPostingValueINR = Convert.ToDouble(txtPostingValue.Text);
+                    else
+                        poPostingValueINR = 0;
+
+                    postingStatus = Convert.ToString(ddlPostingStatus.SelectedValue);
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblDocClass.Text)))
+                        docClass = Convert.ToString(lblDocClass.Text);
+                    else
+                        docClass = string.Empty;
+
+                    if (ddlSalesPivotGroup.SelectedIndex > 0)
+                        salesPivotGroup = Convert.ToInt32(ddlSalesPivotGroup.SelectedValue);
+                    else
+                    {
+                        chk = false;
+                        ExceptionMessage("Please select sales pivot group.!");
+                        return;
+                    }
+
+                    if (!string.IsNullOrEmpty(Convert.ToString(lblLocation.Text)))
+                        location = Convert.ToString(lblLocation.Text);
+                    else
+                        location = string.Empty;
+
+                    if (chk)
+                    {
+                        int value = objPurchase.PostUnpostedPO(poNo, poDate, vendorCode, vendorName, poValueINR, poPostingValueINR, postingStatus,
+                                                                docClass, salesPivotGroup, location, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+
+                        if (value > 0)
+                        {
+                            count++;
+                            RemoveRecord(serialNo);
+                        }
+                    }
+                }
+
+                if (Session["PO_REPORT"] != null)
+                {
+                    DataTable dt = new DataTable();
+                    dt = (DataTable)Session["PO_REPORT"];
+                    gvUnpostedPOList.DataSource = dt;
+                    gvUnpostedPOList.DataBind();
+
+                    SuccessMessage(count + " Records imported. Rest " + gvUnpostedPOList.Rows.Count + " Records already existed with different PO Value INR, would you like to update..?");
+                }
+                else
+                {
+                    SuccessMessage("All records imported successfully..!");
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void RemoveRecord(int serialNo)
+    {
+        try
+        {
+            HidePanel();
+
+            DataTable dtNew = new DataTable();
+
+            dtNew.Columns.Add("SERIAL_NO", typeof(string));
+            dtNew.Columns.Add("PURCHASE_ID", typeof(string));
+            dtNew.Columns.Add("EXISTING_PO_VALUE_INR", typeof(string));
+            dtNew.Columns.Add("PO_NO", typeof(string));
+            dtNew.Columns.Add("PO_DATE", typeof(string));
+            dtNew.Columns.Add("VENDOR_CODE", typeof(string));
+            dtNew.Columns.Add("VENDOR_NAME", typeof(string));
+            dtNew.Columns.Add("PO_VALUE_INR", typeof(string));
+            dtNew.Columns.Add("FRAIGHT_OR_CUSTOM_LOADING_IN_PERCENTAGE", typeof(string));
+            dtNew.Columns.Add("TOTAL_PO_VALUE_INR", typeof(string));
+            dtNew.Columns.Add("DOC_CLASS", typeof(string));
+            dtNew.Columns.Add("PO_STATUS", typeof(string));
+            dtNew.Columns.Add("LOCATION", typeof(string));
+            dtNew.Columns.Add("LAST_DELIVERY_DATE", typeof(string));
+            dtNew.Columns.Add("EXPECTED_DELIVERY_DATE", typeof(string));
+            dtNew.Columns.Add("NO_OF_MONTHS_TO_DELIVER", typeof(string));
+            dtNew.Columns.Add("NO_OF_MONTHS_BASED_UPON", typeof(string));
+            dtNew.Columns.Add("PAYMENT_TERM", typeof(string));
+            dtNew.Columns.Add("IS_ORDER_SUBJECT_TO", typeof(string));
+            dtNew.Columns.Add("SALES_PIVOT_GROUP", typeof(string));
+
+            foreach (GridViewRow gr in gvUnpostedPOList.Rows)
+            {
+                DataRow dr = dtNew.NewRow();
+                Label lblSerialNo = (Label)gr.FindControl("lblSerialNo");
+                Label lblPurchaseID = (Label)gr.FindControl("lblPurchaseID");
+                Label lblExistingPoValueINR = (Label)gr.FindControl("lblExistingPoValueINR");
+                Label lblPONo = (Label)gr.FindControl("lblPONo");
+                Label lblPODate = (Label)gr.FindControl("lblPODate");
+                Label lblVendorCode = (Label)gr.FindControl("lblVendorCode");
+                Label lblVendorName = (Label)gr.FindControl("lblVendorName");
+                Label lblPOValueINR = (Label)gr.FindControl("lblPOValueINR");
+                TextBox txtFraightOrCustomLoading = (TextBox)gr.FindControl("txtFraightOrCustomLoading");
+                TextBox txtTotalPOValueINR = (TextBox)gr.FindControl("txtTotalPOValueINR");
+                Label lblDocClass = (Label)gr.FindControl("lblDocClass");
+                Label lblPOStatus = (Label)gr.FindControl("lblPOStatus");
+                Label lblLocation = (Label)gr.FindControl("lblLocation");
+                TextBox txtLastDeliveryDate = (TextBox)gr.FindControl("txtLastDeliveryDate");
+
+                TextBox txtExpectedDeliveryDate = (TextBox)gr.FindControl("txtExpectedDeliveryDate");
+                TextBox txtNoOfMonthsToDeliver = (TextBox)gr.FindControl("txtNoOfMonthsToDeliver");
+                TextBox txtNoOfMonthsBasedUpon = (TextBox)gr.FindControl("txtNoOfMonthsBasedUpon");
+                TextBox txtPaymentTerm = (TextBox)gr.FindControl("txtPaymentTerm");
+                DropDownList ddlIsOrderSubjectTo = (DropDownList)gr.FindControl("ddlIsOrderSubjectTo");
+                DropDownList ddlSalesPivotGroup = (DropDownList)gr.FindControl("ddlSalesPivotGroup");
+
+
+
+                if (!string.IsNullOrEmpty(lblSerialNo.Text))
+                    dr["SERIAL_NO"] = lblSerialNo.Text;
+                else
+                    dr["SERIAL_NO"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblPurchaseID.Text))
+                    dr["PURCHASE_ID"] = lblPurchaseID.Text;
+                else
+                    dr["PURCHASE_ID"] = "0";
+
+                if (!string.IsNullOrEmpty(lblExistingPoValueINR.Text))
+                    dr["EXISTING_PO_VALUE_INR"] = lblExistingPoValueINR.Text;
+                else
+                    dr["EXISTING_PO_VALUE_INR"] = "0";
+
+                if (!string.IsNullOrEmpty(lblPONo.Text))
+                    dr["PO_NO"] = lblPONo.Text;
+                else
+                    dr["PO_NO"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblPODate.Text))
+                    dr["PO_DATE"] = Convert.ToDateTime(lblPODate.Text).ToString("dd-MMM-yyyy");
+                else
+                    dr["PO_DATE"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblVendorCode.Text))
+                    dr["VENDOR_CODE"] = lblVendorCode.Text;
+                else
+                    dr["VENDOR_CODE"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblVendorName.Text))
+                    dr["VENDOR_NAME"] = lblVendorName.Text;
+                else
+                    dr["VENDOR_NAME"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblPOValueINR.Text))
+                    dr["PO_VALUE_INR"] = Convert.ToString(lblPOValueINR.Text);
+                else
+                    dr["PO_VALUE_INR"] = "0";
+
+                if (!string.IsNullOrEmpty(txtFraightOrCustomLoading.Text))
+                    dr["FRAIGHT_OR_CUSTOM_LOADING_IN_PERCENTAGE"] = Convert.ToString(txtFraightOrCustomLoading.Text);
+                else
+                    dr["FRAIGHT_OR_CUSTOM_LOADING_IN_PERCENTAGE"] = "0";
+
+                if (!string.IsNullOrEmpty(txtTotalPOValueINR.Text))
+                    dr["TOTAL_PO_VALUE_INR"] = Convert.ToString(txtTotalPOValueINR.Text);
+                else
+                    dr["TOTAL_PO_VALUE_INR"] = "0";
+
+                if (!string.IsNullOrEmpty(lblDocClass.Text))
+                    dr["DOC_CLASS"] = Convert.ToString(lblDocClass.Text);
+                else
+                    dr["DOC_CLASS"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblPOStatus.Text))
+                    dr["PO_STATUS"] = lblPOStatus.Text;
+                else
+                    dr["PO_STATUS"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(lblLocation.Text))
+                    dr["LOCATION"] = lblLocation.Text;
+                else
+                    dr["LOCATION"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(txtLastDeliveryDate.Text))
+                    dr["LAST_DELIVERY_DATE"] = txtLastDeliveryDate.Text;
+                else
+                    dr["LAST_DELIVERY_DATE"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(txtExpectedDeliveryDate.Text))
+                    dr["EXPECTED_DELIVERY_DATE"] = txtExpectedDeliveryDate.Text;
+                else
+                    dr["EXPECTED_DELIVERY_DATE"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(txtNoOfMonthsToDeliver.Text))
+                    dr["NO_OF_MONTHS_TO_DELIVER"] = txtNoOfMonthsToDeliver.Text;
+                else
+                    dr["NO_OF_MONTHS_TO_DELIVER"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(txtNoOfMonthsBasedUpon.Text))
+                    dr["NO_OF_MONTHS_BASED_UPON"] = txtNoOfMonthsBasedUpon.Text;
+                else
+                    dr["NO_OF_MONTHS_BASED_UPON"] = string.Empty;
+
+                if (!string.IsNullOrEmpty(txtPaymentTerm.Text))
+                    dr["PAYMENT_TERM"] = txtPaymentTerm.Text;
+                else
+                    dr["PAYMENT_TERM"] = string.Empty;
+
+                if (ddlIsOrderSubjectTo.SelectedIndex > 0)
+                    dr["IS_ORDER_SUBJECT_TO"] = Convert.ToString(ddlIsOrderSubjectTo.SelectedValue);
+                else
+                    dr["IS_ORDER_SUBJECT_TO"] = "0";
+
+                if (ddlSalesPivotGroup.SelectedIndex > 0)
+                    dr["SALES_PIVOT_GROUP"] = Convert.ToString(ddlSalesPivotGroup.SelectedValue);
+                else
+                    dr["SALES_PIVOT_GROUP"] = "0";
+
+                dtNew.Rows.Add(dr);
+            }
+
+
+            if (dtNew.Rows.Count > 0)
+            {
+                foreach (DataRow drremove in dtNew.Select("SERIAL_NO='" + serialNo + "'"))
+                {
+                    dtNew.Rows.Remove(drremove);
+                }
+
+                if (dtNew.Rows.Count > 0)
+                {
+                    Session["PO_REPORT"] = dtNew;
+                    gvUnpostedPOList.DataSource = dtNew;
+                    gvUnpostedPOList.DataBind();
+                }
+                else
+                {
+                    Session["PO_REPORT"] = null;
+                    gvUnpostedPOList.DataSource = null;
+                    gvUnpostedPOList.DataBind();
+                }
+            }
+            else
+            {
+                Session["PO_REPORT"] = null;
+            }
+            lblRecords.Text = "Records[" + dtNew.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void HidePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    #endregion
+
+}
