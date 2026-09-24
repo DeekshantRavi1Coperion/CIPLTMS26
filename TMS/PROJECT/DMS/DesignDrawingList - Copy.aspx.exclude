@@ -1,0 +1,535 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="DesignDrawingList - Copy.aspx.cs"
+    Inherits="PROJECT_DMS_DesignDrawingList" Title="Design List" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link rel="icon" href="../Images/Icon04.png" />
+    <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../Scripts/NumericValidation.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        .modalBackground {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+    </style>
+
+    <style type="text/css">
+        .textboxcenter {
+            width: 100%;
+            padding: 5px 5px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: center;
+            border-radius: 4px;
+            background-color: transparent;
+            /*background-color: whitesmoke;*/
+            /*background-color: #D8D8D8;*/
+        }
+
+        .textboxright {
+            width: 100%;
+            padding: 5px 5px;
+            margin: 1px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: right;
+            border-radius: 4px;
+            background-color: transparent;
+            /*background-color: whitesmoke;*/
+            /*background-color: #D8D8D8;*/
+        }
+
+        .textboxleft {
+            width: 100%;
+            padding: 5px 5px;
+            margin: 0px 0;
+            box-sizing: border-box;
+            border: none;
+            display: inline-block;
+            text-align: left;
+            border-radius: 4px;
+            background-color: transparent;
+            /*background-color: palegreen;*/
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+        function pageLoad() {
+            document.getElementById('<%=txtDateByProjectTeamToEdit.ClientID %>').value = document.getElementById('<%=hdDateByProjectTeamToEdit.ClientID %>').value;
+        }
+
+        function clientChangedDateByProjectTeamToEdit(sender, args) {
+            document.getElementById('<%=hdDateByProjectTeamToEdit.ClientID %>').value = document.getElementById('<%=txtDateByProjectTeamToEdit.ClientID %>').value;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        function ValidateJobNo() {
+            var JOBNo = document.getElementById('<%=txtJOBNoToEdit.ClientID %>').value;
+            if (JOBNo == '') {
+                document.getElementById('<%=txtJOBNoToEdit.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtJOBNoToEdit.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateDrawingNumber() {
+            var DrawingNumber = document.getElementById('<%=txtDrawingNumberToEdit.ClientID %>').value;
+            if (DrawingNumber == '') {
+                document.getElementById('<%=txtDrawingNumberToEdit.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtDrawingNumberToEdit.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateDescription() {
+            var Description = document.getElementById('<%=txtDescriptionToEdit.ClientID %>').value;
+            if (Description == '') {
+                document.getElementById('<%=txtDescriptionToEdit.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtDescriptionToEdit.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateQuantity() {
+            var Quantity = document.getElementById('<%=txtQuantityToEdit.ClientID %>').value;
+            if (Quantity == '' || parseInt(Quantity) == 0) {
+                document.getElementById('<%=txtQuantityToEdit.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtQuantityToEdit.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateUOM() {
+            var UOM = document.getElementById('<%=txtUOMToEdit.ClientID %>').value;
+            if (UOM == '') {
+                document.getElementById('<%=txtUOMToEdit.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtUOMToEdit.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+
+
+    </script>
+
+
+
+    <script type="text/javascript">
+        function ValidateAll() {
+            var check = true;
+
+            if (ValidateJobNo()) {
+                check = false;
+            }
+
+            if (ValidateDrawingNumber()) {
+                check = false;
+            }
+
+            if (ValidateDescription()) {
+                check = false;
+            }
+
+            if (ValidateUOM()) {
+                check = false;
+            }
+
+            if (ValidateQuantity()) {
+                check = false;
+            }
+
+            if (ValidateUOM()) {
+                check = false;
+            }
+
+
+
+            return check;
+        }
+
+        function ConfirmSaving() {
+
+            if (confirm("Would you like to update design drawing details?")) {
+                document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                return true;
+            }
+            else {
+                document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                return false;
+            }
+        }
+    </script>
+    
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </ajax:ToolkitScriptManager>
+    <asp:HiddenField ID="hdConfirmValue" runat="server" />
+    <%--<asp:UpdatePanel runat="server" ID="uppanel">
+        <ContentTemplate>--%>
+    <div align="center" style="margin-top: 20px;">
+        <fieldset style="width: 70%">
+            <legend style="text-align: center;">Design Drawing List</legend>
+
+            <table width="100%">
+
+                <tr>
+                    <td align="right">JOB No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtJOBNoMainSearch" runat="server" Width="100%"></asp:TextBox>
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td align="right">Drawing No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtDrawingNoMainSearch" runat="server" Width="100%"></asp:TextBox>
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td align="right">Is Active</td>
+                    <td>
+                        <asp:DropDownList ID="ddlIsActive" runat="server" Width="100%" Height="26px">
+                            <asp:ListItem Text="All" />
+                            <asp:ListItem Text="Active" Value="0" />
+                            <asp:ListItem Text="Inactive" Value="1" />
+                        </asp:DropDownList>
+                    </td>
+
+                    <td>&nbsp;</td>
+
+                    <td>
+                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search" OnClick="btnSearch_Click" /></td>
+
+                    <td>&nbsp;</td>
+
+                    <td>
+                        <asp:Button ID="btnAddDrawing" CssClass="button" Width="100%" runat="server" Text="Add New Drawing"
+                            OnClick="btnAddDrawing_Click" />
+                    </td>
+                     <td>&nbsp;</td>
+
+                    <td>
+                        <asp:Button ID="btnImportDrawings" CssClass="button" Width="100%" runat="server" Text="Import Drawings List"
+                            OnClick="btnImportDrawings_Click" />
+                    </td>
+                </tr>
+
+            </table>
+        </fieldset>
+    </div>
+    <br />
+    <div align="center">
+        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+        </asp:Panel>
+    </div>
+    <div align="center">
+        <fieldset style="width: 60%;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+            <div id="gridContainer" style='overflow-y: scroll; overflow-x: scroll; width: 100%; height: 430px; border: 1px solid lightgray;'>
+                <asp:GridView ID="gvDesignDetails" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvDesignDetails_RowCommand" OnRowDataBound="gvDesignDetails_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDrawingID" runat="server" Text='<%# Eval("DRAWING_ID") %>' Visible="false" />
+                                <asp:Label ID="lblIsActive" runat="server" Text='<%# Eval("IS_DELETED") %>' Visible="false" />
+
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ToolTip="Edit"
+                                    ImageUrl="~/Images/NEWICONS/Amendment01.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnRemove" CommandArgument="REMOVE" runat="server" ToolTip="Remove"
+                                    ImageUrl="~/Images/cancelled_img.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Activate" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnActivate" CommandArgument="ACTIVATE" runat="server" ToolTip="Activate"
+                                    ImageUrl="~/Images/closed_img.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="JOB No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Text='<%# Eval("JOB_NO") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Drawing No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDrawingNo" runat="server" Text='<%# Eval("DRAWING_NO") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Description">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("DESCRIPTION") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Quantity" HeaderStyle-Width="100px">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" runat="server" Text='<%# Eval("QUANTITY") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="UOM" HeaderStyle-Width="50px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="REQD_DATE_BY_PROJECT_TEAM">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtRqdDateByProjectTeam" runat="server" Text='<%# Eval("REQD_DATE_BY_PROJECT_TEAM") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="IsActive">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkIsActive" runat="server" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+            </div>
+        </fieldset>
+    </div>
+
+    <%--UPDATE DESIGN DRAWING START--%>
+    <asp:Button ID="btnShowPopupUpdateDrawing" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeUpdateDrawing" runat="server" TargetControlID="btnShowPopupUpdateDrawing"
+        PopupControlID="pnlPopupUpdateDrawing" CancelControlID="imgBtnCancelUpdateDrawing" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupUpdateDrawing" runat="server" BackColor="White" Height="350px" Width="700px"
+        Style="display: block">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelUpdateDrawing" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <fieldset style="width: 90%; margin-left: 5%; margin-top: 10px;">
+            <legend style="text-align: center;">Update Design Drawing
+            </legend>
+            <div style="width: 100%; margin-left: 0;">
+
+                <table style="width: 100%;">
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td style="width: 15%;">JOB No.:</td>
+                        <td style="width: 30%;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="width: 90%">
+                                        <asp:TextBox ID="txtJOBNoToEdit" runat="server" Width="100%" Enabled="false" onblur="return ValidateJOBNo();" />
+                                    </td>
+
+                                    <td style="width: 10%">
+                                        <asp:Button ID="btnGetJOBNo" runat="server" Width="100%" Text="Get" CssClass="button"
+                                            OnClick="btnGetJOBNo_Click" Visible="false" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td style="width: 15%;">Drawing No.:</td>
+                        <td style="width: 30%;">
+                            <asp:TextBox ID="txtDrawingNumberToEdit" runat="server" Width="100%" onblur="return ValidateDrawingNumber();"
+                                Style="text-transform: uppercase" Enabled="false" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td>Description:</td>
+                        <td colspan="4">
+                            <asp:TextBox ID="txtDescriptionToEdit" TextMode="MultiLine" Rows="2" runat="server" Width="100%" onblur="return ValidateDescription();" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td>Quantity:</td>
+                        <td>
+                            <asp:TextBox ID="txtQuantityToEdit" runat="server" Width="100%" onblur="return ValidateQuantity();"
+                                onkeypress="return inNumberKey(this, event);" />
+                        </td>
+
+                        <td>&nbsp;</td>
+                        <td style="width: 15%;">UOM:</td>
+                        <td style="width: 30%;">
+                            <asp:TextBox ID="txtUOMToEdit" runat="server" Width="100%" onblur="return ValidateUOM();" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                    <tr>
+                        <td>Reqd. Date By Project Team:</td>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtDateByProjectTeamToEdit" runat="server" onkeyDown="javascript:preventInput(event);" Width="100%"></asp:TextBox>
+                                        <asp:HiddenField ID="hdDateByProjectTeamToEdit" runat="server" />
+                                        <ajax:CalendarExtender ID="calendarDateByProjectTeamToEdit" PopupButtonID="imgBtnDateByProjectTeamToEdit" runat="server"
+                                            TargetControlID="txtDateByProjectTeamToEdit" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedDateByProjectTeamToEdit">
+                                        </ajax:CalendarExtender>
+                                    </td>
+                                    <td>
+                                        <asp:ImageButton ID="imgBtnDateByProjectTeamToEdit" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                            ToolTip="Calendar" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td colspan="2">&nbsp;</td>
+
+                        <td>
+                            <asp:Button ID="btnUpdateDrawing" runat="server" Width="100%" Text="Update Drawing" CssClass="button"
+                                OnClick="btnUpdateDrawing_Click" OnClientClick="return ValidateAll();" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                </table>
+            </div>
+        </fieldset>
+    </asp:Panel>
+    <%--UPDATE DESIGN DRAWING END--%>
+
+
+    <%--JOB DETAIL START--%>
+    <asp:Button ID="btnShowPopupJOBDetail" runat="server" Style="display: none" />
+    <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
+        PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
+    </ajax:ModalPopupExtender>
+    <asp:Panel ID="pnlPopupJOBDetail" runat="server" BackColor="White" Height="600px" Width="500px"
+        Style="display: block">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelJOBDetail" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <fieldset style="width: 90%; margin-top: 5px;">
+            <legend style="text-align: center;">
+                <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
+            <br />
+            <asp:Label ID="lblJOBMsg" runat="server" />
+            <br />
+            <table style="width: 100%; margin-left: 0px;">
+                <tr>
+                    <td>JOB No.:
+                    </td>
+                    <td>
+                        <asp:TextBox ID="txtJOBNoSearch" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;
+                    </td>
+                    <td>
+                        <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
+                            Width="100%" OnClick="btnSearchJOBNo_Click" />
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <div style='overflow: auto; width: 99%; height: 390px; border: 1px solid lightgray; margin-left: 5px;'>
+                <div align="center">
+                    <asp:GridView ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <Columns>
+                            <asp:TemplateField HeaderText="Get JOB">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                    <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No."
+                                        runat="server" Text="Get JOB No." CssClass="cancelbutton" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        </Columns>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
+                </div>
+            </div>
+        </fieldset>
+    </asp:Panel>
+    <%--JOB DETAIL END--%>
+
+    <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
+</asp:Content>

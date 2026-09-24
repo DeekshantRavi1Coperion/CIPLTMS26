@@ -1,0 +1,486 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class PROJECT_DMS_DesignDrawingList : System.Web.UI.Page
+{
+
+    #region VARIABLES[=======================]
+
+    BAL.Project objProject = new BAL.Project();
+
+    DataSet dsDesignDrawingList = new DataSet();
+    DataSet dsJobNo = new DataSet();
+
+    int recordID = 0;
+    string jobNo = string.Empty;
+    string drawingNo = string.Empty;
+    string description = string.Empty;
+    int quantity = 0;
+    string UOM = string.Empty;
+    string rqdDateByProjectTeam = string.Empty;
+    string isActive = string.Empty;
+
+    #endregion
+
+
+    #region EVENTS[==========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        HidePanel();
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+                hdDateByProjectTeamToEdit.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+                txtDateByProjectTeamToEdit.Text = hdDateByProjectTeamToEdit.Value;
+
+                GetDesignDrawingList();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+    }
+
+    protected void btnSearch_Click(object sender, EventArgs e)
+    {
+        GetDesignDrawingList();
+    }
+
+    protected void gvDesignDetails_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES" || Convert.ToString(e.CommandArgument) == "REMOVE" || Convert.ToString(e.CommandArgument) == "ACTIVATE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+                Label lblDrawingID = gvDesignDetails.Rows[rowindex].FindControl("lblDrawingID") as Label;
+                Label lblJOBNo = gvDesignDetails.Rows[rowindex].FindControl("lblJOBNo") as Label;
+                Label lblDrawingNo = gvDesignDetails.Rows[rowindex].FindControl("lblDrawingNo") as Label;
+                Label lblDescription = gvDesignDetails.Rows[rowindex].FindControl("lblDescription") as Label;
+                TextBox txtQuantity = gvDesignDetails.Rows[rowindex].FindControl("txtQuantity") as TextBox;
+                Label lblUOM = gvDesignDetails.Rows[rowindex].FindControl("lblUOM") as Label;
+                TextBox txtRqdDateByProjectTeam = gvDesignDetails.Rows[rowindex].FindControl("txtRqdDateByProjectTeam") as TextBox;
+
+                ViewState["RECORD_ID"] = Convert.ToInt32(lblDrawingID.Text);
+
+                if (Convert.ToString(e.CommandArgument) == "PROPERTIES")
+                {
+                    if (!string.IsNullOrEmpty(lblJOBNo.Text))
+                        txtJOBNoToEdit.Text = lblJOBNo.Text;
+                    else txtJOBNoToEdit.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblDrawingNo.Text))
+                        txtDrawingNumberToEdit.Text = lblDrawingNo.Text;
+                    else txtDrawingNumberToEdit.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblDescription.Text))
+                        txtDescriptionToEdit.Text = lblDescription.Text;
+                    else txtDescriptionToEdit.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(txtQuantity.Text))
+                        txtQuantityToEdit.Text = txtQuantity.Text;
+                    else txtQuantityToEdit.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblUOM.Text))
+                        txtUOMToEdit.Text = lblUOM.Text;
+                    else txtUOMToEdit.Text = string.Empty;
+
+                    if (!string.IsNullOrEmpty(txtRqdDateByProjectTeam.Text))
+                    {
+                        hdDateByProjectTeamToEdit.Value = txtRqdDateByProjectTeam.Text;
+                        txtDateByProjectTeamToEdit.Text = hdDateByProjectTeamToEdit.Value;
+                    }
+                    else
+                    {
+                        hdDateByProjectTeamToEdit.Value = string.Empty;
+                        txtQuantityToEdit.Text = string.Empty;
+                    }
+
+                    mpeUpdateDrawing.Show();
+                }
+
+                if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    RemoveOrActivateDrawwing(Convert.ToInt32(lblDrawingID.Text), 1);
+                }
+                if (Convert.ToString(e.CommandArgument) == "ACTIVATE")
+                {
+                    RemoveOrActivateDrawwing(Convert.ToInt32(lblDrawingID.Text), 0);
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void RemoveOrActivateDrawwing(int recordID, int activeValue)
+    {
+        try
+        {
+            int value = 0;
+            if (recordID > 0)
+            {
+                value = objProject.RemoveOrActivateDrawwing(recordID, activeValue, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+            }
+
+            if (value > 0)
+            {
+                SuccessMessage("Updated successfully...!!!");
+                GetDesignDrawingList();
+                Reset();
+            }
+            else
+            {
+                ExceptionMessage("Please try again...!!!");
+                return;
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void gvDesignDetails_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+
+                Label lblIsActive = e.Row.FindControl("lblIsActive") as Label;
+                CheckBox chkIsActive = e.Row.FindControl("chkIsActive") as CheckBox;
+
+                ImageButton imgProperties = e.Row.FindControl("imgProperties") as ImageButton;
+                ImageButton imgBtnRemove = e.Row.FindControl("imgBtnRemove") as ImageButton;
+                ImageButton imgBtnActivate = e.Row.FindControl("imgBtnActivate") as ImageButton;
+
+                imgProperties.Visible = false;
+                imgBtnRemove.Visible = false;
+                imgBtnActivate.Visible = false;
+
+                if (Convert.ToInt32(lblIsActive.Text) == 0)
+                {
+                    chkIsActive.Checked = true;
+
+                    imgProperties.Visible = true;
+                    imgBtnRemove.Visible = true;
+                    imgBtnActivate.Visible = false;
+                }
+                else
+                {
+                    chkIsActive.Checked = false;
+
+                    imgProperties.Visible = false;
+                    imgBtnRemove.Visible = false;
+                    imgBtnActivate.Visible = true;
+                }
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+   
+  
+
+    // JOB DETAILS
+    protected void btnGetJOBNo_Click(object sender, EventArgs e)
+    {
+        mpeJOBDetail.Show();
+        GetJOBDetail();
+    }
+
+    protected void btnSearchJOBNo_Click(object sender, EventArgs e)
+    {
+        mpeJOBDetail.Show();
+        GetJOBDetail();
+    }
+
+    protected void gvJOBDetail_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                GridViewRow rowSelect = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
+                rowindex = rowSelect.RowIndex;
+
+                Label lblJOBNo = gvJOBDetail.Rows[rowindex].FindControl("lblJOBNo") as Label;
+                txtJOBNoToEdit.Text = Convert.ToString(lblJOBNo.Text).Trim();
+
+                mpeUpdateDrawing.Show();
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx");
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+    protected void btnUpdateDrawing_Click(object sender, EventArgs e)
+    {
+        UpdateDesignDrawing();
+    }
+
+    protected void btnAddDrawing_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/PROJECT/DESIGN_MGMT/AddDeisgnDrawing.aspx");
+    }
+
+    protected void btnImportDrawings_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/PROJECT/DESIGN_MGMT/ImportDrawings.aspx");
+    }
+
+    
+
+    #endregion
+
+
+    #region METHODS[=========================]
+
+    private void GetDesignDrawingList()
+    {
+        try
+        {
+            jobNo = string.Empty;
+            drawingNo = string.Empty;
+            isActive = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtJOBNoMainSearch.Text))
+                jobNo = txtJOBNoMainSearch.Text.Trim().ToUpper();
+
+            if (!string.IsNullOrEmpty(txtDrawingNoMainSearch.Text))
+                drawingNo = txtDrawingNoMainSearch.Text.Trim().ToUpper();
+
+            if (ddlIsActive.SelectedIndex > 0)
+                isActive = Convert.ToString(ddlIsActive.SelectedValue);
+
+            dsDesignDrawingList = objProject.GetDesignDrawingsList(jobNo, drawingNo, isActive);
+
+            if (dsDesignDrawingList.Tables.Count > 0 && dsDesignDrawingList.Tables[0].Rows.Count > 0)
+            {
+                gvDesignDetails.DataSource = dsDesignDrawingList.Tables[0];
+                gvDesignDetails.DataBind();
+            }
+            else
+            {
+                gvDesignDetails.DataSource = null;
+                gvDesignDetails.DataBind();
+            }
+            lblRecords.Text = "Records[" + dsDesignDrawingList.Tables[0].Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    private DataSet GetJOBData()
+    {
+        try
+        {
+            string jobNo = string.Empty;
+
+            if (!string.IsNullOrEmpty(txtJOBNoSearch.Text))
+                jobNo = txtJOBNoSearch.Text;
+
+            dsJobNo = objProject.GetJOBDetailsForDesignDrawings(jobNo);
+
+            if (dsJobNo.Tables.Count > 0)
+            {
+                return dsJobNo;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return null;
+        }
+    }
+    private void GetJOBDetail()
+    {
+        try
+        {
+            dsJobNo = GetJOBData();
+            if (dsJobNo.Tables.Count > 0 && dsJobNo.Tables[0].Rows.Count > 0)
+            {
+                lblJOBMsg.Visible = false;
+                lblJOBMsg.Text = string.Empty;
+                gvJOBDetail.DataSource = dsJobNo.Tables[0];
+                gvJOBDetail.DataBind();
+            }
+            else
+            {
+                lblJOBMsg.Visible = true;
+                lblJOBMsg.Text = "No data found!";
+                gvJOBDetail.DataSource = null;
+                gvJOBDetail.DataBind();
+            }
+            lblJOBRecords.Text = "Records[" + gvJOBDetail.Rows.Count + "]";
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+        }
+    }
+
+    private void UpdateDesignDrawing()
+    {
+        try
+        {
+            recordID = 0;
+            jobNo = string.Empty;
+            drawingNo = string.Empty;
+            description = string.Empty;
+            quantity = 0;
+            UOM = string.Empty;
+            rqdDateByProjectTeam = string.Empty;
+
+            recordID = Convert.ToInt32(ViewState["RECORD_ID"]);
+
+            if (!string.IsNullOrEmpty(txtJOBNoToEdit.Text))
+                jobNo = txtJOBNoToEdit.Text.ToUpper();
+
+            if (!string.IsNullOrEmpty(txtDrawingNumberToEdit.Text))
+                drawingNo = txtDrawingNumberToEdit.Text.Trim().ToUpper();
+
+            if (!string.IsNullOrEmpty(txtDescriptionToEdit.Text))
+                description = txtDescriptionToEdit.Text;
+
+            if (Convert.ToDouble(txtQuantityToEdit.Text) > 0)
+                quantity = Convert.ToInt32(txtQuantityToEdit.Text);
+
+            if (!string.IsNullOrEmpty(txtUOMToEdit.Text))
+                UOM = txtUOMToEdit.Text;
+
+            if (!string.IsNullOrEmpty(hdDateByProjectTeamToEdit.Value))
+                rqdDateByProjectTeam = Convert.ToDateTime(hdDateByProjectTeamToEdit.Value).ToString("yyyy-MM-dd");
+
+
+            int value = 0;
+            if (recordID > 0)
+            {
+                value = objProject.UpdateDesignDrawing(recordID, jobNo, drawingNo, description, quantity, UOM, rqdDateByProjectTeam, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+            }
+
+            if (value > 0)
+            {
+                SuccessMessage("Updated successfully...!!!");
+                GetDesignDrawingList();
+                Reset();
+            }
+            else
+            {
+                ExceptionMessage("Please try again...!!!");
+                return;
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+   
+    private void Reset()
+    {
+        try
+        {
+            txtJOBNoToEdit.Text = string.Empty;
+            txtDrawingNumberToEdit.Text = string.Empty;
+            txtDescriptionToEdit.Text = string.Empty;
+            txtQuantityToEdit.Text = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+  
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void HidePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    #endregion    
+}
