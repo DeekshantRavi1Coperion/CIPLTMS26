@@ -1,0 +1,3438 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using System.Web;
+using BAL;
+using System.Web.UI;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+
+
+public class LOTSendMailOldV2
+{
+
+    #region VARIABLES[===================]
+
+
+    GetLOTMailTypeAndStatus objGetLOTMailTypeAndStatus = new GetLOTMailTypeAndStatus();
+    LOTMailTypeAndStatusProperties objLOTMailTypeAndStatusProperties = new LOTMailTypeAndStatusProperties();
+    GetLOTApproverStatus objGetLOTApproverStatus = new GetLOTApproverStatus();
+
+    //GetLOTNextStatus objGetLOTNextStatus = new GetLOTNextStatus();
+    LOTHtmlForPDFApproval objLOTHtmlForPDFApproval = new LOTHtmlForPDFApproval();
+    LOTMailInfoProperties objLOTMailInfoProperties = new LOTMailInfoProperties();
+    //GetLOTMailType objGetLOTMailType = new GetLOTMailType();
+    Project objProject = new Project();
+    DataSet dsMailInfo = new DataSet();
+
+    int currentStatusID = 0;
+    int nextStatusID = 0;
+    int returnVal = 0;
+    bool isCCAllowed = false;
+    int mailType = 0;
+    int LOTMainSubitemID = 0;
+    int newStatusID = 0;
+    int recordNo = 0;
+    int LOTTFSubitemID = 0;
+
+    int createdByID = 0;
+    string createdByName = string.Empty;
+    string createdByEmail = string.Empty;
+
+    int amendedByID = 0;
+    string amendedByName = string.Empty;
+    string amendedByEmail = string.Empty;
+
+    int PEID = 0;
+    string PEName = string.Empty;
+    string PEEmail = string.Empty;
+    string PEUD = string.Empty;
+    string PEPD = string.Empty;
+
+    int PMID = 0;
+    string PMName = string.Empty;
+    string PMEmail = string.Empty;
+    string PMUD = string.Empty;
+    string PMPD = string.Empty;
+
+    int prodMngrID = 0;
+    string prodMngrName = string.Empty;
+    string prodMngrEmail = string.Empty;
+    string prodMngrEmailCC = string.Empty;
+
+
+    string qualityMngrName = string.Empty;
+    string qualityNames = string.Empty;
+    string qualityEmails = string.Empty;
+
+    string planningMngrName = string.Empty;
+    string planningNames = string.Empty;
+    string planningEmails = string.Empty;
+
+    int approvedByID = 0;
+    string approvedByName = string.Empty;
+    string approvedByEmail = string.Empty;
+
+    int acceptedByID = 0;
+    string acceptedByName = string.Empty;
+    string acceptedByEmail = string.Empty;
+
+
+    int sendToIntlInspectionByID = 0;
+    string sendToIntlInspectionByName = string.Empty;
+    string sendToIntlInspectionByEmail = string.Empty;
+
+    int qAIntlInspectionAcceptedByID = 0;
+    string qAIntlInspectionAcceptedByName = string.Empty;
+    string qAIntlInspectionAcceptedByEmail = string.Empty;
+
+    int qAIntlInspectionNotAcceptedByID = 0;
+    string qAIntlInspectionNotAcceptedByName = string.Empty;
+    string qAIntlInspectionNotAcceptedByEmail = string.Empty;
+
+
+    int amendmentCount = 0;
+
+    int amendmentByID = 0;
+    string amendmentByName = string.Empty;
+    string amendmentByEmail = string.Empty;
+
+    int amendedApprovedByID = 0;
+    string amendedApprovedByName = string.Empty;
+    string amendedApprovedByEmail = string.Empty;
+
+    int amendedAcceptedByID = 0;
+    string amendedAcceptedByName = string.Empty;
+    string amendedAcceptedByEmail = string.Empty;
+
+    int completedByID = 0;
+    string completedByName = string.Empty;
+    string completedByEmail = string.Empty;
+
+
+
+    int qualityAcceptedByID = 0;
+    string qualityAcceptedByName = string.Empty;
+    string qualityAcceptedByEmail = string.Empty;
+    int planningAcceptedByID = 0;
+    string planningAcceptedByName = string.Empty;
+    string planningAcceptedByEmail = string.Empty;
+    int qualityAmendedAcceptedByID = 0;
+    string qualityAmendedAcceptedByName = string.Empty;
+    string qualityAmendedAcceptedByEmail = string.Empty;
+    int planningAmendedAcceptedByID = 0;
+    string planningAmendedAcceptedByName = string.Empty;
+    string planningAmendedAcceptedByEmail = string.Empty;
+
+
+
+
+
+
+    string urlTxt = string.Empty;
+    string href = string.Empty;
+    string link = string.Empty;
+
+    string PEApproveHref = string.Empty;
+    string PEApproveLink = string.Empty;
+
+    //string PEAmendmentHref = string.Empty;
+    //string PEAmendmentLink = string.Empty;
+
+    string PMApproveHref = string.Empty;
+    string PMApproveLink = string.Empty;
+
+    //string PMAmendmentHref = string.Empty;
+    //string PMAmendmentLink = string.Empty;
+
+    string fileName = string.Empty;
+    string body = string.Empty;
+    string subject = string.Empty;
+    string from = string.Empty;
+    string to = string.Empty;
+    string cc = string.Empty;
+    string bcc = string.Empty;
+
+    bool isPlannigMailSent = false;
+    bool isQualityMailSent = false;
+
+    DataTable dtQuantityDetails = new DataTable();
+    #endregion
+
+    public int SendEmailLOT(int LOTTFID, string LOTTFSubitemIDs, string TFNo, int unitID, int createdByID,
+                            string remarks, int qualityPlanningStatusID, int qualityInspID, int qaIntlInspFlag, int editFlag, byte[] IRNFileBytes, DataTable dtQuantity,
+                            int partialStatusID, int partialQuantityFlag)
+    {
+        try
+        {
+
+
+            #region Datatables
+
+            DataTable dtSi = new DataTable();
+
+            #region dsSi COLUMNS
+
+            dtSi.Columns.Add("RECORD_NO", typeof(int));
+            dtSi.Columns.Add("LOT_TF_SUBITEM_ID", typeof(int));
+            dtSi.Columns.Add("STATUS_ID", typeof(int));
+            dtSi.Columns.Add("NEXT_STATUS_ID", typeof(int));
+            dtSi.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dtSi.Columns.Add("EXPECTED_COMPLETION_DATE", typeof(string));
+            dtSi.Columns.Add("SUBITEM_DESC", typeof(string));
+            dtSi.Columns.Add("TAG_NO", typeof(string));
+            dtSi.Columns.Add("LOT_MAIN_SUBITEM_ID", typeof(int));
+            dtSi.Columns.Add("LOT_MAIN_ITEM", typeof(string));
+            dtSi.Columns.Add("DRAWING_NO", typeof(string));
+            dtSi.Columns.Add("REVISION_NO", typeof(int));
+            dtSi.Columns.Add("CATEGORY", typeof(string));
+            dtSi.Columns.Add("QUANTITY", typeof(int));
+            dtSi.Columns.Add("PRODUCTION_MNGR_ID", typeof(int));
+            dtSi.Columns.Add("PRODUCTION_MNGR_NAME", typeof(string));
+            dtSi.Columns.Add("CREATED_BY_ID", typeof(int));
+            dtSi.Columns.Add("CREATED_BY", typeof(string));
+            dtSi.Columns.Add("CREATED_ON", typeof(string));
+            dtSi.Columns.Add("APPROVED_BY_ID", typeof(int));
+            dtSi.Columns.Add("APPROVED_BY", typeof(string));
+            dtSi.Columns.Add("APPROVED_ON", typeof(string));
+            dtSi.Columns.Add("APPROVED_REMARKS", typeof(string));
+            dtSi.Columns.Add("ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("SENT_TO_INTL_INSP_BY_ID", typeof(int));
+            dtSi.Columns.Add("SENT_TO_INTL_INSP_BY", typeof(string));
+            dtSi.Columns.Add("SENT_TO_INTL_INSP_ON", typeof(string));
+            dtSi.Columns.Add("SENT_TO_INTL_INSP_REMARKS", typeof(string));
+            dtSi.Columns.Add("QA_INTL_INSP_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("QA_INTL_INSP_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("QA_INTL_INSP_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("QA_INTL_INSP_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("AMENDMENT_COUNT", typeof(int));
+            dtSi.Columns.Add("AMENDMENT_BY_ID", typeof(int));
+            dtSi.Columns.Add("AMENDMENT_BY", typeof(string));
+            dtSi.Columns.Add("AMENDMENT_ON", typeof(string));
+            dtSi.Columns.Add("AMENDMENT_REMARKS", typeof(string));
+            dtSi.Columns.Add("AMENDED_BY_ID", typeof(int));
+            dtSi.Columns.Add("AMENDED_BY", typeof(string));
+            dtSi.Columns.Add("AMENDED_ON", typeof(string));
+            dtSi.Columns.Add("AMENDED_REMARKS", typeof(string));
+            dtSi.Columns.Add("AMENDED_APPROVED_BY_ID", typeof(int));
+            dtSi.Columns.Add("AMENDED_APPROVED_BY", typeof(string));
+            dtSi.Columns.Add("AMENDED_APPROVED_ON", typeof(string));
+            dtSi.Columns.Add("AMENDED_APPROVED_REMARKS", typeof(string));
+            dtSi.Columns.Add("AMENDED_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("AMENDED_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("AMENDED_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("AMENDED_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("AMENDED_QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("AMENDED_QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi.Columns.Add("AMENDED_PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi.Columns.Add("AMENDED_PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi.Columns.Add("COMPLETED_BY_ID", typeof(int));
+            dtSi.Columns.Add("COMPLETED_BY", typeof(string));
+            dtSi.Columns.Add("COMPLETED_ON", typeof(string));
+            dtSi.Columns.Add("COMPLETED_REMARKS", typeof(string));
+
+            #endregion
+
+
+
+            DataTable dtSi1 = new DataTable();
+
+            #region dtSi1 COLUMNS
+
+            dtSi1.Columns.Add("RECORD_NO", typeof(int));
+            dtSi1.Columns.Add("LOT_TF_SUBITEM_ID", typeof(int));
+            dtSi1.Columns.Add("STATUS_ID", typeof(int));
+            dtSi1.Columns.Add("NEXT_STATUS_ID", typeof(int));
+            dtSi1.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dtSi1.Columns.Add("EXPECTED_COMPLETION_DATE", typeof(string));
+            dtSi1.Columns.Add("SUBITEM_DESC", typeof(string));
+            dtSi1.Columns.Add("TAG_NO", typeof(string));
+            dtSi1.Columns.Add("LOT_MAIN_SUBITEM_ID", typeof(int));
+            dtSi1.Columns.Add("LOT_MAIN_ITEM", typeof(string));
+            dtSi1.Columns.Add("DRAWING_NO", typeof(string));
+            dtSi1.Columns.Add("REVISION_NO", typeof(int));
+            dtSi1.Columns.Add("CATEGORY", typeof(string));
+            dtSi1.Columns.Add("QUANTITY", typeof(int));
+            dtSi1.Columns.Add("PRODUCTION_MNGR_ID", typeof(int));
+            dtSi1.Columns.Add("PRODUCTION_MNGR_NAME", typeof(string));
+            dtSi1.Columns.Add("CREATED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("CREATED_BY", typeof(string));
+            dtSi1.Columns.Add("CREATED_ON", typeof(string));
+            dtSi1.Columns.Add("APPROVED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("APPROVED_BY", typeof(string));
+            dtSi1.Columns.Add("APPROVED_ON", typeof(string));
+            dtSi1.Columns.Add("APPROVED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("SENT_TO_INTL_INSP_BY_ID", typeof(int));
+            dtSi1.Columns.Add("SENT_TO_INTL_INSP_BY", typeof(string));
+            dtSi1.Columns.Add("SENT_TO_INTL_INSP_ON", typeof(string));
+            dtSi1.Columns.Add("SENT_TO_INTL_INSP_REMARKS", typeof(string));
+            dtSi1.Columns.Add("QA_INTL_INSP_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("QA_INTL_INSP_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("QA_INTL_INSP_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("QA_INTL_INSP_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("AMENDMENT_COUNT", typeof(int));
+            dtSi1.Columns.Add("AMENDMENT_BY_ID", typeof(int));
+            dtSi1.Columns.Add("AMENDMENT_BY", typeof(string));
+            dtSi1.Columns.Add("AMENDMENT_ON", typeof(string));
+            dtSi1.Columns.Add("AMENDMENT_REMARKS", typeof(string));
+            dtSi1.Columns.Add("AMENDED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("AMENDED_BY", typeof(string));
+            dtSi1.Columns.Add("AMENDED_ON", typeof(string));
+            dtSi1.Columns.Add("AMENDED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("AMENDED_APPROVED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("AMENDED_APPROVED_BY", typeof(string));
+            dtSi1.Columns.Add("AMENDED_APPROVED_ON", typeof(string));
+            dtSi1.Columns.Add("AMENDED_APPROVED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("AMENDED_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("AMENDED_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("AMENDED_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("AMENDED_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("AMENDED_QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("AMENDED_QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi1.Columns.Add("AMENDED_PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi1.Columns.Add("AMENDED_PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi1.Columns.Add("COMPLETED_BY_ID", typeof(int));
+            dtSi1.Columns.Add("COMPLETED_BY", typeof(string));
+            dtSi1.Columns.Add("COMPLETED_ON", typeof(string));
+            dtSi1.Columns.Add("COMPLETED_REMARKS", typeof(string));
+
+            #endregion
+
+
+
+            DataTable dtSi2 = new DataTable();
+
+            #region dtSi2 COLUMNS
+
+            dtSi2.Columns.Add("RECORD_NO", typeof(int));
+            dtSi2.Columns.Add("LOT_TF_SUBITEM_ID", typeof(int));
+            dtSi2.Columns.Add("STATUS_ID", typeof(int));
+            dtSi2.Columns.Add("NEXT_STATUS_ID", typeof(int));
+            dtSi2.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dtSi2.Columns.Add("EXPECTED_COMPLETION_DATE", typeof(string));
+            dtSi2.Columns.Add("SUBITEM_DESC", typeof(string));
+            dtSi2.Columns.Add("TAG_NO", typeof(string));
+            dtSi2.Columns.Add("LOT_MAIN_SUBITEM_ID", typeof(int));
+            dtSi2.Columns.Add("LOT_MAIN_ITEM", typeof(string));
+            dtSi2.Columns.Add("DRAWING_NO", typeof(string));
+            dtSi2.Columns.Add("REVISION_NO", typeof(int));
+            dtSi2.Columns.Add("CATEGORY", typeof(string));
+            dtSi2.Columns.Add("QUANTITY", typeof(int));
+            dtSi2.Columns.Add("PRODUCTION_MNGR_ID", typeof(int));
+            dtSi2.Columns.Add("PRODUCTION_MNGR_NAME", typeof(string));
+            dtSi2.Columns.Add("CREATED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("CREATED_BY", typeof(string));
+            dtSi2.Columns.Add("CREATED_ON", typeof(string));
+            dtSi2.Columns.Add("APPROVED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("APPROVED_BY", typeof(string));
+            dtSi2.Columns.Add("APPROVED_ON", typeof(string));
+            dtSi2.Columns.Add("APPROVED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("SENT_TO_INTL_INSP_BY_ID", typeof(int));
+            dtSi2.Columns.Add("SENT_TO_INTL_INSP_BY", typeof(string));
+            dtSi2.Columns.Add("SENT_TO_INTL_INSP_ON", typeof(string));
+            dtSi2.Columns.Add("SENT_TO_INTL_INSP_REMARKS", typeof(string));
+            dtSi2.Columns.Add("QA_INTL_INSP_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("QA_INTL_INSP_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("QA_INTL_INSP_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("QA_INTL_INSP_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("AMENDMENT_COUNT", typeof(int));
+            dtSi2.Columns.Add("AMENDMENT_BY_ID", typeof(int));
+            dtSi2.Columns.Add("AMENDMENT_BY", typeof(string));
+            dtSi2.Columns.Add("AMENDMENT_ON", typeof(string));
+            dtSi2.Columns.Add("AMENDMENT_REMARKS", typeof(string));
+            dtSi2.Columns.Add("AMENDED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("AMENDED_BY", typeof(string));
+            dtSi2.Columns.Add("AMENDED_ON", typeof(string));
+            dtSi2.Columns.Add("AMENDED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("AMENDED_APPROVED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("AMENDED_APPROVED_BY", typeof(string));
+            dtSi2.Columns.Add("AMENDED_APPROVED_ON", typeof(string));
+            dtSi2.Columns.Add("AMENDED_APPROVED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("AMENDED_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("AMENDED_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("AMENDED_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("AMENDED_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("AMENDED_QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("AMENDED_QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi2.Columns.Add("AMENDED_PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi2.Columns.Add("AMENDED_PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi2.Columns.Add("COMPLETED_BY_ID", typeof(int));
+            dtSi2.Columns.Add("COMPLETED_BY", typeof(string));
+            dtSi2.Columns.Add("COMPLETED_ON", typeof(string));
+            dtSi2.Columns.Add("COMPLETED_REMARKS", typeof(string));
+
+            #endregion
+
+
+
+            DataTable dtSi3 = new DataTable();
+
+            #region dtSi3 COLUMNS
+
+            dtSi3.Columns.Add("RECORD_NO", typeof(int));
+            dtSi3.Columns.Add("LOT_TF_SUBITEM_ID", typeof(int));
+            dtSi3.Columns.Add("STATUS_ID", typeof(int));
+            dtSi3.Columns.Add("NEXT_STATUS_ID", typeof(int));
+            dtSi3.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dtSi3.Columns.Add("EXPECTED_COMPLETION_DATE", typeof(string));
+            dtSi3.Columns.Add("SUBITEM_DESC", typeof(string));
+            dtSi3.Columns.Add("TAG_NO", typeof(string));
+            dtSi3.Columns.Add("LOT_MAIN_SUBITEM_ID", typeof(int));
+            dtSi3.Columns.Add("LOT_MAIN_ITEM", typeof(string));
+            dtSi3.Columns.Add("DRAWING_NO", typeof(string));
+            dtSi3.Columns.Add("REVISION_NO", typeof(int));
+            dtSi3.Columns.Add("CATEGORY", typeof(string));
+            dtSi3.Columns.Add("QUANTITY", typeof(int));
+            dtSi3.Columns.Add("PRODUCTION_MNGR_ID", typeof(int));
+            dtSi3.Columns.Add("PRODUCTION_MNGR_NAME", typeof(string));
+            dtSi3.Columns.Add("CREATED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("CREATED_BY", typeof(string));
+            dtSi3.Columns.Add("CREATED_ON", typeof(string));
+            dtSi3.Columns.Add("APPROVED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("APPROVED_BY", typeof(string));
+            dtSi3.Columns.Add("APPROVED_ON", typeof(string));
+            dtSi3.Columns.Add("APPROVED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("SENT_TO_INTL_INSP_BY_ID", typeof(int));
+            dtSi3.Columns.Add("SENT_TO_INTL_INSP_BY", typeof(string));
+            dtSi3.Columns.Add("SENT_TO_INTL_INSP_ON", typeof(string));
+            dtSi3.Columns.Add("SENT_TO_INTL_INSP_REMARKS", typeof(string));
+            dtSi3.Columns.Add("QA_INTL_INSP_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("QA_INTL_INSP_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("QA_INTL_INSP_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("QA_INTL_INSP_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("AMENDMENT_COUNT", typeof(int));
+            dtSi3.Columns.Add("AMENDMENT_BY_ID", typeof(int));
+            dtSi3.Columns.Add("AMENDMENT_BY", typeof(string));
+            dtSi3.Columns.Add("AMENDMENT_ON", typeof(string));
+            dtSi3.Columns.Add("AMENDMENT_REMARKS", typeof(string));
+            dtSi3.Columns.Add("AMENDED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("AMENDED_BY", typeof(string));
+            dtSi3.Columns.Add("AMENDED_ON", typeof(string));
+            dtSi3.Columns.Add("AMENDED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("AMENDED_APPROVED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("AMENDED_APPROVED_BY", typeof(string));
+            dtSi3.Columns.Add("AMENDED_APPROVED_ON", typeof(string));
+            dtSi3.Columns.Add("AMENDED_APPROVED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("AMENDED_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("AMENDED_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("AMENDED_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("AMENDED_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("AMENDED_QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("AMENDED_QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi3.Columns.Add("AMENDED_PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi3.Columns.Add("AMENDED_PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi3.Columns.Add("COMPLETED_BY_ID", typeof(int));
+            dtSi3.Columns.Add("COMPLETED_BY", typeof(string));
+            dtSi3.Columns.Add("COMPLETED_ON", typeof(string));
+            dtSi3.Columns.Add("COMPLETED_REMARKS", typeof(string));
+
+            #endregion
+
+
+
+            DataTable dtSi4 = new DataTable();
+
+            #region dtSi4 COLUMNS
+
+            dtSi4.Columns.Add("RECORD_NO", typeof(int));
+            dtSi4.Columns.Add("LOT_TF_SUBITEM_ID", typeof(int));
+            dtSi4.Columns.Add("STATUS_ID", typeof(int));
+            dtSi4.Columns.Add("NEXT_STATUS_ID", typeof(int));
+            dtSi4.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dtSi4.Columns.Add("EXPECTED_COMPLETION_DATE", typeof(string));
+            dtSi4.Columns.Add("SUBITEM_DESC", typeof(string));
+            dtSi4.Columns.Add("TAG_NO", typeof(string));
+            dtSi4.Columns.Add("LOT_MAIN_SUBITEM_ID", typeof(int));
+            dtSi4.Columns.Add("LOT_MAIN_ITEM", typeof(string));
+            dtSi4.Columns.Add("DRAWING_NO", typeof(string));
+            dtSi4.Columns.Add("REVISION_NO", typeof(int));
+            dtSi4.Columns.Add("CATEGORY", typeof(string));
+            dtSi4.Columns.Add("QUANTITY", typeof(int));
+            dtSi4.Columns.Add("PRODUCTION_MNGR_ID", typeof(int));
+            dtSi4.Columns.Add("PRODUCTION_MNGR_NAME", typeof(string));
+            dtSi4.Columns.Add("CREATED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("CREATED_BY", typeof(string));
+            dtSi4.Columns.Add("CREATED_ON", typeof(string));
+            dtSi4.Columns.Add("APPROVED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("APPROVED_BY", typeof(string));
+            dtSi4.Columns.Add("APPROVED_ON", typeof(string));
+            dtSi4.Columns.Add("APPROVED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("SENT_TO_INTL_INSP_BY_ID", typeof(int));
+            dtSi4.Columns.Add("SENT_TO_INTL_INSP_BY", typeof(string));
+            dtSi4.Columns.Add("SENT_TO_INTL_INSP_ON", typeof(string));
+            dtSi4.Columns.Add("SENT_TO_INTL_INSP_REMARKS", typeof(string));
+            dtSi4.Columns.Add("QA_INTL_INSP_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("QA_INTL_INSP_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("QA_INTL_INSP_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("QA_INTL_INSP_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("QA_INTL_INSP_NOT_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("AMENDMENT_COUNT", typeof(int));
+            dtSi4.Columns.Add("AMENDMENT_BY_ID", typeof(int));
+            dtSi4.Columns.Add("AMENDMENT_BY", typeof(string));
+            dtSi4.Columns.Add("AMENDMENT_ON", typeof(string));
+            dtSi4.Columns.Add("AMENDMENT_REMARKS", typeof(string));
+            dtSi4.Columns.Add("AMENDED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("AMENDED_BY", typeof(string));
+            dtSi4.Columns.Add("AMENDED_ON", typeof(string));
+            dtSi4.Columns.Add("AMENDED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("AMENDED_APPROVED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("AMENDED_APPROVED_BY", typeof(string));
+            dtSi4.Columns.Add("AMENDED_APPROVED_ON", typeof(string));
+            dtSi4.Columns.Add("AMENDED_APPROVED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("AMENDED_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("AMENDED_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("AMENDED_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("AMENDED_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("AMENDED_QUALITY_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("AMENDED_QUALITY_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("AMENDED_QUALITY_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("AMENDED_PLANNING_ACCEPTED_BY", typeof(string));
+            dtSi4.Columns.Add("AMENDED_PLANNING_ACCEPTED_ON", typeof(string));
+            dtSi4.Columns.Add("AMENDED_PLANNING_ACCEPTED_REMARKS", typeof(string));
+            dtSi4.Columns.Add("COMPLETED_BY_ID", typeof(int));
+            dtSi4.Columns.Add("COMPLETED_BY", typeof(string));
+            dtSi4.Columns.Add("COMPLETED_ON", typeof(string));
+            dtSi4.Columns.Add("COMPLETED_REMARKS", typeof(string));
+
+            #endregion
+
+
+
+            #endregion
+
+            returnVal = 0;
+            LOTMainSubitemID = 0;
+            newStatusID = 0;
+            createdByID = 0;
+            approvedByID = 0;
+            PEID = 0;
+            PMID = 0;
+            prodMngrID = 0;
+            currentStatusID = 0;
+            nextStatusID = 0;
+            LOTTFSubitemID = 0;
+
+
+            dsMailInfo = objProject.GetJOBMailInfoTwo(LOTTFID, LOTTFSubitemIDs, qaIntlInspFlag);
+
+
+            dtSi1.Rows.Clear();
+            dtSi2.Rows.Clear();
+            dtSi3.Rows.Clear();
+
+            if (dsMailInfo.Tables.Count > 0)
+            {
+                isPlannigMailSent = false;
+                isQualityMailSent = false;
+
+                PEID = Convert.ToInt32(dsMailInfo.Tables[0].Rows[0]["PE_ID"]);
+                PMID = Convert.ToInt32(dsMailInfo.Tables[0].Rows[0]["PM_ID"]);
+
+                foreach (DataRow d2 in dsMailInfo.Tables[2].Rows)
+                {
+                    recordNo = Convert.ToInt32(d2["RECORD_NO"]);
+                    LOTTFSubitemID = Convert.ToInt32(d2["LOT_TF_SUBITEM_ID"]);
+
+                    if (partialQuantityFlag > 0)
+                    {
+                        if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialIntlInspection))
+                            currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection);
+
+                        else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemAccepted))
+                            currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted);
+
+                        else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemNotAccepted))
+                            currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted);
+
+                        else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialComplete))
+                            currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Complete);
+                    }
+                    else
+                        currentStatusID = Convert.ToInt32(d2["STATUS_ID"]);
+
+                    createdByID = Convert.ToInt32(d2["CREATED_BY_ID"]);
+                    approvedByID = Convert.ToInt32(d2["APPROVED_BY_ID"]);
+                    amendmentCount = Convert.ToInt32(d2["AMENDMENT_COUNT"]);
+                    amendedByID = Convert.ToInt32(d2["AMENDED_BY_ID"]);
+                    amendedApprovedByID = Convert.ToInt32(d2["AMENDED_APPROVED_BY_ID"]);
+
+                    foreach (DataRow d3 in dsMailInfo.Tables[3].Select("LOT_MAIN_SUBITEM_ID='" + Convert.ToInt32(d2["LOT_MAIN_SUBITEM_ID"]) + "'"))
+                    {
+                        prodMngrID = Convert.ToInt32(d3["PRODUCTION_MNGR_ID"]);
+
+                        if (partialQuantityFlag > 0)
+                        {
+                            if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialIntlInspection))
+                            {
+                                currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection);
+                                nextStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection);
+                            }
+                            else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemAccepted))
+                            {
+                                currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted);
+                                nextStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted);
+                            }
+                            else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemNotAccepted))
+                            {
+                                currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted);
+                                nextStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted);
+                            }
+                            else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialComplete))
+                            {
+                                currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Complete);
+                                nextStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Complete);
+                            }
+                        }
+                        else
+                        {
+                            if (amendmentCount > 0)
+                                objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(amendedByID, PEID, PMID, prodMngrID, amendedApprovedByID), amendmentCount, currentStatusID);
+                            else
+                                objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(createdByID, PEID, PMID, prodMngrID, approvedByID), amendmentCount, currentStatusID);
+
+                            nextStatusID = objLOTMailTypeAndStatusProperties.NextStatusID;
+                        }
+
+
+
+                        DataRow drs = dtSi.NewRow();
+
+                        #region DTSI Rows
+
+                        drs["RECORD_NO"] = recordNo;
+                        drs["LOT_TF_SUBITEM_ID"] = d2["LOT_TF_SUBITEM_ID"];
+
+                        drs["STATUS_ID"] = d2["STATUS_ID"];
+                        if (partialQuantityFlag > 0)
+                        {
+                            drs["STATUS_ID"] = currentStatusID;
+                        }
+
+                        drs["NEXT_STATUS_ID"] = nextStatusID;
+                        drs["PRODUCTION_ORDER_NO"] = d2["PRODUCTION_ORDER_NO"];
+                        drs["EXPECTED_COMPLETION_DATE"] = d2["EXPECTED_COMPLETION_DATE"];
+                        drs["SUBITEM_DESC"] = d2["SUBITEM_DESC"];
+                        drs["TAG_NO"] = d2["TAG_NO"];
+                        drs["LOT_MAIN_SUBITEM_ID"] = d2["LOT_MAIN_SUBITEM_ID"];
+                        drs["LOT_MAIN_ITEM"] = Convert.ToString(d2["LOT_MAIN_ITEM"] + " [" + d2["LOT_MAIN_SUBITEM"] + "]");
+                        drs["DRAWING_NO"] = d2["DRAWING_NO"];
+                        drs["REVISION_NO"] = d2["REVISION_NO"];
+                        drs["CATEGORY"] = d2["CATEGORY"];
+                        drs["QUANTITY"] = d2["QUANTITY"];
+                        drs["PRODUCTION_MNGR_ID"] = d2["PRODUCTION_MNGR_ID"];
+                        drs["PRODUCTION_MNGR_NAME"] = d2["PRODUCTION_MNGR_NAME"];
+                        drs["CREATED_BY_ID"] = d2["CREATED_BY_ID"];
+                        drs["CREATED_BY"] = d2["CREATED_BY"];
+                        drs["CREATED_ON"] = d2["CREATED_ON"];
+                        drs["APPROVED_BY_ID"] = d2["APPROVED_BY_ID"];
+                        drs["APPROVED_BY"] = d2["APPROVED_BY"];
+                        drs["APPROVED_ON"] = d2["APPROVED_ON"];
+                        drs["APPROVED_REMARKS"] = d2["APPROVED_REMARKS"];
+                        drs["ACCEPTED_BY_ID"] = d2["ACCEPTED_BY_ID"];
+                        drs["ACCEPTED_BY"] = d2["ACCEPTED_BY"];
+                        drs["ACCEPTED_ON"] = d2["ACCEPTED_ON"];
+                        drs["ACCEPTED_REMARKS"] = d2["ACCEPTED_REMARKS"];
+                        drs["SENT_TO_INTL_INSP_BY_ID"] = d2["SENT_TO_INTL_INSP_BY_ID"];
+                        drs["SENT_TO_INTL_INSP_BY"] = d2["SENT_TO_INTL_INSP_BY"];
+                        drs["SENT_TO_INTL_INSP_ON"] = d2["SENT_TO_INTL_INSP_ON"];
+                        drs["SENT_TO_INTL_INSP_REMARKS"] = d2["SENT_TO_INTL_INSP_REMARKS"];
+                        drs["QA_INTL_INSP_ACCEPTED_BY_ID"] = d2["QA_INTL_INSP_ACCEPTED_BY_ID"];
+                        drs["QA_INTL_INSP_ACCEPTED_BY"] = d2["QA_INTL_INSP_ACCEPTED_BY"];
+                        drs["QA_INTL_INSP_ACCEPTED_ON"] = d2["QA_INTL_INSP_ACCEPTED_ON"];
+                        drs["QA_INTL_INSP_ACCEPTED_REMARKS"] = d2["QA_INTL_INSP_ACCEPTED_REMARKS"];
+                        drs["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] = d2["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"];
+                        drs["QA_INTL_INSP_NOT_ACCEPTED_BY"] = d2["QA_INTL_INSP_NOT_ACCEPTED_BY"];
+                        drs["QA_INTL_INSP_NOT_ACCEPTED_ON"] = d2["QA_INTL_INSP_NOT_ACCEPTED_ON"];
+                        drs["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] = d2["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"];
+                        drs["QUALITY_ACCEPTED_BY_ID"] = d2["QUALITY_ACCEPTED_BY_ID"];
+                        drs["QUALITY_ACCEPTED_BY"] = d2["QUALITY_ACCEPTED_BY"];
+                        drs["QUALITY_ACCEPTED_ON"] = d2["QUALITY_ACCEPTED_ON"];
+                        drs["QUALITY_ACCEPTED_REMARKS"] = d2["QUALITY_ACCEPTED_REMARKS"];
+                        drs["PLANNING_ACCEPTED_BY_ID"] = d2["PLANNING_ACCEPTED_BY_ID"];
+                        drs["PLANNING_ACCEPTED_BY"] = d2["PLANNING_ACCEPTED_BY"];
+                        drs["PLANNING_ACCEPTED_ON"] = d2["PLANNING_ACCEPTED_ON"];
+                        drs["PLANNING_ACCEPTED_REMARKS"] = d2["PLANNING_ACCEPTED_REMARKS"];
+                        drs["AMENDMENT_COUNT"] = d2["AMENDMENT_COUNT"];
+                        drs["AMENDMENT_BY_ID"] = d2["AMENDMENT_BY_ID"];
+                        drs["AMENDMENT_BY"] = d2["AMENDMENT_BY"];
+                        drs["AMENDMENT_ON"] = d2["AMENDMENT_ON"];
+                        drs["AMENDMENT_REMARKS"] = d2["AMENDMENT_REMARKS"];
+                        drs["AMENDED_BY_ID"] = d2["AMENDED_BY_ID"];
+                        drs["AMENDED_BY"] = d2["AMENDED_BY"];
+                        drs["AMENDED_ON"] = d2["AMENDED_ON"];
+                        drs["AMENDED_REMARKS"] = d2["AMENDED_REMARKS"];
+                        drs["AMENDED_APPROVED_BY_ID"] = d2["AMENDED_APPROVED_BY_ID"];
+                        drs["AMENDED_APPROVED_BY"] = d2["AMENDED_APPROVED_BY"];
+                        drs["AMENDED_APPROVED_ON"] = d2["AMENDED_APPROVED_ON"];
+                        drs["AMENDED_APPROVED_REMARKS"] = d2["AMENDED_APPROVED_REMARKS"];
+                        drs["AMENDED_ACCEPTED_BY_ID"] = d2["AMENDED_ACCEPTED_BY_ID"];
+                        drs["AMENDED_ACCEPTED_BY"] = d2["AMENDED_ACCEPTED_BY"];
+                        drs["AMENDED_ACCEPTED_ON"] = d2["AMENDED_ACCEPTED_ON"];
+                        drs["AMENDED_ACCEPTED_REMARKS"] = d2["AMENDED_ACCEPTED_REMARKS"];
+                        drs["AMENDED_QUALITY_ACCEPTED_BY_ID"] = d2["AMENDED_QUALITY_ACCEPTED_BY_ID"];
+                        drs["AMENDED_QUALITY_ACCEPTED_BY"] = d2["AMENDED_QUALITY_ACCEPTED_BY"];
+                        drs["AMENDED_QUALITY_ACCEPTED_ON"] = d2["AMENDED_QUALITY_ACCEPTED_ON"];
+                        drs["AMENDED_QUALITY_ACCEPTED_REMARKS"] = d2["AMENDED_QUALITY_ACCEPTED_REMARKS"];
+                        drs["AMENDED_PLANNING_ACCEPTED_BY_ID"] = d2["AMENDED_PLANNING_ACCEPTED_BY_ID"];
+                        drs["AMENDED_PLANNING_ACCEPTED_BY"] = d2["AMENDED_PLANNING_ACCEPTED_BY"];
+                        drs["AMENDED_PLANNING_ACCEPTED_ON"] = d2["AMENDED_PLANNING_ACCEPTED_ON"];
+                        drs["AMENDED_PLANNING_ACCEPTED_REMARKS"] = d2["AMENDED_PLANNING_ACCEPTED_REMARKS"];
+                        drs["COMPLETED_BY_ID"] = d2["COMPLETED_BY_ID"];
+                        drs["COMPLETED_BY"] = d2["COMPLETED_BY"];
+                        drs["COMPLETED_ON"] = d2["COMPLETED_ON"];
+                        drs["COMPLETED_REMARKS"] = d2["COMPLETED_REMARKS"];
+
+                        #endregion
+
+                        dtSi.Rows.Add(drs);
+                    }
+                }
+
+                if (dtSi.Rows.Count > 0)
+                {
+                    foreach (DataRow drsi in dtSi.Rows)
+                    {
+                        nextStatusID = Convert.ToInt32(drsi["NEXT_STATUS_ID"]);
+
+                        if (nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Approved) ||
+                            nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Amended) ||
+                            nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.AmndApproved))
+                        {
+                            DataRow drs1 = dtSi1.NewRow();
+
+                            #region DTSI1 ROWS
+
+                            drs1["RECORD_NO"] = drsi["RECORD_NO"];
+                            drs1["LOT_TF_SUBITEM_ID"] = drsi["LOT_TF_SUBITEM_ID"];
+
+                            drs1["STATUS_ID"] = drsi["STATUS_ID"];
+                            if (partialQuantityFlag > 0)
+                            {
+                                drs1["STATUS_ID"] = currentStatusID;
+                            }
+                            drs1["NEXT_STATUS_ID"] = nextStatusID;
+
+                            drs1["PRODUCTION_ORDER_NO"] = drsi["PRODUCTION_ORDER_NO"];
+                            drs1["EXPECTED_COMPLETION_DATE"] = drsi["EXPECTED_COMPLETION_DATE"];
+                            drs1["SUBITEM_DESC"] = drsi["SUBITEM_DESC"];
+                            drs1["TAG_NO"] = drsi["TAG_NO"];
+                            drs1["LOT_MAIN_SUBITEM_ID"] = drsi["LOT_MAIN_SUBITEM_ID"];
+                            drs1["LOT_MAIN_ITEM"] = drsi["LOT_MAIN_ITEM"];
+                            drs1["DRAWING_NO"] = drsi["DRAWING_NO"];
+                            drs1["REVISION_NO"] = drsi["REVISION_NO"];
+                            drs1["CATEGORY"] = drsi["CATEGORY"];
+                            drs1["QUANTITY"] = drsi["QUANTITY"];
+                            drs1["PRODUCTION_MNGR_ID"] = drsi["PRODUCTION_MNGR_ID"];
+                            drs1["PRODUCTION_MNGR_NAME"] = drsi["PRODUCTION_MNGR_NAME"];
+                            drs1["CREATED_BY_ID"] = drsi["CREATED_BY_ID"];
+                            drs1["CREATED_BY"] = drsi["CREATED_BY"];
+                            drs1["CREATED_ON"] = drsi["CREATED_ON"];
+                            drs1["APPROVED_BY_ID"] = drsi["APPROVED_BY_ID"];
+                            drs1["APPROVED_BY"] = drsi["APPROVED_BY"];
+                            drs1["APPROVED_ON"] = drsi["APPROVED_ON"];
+                            drs1["APPROVED_REMARKS"] = drsi["APPROVED_REMARKS"];
+                            drs1["ACCEPTED_BY_ID"] = drsi["ACCEPTED_BY_ID"];
+                            drs1["ACCEPTED_BY"] = drsi["ACCEPTED_BY"];
+                            drs1["ACCEPTED_ON"] = drsi["ACCEPTED_ON"];
+                            drs1["ACCEPTED_REMARKS"] = drsi["ACCEPTED_REMARKS"];
+                            drs1["SENT_TO_INTL_INSP_BY_ID"] = drsi["SENT_TO_INTL_INSP_BY_ID"];
+                            drs1["SENT_TO_INTL_INSP_BY"] = drsi["SENT_TO_INTL_INSP_BY"];
+                            drs1["SENT_TO_INTL_INSP_ON"] = drsi["SENT_TO_INTL_INSP_ON"];
+                            drs1["SENT_TO_INTL_INSP_REMARKS"] = drsi["SENT_TO_INTL_INSP_REMARKS"];
+                            drs1["QA_INTL_INSP_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_ACCEPTED_BY_ID"];
+                            drs1["QA_INTL_INSP_ACCEPTED_BY"] = drsi["QA_INTL_INSP_ACCEPTED_BY"];
+                            drs1["QA_INTL_INSP_ACCEPTED_ON"] = drsi["QA_INTL_INSP_ACCEPTED_ON"];
+                            drs1["QA_INTL_INSP_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_ACCEPTED_REMARKS"];
+                            drs1["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"];
+                            drs1["QA_INTL_INSP_NOT_ACCEPTED_BY"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY"];
+                            drs1["QA_INTL_INSP_NOT_ACCEPTED_ON"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_ON"];
+                            drs1["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"];
+                            drs1["QUALITY_ACCEPTED_BY_ID"] = drsi["QUALITY_ACCEPTED_BY_ID"];
+                            drs1["QUALITY_ACCEPTED_BY"] = drsi["QUALITY_ACCEPTED_BY"];
+                            drs1["QUALITY_ACCEPTED_ON"] = drsi["QUALITY_ACCEPTED_ON"];
+                            drs1["QUALITY_ACCEPTED_REMARKS"] = drsi["QUALITY_ACCEPTED_REMARKS"];
+                            drs1["PLANNING_ACCEPTED_BY_ID"] = drsi["PLANNING_ACCEPTED_BY_ID"];
+                            drs1["PLANNING_ACCEPTED_BY"] = drsi["PLANNING_ACCEPTED_BY"];
+                            drs1["PLANNING_ACCEPTED_ON"] = drsi["PLANNING_ACCEPTED_ON"];
+                            drs1["PLANNING_ACCEPTED_REMARKS"] = drsi["PLANNING_ACCEPTED_REMARKS"];
+                            drs1["AMENDMENT_COUNT"] = drsi["AMENDMENT_COUNT"];
+                            drs1["AMENDMENT_BY_ID"] = drsi["AMENDMENT_BY_ID"];
+                            drs1["AMENDMENT_BY"] = drsi["AMENDMENT_BY"];
+                            drs1["AMENDMENT_ON"] = drsi["AMENDMENT_ON"];
+                            drs1["AMENDMENT_REMARKS"] = drsi["AMENDMENT_REMARKS"];
+                            drs1["AMENDED_BY_ID"] = drsi["AMENDED_BY_ID"];
+                            drs1["AMENDED_BY"] = drsi["AMENDED_BY"];
+                            drs1["AMENDED_ON"] = drsi["AMENDED_ON"];
+                            drs1["AMENDED_REMARKS"] = drsi["AMENDED_REMARKS"];
+                            drs1["AMENDED_APPROVED_BY_ID"] = drsi["AMENDED_APPROVED_BY_ID"];
+                            drs1["AMENDED_APPROVED_BY"] = drsi["AMENDED_APPROVED_BY"];
+                            drs1["AMENDED_APPROVED_ON"] = drsi["AMENDED_APPROVED_ON"];
+                            drs1["AMENDED_APPROVED_REMARKS"] = drsi["AMENDED_APPROVED_REMARKS"];
+                            drs1["AMENDED_ACCEPTED_BY_ID"] = drsi["AMENDED_ACCEPTED_BY_ID"];
+                            drs1["AMENDED_ACCEPTED_BY"] = drsi["AMENDED_ACCEPTED_BY"];
+                            drs1["AMENDED_ACCEPTED_ON"] = drsi["AMENDED_ACCEPTED_ON"];
+                            drs1["AMENDED_ACCEPTED_REMARKS"] = drsi["AMENDED_ACCEPTED_REMARKS"];
+                            drs1["AMENDED_QUALITY_ACCEPTED_BY_ID"] = drsi["AMENDED_QUALITY_ACCEPTED_BY_ID"];
+                            drs1["AMENDED_QUALITY_ACCEPTED_BY"] = drsi["AMENDED_QUALITY_ACCEPTED_BY"];
+                            drs1["AMENDED_QUALITY_ACCEPTED_ON"] = drsi["AMENDED_QUALITY_ACCEPTED_ON"];
+                            drs1["AMENDED_QUALITY_ACCEPTED_REMARKS"] = drsi["AMENDED_QUALITY_ACCEPTED_REMARKS"];
+                            drs1["AMENDED_PLANNING_ACCEPTED_BY_ID"] = drsi["AMENDED_PLANNING_ACCEPTED_BY_ID"];
+                            drs1["AMENDED_PLANNING_ACCEPTED_BY"] = drsi["AMENDED_PLANNING_ACCEPTED_BY"];
+                            drs1["AMENDED_PLANNING_ACCEPTED_ON"] = drsi["AMENDED_PLANNING_ACCEPTED_ON"];
+                            drs1["AMENDED_PLANNING_ACCEPTED_REMARKS"] = drsi["AMENDED_PLANNING_ACCEPTED_REMARKS"];
+                            drs1["COMPLETED_BY_ID"] = drsi["COMPLETED_BY_ID"];
+                            drs1["COMPLETED_BY"] = drsi["COMPLETED_BY"];
+                            drs1["COMPLETED_ON"] = drsi["COMPLETED_ON"];
+                            drs1["COMPLETED_REMARKS"] = drsi["COMPLETED_REMARKS"];
+
+                            #endregion
+
+                            dtSi1.Rows.Add(drs1);
+                        }
+
+                        else if (nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.ProdAccepted) ||
+                                 nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.AmndProdAccepted) ||
+
+                                 nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QALOTAccepted) ||
+                                 nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.AmndQALOTAccepted) ||
+
+                                 nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection) ||
+                                 nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted) ||
+                                 nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted)
+                                 )
+                        {
+                            DataRow drs2 = dtSi2.NewRow();
+
+                            #region DTSI2 Rows
+
+                            drs2["RECORD_NO"] = drsi["RECORD_NO"];
+                            drs2["LOT_TF_SUBITEM_ID"] = drsi["LOT_TF_SUBITEM_ID"];
+
+                            drs2["STATUS_ID"] = drsi["STATUS_ID"];
+                            if (partialQuantityFlag > 0)
+                            {
+                                drs2["STATUS_ID"] = currentStatusID;
+                            }
+                            drs2["NEXT_STATUS_ID"] = nextStatusID;
+
+                            drs2["PRODUCTION_ORDER_NO"] = drsi["PRODUCTION_ORDER_NO"];
+                            drs2["EXPECTED_COMPLETION_DATE"] = drsi["EXPECTED_COMPLETION_DATE"];
+                            drs2["SUBITEM_DESC"] = drsi["SUBITEM_DESC"];
+                            drs2["TAG_NO"] = drsi["TAG_NO"];
+                            drs2["LOT_MAIN_SUBITEM_ID"] = drsi["LOT_MAIN_SUBITEM_ID"];
+                            drs2["LOT_MAIN_ITEM"] = drsi["LOT_MAIN_ITEM"];
+                            drs2["DRAWING_NO"] = drsi["DRAWING_NO"];
+                            drs2["REVISION_NO"] = drsi["REVISION_NO"];
+                            drs2["CATEGORY"] = drsi["CATEGORY"];
+
+
+                            drs2["QUANTITY"] = drsi["QUANTITY"];
+                            //if (nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection) ||
+                            //    nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted) ||
+                            //    nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted))
+                            //{
+                            //    if (dtQuantity != null && dtQuantity.Rows.Count > 0)
+                            //    {
+                            //        foreach (DataRow drq in dtQuantity.Select("LOT_TF_SUBITEM_ID='" + Convert.ToInt32(drsi["LOT_TF_SUBITEM_ID"]) + "'"))
+                            //        {
+                            //            drs2["QUANTITY"] = drq["QUANTITY"];
+                            //        }
+                            //    }
+                            //}
+
+                            drs2["PRODUCTION_MNGR_ID"] = drsi["PRODUCTION_MNGR_ID"];
+                            drs2["PRODUCTION_MNGR_NAME"] = drsi["PRODUCTION_MNGR_NAME"];
+                            drs2["CREATED_BY_ID"] = drsi["CREATED_BY_ID"];
+                            drs2["CREATED_BY"] = drsi["CREATED_BY"];
+                            drs2["CREATED_ON"] = drsi["CREATED_ON"];
+                            drs2["APPROVED_BY_ID"] = drsi["APPROVED_BY_ID"];
+                            drs2["APPROVED_BY"] = drsi["APPROVED_BY"];
+                            drs2["APPROVED_ON"] = drsi["APPROVED_ON"];
+                            drs2["APPROVED_REMARKS"] = drsi["APPROVED_REMARKS"];
+                            drs2["ACCEPTED_BY_ID"] = drsi["ACCEPTED_BY_ID"];
+                            drs2["ACCEPTED_BY"] = drsi["ACCEPTED_BY"];
+                            drs2["ACCEPTED_ON"] = drsi["ACCEPTED_ON"];
+                            drs2["ACCEPTED_REMARKS"] = drsi["ACCEPTED_REMARKS"];
+                            drs2["SENT_TO_INTL_INSP_BY_ID"] = drsi["SENT_TO_INTL_INSP_BY_ID"];
+                            drs2["SENT_TO_INTL_INSP_BY"] = drsi["SENT_TO_INTL_INSP_BY"];
+                            drs2["SENT_TO_INTL_INSP_ON"] = drsi["SENT_TO_INTL_INSP_ON"];
+                            drs2["SENT_TO_INTL_INSP_REMARKS"] = drsi["SENT_TO_INTL_INSP_REMARKS"];
+                            drs2["QA_INTL_INSP_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_ACCEPTED_BY_ID"];
+                            drs2["QA_INTL_INSP_ACCEPTED_BY"] = drsi["QA_INTL_INSP_ACCEPTED_BY"];
+                            drs2["QA_INTL_INSP_ACCEPTED_ON"] = drsi["QA_INTL_INSP_ACCEPTED_ON"];
+                            drs2["QA_INTL_INSP_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_ACCEPTED_REMARKS"];
+                            drs2["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"];
+                            drs2["QA_INTL_INSP_NOT_ACCEPTED_BY"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY"];
+                            drs2["QA_INTL_INSP_NOT_ACCEPTED_ON"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_ON"];
+                            drs2["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"];
+                            drs2["QUALITY_ACCEPTED_BY_ID"] = drsi["QUALITY_ACCEPTED_BY_ID"];
+                            drs2["QUALITY_ACCEPTED_BY"] = drsi["QUALITY_ACCEPTED_BY"];
+                            drs2["QUALITY_ACCEPTED_ON"] = drsi["QUALITY_ACCEPTED_ON"];
+                            drs2["QUALITY_ACCEPTED_REMARKS"] = drsi["QUALITY_ACCEPTED_REMARKS"];
+                            drs2["PLANNING_ACCEPTED_BY_ID"] = drsi["PLANNING_ACCEPTED_BY_ID"];
+                            drs2["PLANNING_ACCEPTED_BY"] = drsi["PLANNING_ACCEPTED_BY"];
+                            drs2["PLANNING_ACCEPTED_ON"] = drsi["PLANNING_ACCEPTED_ON"];
+                            drs2["PLANNING_ACCEPTED_REMARKS"] = drsi["PLANNING_ACCEPTED_REMARKS"];
+                            drs2["AMENDMENT_COUNT"] = drsi["AMENDMENT_COUNT"];
+                            drs2["AMENDMENT_BY_ID"] = drsi["AMENDMENT_BY_ID"];
+                            drs2["AMENDMENT_BY"] = drsi["AMENDMENT_BY"];
+                            drs2["AMENDMENT_ON"] = drsi["AMENDMENT_ON"];
+                            drs2["AMENDMENT_REMARKS"] = drsi["AMENDMENT_REMARKS"];
+                            drs2["AMENDED_BY_ID"] = drsi["AMENDED_BY_ID"];
+                            drs2["AMENDED_BY"] = drsi["AMENDED_BY"];
+                            drs2["AMENDED_ON"] = drsi["AMENDED_ON"];
+                            drs2["AMENDED_REMARKS"] = drsi["AMENDED_REMARKS"];
+                            drs2["AMENDED_APPROVED_BY_ID"] = drsi["AMENDED_APPROVED_BY_ID"];
+                            drs2["AMENDED_APPROVED_BY"] = drsi["AMENDED_APPROVED_BY"];
+                            drs2["AMENDED_APPROVED_ON"] = drsi["AMENDED_APPROVED_ON"];
+                            drs2["AMENDED_APPROVED_REMARKS"] = drsi["AMENDED_APPROVED_REMARKS"];
+                            drs2["AMENDED_ACCEPTED_BY_ID"] = drsi["AMENDED_ACCEPTED_BY_ID"];
+                            drs2["AMENDED_ACCEPTED_BY"] = drsi["AMENDED_ACCEPTED_BY"];
+                            drs2["AMENDED_ACCEPTED_ON"] = drsi["AMENDED_ACCEPTED_ON"];
+                            drs2["AMENDED_ACCEPTED_REMARKS"] = drsi["AMENDED_ACCEPTED_REMARKS"];
+                            drs2["AMENDED_QUALITY_ACCEPTED_BY_ID"] = drsi["AMENDED_QUALITY_ACCEPTED_BY_ID"];
+                            drs2["AMENDED_QUALITY_ACCEPTED_BY"] = drsi["AMENDED_QUALITY_ACCEPTED_BY"];
+                            drs2["AMENDED_QUALITY_ACCEPTED_ON"] = drsi["AMENDED_QUALITY_ACCEPTED_ON"];
+                            drs2["AMENDED_QUALITY_ACCEPTED_REMARKS"] = drsi["AMENDED_QUALITY_ACCEPTED_REMARKS"];
+                            drs2["AMENDED_PLANNING_ACCEPTED_BY_ID"] = drsi["AMENDED_PLANNING_ACCEPTED_BY_ID"];
+                            drs2["AMENDED_PLANNING_ACCEPTED_BY"] = drsi["AMENDED_PLANNING_ACCEPTED_BY"];
+                            drs2["AMENDED_PLANNING_ACCEPTED_ON"] = drsi["AMENDED_PLANNING_ACCEPTED_ON"];
+                            drs2["AMENDED_PLANNING_ACCEPTED_REMARKS"] = drsi["AMENDED_PLANNING_ACCEPTED_REMARKS"];
+                            drs2["COMPLETED_BY_ID"] = drsi["COMPLETED_BY_ID"];
+                            drs2["COMPLETED_BY"] = drsi["COMPLETED_BY"];
+                            drs2["COMPLETED_ON"] = drsi["COMPLETED_ON"];
+                            drs2["COMPLETED_REMARKS"] = drsi["COMPLETED_REMARKS"];
+
+                            #endregion
+
+                            dtSi2.Rows.Add(drs2);
+                        }
+
+                        else if (nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Complete))
+                        {
+                            DataRow drs3 = dtSi3.NewRow();
+
+                            #region DTSI3 Rows
+
+                            drs3["RECORD_NO"] = drsi["RECORD_NO"];
+                            drs3["LOT_TF_SUBITEM_ID"] = drsi["LOT_TF_SUBITEM_ID"];
+
+                            drs3["STATUS_ID"] = drsi["STATUS_ID"];
+                            if (partialQuantityFlag > 0)
+                            {
+                                drs3["STATUS_ID"] = currentStatusID;
+                            }
+                            drs3["NEXT_STATUS_ID"] = nextStatusID;
+
+                            drs3["PRODUCTION_ORDER_NO"] = drsi["PRODUCTION_ORDER_NO"];
+                            drs3["EXPECTED_COMPLETION_DATE"] = drsi["EXPECTED_COMPLETION_DATE"];
+                            drs3["SUBITEM_DESC"] = drsi["SUBITEM_DESC"];
+                            drs3["TAG_NO"] = drsi["TAG_NO"];
+                            drs3["LOT_MAIN_SUBITEM_ID"] = drsi["LOT_MAIN_SUBITEM_ID"];
+                            drs3["LOT_MAIN_ITEM"] = drsi["LOT_MAIN_ITEM"];
+                            drs3["DRAWING_NO"] = drsi["DRAWING_NO"];
+                            drs3["REVISION_NO"] = drsi["REVISION_NO"];
+                            drs3["CATEGORY"] = drsi["CATEGORY"];
+
+
+                            drs3["QUANTITY"] = drsi["QUANTITY"];
+                            //if (dtQuantity != null && dtQuantity.Rows.Count > 0)
+                            //{
+                            //    foreach (DataRow drq in dtQuantity.Select("LOT_TF_SUBITEM_ID='" + Convert.ToInt32(drsi["LOT_TF_SUBITEM_ID"]) + "'"))
+                            //    {
+                            //        drs3["QUANTITY"] = drq["QUANTITY"];
+                            //    }
+                            //}
+
+                            drs3["PRODUCTION_MNGR_ID"] = drsi["PRODUCTION_MNGR_ID"];
+                            drs3["PRODUCTION_MNGR_NAME"] = drsi["PRODUCTION_MNGR_NAME"];
+                            drs3["CREATED_BY_ID"] = drsi["CREATED_BY_ID"];
+                            drs3["CREATED_BY"] = drsi["CREATED_BY"];
+                            drs3["CREATED_ON"] = drsi["CREATED_ON"];
+                            drs3["APPROVED_BY_ID"] = drsi["APPROVED_BY_ID"];
+                            drs3["APPROVED_BY"] = drsi["APPROVED_BY"];
+                            drs3["APPROVED_ON"] = drsi["APPROVED_ON"];
+                            drs3["APPROVED_REMARKS"] = drsi["APPROVED_REMARKS"];
+                            drs3["ACCEPTED_BY_ID"] = drsi["ACCEPTED_BY_ID"];
+                            drs3["ACCEPTED_BY"] = drsi["ACCEPTED_BY"];
+                            drs3["ACCEPTED_ON"] = drsi["ACCEPTED_ON"];
+                            drs3["ACCEPTED_REMARKS"] = drsi["ACCEPTED_REMARKS"];
+                            drs3["SENT_TO_INTL_INSP_BY_ID"] = drsi["SENT_TO_INTL_INSP_BY_ID"];
+                            drs3["SENT_TO_INTL_INSP_BY"] = drsi["SENT_TO_INTL_INSP_BY"];
+                            drs3["SENT_TO_INTL_INSP_ON"] = drsi["SENT_TO_INTL_INSP_ON"];
+                            drs3["SENT_TO_INTL_INSP_REMARKS"] = drsi["SENT_TO_INTL_INSP_REMARKS"];
+                            drs3["QA_INTL_INSP_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_ACCEPTED_BY_ID"];
+                            drs3["QA_INTL_INSP_ACCEPTED_BY"] = drsi["QA_INTL_INSP_ACCEPTED_BY"];
+                            drs3["QA_INTL_INSP_ACCEPTED_ON"] = drsi["QA_INTL_INSP_ACCEPTED_ON"];
+                            drs3["QA_INTL_INSP_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_ACCEPTED_REMARKS"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_BY"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_ON"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_ON"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"];
+                            drs3["QUALITY_ACCEPTED_BY_ID"] = drsi["QUALITY_ACCEPTED_BY_ID"];
+                            drs3["QUALITY_ACCEPTED_BY"] = drsi["QUALITY_ACCEPTED_BY"];
+                            drs3["QUALITY_ACCEPTED_ON"] = drsi["QUALITY_ACCEPTED_ON"];
+                            drs3["QUALITY_ACCEPTED_REMARKS"] = drsi["QUALITY_ACCEPTED_REMARKS"];
+                            drs3["PLANNING_ACCEPTED_BY_ID"] = drsi["PLANNING_ACCEPTED_BY_ID"];
+                            drs3["PLANNING_ACCEPTED_BY"] = drsi["PLANNING_ACCEPTED_BY"];
+                            drs3["PLANNING_ACCEPTED_ON"] = drsi["PLANNING_ACCEPTED_ON"];
+                            drs3["PLANNING_ACCEPTED_REMARKS"] = drsi["PLANNING_ACCEPTED_REMARKS"];
+                            drs3["AMENDMENT_COUNT"] = drsi["AMENDMENT_COUNT"];
+                            drs3["AMENDMENT_BY_ID"] = drsi["AMENDMENT_BY_ID"];
+                            drs3["AMENDMENT_BY"] = drsi["AMENDMENT_BY"];
+                            drs3["AMENDMENT_ON"] = drsi["AMENDMENT_ON"];
+                            drs3["AMENDMENT_REMARKS"] = drsi["AMENDMENT_REMARKS"];
+                            drs3["AMENDED_BY_ID"] = drsi["AMENDED_BY_ID"];
+                            drs3["AMENDED_BY"] = drsi["AMENDED_BY"];
+                            drs3["AMENDED_ON"] = drsi["AMENDED_ON"];
+                            drs3["AMENDED_REMARKS"] = drsi["AMENDED_REMARKS"];
+                            drs3["AMENDED_APPROVED_BY_ID"] = drsi["AMENDED_APPROVED_BY_ID"];
+                            drs3["AMENDED_APPROVED_BY"] = drsi["AMENDED_APPROVED_BY"];
+                            drs3["AMENDED_APPROVED_ON"] = drsi["AMENDED_APPROVED_ON"];
+                            drs3["AMENDED_APPROVED_REMARKS"] = drsi["AMENDED_APPROVED_REMARKS"];
+                            drs3["AMENDED_ACCEPTED_BY_ID"] = drsi["AMENDED_ACCEPTED_BY_ID"];
+                            drs3["AMENDED_ACCEPTED_BY"] = drsi["AMENDED_ACCEPTED_BY"];
+                            drs3["AMENDED_ACCEPTED_ON"] = drsi["AMENDED_ACCEPTED_ON"];
+                            drs3["AMENDED_ACCEPTED_REMARKS"] = drsi["AMENDED_ACCEPTED_REMARKS"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_BY_ID"] = drsi["AMENDED_QUALITY_ACCEPTED_BY_ID"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_BY"] = drsi["AMENDED_QUALITY_ACCEPTED_BY"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_ON"] = drsi["AMENDED_QUALITY_ACCEPTED_ON"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_REMARKS"] = drsi["AMENDED_QUALITY_ACCEPTED_REMARKS"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_BY_ID"] = drsi["AMENDED_PLANNING_ACCEPTED_BY_ID"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_BY"] = drsi["AMENDED_PLANNING_ACCEPTED_BY"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_ON"] = drsi["AMENDED_PLANNING_ACCEPTED_ON"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_REMARKS"] = drsi["AMENDED_PLANNING_ACCEPTED_REMARKS"];
+                            drs3["COMPLETED_BY_ID"] = drsi["COMPLETED_BY_ID"];
+                            drs3["COMPLETED_BY"] = drsi["COMPLETED_BY"];
+                            drs3["COMPLETED_ON"] = drsi["COMPLETED_ON"];
+                            drs3["COMPLETED_REMARKS"] = drsi["COMPLETED_REMARKS"];
+
+                            #endregion
+
+                            dtSi3.Rows.Add(drs3);
+                        }
+
+                        else if (nextStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Completed))
+                        {
+                            DataRow drs3 = dtSi3.NewRow();
+
+                            #region DTSI3 Rows
+
+                            drs3["RECORD_NO"] = drsi["RECORD_NO"];
+                            drs3["LOT_TF_SUBITEM_ID"] = drsi["LOT_TF_SUBITEM_ID"];
+                            drs3["STATUS_ID"] = drsi["STATUS_ID"];
+
+                            if (partialQuantityFlag > 0)
+                            {
+                                drs3["STATUS_ID"] = currentStatusID;
+                            }
+                            drs3["NEXT_STATUS_ID"] = nextStatusID;
+
+                            drs3["PRODUCTION_ORDER_NO"] = drsi["PRODUCTION_ORDER_NO"];
+                            drs3["EXPECTED_COMPLETION_DATE"] = drsi["EXPECTED_COMPLETION_DATE"];
+                            drs3["SUBITEM_DESC"] = drsi["SUBITEM_DESC"];
+                            drs3["TAG_NO"] = drsi["TAG_NO"];
+                            drs3["LOT_MAIN_SUBITEM_ID"] = drsi["LOT_MAIN_SUBITEM_ID"];
+                            drs3["LOT_MAIN_ITEM"] = drsi["LOT_MAIN_ITEM"];
+                            drs3["DRAWING_NO"] = drsi["DRAWING_NO"];
+                            drs3["REVISION_NO"] = drsi["REVISION_NO"];
+                            drs3["CATEGORY"] = drsi["CATEGORY"];
+
+
+                            drs3["QUANTITY"] = drsi["QUANTITY"];
+                            //if (dtQuantity != null && dtQuantity.Rows.Count > 0)
+                            //{
+                            //    foreach (DataRow drq in dtQuantity.Select("LOT_TF_SUBITEM_ID='" + Convert.ToInt32(drsi["LOT_TF_SUBITEM_ID"]) + "'"))
+                            //    {
+                            //        drs3["QUANTITY"] = drq["QUANTITY"];
+                            //    }
+                            //}
+
+                            drs3["PRODUCTION_MNGR_ID"] = drsi["PRODUCTION_MNGR_ID"];
+                            drs3["PRODUCTION_MNGR_NAME"] = drsi["PRODUCTION_MNGR_NAME"];
+                            drs3["CREATED_BY_ID"] = drsi["CREATED_BY_ID"];
+                            drs3["CREATED_BY"] = drsi["CREATED_BY"];
+                            drs3["CREATED_ON"] = drsi["CREATED_ON"];
+                            drs3["APPROVED_BY_ID"] = drsi["APPROVED_BY_ID"];
+                            drs3["APPROVED_BY"] = drsi["APPROVED_BY"];
+                            drs3["APPROVED_ON"] = drsi["APPROVED_ON"];
+                            drs3["APPROVED_REMARKS"] = drsi["APPROVED_REMARKS"];
+                            drs3["ACCEPTED_BY_ID"] = drsi["ACCEPTED_BY_ID"];
+                            drs3["ACCEPTED_BY"] = drsi["ACCEPTED_BY"];
+                            drs3["ACCEPTED_ON"] = drsi["ACCEPTED_ON"];
+                            drs3["ACCEPTED_REMARKS"] = drsi["ACCEPTED_REMARKS"];
+                            drs3["SENT_TO_INTL_INSP_BY_ID"] = drsi["SENT_TO_INTL_INSP_BY_ID"];
+                            drs3["SENT_TO_INTL_INSP_BY"] = drsi["SENT_TO_INTL_INSP_BY"];
+                            drs3["SENT_TO_INTL_INSP_ON"] = drsi["SENT_TO_INTL_INSP_ON"];
+                            drs3["SENT_TO_INTL_INSP_REMARKS"] = drsi["SENT_TO_INTL_INSP_REMARKS"];
+                            drs3["QA_INTL_INSP_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_ACCEPTED_BY_ID"];
+                            drs3["QA_INTL_INSP_ACCEPTED_BY"] = drsi["QA_INTL_INSP_ACCEPTED_BY"];
+                            drs3["QA_INTL_INSP_ACCEPTED_ON"] = drsi["QA_INTL_INSP_ACCEPTED_ON"];
+                            drs3["QA_INTL_INSP_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_ACCEPTED_REMARKS"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_BY"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_BY"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_ON"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_ON"];
+                            drs3["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] = drsi["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"];
+                            drs3["QUALITY_ACCEPTED_BY_ID"] = drsi["QUALITY_ACCEPTED_BY_ID"];
+                            drs3["QUALITY_ACCEPTED_BY"] = drsi["QUALITY_ACCEPTED_BY"];
+                            drs3["QUALITY_ACCEPTED_ON"] = drsi["QUALITY_ACCEPTED_ON"];
+                            drs3["QUALITY_ACCEPTED_REMARKS"] = drsi["QUALITY_ACCEPTED_REMARKS"];
+                            drs3["PLANNING_ACCEPTED_BY_ID"] = drsi["PLANNING_ACCEPTED_BY_ID"];
+                            drs3["PLANNING_ACCEPTED_BY"] = drsi["PLANNING_ACCEPTED_BY"];
+                            drs3["PLANNING_ACCEPTED_ON"] = drsi["PLANNING_ACCEPTED_ON"];
+                            drs3["PLANNING_ACCEPTED_REMARKS"] = drsi["PLANNING_ACCEPTED_REMARKS"];
+                            drs3["AMENDMENT_COUNT"] = drsi["AMENDMENT_COUNT"];
+                            drs3["AMENDMENT_BY_ID"] = drsi["AMENDMENT_BY_ID"];
+                            drs3["AMENDMENT_BY"] = drsi["AMENDMENT_BY"];
+                            drs3["AMENDMENT_ON"] = drsi["AMENDMENT_ON"];
+                            drs3["AMENDMENT_REMARKS"] = drsi["AMENDMENT_REMARKS"];
+                            drs3["AMENDED_BY_ID"] = drsi["AMENDED_BY_ID"];
+                            drs3["AMENDED_BY"] = drsi["AMENDED_BY"];
+                            drs3["AMENDED_ON"] = drsi["AMENDED_ON"];
+                            drs3["AMENDED_REMARKS"] = drsi["AMENDED_REMARKS"];
+                            drs3["AMENDED_APPROVED_BY_ID"] = drsi["AMENDED_APPROVED_BY_ID"];
+                            drs3["AMENDED_APPROVED_BY"] = drsi["AMENDED_APPROVED_BY"];
+                            drs3["AMENDED_APPROVED_ON"] = drsi["AMENDED_APPROVED_ON"];
+                            drs3["AMENDED_APPROVED_REMARKS"] = drsi["AMENDED_APPROVED_REMARKS"];
+                            drs3["AMENDED_ACCEPTED_BY_ID"] = drsi["AMENDED_ACCEPTED_BY_ID"];
+                            drs3["AMENDED_ACCEPTED_BY"] = drsi["AMENDED_ACCEPTED_BY"];
+                            drs3["AMENDED_ACCEPTED_ON"] = drsi["AMENDED_ACCEPTED_ON"];
+                            drs3["AMENDED_ACCEPTED_REMARKS"] = drsi["AMENDED_ACCEPTED_REMARKS"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_BY_ID"] = drsi["AMENDED_QUALITY_ACCEPTED_BY_ID"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_BY"] = drsi["AMENDED_QUALITY_ACCEPTED_BY"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_ON"] = drsi["AMENDED_QUALITY_ACCEPTED_ON"];
+                            drs3["AMENDED_QUALITY_ACCEPTED_REMARKS"] = drsi["AMENDED_QUALITY_ACCEPTED_REMARKS"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_BY_ID"] = drsi["AMENDED_PLANNING_ACCEPTED_BY_ID"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_BY"] = drsi["AMENDED_PLANNING_ACCEPTED_BY"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_ON"] = drsi["AMENDED_PLANNING_ACCEPTED_ON"];
+                            drs3["AMENDED_PLANNING_ACCEPTED_REMARKS"] = drsi["AMENDED_PLANNING_ACCEPTED_REMARKS"];
+                            drs3["COMPLETED_BY_ID"] = drsi["COMPLETED_BY_ID"];
+                            drs3["COMPLETED_BY"] = drsi["COMPLETED_BY"];
+                            drs3["COMPLETED_ON"] = drsi["COMPLETED_ON"];
+                            drs3["COMPLETED_REMARKS"] = drsi["COMPLETED_REMARKS"];
+
+                            #endregion
+
+                            dtSi3.Rows.Add(drs3);
+                        }
+                    }
+                }
+
+
+                if (dsMailInfo.Tables[8].Rows.Count > 0)
+                {
+                    foreach (DataRow dr8 in dsMailInfo.Tables[8].Rows)
+                    {
+                        bcc += Convert.ToString(dr8["EMAIL_ID"]) + ";";
+                    }
+
+                    if (!string.IsNullOrEmpty(bcc)) ;
+                    bcc = bcc.TrimEnd(';');
+                }
+
+
+                isPlannigMailSent = false;
+                isQualityMailSent = false;
+
+                if (dsMailInfo.Tables[9].Rows.Count > 0)
+                {
+                    dtQuantityDetails = dsMailInfo.Tables[9];
+                }
+                else dtQuantityDetails = null;
+
+                if (dtSi1.Rows.Count > 0)
+                {
+                    LOTMainSubitemID = Convert.ToInt32(dtSi1.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                    objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                    CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi1, objLOTMailInfoProperties, createdByID, remarks,
+                        qualityPlanningStatusID, 0, editFlag, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+                }
+
+                if (dtSi2.Rows.Count > 0)
+                {
+                    isPlannigMailSent = false;
+                    isQualityMailSent = false;
+
+                    if (qualityPlanningStatusID == 0)
+                    {
+                        dtSi4.Rows.Clear();
+
+                        foreach (DataRow drdprdmngr in dsMailInfo.Tables[7].Rows)
+                        {
+                            dtSi4.Rows.Clear();
+
+                            prodMngrID = Convert.ToInt32(drdprdmngr["PRODUCTION_MNGR_ID"]);
+                            foreach (DataRow drprdsi in dsMailInfo.Tables[3].Select("PRODUCTION_MNGR_ID='" + prodMngrID + "'"))
+                            {
+                                LOTMainSubitemID = Convert.ToInt32(drprdsi["LOT_MAIN_SUBITEM_ID"]);
+                                foreach (DataRow dracc in dtSi2.Select("PRODUCTION_MNGR_ID=" + prodMngrID + " AND LOT_MAIN_SUBITEM_ID='" + LOTMainSubitemID + "'"))
+                                {
+                                    DataRow drs4 = dtSi4.NewRow();
+
+                                    #region DTSI4 Rows
+
+                                    drs4["RECORD_NO"] = dracc["RECORD_NO"];
+                                    drs4["LOT_TF_SUBITEM_ID"] = dracc["LOT_TF_SUBITEM_ID"];
+                                    drs4["STATUS_ID"] = dracc["STATUS_ID"];
+                                    if (partialQuantityFlag > 0)
+                                    {
+                                        drs4["STATUS_ID"] = currentStatusID;
+                                    }
+                                    drs4["NEXT_STATUS_ID"] = nextStatusID;
+
+                                    drs4["PRODUCTION_ORDER_NO"] = dracc["PRODUCTION_ORDER_NO"];
+                                    drs4["EXPECTED_COMPLETION_DATE"] = dracc["EXPECTED_COMPLETION_DATE"];
+                                    drs4["SUBITEM_DESC"] = dracc["SUBITEM_DESC"];
+                                    drs4["TAG_NO"] = dracc["TAG_NO"];
+                                    drs4["LOT_MAIN_SUBITEM_ID"] = dracc["LOT_MAIN_SUBITEM_ID"];
+                                    drs4["LOT_MAIN_ITEM"] = dracc["LOT_MAIN_ITEM"];
+                                    drs4["DRAWING_NO"] = dracc["DRAWING_NO"];
+                                    drs4["REVISION_NO"] = dracc["REVISION_NO"];
+                                    drs4["CATEGORY"] = dracc["CATEGORY"];
+                                    drs4["QUANTITY"] = dracc["QUANTITY"];
+                                    drs4["PRODUCTION_MNGR_ID"] = dracc["PRODUCTION_MNGR_ID"];
+                                    drs4["PRODUCTION_MNGR_NAME"] = dracc["PRODUCTION_MNGR_NAME"];
+                                    drs4["CREATED_BY_ID"] = dracc["CREATED_BY_ID"];
+                                    drs4["CREATED_BY"] = dracc["CREATED_BY"];
+                                    drs4["CREATED_ON"] = dracc["CREATED_ON"];
+                                    drs4["APPROVED_BY_ID"] = dracc["APPROVED_BY_ID"];
+                                    drs4["APPROVED_BY"] = dracc["APPROVED_BY"];
+                                    drs4["APPROVED_ON"] = dracc["APPROVED_ON"];
+                                    drs4["APPROVED_REMARKS"] = dracc["APPROVED_REMARKS"];
+                                    drs4["ACCEPTED_BY_ID"] = dracc["ACCEPTED_BY_ID"];
+                                    drs4["ACCEPTED_BY"] = dracc["ACCEPTED_BY"];
+                                    drs4["ACCEPTED_ON"] = dracc["ACCEPTED_ON"];
+                                    drs4["ACCEPTED_REMARKS"] = dracc["ACCEPTED_REMARKS"];
+                                    drs4["SENT_TO_INTL_INSP_BY_ID"] = dracc["SENT_TO_INTL_INSP_BY_ID"];
+                                    drs4["SENT_TO_INTL_INSP_BY"] = dracc["SENT_TO_INTL_INSP_BY"];
+                                    drs4["SENT_TO_INTL_INSP_ON"] = dracc["SENT_TO_INTL_INSP_ON"];
+                                    drs4["SENT_TO_INTL_INSP_REMARKS"] = dracc["SENT_TO_INTL_INSP_REMARKS"];
+                                    drs4["QA_INTL_INSP_ACCEPTED_BY_ID"] = dracc["QA_INTL_INSP_ACCEPTED_BY_ID"];
+                                    drs4["QA_INTL_INSP_ACCEPTED_BY"] = dracc["QA_INTL_INSP_ACCEPTED_BY"];
+                                    drs4["QA_INTL_INSP_ACCEPTED_ON"] = dracc["QA_INTL_INSP_ACCEPTED_ON"];
+                                    drs4["QA_INTL_INSP_ACCEPTED_REMARKS"] = dracc["QA_INTL_INSP_ACCEPTED_REMARKS"];
+                                    drs4["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] = dracc["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"];
+                                    drs4["QA_INTL_INSP_NOT_ACCEPTED_BY"] = dracc["QA_INTL_INSP_NOT_ACCEPTED_BY"];
+                                    drs4["QA_INTL_INSP_NOT_ACCEPTED_ON"] = dracc["QA_INTL_INSP_NOT_ACCEPTED_ON"];
+                                    drs4["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] = dracc["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"];
+                                    drs4["QUALITY_ACCEPTED_BY_ID"] = dracc["QUALITY_ACCEPTED_BY_ID"];
+                                    drs4["QUALITY_ACCEPTED_BY"] = dracc["QUALITY_ACCEPTED_BY"];
+                                    drs4["QUALITY_ACCEPTED_ON"] = dracc["QUALITY_ACCEPTED_ON"];
+                                    drs4["QUALITY_ACCEPTED_REMARKS"] = dracc["QUALITY_ACCEPTED_REMARKS"];
+                                    drs4["PLANNING_ACCEPTED_BY_ID"] = dracc["PLANNING_ACCEPTED_BY_ID"];
+                                    drs4["PLANNING_ACCEPTED_BY"] = dracc["PLANNING_ACCEPTED_BY"];
+                                    drs4["PLANNING_ACCEPTED_ON"] = dracc["PLANNING_ACCEPTED_ON"];
+                                    drs4["PLANNING_ACCEPTED_REMARKS"] = dracc["PLANNING_ACCEPTED_REMARKS"];
+                                    drs4["AMENDMENT_COUNT"] = dracc["AMENDMENT_COUNT"];
+                                    drs4["AMENDMENT_BY_ID"] = dracc["AMENDMENT_BY_ID"];
+                                    drs4["AMENDMENT_BY"] = dracc["AMENDMENT_BY"];
+                                    drs4["AMENDMENT_ON"] = dracc["AMENDMENT_ON"];
+                                    drs4["AMENDMENT_REMARKS"] = dracc["AMENDMENT_REMARKS"];
+                                    drs4["AMENDED_BY_ID"] = dracc["AMENDED_BY_ID"];
+                                    drs4["AMENDED_BY"] = dracc["AMENDED_BY"];
+                                    drs4["AMENDED_ON"] = dracc["AMENDED_ON"];
+                                    drs4["AMENDED_REMARKS"] = dracc["AMENDED_REMARKS"];
+                                    drs4["AMENDED_APPROVED_BY_ID"] = dracc["AMENDED_APPROVED_BY_ID"];
+                                    drs4["AMENDED_APPROVED_BY"] = dracc["AMENDED_APPROVED_BY"];
+                                    drs4["AMENDED_APPROVED_ON"] = dracc["AMENDED_APPROVED_ON"];
+                                    drs4["AMENDED_APPROVED_REMARKS"] = dracc["AMENDED_APPROVED_REMARKS"];
+                                    drs4["AMENDED_ACCEPTED_BY_ID"] = dracc["AMENDED_ACCEPTED_BY_ID"];
+                                    drs4["AMENDED_ACCEPTED_BY"] = dracc["AMENDED_ACCEPTED_BY"];
+                                    drs4["AMENDED_ACCEPTED_ON"] = dracc["AMENDED_ACCEPTED_ON"];
+                                    drs4["AMENDED_ACCEPTED_REMARKS"] = dracc["AMENDED_ACCEPTED_REMARKS"];
+                                    drs4["AMENDED_QUALITY_ACCEPTED_BY_ID"] = dracc["AMENDED_QUALITY_ACCEPTED_BY_ID"];
+                                    drs4["AMENDED_QUALITY_ACCEPTED_BY"] = dracc["AMENDED_QUALITY_ACCEPTED_BY"];
+                                    drs4["AMENDED_QUALITY_ACCEPTED_ON"] = dracc["AMENDED_QUALITY_ACCEPTED_ON"];
+                                    drs4["AMENDED_QUALITY_ACCEPTED_REMARKS"] = dracc["AMENDED_QUALITY_ACCEPTED_REMARKS"];
+                                    drs4["AMENDED_PLANNING_ACCEPTED_BY_ID"] = dracc["AMENDED_PLANNING_ACCEPTED_BY_ID"];
+                                    drs4["AMENDED_PLANNING_ACCEPTED_BY"] = dracc["AMENDED_PLANNING_ACCEPTED_BY"];
+                                    drs4["AMENDED_PLANNING_ACCEPTED_ON"] = dracc["AMENDED_PLANNING_ACCEPTED_ON"];
+                                    drs4["AMENDED_PLANNING_ACCEPTED_REMARKS"] = dracc["AMENDED_PLANNING_ACCEPTED_REMARKS"];
+                                    drs4["COMPLETED_BY_ID"] = dracc["COMPLETED_BY_ID"];
+                                    drs4["COMPLETED_BY"] = dracc["COMPLETED_BY"];
+                                    drs4["COMPLETED_ON"] = dracc["COMPLETED_ON"];
+                                    drs4["COMPLETED_REMARKS"] = dracc["COMPLETED_REMARKS"];
+
+                                    #endregion
+
+                                    dtSi4.Rows.Add(drs4);
+                                }
+                            }
+
+                            if (qualityInspID > 0)
+                            {
+                                if (dtSi4.Rows.Count > 0)
+                                {
+                                    LOTMainSubitemID = Convert.ToInt32(dtSi4.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                                    objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                                    CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi4, objLOTMailInfoProperties, createdByID, remarks, qualityPlanningStatusID,
+                                        qualityInspID, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+                                }
+                            }
+                            else
+                            {
+                                if (dtSi4.Rows.Count > 0)
+                                {
+                                    LOTMainSubitemID = Convert.ToInt32(dtSi4.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                                    objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                                    CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi4, objLOTMailInfoProperties, createdByID, remarks,
+                                                         qualityPlanningStatusID, 0, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+                                }
+                            }
+
+                        }
+                        if (qualityPlanningStatusID == 0 && qualityInspID == 0)
+                        {
+                            bool isAllowedToSendPlanningMail = false;
+
+                            objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+
+                            foreach (DataRow dr in dtSi.Rows)
+                            {
+                                if (Convert.ToInt32(dr["STATUS_ID"]) == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Approved) ||
+                                    Convert.ToInt32(dr["STATUS_ID"]) == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.AmndApproved))
+                                {
+                                    isAllowedToSendPlanningMail = true;
+                                    break;
+                                }
+                            }
+                            if (isAllowedToSendPlanningMail)
+                            {
+                                //CallPlanningSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi2, objLOTMailInfoProperties, createdByID, remarks,
+                                 //                            Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Planning), partialStatusID, partialQuantityFlag);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        isPlannigMailSent = false;
+                        isQualityMailSent = false;
+
+                        if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Planning))
+                        {
+                            LOTMainSubitemID = Convert.ToInt32(dtSi.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                            objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                            CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi, objLOTMailInfoProperties, createdByID, remarks,
+                                                 qualityPlanningStatusID, 0, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+
+                            isPlannigMailSent = true;
+
+                        }
+
+                        else if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Quality))
+                        {
+                            LOTMainSubitemID = Convert.ToInt32(dtSi2.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                            objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                            CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi2, objLOTMailInfoProperties, createdByID, remarks,
+                                                 qualityPlanningStatusID, 0, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+
+                            isQualityMailSent = true;
+
+                        }
+
+                    }
+                }
+
+
+                if (dtSi3.Rows.Count > 0)
+                {
+                    if (qualityPlanningStatusID == 0)
+                    {
+                        LOTMainSubitemID = Convert.ToInt32(dtSi3.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                        objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                        CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi3, objLOTMailInfoProperties, createdByID, remarks,
+                                             qualityPlanningStatusID, 0, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+                    }
+                    else
+                    {
+                        if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Planning))
+                        {
+                            if (isPlannigMailSent == false)
+                            {
+                                LOTMainSubitemID = Convert.ToInt32(dtSi.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                                objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                                CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi, objLOTMailInfoProperties, createdByID, remarks,
+                                                     qualityPlanningStatusID, 0, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+
+                                isPlannigMailSent = true;
+                            }
+                        }
+
+                        else if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Quality))
+                        {
+                            if (isQualityMailSent == false)
+                            {
+                                LOTMainSubitemID = Convert.ToInt32(dtSi3.Rows[0]["LOT_MAIN_SUBITEM_ID"]);
+                                objLOTMailInfoProperties = GetMailInfo(dsMailInfo, LOTMainSubitemID);
+                                CallSendMailFunction(LOTTFID, TFNo, unitID, dsMailInfo.Tables[0], dtSi3, objLOTMailInfoProperties, createdByID, remarks,
+                                                     qualityPlanningStatusID, 0, 0, IRNFileBytes, bcc, dtQuantityDetails, partialStatusID, partialQuantityFlag);
+
+                                isQualityMailSent = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return returnVal;
+        }
+
+        catch (Exception ex)
+        {
+            returnVal = 0;
+            return returnVal;
+        }
+    }
+
+    private void CallSendMailFunction(int LOTTFID, string TFNo, int unitID, DataTable dtLOTDetails, DataTable dtSubitems, LOTMailInfoProperties objLOTMailInfoProperties,
+        int createdByID, string remarks, int qualityPlanningStatusID, int qualityInspID, int editFlag, byte[] IRNFileBytes, string bcc, DataTable dtQuantityDetails,
+        int partialStatusID, int partialQuantityFlag)
+    {
+        try
+        {
+
+            #region Variables
+
+            mailType = 0;
+            currentStatusID = 0;
+
+            createdByName = string.Empty;
+            createdByEmail = string.Empty;
+
+            amendedByID = 0;
+            amendedByName = string.Empty;
+            amendedByEmail = string.Empty;
+
+            PEID = 0;
+            PEName = string.Empty;
+            PEEmail = string.Empty;
+            PEUD = string.Empty;
+            PEPD = string.Empty;
+
+            PMID = 0;
+            PMName = string.Empty;
+            PMEmail = string.Empty;
+            PMUD = string.Empty;
+            PMPD = string.Empty;
+
+            prodMngrID = 0;
+            prodMngrName = string.Empty;
+            prodMngrEmail = string.Empty;
+            prodMngrEmailCC = string.Empty;
+
+            approvedByID = 0;
+            approvedByName = string.Empty;
+            approvedByEmail = string.Empty;
+
+            acceptedByID = 0;
+            acceptedByName = string.Empty;
+            acceptedByEmail = string.Empty;
+
+            sendToIntlInspectionByID = 0;
+            sendToIntlInspectionByName = string.Empty;
+            sendToIntlInspectionByEmail = string.Empty;
+
+            qAIntlInspectionAcceptedByID = 0;
+            qAIntlInspectionAcceptedByName = string.Empty;
+            qAIntlInspectionAcceptedByEmail = string.Empty;
+
+            qAIntlInspectionNotAcceptedByID = 0;
+            qAIntlInspectionNotAcceptedByName = string.Empty;
+            qAIntlInspectionNotAcceptedByEmail = string.Empty;
+
+
+            amendmentCount = 0;
+
+            amendmentByID = 0;
+            amendmentByName = string.Empty;
+            amendmentByEmail = string.Empty;
+
+            amendedApprovedByID = 0;
+            amendedApprovedByName = string.Empty;
+            amendedApprovedByEmail = string.Empty;
+
+            amendedAcceptedByID = 0;
+            amendedAcceptedByName = string.Empty;
+            amendedAcceptedByEmail = string.Empty;
+
+            completedByID = 0;
+            completedByName = string.Empty;
+            completedByEmail = string.Empty;
+
+
+            qualityAcceptedByID = 0;
+            qualityAcceptedByName = string.Empty;
+            qualityAcceptedByEmail = string.Empty;
+
+            planningAcceptedByID = 0;
+            planningAcceptedByName = string.Empty;
+            planningAcceptedByEmail = string.Empty;
+
+            qualityAmendedAcceptedByID = 0;
+            qualityAmendedAcceptedByName = string.Empty;
+            qualityAmendedAcceptedByEmail = string.Empty;
+
+            planningAmendedAcceptedByID = 0;
+            planningAmendedAcceptedByName = string.Empty;
+            planningAmendedAcceptedByEmail = string.Empty;
+
+
+            urlTxt = string.Empty;
+            href = string.Empty;
+            link = string.Empty;
+
+            PEApproveHref = string.Empty;
+            PEApproveLink = string.Empty;
+
+            //PEAmendmentHref = string.Empty;
+            //PEAmendmentLink = string.Empty;
+
+            PMApproveHref = string.Empty;
+            PMApproveLink = string.Empty;
+
+            //PMAmendmentHref = string.Empty;
+            //PMAmendmentLink = string.Empty;
+
+            fileName = string.Empty;
+            body = string.Empty;
+            subject = string.Empty;
+            from = string.Empty;
+            to = string.Empty;
+            cc = string.Empty;
+
+            #endregion
+
+
+            if (objLOTMailInfoProperties != null)
+            {
+                if (partialQuantityFlag > 0)
+                {
+                    if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialIntlInspection))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection);
+
+                    else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemAccepted))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted);
+
+                    else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemNotAccepted))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted);
+
+                    else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialComplete))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Complete);
+                }
+                else
+                {
+                    if (Convert.ToInt32(objLOTMailInfoProperties.statusID) > 0)
+                        currentStatusID = Convert.ToInt32(objLOTMailInfoProperties.statusID);
+                }
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.CreatedByID) > 0)
+                    createdByID = Convert.ToInt32(objLOTMailInfoProperties.CreatedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CreatedByName)))
+                    createdByName = Convert.ToString(objLOTMailInfoProperties.CreatedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CreatedByEmail)))
+                    createdByEmail = Convert.ToString(objLOTMailInfoProperties.CreatedByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.PEID) > 0)
+                    PEID = Convert.ToInt32(objLOTMailInfoProperties.PEID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEName)))
+                    PEName = Convert.ToString(objLOTMailInfoProperties.PEName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEEmail)))
+                    PEEmail = Convert.ToString(objLOTMailInfoProperties.PEEmail);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEUD)))
+                    PEUD = Convert.ToString(objLOTMailInfoProperties.PEUD);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEPD)))
+                    PEPD = Convert.ToString(objLOTMailInfoProperties.PEPD);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.PMID) > 0)
+                    PMID = Convert.ToInt32(objLOTMailInfoProperties.PMID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMName)))
+                    PMName = Convert.ToString(objLOTMailInfoProperties.PMName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMEmail)))
+                    PMEmail = Convert.ToString(objLOTMailInfoProperties.PMEmail);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMUD)))
+                    PMUD = Convert.ToString(objLOTMailInfoProperties.PMUD);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMPD)))
+                    PMPD = Convert.ToString(objLOTMailInfoProperties.PMPD);
+
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.ProdMngrID) > 0)
+                    prodMngrID = Convert.ToInt32(objLOTMailInfoProperties.ProdMngrID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ProdMngrName)))
+                    prodMngrName = Convert.ToString(objLOTMailInfoProperties.ProdMngrName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ProdMngrEmail)))
+                    prodMngrEmail = Convert.ToString(objLOTMailInfoProperties.ProdMngrEmail);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ProdMngrEmailCC)))
+                    prodMngrEmailCC = Convert.ToString(objLOTMailInfoProperties.ProdMngrEmailCC);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.ApprovedByID) > 0)
+                    approvedByID = Convert.ToInt32(objLOTMailInfoProperties.ApprovedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ApprovedByName)))
+                    approvedByName = Convert.ToString(objLOTMailInfoProperties.ApprovedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ApprovedByEmail)))
+                    approvedByEmail = Convert.ToString(objLOTMailInfoProperties.ApprovedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AcceptedByID) > 0)
+                    acceptedByID = Convert.ToInt32(objLOTMailInfoProperties.AcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AcceptedByName)))
+                    acceptedByName = Convert.ToString(objLOTMailInfoProperties.AcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AcceptedByEmail)))
+                    acceptedByEmail = Convert.ToString(objLOTMailInfoProperties.AcceptedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.SendToIntlInspectionByID) > 0)
+                    sendToIntlInspectionByID = Convert.ToInt32(objLOTMailInfoProperties.SendToIntlInspectionByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.SendToIntlInspectionByName)))
+                    sendToIntlInspectionByName = Convert.ToString(objLOTMailInfoProperties.SendToIntlInspectionByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.SendToIntlInspectionByEmail)))
+                    sendToIntlInspectionByEmail = Convert.ToString(objLOTMailInfoProperties.SendToIntlInspectionByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.QAIntlInspectionAcceptedByID) > 0)
+                    qAIntlInspectionAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.QAIntlInspectionAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionAcceptedByName)))
+                    qAIntlInspectionAcceptedByName = Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionAcceptedByEmail)))
+                    qAIntlInspectionAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionAcceptedByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByID) > 0)
+                    qAIntlInspectionNotAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByName)))
+                    qAIntlInspectionNotAcceptedByName = Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByEmail)))
+                    qAIntlInspectionNotAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendmentCount) > 0)
+                    amendmentCount = Convert.ToInt32(objLOTMailInfoProperties.AmendmentCount);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendmentByID) > 0)
+                    amendmentByID = Convert.ToInt32(objLOTMailInfoProperties.AmendmentByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendmentByName)))
+                    amendmentByName = Convert.ToString(objLOTMailInfoProperties.AmendmentByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendmentByEmail)))
+                    amendmentByEmail = Convert.ToString(objLOTMailInfoProperties.AmendmentByEmail);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendedByID) > 0)
+                    amendedByID = Convert.ToInt32(objLOTMailInfoProperties.AmendedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedByName)))
+                    amendedByName = Convert.ToString(objLOTMailInfoProperties.AmendedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedByEmail)))
+                    amendedByEmail = Convert.ToString(objLOTMailInfoProperties.AmendedByEmail);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendedApprovedByID) > 0)
+                    amendedApprovedByID = Convert.ToInt32(objLOTMailInfoProperties.AmendedApprovedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByName)))
+                    amendedApprovedByName = Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByEmail)))
+                    amendedApprovedByEmail = Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendedAcceptedByID) > 0)
+                    amendedAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.AmendedAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByName)))
+                    amendedAcceptedByName = Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByEmail)))
+                    amendedAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.CompletedByID) > 0)
+                    completedByID = Convert.ToInt32(objLOTMailInfoProperties.CompletedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CompletedByName)))
+                    completedByName = Convert.ToString(objLOTMailInfoProperties.CompletedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CompletedByEmail)))
+                    completedByEmail = Convert.ToString(objLOTMailInfoProperties.CompletedByEmail);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityMngrNames)))
+                    qualityNames = Convert.ToString(objLOTMailInfoProperties.QualityMngrNames);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityMngrEmails)))
+                    qualityEmails = Convert.ToString(objLOTMailInfoProperties.QualityMngrEmails);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningMngrNames)))
+                    planningNames = Convert.ToString(objLOTMailInfoProperties.PlanningMngrNames);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningMngrEmails)))
+                    planningEmails = Convert.ToString(objLOTMailInfoProperties.PlanningMngrEmails);
+
+
+
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.QualityAcceptedByID) > 0)
+                    qualityAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.QualityAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityAcceptedByName)))
+                    qualityAcceptedByName = Convert.ToString(objLOTMailInfoProperties.QualityAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityAcceptedByEmail)))
+                    qualityAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.QualityAcceptedByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.PlanningAcceptedByID) > 0)
+                    planningAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.PlanningAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningAcceptedByName)))
+                    planningAcceptedByName = Convert.ToString(objLOTMailInfoProperties.PlanningAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningAcceptedByEmail)))
+                    planningAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.PlanningAcceptedByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.QualityAmendedAcceptedByID) > 0)
+                    qualityAmendedAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.QualityAmendedAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityAmendedAcceptedByName)))
+                    qualityAmendedAcceptedByName = Convert.ToString(objLOTMailInfoProperties.QualityAmendedAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityAmendedAcceptedByEmail)))
+                    qualityAmendedAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.QualityAmendedAcceptedByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.PlanningAmendedAcceptedByID) > 0)
+                    planningAmendedAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.PlanningAmendedAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningAmendedAcceptedByName)))
+                    planningAmendedAcceptedByName = Convert.ToString(objLOTMailInfoProperties.PlanningAmendedAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningAmendedAcceptedByEmail)))
+                    planningAmendedAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.PlanningAmendedAcceptedByEmail);
+
+
+            }
+
+            int mailValue = 0;
+
+            if (qualityPlanningStatusID > 0)
+            {
+                //if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Quality))
+                //    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QualityAcceptedMail);
+
+                //else if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Planning))
+                //    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.PlanningAcceptedMail);
+
+                //else if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.AmendedQuality))
+                //    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedQualityAcceptedMail);
+
+                //else if (qualityPlanningStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.AmendedPlanning))
+                //    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedPlanningAcceptedMail);
+            }
+
+            else if (qualityInspID > 0)
+            {
+                if (qualityInspID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection))
+                    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.SendToIntlInspMail);
+
+                else if (qualityInspID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted))
+                    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QAIntlInspAcceptedMail);
+
+                else if (qualityInspID == Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted))
+                    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QAIntlInspNotAcceptedMail);
+            }
+
+            else
+            {
+                if (amendmentCount > 0)
+                    objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(amendedByID, PEID, PMID, prodMngrID, amendedApprovedByID), amendmentCount, currentStatusID);
+                else
+                    objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(createdByID, PEID, PMID, prodMngrID, approvedByID), amendmentCount, currentStatusID);
+
+                //objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(createdByID, PEID, PMID, prodMngrID, approvedByID), amendmentCount, currentStatusID);
+
+                mailType = objLOTMailTypeAndStatusProperties.MailTypeID;
+                //mailType = objGetLOTMailType.GetMailType(createdByID, PEID, PMID, prodMngrID, amendmentCount);
+            }
+
+
+
+            fileName = string.Empty;
+            body = string.Empty;
+            subject = string.Empty;
+            from = string.Empty;
+            to = string.Empty;
+            cc = string.Empty;
+
+
+            urlTxt = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["URL"]);
+            link = "'" + urlTxt + "/Login.aspx?tfno=" + TFNo + "'&unitid=" + unitID + "'";
+
+
+
+
+
+            if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.ApprovalMail))
+            {
+                if (PEID == PMID)
+                {
+                    // To PM--------------------------------------
+                    from = createdByEmail;
+                    to = PMEmail;
+
+                    if (editFlag > 0)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/02EditedLOTPMApprovalMail.htm";
+                        subject = "Approval Request for Edited LOT With TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment Edited LOT</a>";
+                    }
+                    else
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/02LOTPMApprovalMail.htm";
+                        subject = "Approval Request for TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment LOT</a>";
+                    }
+
+                    mailValue = SendMail(TFNo, from, to, cc, bcc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    //--------------------------------------------
+                }
+                else
+                {
+                    // To PE------------------------------------
+                    from = createdByEmail;
+                    to = PEEmail;
+
+
+                    if (editFlag > 0)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/01EditedLOTPEApprovalMail.htm";
+                        subject = "Approval Request for Edited LOT With TF No.: " + TFNo;
+
+                        PEApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PEUD + "&pd=" + PEPD + "&emprecordid=" + Convert.ToString(PEID) + "'";
+                        PEApproveHref = "<a href=" + PEApproveLink + ">Approve/Send To Amendment Edited LOT</a>";
+                    }
+                    else
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/01LOTPEApprovalMail.htm";
+                        subject = "Approval Request for TF No.: " + TFNo;
+
+                        PEApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PEUD + "&pd=" + PEPD + "&emprecordid=" + Convert.ToString(PEID) + "'";
+                        PEApproveHref = "<a href=" + PEApproveLink + ">Approve/Send To Amendment LOT</a>";
+                    }
+
+                    mailValue = SendMail(TFNo, from, to, cc, bcc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    //--------------------------------------------
+
+
+
+
+                    // To PM--------------------------------------
+                    from = createdByEmail;
+                    to = PMEmail;
+
+                    if (editFlag > 0)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/02EditedLOTPMApprovalMail.htm";
+                        subject = "Approval Request for Edited LOT With TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment Edited LOT</a>";
+                    }
+                    else
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/02LOTPMApprovalMail.htm";
+                        subject = "Approval Request for TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment LOT</a>";
+                    }
+
+                    mailValue = SendMail(TFNo, from, to, cc, bcc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    //---------------------------------------------
+
+
+                }
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail))
+            {
+                from = approvedByEmail;
+                to = prodMngrEmail;
+
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                        cc = PMEmail + ";" + PEEmail + ";" + prodMngrEmailCC;
+                    else
+                        cc = PMEmail + ";" + prodMngrEmailCC;
+                }
+                else
+                    cc = prodMngrEmailCC;
+
+                if (!string.IsNullOrEmpty(cc))
+                    cc = cc + ";" + qualityEmails;
+                else cc = qualityEmails;
+
+
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/03LOTAcceptanceMail.htm";
+                subject = "Released To Production TF No.: " + TFNo;
+                href = "<a href=" + link + ">Please Accept LOT</a>";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptedMail))
+            {
+                from = acceptedByEmail;
+
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                    {
+                        to = PMEmail;
+                        cc = PEEmail;
+                    }
+                    else
+                        to = PMEmail;
+                }
+                else if (prodMngrID != PEID && prodMngrID == PMID)
+                    to = PEEmail;
+
+                else if (prodMngrID == PEID && prodMngrID != PMID)
+                    to = PMEmail;
+
+                else if (prodMngrID == PEID && prodMngrID == PMID)
+                    to = string.Empty;
+
+                if (!string.IsNullOrEmpty(cc))
+                    cc = cc + ";" + planningEmails;
+                else cc = planningEmails;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/04LOTAcceptedMail.htm";
+                subject = "Accepted TF No.: " + TFNo;
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+
+
+                if (!string.IsNullOrEmpty(qualityEmails))
+                {
+                    string[] strQualityEmails = qualityEmails.Split(';');
+                    string[] strQualityNames = qualityNames.Split(';');
+
+                    for (int i = 0; i < strQualityEmails.Length; i++)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/03LOTAcceptanceMail.htm";
+                        subject = "Released To Quality TF No.: " + TFNo;
+                        href = "<a href=" + link + ">Please Accept LOT</a>";
+
+                        to = strQualityEmails[i];
+                        cc = string.Empty;
+                        prodMngrName = strQualityNames[i];
+
+                        mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    }
+                }
+
+
+
+
+            }
+
+
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.SendToIntlInspMail))
+            {
+                from = sendToIntlInspectionByEmail;
+
+                if (!string.IsNullOrEmpty(qualityEmails))
+                {
+                    string[] strQualityEmails = qualityEmails.Split(';');
+                    string[] strQualityNames = qualityNames.Split(';');
+
+                    for (int i = 0; i < strQualityEmails.Length; i++)
+                    {
+                        qualityMngrName = string.Empty;
+
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/05LOTSendToIntlInspMail.htm";
+                        subject = "Released Item(s) To Quality With TF No.: " + TFNo + " For Internal Inspection.";
+                        href = "<a href=" + link + ">Please Accept/Not Accept Item(s)</a>";
+
+                        to = strQualityEmails[i];
+                        cc = string.Empty;
+                        qualityMngrName = strQualityNames[i];
+
+                        mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    }
+                }
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QAIntlInspAcceptedMail))
+            {
+                from = qAIntlInspectionAcceptedByEmail;
+                to = sendToIntlInspectionByEmail;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/06QAIntlInspAcceptedMail.htm";
+                subject = "Item(s) with TF No.: " + TFNo + " accepted by Quality for Internal Inspection.";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QAIntlInspNotAcceptedMail))
+            {
+                from = qAIntlInspectionNotAcceptedByEmail;
+                to = sendToIntlInspectionByEmail;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/07QAIntlInspNotAcceptedMail.htm";
+                subject = "Item(s) with TF No.: " + TFNo + " not accepted by Quality for Internal Inspection.";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.CompletedMail))
+            {
+                from = completedByEmail;
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                    {
+                        to = PMEmail;
+                        cc = PEEmail;
+                    }
+                    else
+                        to = PMEmail;
+                }
+                else if (prodMngrID != PEID && prodMngrID == PMID)
+                    to = PEEmail;
+
+                else if (prodMngrID == PEID && prodMngrID != PMID)
+                    to = PMEmail;
+
+                else if (prodMngrID == PEID && prodMngrID == PMID)
+                    to = string.Empty;
+
+                if (!string.IsNullOrEmpty(cc))
+                    cc = cc + ";" + sendToIntlInspectionByEmail;
+                else
+                    cc = sendToIntlInspectionByEmail;
+
+
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/08LOTCompletedMail.htm";
+                subject = "Item(s) with TF No.: " + TFNo + " completed with final inspection by Quality.";
+
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+
+
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendmentMail))
+            {
+                from = amendmentByEmail;
+
+                if (amendmentByID == prodMngrID)
+                {
+                    to = PMEmail;
+                    cc = PEEmail;
+                }
+                else
+                {
+                    to = createdByEmail;
+                    if (PMID == PEID)
+                        cc = PMEmail;
+                    else
+                    {
+                        cc = PMEmail + ";" + PEEmail;
+                    }
+                }
+
+                subject = "Send To Amendment TF No.: " + TFNo;
+
+                if (amendmentByID == prodMngrID)
+                    fileName = "~/PROJECT/LOT/EMAIL_FORMATS/10LOTSentToAmendmentMailByProdMngr.htm";
+                else
+                    fileName = "~/PROJECT/LOT/EMAIL_FORMATS/09LOTSentToAmendmentMail.htm";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+
+
+
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedApprovalMail))
+            {
+                if (PEID == PMID)
+                {
+                    from = amendedByEmail;
+                    to = PMEmail;
+
+                    if (editFlag > 0)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/12EditedAmendedLOTPMApprovalMail.htm";
+                        subject = "Approval Request for Edited Amended LOT with TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment Edited Amended LOT</a>";
+                    }
+                    else
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/12AmendedLOTPMApprovalMail.htm";
+                        subject = "Approval Request for Amended LOT with TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment Amended LOT</a>";
+                    }
+
+                    mailValue = SendMail(TFNo, from, to, cc, bcc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                }
+                else
+                {
+                    // To PE-------------------------------
+                    from = amendedByEmail;
+                    to = PEEmail;
+
+                    if (editFlag > 0)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/11EditedAmendedLOTPEApprovalMail.htm";
+                        subject = "Approval Request for Edited Amended LOT with TF No.: " + TFNo;
+
+                        PEApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PEUD + "&pd=" + PEPD + "&emprecordid=" + Convert.ToString(PEID) + "'";
+                        PEApproveHref = "<a href=" + PEApproveLink + ">Approve/Send To Amendment Edited Amended LOT</a>";
+                    }
+                    else
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/11AmendedLOTPEApprovalMail.htm";
+                        subject = "Approval Request for TF No.: " + TFNo;
+
+                        PEApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PEUD + "&pd=" + PEPD + "&emprecordid=" + Convert.ToString(PEID) + "'";
+                        PEApproveHref = "<a href=" + PEApproveLink + ">Approve/Send To Amendment Amended LOT</a>";
+                    }
+
+                    mailValue = SendMail(TFNo, from, to, cc, bcc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    //-------------------------------
+
+
+
+
+
+                    // To PM-------------------------------
+                    from = amendedByEmail;
+                    to = PMEmail;
+
+                    if (editFlag > 0)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/12EditedAmendedLOTPMApprovalMail.htm";
+                        subject = "Approval Request for Edited Amended LOT with TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment Edited Amended LOT</a>";
+                    }
+                    else
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/12AmendedLOTPMApprovalMail.htm";
+                        subject = "Approval Request for Amended LOT with TF No.: " + TFNo;
+
+                        PMApproveLink = "'" + urlTxt + "/PROJECT/LOT/UpdateStatusLOTDetail.aspx?lottfid=" + LOTTFID + "&ud=" + PMUD + "&pd=" + PMPD + "&emprecordid=" + Convert.ToString(PMID) + "'";
+                        PMApproveHref = "<a href=" + PMApproveLink + ">Approve/Send To Amendment Amended LOT</a>";
+                    }
+
+                    mailValue = SendMail(TFNo, from, to, cc, bcc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    //-------------------------------
+                }
+            }
+
+
+
+
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail))
+            {
+                from = amendedApprovedByEmail;
+                to = prodMngrEmail;
+
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                        cc = PMEmail + ";" + PEEmail + ";" + prodMngrEmailCC;
+                    else
+                        cc = PMEmail + ";" + prodMngrEmailCC;
+                }
+                else
+                    cc = prodMngrEmailCC;
+
+                if (!string.IsNullOrEmpty(cc))
+                    cc = cc + ";" + qualityEmails;
+                else cc = qualityEmails;
+
+
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/13AmendedAcceptanceMail.htm";
+                subject = "Released To Production TF No.: " + TFNo;
+                href = "<a href=" + link + ">Please Accept Amended LOT</a>";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptedMail))
+            {
+                from = amendedAcceptedByEmail;
+
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                    {
+                        to = PMEmail;
+                        cc = PEEmail;
+                    }
+                    else
+                        to = PMEmail;
+                }
+                else if (prodMngrID != PEID && prodMngrID == PMID)
+                    to = PEEmail;
+
+                else if (prodMngrID == PEID && prodMngrID != PMID)
+                    to = PMEmail;
+
+                else if (prodMngrID == PEID && prodMngrID == PMID)
+                    to = string.Empty;
+
+                if (!string.IsNullOrEmpty(cc))
+                    cc = cc + ";" + planningEmails;
+                else cc = planningEmails;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/14AmendedAcceptedMail.htm";
+                subject = "Accepted TF No.: " + TFNo;
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+
+
+
+
+
+
+                if (!string.IsNullOrEmpty(qualityEmails))
+                {
+                    string[] strQualityEmails = qualityEmails.Split(';');
+                    string[] strQualityNames = qualityNames.Split(';');
+
+                    for (int i = 0; i < strQualityEmails.Length; i++)
+                    {
+                        fileName = "~/PROJECT/LOT/EMAIL_FORMATS/13AmendedAcceptanceMail.htm";
+                        subject = "Released To Quality TF No.: " + TFNo;
+                        href = "<a href=" + link + ">Please Accept LOT</a>";
+
+                        to = strQualityEmails[i];
+                        cc = string.Empty;
+                        prodMngrName = strQualityNames[i];
+
+                        mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+                    }
+                }
+            }
+
+
+
+            //else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QualityAcceptedMail))
+            //{
+            //    from = qualityAcceptedByEmail;
+
+            //    if (PEID == PMID)
+            //        to = PMEmail;
+            //    else
+            //        to = PMEmail;
+
+            //    cc = PEEmail;
+
+            //    fileName = "~/PROJECT/LOT/EMAIL_FORMATS/15LOTQualityAcceptedMail.htm";
+            //    subject = "Accepted By Quality TF No.: " + TFNo;
+
+            //    mailValue = SendMail(TFNo, from, to, cc, subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes);
+            //}
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.QualityAcceptedMail))
+            {
+                from = qualityAcceptedByEmail;
+                to = prodMngrEmail;
+
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                        cc = PMEmail + ";" + PEEmail;
+                    else
+                        cc = PMEmail;
+                }
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/15LOTQualityAcceptedMail.htm";
+                subject = "Accepted By Quality TF No.: " + TFNo;
+                href = "<a href=" + link + ">Please Send Item(s) for Internal inspection</a>";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedQualityAcceptedMail))
+            {
+                from = qualityAcceptedByEmail;
+                to = prodMngrEmail;
+
+                if (prodMngrID != PEID && prodMngrID != PMID)
+                {
+                    if (PEID != PMID)
+                        cc = PMEmail + ";" + PEEmail;
+                    else
+                        cc = PMEmail;
+                }
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/15AmendedLOTQualityAcceptedMail.htm";
+                subject = "Accepted By Quality TF No.: " + TFNo;
+                href = "<a href=" + link + ">Please Send Item(s) for Internal inspection</a>";
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+
+            }
+
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.PlanningAcceptedMail))
+            {
+                from = planningAcceptedByEmail;
+
+                if (PEID == PMID)
+                    to = PMEmail;
+                else
+                    to = PMEmail;
+
+                cc = PEEmail;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/16LOTPlanningAcceptedMail.htm";
+                subject = "Accepted By Planning TF No.: " + TFNo;
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedQualityAcceptedMail))
+            {
+                from = qualityAmendedAcceptedByEmail;
+
+                if (PEID == PMID)
+                    to = PMEmail;
+                else
+                    to = PMEmail;
+
+                cc = PEEmail;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/17AmendedLOTQualityAcceptedMail.htm";
+                subject = "Accepted By Quality TF No.: " + TFNo;
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedPlanningAcceptedMail))
+            {
+                from = planningAmendedAcceptedByEmail;
+
+                if (PEID == PMID)
+                    to = PMEmail;
+                else
+                    to = PMEmail;
+
+                cc = PEEmail;
+
+                fileName = "~/PROJECT/LOT/EMAIL_FORMATS/18AmendedLOTPlanningAcceptedMail.htm";
+                subject = "Accepted By Planning TF No.: " + TFNo;
+
+                mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, IRNFileBytes, dtQuantityDetails);
+            }
+
+            else if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.NotApplicable))
+            {
+                from = string.Empty;
+                to = string.Empty;
+                cc = string.Empty;
+                fileName = string.Empty;
+                subject = string.Empty;
+                href = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            //
+        }
+    }
+
+
+    private void CallPlanningSendMailFunction(int LOTTFID, string TFNo, int unitID, DataTable dtLOTDetails, DataTable dtSubitems,
+        LOTMailInfoProperties objLOTMailInfoProperties, int createdByID, string remarks, int typeID, int partialStatusID, int partialQuantityFlag)
+    {
+        try
+        {
+            #region Variables
+
+
+            mailType = 0;
+            currentStatusID = 0;
+
+            createdByName = string.Empty;
+            createdByEmail = string.Empty;
+
+            amendedByID = 0;
+            amendedByName = string.Empty;
+            amendedByEmail = string.Empty;
+
+            PEID = 0;
+            PEName = string.Empty;
+            PEEmail = string.Empty;
+            PEUD = string.Empty;
+            PEPD = string.Empty;
+
+            PMID = 0;
+            PMName = string.Empty;
+            PMEmail = string.Empty;
+            PMUD = string.Empty;
+            PMPD = string.Empty;
+
+            prodMngrID = 0;
+            prodMngrName = string.Empty;
+            prodMngrEmail = string.Empty;
+            prodMngrEmailCC = string.Empty;
+
+            approvedByID = 0;
+            approvedByName = string.Empty;
+            approvedByEmail = string.Empty;
+
+            acceptedByID = 0;
+            acceptedByName = string.Empty;
+            acceptedByEmail = string.Empty;
+
+            amendmentCount = 0;
+
+            amendmentByID = 0;
+            amendmentByName = string.Empty;
+            amendmentByEmail = string.Empty;
+
+            amendedApprovedByID = 0;
+            amendedApprovedByName = string.Empty;
+            amendedApprovedByEmail = string.Empty;
+
+            amendedAcceptedByID = 0;
+            amendedAcceptedByName = string.Empty;
+            amendedAcceptedByEmail = string.Empty;
+
+            completedByID = 0;
+            completedByName = string.Empty;
+            completedByEmail = string.Empty;
+
+
+            urlTxt = string.Empty;
+            href = string.Empty;
+            link = string.Empty;
+
+            PEApproveHref = string.Empty;
+            PEApproveLink = string.Empty;
+
+            //PEAmendmentHref = string.Empty;
+            //PEAmendmentLink = string.Empty;
+
+            PMApproveHref = string.Empty;
+            PMApproveLink = string.Empty;
+
+            //PMAmendmentHref = string.Empty;
+            //PMAmendmentLink = string.Empty;
+
+            fileName = string.Empty;
+            body = string.Empty;
+            subject = string.Empty;
+            from = string.Empty;
+            to = string.Empty;
+            cc = string.Empty;
+
+            #endregion
+
+
+            if (objLOTMailInfoProperties != null)
+            {
+                if (Convert.ToInt32(objLOTMailInfoProperties.CreatedByID) > 0)
+                    currentStatusID = Convert.ToInt32(objLOTMailInfoProperties.statusID);
+
+                if (partialQuantityFlag > 0)
+                {
+                    if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialIntlInspection))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.IntlInspection);
+
+                    else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemAccepted))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemAccepted);
+
+                    else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialQAItemNotAccepted))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.QAItemNotAccepted);
+
+                    else if (partialStatusID == Convert.ToInt32(LOTAllStatusAndTypes.EnumPartialStatus.PartialComplete))
+                        currentStatusID = Convert.ToInt32(LOTAllStatusAndTypes.EnumStatus.Complete);
+                }
+                else
+                {
+                    if (Convert.ToInt32(objLOTMailInfoProperties.statusID) > 0)
+                        currentStatusID = Convert.ToInt32(objLOTMailInfoProperties.statusID);
+                }
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.CreatedByID) > 0)
+                    createdByID = Convert.ToInt32(objLOTMailInfoProperties.CreatedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CreatedByName)))
+                    createdByName = Convert.ToString(objLOTMailInfoProperties.CreatedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CreatedByEmail)))
+                    createdByEmail = Convert.ToString(objLOTMailInfoProperties.CreatedByEmail);
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.PEID) > 0)
+                    PEID = Convert.ToInt32(objLOTMailInfoProperties.PEID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEName)))
+                    PEName = Convert.ToString(objLOTMailInfoProperties.PEName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEEmail)))
+                    PEEmail = Convert.ToString(objLOTMailInfoProperties.PEEmail);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEUD)))
+                    PEUD = Convert.ToString(objLOTMailInfoProperties.PEUD);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PEPD)))
+                    PEPD = Convert.ToString(objLOTMailInfoProperties.PEPD);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.PMID) > 0)
+                    PMID = Convert.ToInt32(objLOTMailInfoProperties.PMID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMName)))
+                    PMName = Convert.ToString(objLOTMailInfoProperties.PMName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMEmail)))
+                    PMEmail = Convert.ToString(objLOTMailInfoProperties.PMEmail);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMUD)))
+                    PMUD = Convert.ToString(objLOTMailInfoProperties.PMUD);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PMPD)))
+                    PMPD = Convert.ToString(objLOTMailInfoProperties.PMPD);
+
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.ProdMngrID) > 0)
+                    prodMngrID = Convert.ToInt32(objLOTMailInfoProperties.ProdMngrID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ProdMngrName)))
+                    prodMngrName = Convert.ToString(objLOTMailInfoProperties.ProdMngrName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ProdMngrEmail)))
+                    prodMngrEmail = Convert.ToString(objLOTMailInfoProperties.ProdMngrEmail);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ProdMngrEmailCC)))
+                    prodMngrEmailCC = Convert.ToString(objLOTMailInfoProperties.ProdMngrEmailCC);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.ApprovedByID) > 0)
+                    approvedByID = Convert.ToInt32(objLOTMailInfoProperties.ApprovedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ApprovedByName)))
+                    approvedByName = Convert.ToString(objLOTMailInfoProperties.ApprovedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.ApprovedByEmail)))
+                    approvedByEmail = Convert.ToString(objLOTMailInfoProperties.ApprovedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AcceptedByID) > 0)
+                    acceptedByID = Convert.ToInt32(objLOTMailInfoProperties.AcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AcceptedByName)))
+                    acceptedByName = Convert.ToString(objLOTMailInfoProperties.AcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AcceptedByEmail)))
+                    acceptedByEmail = Convert.ToString(objLOTMailInfoProperties.AcceptedByEmail);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendmentCount) > 0)
+                    amendmentCount = Convert.ToInt32(objLOTMailInfoProperties.AmendmentCount);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendmentByID) > 0)
+                    amendmentByID = Convert.ToInt32(objLOTMailInfoProperties.AmendmentByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendmentByName)))
+                    amendmentByName = Convert.ToString(objLOTMailInfoProperties.AmendmentByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendmentByEmail)))
+                    amendmentByEmail = Convert.ToString(objLOTMailInfoProperties.AmendmentByEmail);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendedByID) > 0)
+                    amendedByID = Convert.ToInt32(objLOTMailInfoProperties.AmendedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedByName)))
+                    amendedByName = Convert.ToString(objLOTMailInfoProperties.AmendedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedByEmail)))
+                    amendedByEmail = Convert.ToString(objLOTMailInfoProperties.AmendedByEmail);
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendedApprovedByID) > 0)
+                    amendedApprovedByID = Convert.ToInt32(objLOTMailInfoProperties.AmendedApprovedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByName)))
+                    amendedApprovedByName = Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByEmail)))
+                    amendedApprovedByEmail = Convert.ToString(objLOTMailInfoProperties.AmendedApprovedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.AmendedAcceptedByID) > 0)
+                    amendedAcceptedByID = Convert.ToInt32(objLOTMailInfoProperties.AmendedAcceptedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByName)))
+                    amendedAcceptedByName = Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByEmail)))
+                    amendedAcceptedByEmail = Convert.ToString(objLOTMailInfoProperties.AmendedAcceptedByEmail);
+
+
+
+
+                if (Convert.ToInt32(objLOTMailInfoProperties.CompletedByID) > 0)
+                    completedByID = Convert.ToInt32(objLOTMailInfoProperties.CompletedByID);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CompletedByName)))
+                    completedByName = Convert.ToString(objLOTMailInfoProperties.CompletedByName);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.CompletedByEmail)))
+                    completedByEmail = Convert.ToString(objLOTMailInfoProperties.CompletedByEmail);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityMngrNames)))
+                    qualityNames = Convert.ToString(objLOTMailInfoProperties.QualityMngrNames);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.QualityMngrEmails)))
+                    qualityEmails = Convert.ToString(objLOTMailInfoProperties.QualityMngrEmails);
+
+
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningMngrNames)))
+                    planningNames = Convert.ToString(objLOTMailInfoProperties.PlanningMngrNames);
+
+                if (!string.IsNullOrEmpty(Convert.ToString(objLOTMailInfoProperties.PlanningMngrEmails)))
+                    planningEmails = Convert.ToString(objLOTMailInfoProperties.PlanningMngrEmails);
+
+
+
+            }
+
+            int mailValue = 0;
+
+            if (amendmentCount > 0)
+                objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(amendedByID, PEID, PMID, prodMngrID, amendedApprovedByID), amendmentCount, currentStatusID);
+            else
+                objLOTMailTypeAndStatusProperties = objGetLOTMailTypeAndStatus.GetLOTMailTypeAndStatusValues(createdByID, objGetLOTApproverStatus.GetApproverStatusValue(createdByID, PEID, PMID, prodMngrID, approvedByID), amendmentCount, currentStatusID);
+
+            mailType = objLOTMailTypeAndStatusProperties.MailTypeID;
+
+
+            fileName = string.Empty;
+            body = string.Empty;
+            subject = string.Empty;
+            from = string.Empty;
+            to = string.Empty;
+            cc = string.Empty;
+
+            urlTxt = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["URL"]);
+            link = "'" + urlTxt + "/Login.aspx?tfno=" + TFNo + "'&unitid=" + unitID + "'";
+
+            if (mailType == Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail))
+            {
+
+                if (typeID == Convert.ToInt32(LOTAllStatusAndTypes.EnumQualityAndPlanningStatus.Planning))
+                {
+                    from = approvedByEmail;
+                    fileName = "~/PROJECT/LOT/EMAIL_FORMATS/03LOTAcceptanceMail.htm";
+                    href = "<a href=" + link + ">Please Accept LOT</a>";
+                    if (!string.IsNullOrEmpty(planningEmails))
+                    {
+                        string[] strPlanningEmails = planningEmails.Split(';');
+                        string[] strPlanningNames = planningNames.Split(';');
+
+                        for (int i = 0; i < strPlanningEmails.Length; i++)
+                        {
+                            to = strPlanningEmails[i];
+                            cc = string.Empty;
+                            prodMngrName = strPlanningNames[i];
+
+                            subject = "Released To Planning TF No.: " + TFNo;
+
+                            mailValue = SendMail(TFNo, from, to, cc, "", subject, fileName, PEApproveHref, PMApproveHref, dtLOTDetails, dtSubitems, href, remarks, null, dtQuantityDetails);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            //
+        }
+    }
+
+    private int SendMail(string TFNo, string from, string to, string cc, string bcc, string subject, string fileName,
+                         string PEApproveHref, string PMApproveHref,
+                         DataTable dtLOTDetails, DataTable dtSubitem, string href, string remarks, byte[] IRNFileBytes, DataTable dtQuantityDetails)
+    {
+
+        returnVal = 0;
+        SmtpClient SmtpServer = new SmtpClient();
+        SmtpServer.Host = "eusmtp.hi.corp";
+        SmtpServer.Port = 25;
+        SmtpServer.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+
+        MailMessage mail = new MailMessage();
+
+        if (mailType != Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.NotApplicable) && !string.IsNullOrEmpty(to))
+        {
+            if (!string.IsNullOrEmpty(subject))
+                mail.Subject = subject;
+
+            if (!string.IsNullOrEmpty(from))
+                mail.From = new MailAddress(from);
+
+            if (!string.IsNullOrEmpty(to))
+            {
+                to = to.TrimEnd(';');
+                string[] strTo = to.Split(';');
+                foreach (string item in strTo)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        mail.To.Add(item);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(cc))
+            {
+                cc = cc.TrimEnd(';');
+                string[] strCC = cc.Split(';');
+                foreach (string item in strCC)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        mail.CC.Add(item);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(bcc))
+            {
+                bcc = bcc.TrimEnd(';');
+                string[] strBCC = bcc.Split(';');
+                foreach (string item in strBCC)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        mail.Bcc.Add(item);
+                    }
+                }
+            }
+
+            mail.IsBodyHtml = true;
+
+            using (StreamReader reader = new StreamReader(System.Web.Hosting.HostingEnvironment.MapPath(fileName)))
+            {
+                body = reader.ReadToEnd();
+            }
+
+            body = body.Replace("{#createdbyname#}", createdByName);
+            body = body.Replace("{#pename#}", PEName);
+            body = body.Replace("{#peapproveoramendmentlink#}", PEApproveHref);
+
+            body = body.Replace("{#pmname#}", PMName);
+            body = body.Replace("{#pmapproveoramendmentlink#}", PMApproveHref);
+
+            body = body.Replace("{#prodmngrname#}", prodMngrName);
+
+            body = body.Replace("{#approvedbyname#}", approvedByName);
+            body = body.Replace("{#acceptedbyname#}", acceptedByName);
+            body = body.Replace("{#completedbyname#}", completedByName);
+
+            body = body.Replace("{#amendmentbyname#}", amendmentByName);
+
+            body = body.Replace("{#amendedbyname#}", amendedByName);
+            body = body.Replace("{#amendedapprovedbyname#}", amendedApprovedByName);
+            body = body.Replace("{#amendedacceptedbyname#}", amendedAcceptedByName);
+
+            body = body.Replace("{#qualityacceptedbyname#}", qualityAcceptedByName);
+            body = body.Replace("{#planningacceptedbyname#}", planningAcceptedByName);
+            body = body.Replace("{#amendedqualityacceptedbyname#}", qualityAmendedAcceptedByName);
+            body = body.Replace("{#amendedplanningacceptedbyname#}", planningAmendedAcceptedByName);
+            body = body.Replace("{#senttoamendmentbyprodremarks#}", remarks);
+
+            body = body.Replace("{#qualitymanager#}", qualityMngrName);
+            body = body.Replace("{#sendtointlinspectionname#}", sendToIntlInspectionByName);
+            body = body.Replace("{#qaintlacceptedbyname#}", qAIntlInspectionAcceptedByName);
+            body = body.Replace("{#qaintlnotacceptedbyname#}", qAIntlInspectionNotAcceptedByName);
+            body = body.Replace("{#qaintlnotacceptedremarks#}", remarks);
+
+            body = body.Replace("{#link#}", href);
+
+            mail.Body = body;
+
+            byte[] bytes = GetPDFBytes(dtLOTDetails, dtSubitem, Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.Mail), dtQuantityDetails);
+            mail.Attachments.Add(new Attachment(new MemoryStream(bytes), TFNo + ".pdf"));
+
+            if (IRNFileBytes != null)
+            {
+                mail.Attachments.Add(new Attachment(new MemoryStream(IRNFileBytes), "IRN_" + TFNo + ".pdf"));
+            }
+
+
+            try
+            {
+                if (!string.IsNullOrEmpty(to))
+                {
+                    SmtpServer.Send(mail);
+                    returnVal = 1;
+                }
+                else
+                    returnVal = 0;
+            }
+            catch (Exception ex)
+            {
+                string exMsg = ex.ToString();
+                if (exMsg.Contains("Mailbox unavailable. The server response was: 5.7.1 Unable to relay"))
+                    returnVal = 1;
+
+                else
+                    returnVal = 0;
+            }
+        }
+        else
+            returnVal = 0;
+
+        return returnVal;
+
+    }
+
+    public byte[] GetPDFBytes(DataTable dtLOT, DataTable dtSubitem, int PDFType, DataTable dtQuantityDetails)
+    {
+        try
+        {
+            byte[] pdfBytes;
+            //DataSet ds = new DataSet();
+            //DataTable dtSubitems = new DataTable();
+
+            //if (Session["dsJobNo"] != null)
+            //    ds = (DataSet)Session["dsJobNo"];
+            //else
+            //    ds = GetJOBData();
+
+            //if (Session["dtSubitem"] != null)
+            //    dtSubitems = (DataTable)Session["dtSubitem"];
+
+            //var cssText = File.ReadAllText(MapPath("~/Styles/LOT.css"));
+            var cssText = File.ReadAllText(System.Web.Hosting.HostingEnvironment.MapPath("~/Styles/LOT.css"));
+
+
+            string htmltxt = objLOTHtmlForPDFApproval.GetHtmlForPDF(dtLOT, dtSubitem, dtQuantityDetails, PDFType);
+
+            StringBuilder sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(htmltxt))
+            {
+                sb.Append("<html>\n");
+                sb.Append("<body>\n");
+
+                sb.Append(htmltxt + "\n");
+
+                sb.Append("</body>\n");
+                sb.Append("</html>\n");
+            }
+
+            var html = sb.ToString();
+
+            //string imagePath = Server.MapPath("\\Images\\COPERION") + "\\logo2.png";            
+            string imagePath = System.Web.Hosting.HostingEnvironment.MapPath("\\Images\\COPERION") + "\\logo2.png";
+
+            iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(imagePath);
+            img.Alignment = Element.ALIGN_LEFT;
+            img.ScaleToFit(180f, 250f);
+
+
+            using (var memoryStream = new MemoryStream())
+            {
+                var document = new Document(PageSize.A4);
+                var writer = PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+                document.Add(img);
+                using (var cssMemoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(cssText)))
+                {
+                    using (var htmlMemoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(html)))
+                    {
+                        XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlMemoryStream, cssMemoryStream);
+                    }
+                }
+
+                document.Close();
+                pdfBytes = memoryStream.GetBuffer();
+
+                return pdfBytes;
+            }
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+
+    public LOTMailInfoProperties GetMailInfo(DataSet dsMailInfo, int LOTMainSubitemID)
+    {
+        try
+        {
+            string prodManagerCC = string.Empty;
+
+            string qualityManagerNames = string.Empty;
+            string qualityManagerEmails = string.Empty;
+
+            string planningManagerNames = string.Empty;
+            string planningManagerEmails = string.Empty;
+
+            if (dsMailInfo.Tables[0].Rows.Count > 0)
+            {
+                if (dsMailInfo.Tables[0].Rows[0]["CREATED_BY_ID"] != DBNull.Value)
+                    objLOTMailInfoProperties.CreatedByID = Convert.ToInt32(dsMailInfo.Tables[0].Rows[0]["CREATED_BY_ID"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["CREATED_BY"] != DBNull.Value)
+                    objLOTMailInfoProperties.CreatedByName = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["CREATED_BY"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["CREATED_BY_EMAIL"] != DBNull.Value)
+                    objLOTMailInfoProperties.CreatedByEmail = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["CREATED_BY_EMAIL"]);
+
+
+                if (dsMailInfo.Tables[0].Rows[0]["PE_ID"] != DBNull.Value)
+                    objLOTMailInfoProperties.PEID = Convert.ToInt32(dsMailInfo.Tables[0].Rows[0]["PE_ID"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PE_NAME"] != DBNull.Value)
+                    objLOTMailInfoProperties.PEName = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PE_NAME"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PE_EMAIL"] != DBNull.Value)
+                    objLOTMailInfoProperties.PEEmail = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PE_EMAIL"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PE_UD"] != DBNull.Value)
+                    objLOTMailInfoProperties.PEUD = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PE_UD"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PE_PD"] != DBNull.Value)
+                    objLOTMailInfoProperties.PEPD = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PE_PD"]);
+
+
+                if (dsMailInfo.Tables[0].Rows[0]["PM_ID"] != DBNull.Value)
+                    objLOTMailInfoProperties.PMID = Convert.ToInt32(dsMailInfo.Tables[0].Rows[0]["PM_ID"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PM_NAME"] != DBNull.Value)
+                    objLOTMailInfoProperties.PMName = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PM_NAME"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PM_EMAIL"] != DBNull.Value)
+                    objLOTMailInfoProperties.PMEmail = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PM_EMAIL"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PM_UD"] != DBNull.Value)
+                    objLOTMailInfoProperties.PMUD = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PM_UD"]);
+
+                if (dsMailInfo.Tables[0].Rows[0]["PM_PD"] != DBNull.Value)
+                    objLOTMailInfoProperties.PMPD = Convert.ToString(dsMailInfo.Tables[0].Rows[0]["PM_PD"]);
+
+            }
+
+            int count = 0;
+            if (dsMailInfo.Tables[2].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dsMailInfo.Tables[2].Select("LOT_MAIN_SUBITEM_ID='" + LOTMainSubitemID + "'"))//AND RECORD_NO='" + recordNo + "
+                {
+
+                    //int partialStatusID, int partialQuantityFlag
+
+                    //foreach (DataRow dr10 in dsMailInfo.Tables[10].Select("LOT_TF_SUBITEM_ID='" + Convert.ToInt32(dr["LOT_TF_SUBITEM_ID"]) + ""))
+                    //{
+                    //    count++;
+
+                    //}
+
+                    //if (count == 0)
+                    //{
+                        if (dr["STATUS_ID"] != DBNull.Value)
+                            objLOTMailInfoProperties.statusID = Convert.ToInt32(dr["STATUS_ID"]);
+                    //}
+
+                    if (dr["CREATED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.CreatedByID = Convert.ToInt32(dr["CREATED_BY_ID"]);
+
+                    if (dr["CREATED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.CreatedByName = Convert.ToString(dr["CREATED_BY"]);
+
+                    if (dr["CREATED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.CreatedByEmail = Convert.ToString(dr["CREATED_BY_EMAIL"]);
+
+
+                    if (dr["APPROVED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.ApprovedByID = Convert.ToInt32(dr["APPROVED_BY_ID"]);
+
+                    if (dr["APPROVED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.ApprovedByName = Convert.ToString(dr["APPROVED_BY"]);
+
+                    if (dr["APPROVED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.ApprovedByEmail = Convert.ToString(dr["APPROVED_BY_EMAIL"]);
+
+
+                    if (dr["ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.AcceptedByID = Convert.ToInt32(dr["ACCEPTED_BY_ID"]);
+
+                    if (dr["ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.AcceptedByName = Convert.ToString(dr["ACCEPTED_BY"]);
+
+                    if (dr["ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.AcceptedByEmail = Convert.ToString(dr["ACCEPTED_BY_EMAIL"]);
+
+
+
+
+
+
+
+
+
+
+                    if (dr["SENT_TO_INTL_INSP_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.SendToIntlInspectionByID = Convert.ToInt32(dr["SENT_TO_INTL_INSP_BY_ID"]);
+
+                    if (dr["SENT_TO_INTL_INSP_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.SendToIntlInspectionByName = Convert.ToString(dr["SENT_TO_INTL_INSP_BY"]);
+
+                    if (dr["SENT_TO_INTL_INSP_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.SendToIntlInspectionByEmail = Convert.ToString(dr["SENT_TO_INTL_INSP_BY_EMAIL"]);
+
+
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.QAIntlInspectionAcceptedByID = Convert.ToInt32(dr["QA_INTL_INSP_ACCEPTED_BY_ID"]);
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.QAIntlInspectionAcceptedByName = Convert.ToString(dr["QA_INTL_INSP_ACCEPTED_BY"]);
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.QAIntlInspectionAcceptedByEmail = Convert.ToString(dr["QA_INTL_INSP_ACCEPTED_BY_EMAIL"]);
+
+
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByID = Convert.ToInt32(dr["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"]);
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByName = Convert.ToString(dr["QA_INTL_INSP_NOT_ACCEPTED_BY"]);
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.QAIntlInspectionNotAcceptedByEmail = Convert.ToString(dr["QA_INTL_INSP_NOT_ACCEPTED_BY_EMAIL"]);
+
+
+
+
+
+
+
+
+
+
+                    if (dr["QUALITY_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.QualityAcceptedByID = Convert.ToInt32(dr["QUALITY_ACCEPTED_BY_ID"]);
+
+                    if (dr["QUALITY_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.QualityAcceptedByName = Convert.ToString(dr["QUALITY_ACCEPTED_BY"]);
+
+                    if (dr["QUALITY_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.QualityAcceptedByEmail = Convert.ToString(dr["QUALITY_ACCEPTED_BY_EMAIL"]);
+
+
+                    if (dr["PLANNING_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.PlanningAcceptedByID = Convert.ToInt32(dr["PLANNING_ACCEPTED_BY_ID"]);
+
+                    if (dr["PLANNING_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.PlanningAcceptedByName = Convert.ToString(dr["PLANNING_ACCEPTED_BY"]);
+
+                    if (dr["PLANNING_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.PlanningAcceptedByEmail = Convert.ToString(dr["PLANNING_ACCEPTED_BY_EMAIL"]);
+
+
+
+
+
+
+
+
+
+
+
+                    if (dr["AMENDMENT_COUNT"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendmentCount = Convert.ToInt32(dr["AMENDMENT_COUNT"]);
+
+
+                    if (dr["AMENDMENT_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendmentByID = Convert.ToInt32(dr["AMENDMENT_BY_ID"]);
+
+                    if (dr["AMENDMENT_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendmentByName = Convert.ToString(dr["AMENDMENT_BY"]);
+
+                    if (dr["AMENDMENT_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendmentByEmail = Convert.ToString(dr["AMENDMENT_BY_EMAIL"]);
+
+
+                    if (dr["AMENDED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedByID = Convert.ToInt32(dr["AMENDED_BY_ID"]);
+
+                    if (dr["AMENDED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedByName = Convert.ToString(dr["AMENDED_BY"]);
+
+                    if (dr["AMENDED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedByEmail = Convert.ToString(dr["AMENDED_BY_EMAIL"]);
+
+
+                    if (dr["AMENDED_APPROVED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedApprovedByID = Convert.ToInt32(dr["AMENDED_APPROVED_BY_ID"]);
+
+                    if (dr["AMENDED_APPROVED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedApprovedByName = Convert.ToString(dr["AMENDED_APPROVED_BY"]);
+
+                    if (dr["AMENDED_APPROVED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedApprovedByEmail = Convert.ToString(dr["AMENDED_APPROVED_BY_EMAIL"]);
+
+
+                    if (dr["AMENDED_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedAcceptedByID = Convert.ToInt32(dr["AMENDED_ACCEPTED_BY_ID"]);
+
+                    if (dr["AMENDED_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedAcceptedByName = Convert.ToString(dr["AMENDED_ACCEPTED_BY"]);
+
+                    if (dr["AMENDED_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.AmendedAcceptedByEmail = Convert.ToString(dr["AMENDED_ACCEPTED_BY_EMAIL"]);
+
+
+
+
+                    if (dr["AMENDED_QUALITY_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.QualityAmendedAcceptedByID = Convert.ToInt32(dr["AMENDED_QUALITY_ACCEPTED_BY_ID"]);
+
+                    if (dr["AMENDED_QUALITY_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.QualityAmendedAcceptedByName = Convert.ToString(dr["AMENDED_QUALITY_ACCEPTED_BY"]);
+
+                    if (dr["AMENDED_QUALITY_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.QualityAmendedAcceptedByEmail = Convert.ToString(dr["AMENDED_QUALITY_ACCEPTED_BY_EMAIL"]);
+
+
+                    if (dr["AMENDED_PLANNING_ACCEPTED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.PlanningAmendedAcceptedByID = Convert.ToInt32(dr["AMENDED_PLANNING_ACCEPTED_BY_ID"]);
+
+                    if (dr["AMENDED_PLANNING_ACCEPTED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.PlanningAmendedAcceptedByName = Convert.ToString(dr["AMENDED_PLANNING_ACCEPTED_BY"]);
+
+                    if (dr["AMENDED_PLANNING_ACCEPTED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.PlanningAmendedAcceptedByEmail = Convert.ToString(dr["AMENDED_PLANNING_ACCEPTED_BY_EMAIL"]);
+
+
+
+
+                    if (dr["COMPLETED_BY_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.CompletedByID = Convert.ToInt32(dr["COMPLETED_BY_ID"]);
+
+                    if (dr["COMPLETED_BY"] != DBNull.Value)
+                        objLOTMailInfoProperties.CompletedByName = Convert.ToString(dr["COMPLETED_BY"]);
+
+                    if (dr["COMPLETED_BY_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.CompletedByEmail = Convert.ToString(dr["COMPLETED_BY_EMAIL"]);
+
+
+
+                    if (dr["PRODUCTION_MNGR_ID"] != DBNull.Value)
+                        objLOTMailInfoProperties.ProdMngrID = Convert.ToInt32(dr["PRODUCTION_MNGR_ID"]);
+
+                    if (dr["PRODUCTION_MNGR_NAME"] != DBNull.Value)
+                        objLOTMailInfoProperties.ProdMngrName = Convert.ToString(dr["PRODUCTION_MNGR_NAME"]);
+
+                    if (dr["PRODUCTION_MNGR_EMAIL"] != DBNull.Value)
+                        objLOTMailInfoProperties.ProdMngrEmail = Convert.ToString(dr["PRODUCTION_MNGR_EMAIL"]);
+
+                    break;
+                }
+            }
+
+
+
+            //if (dsMailInfo.Tables[3].Rows.Count > 0)
+            //{
+            //    foreach (DataRow dr in dsMailInfo.Tables[3].Select("LOT_MAIN_SUBITEM_ID='" + LOTMainSubitemID + "'"))
+            //    {
+            //        if (dr["PRODUCTION_MNGR_ID"] != DBNull.Value)
+            //            objLOTMailInfoProperties.ProdMngrID = Convert.ToInt32(dr["PRODUCTION_MNGR_ID"]);
+
+            //        if (dr["PRODUCTION_MNGR_NAME"] != DBNull.Value)
+            //            objLOTMailInfoProperties.ProdMngrName = Convert.ToString(dr["PRODUCTION_MNGR_NAME"]);
+
+            //        if (dr["PRODUCTION_MNGR_EMAIL"] != DBNull.Value)
+            //            objLOTMailInfoProperties.ProdMngrEmail = Convert.ToString(dr["PRODUCTION_MNGR_EMAIL"]);
+            //    }
+            //}
+
+            if (dsMailInfo.Tables[4].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dsMailInfo.Tables[4].Select("LOT_MAIN_SUBITEM_ID='" + LOTMainSubitemID + "'"))
+                {
+                    if (dr["PRODUCTION_MNGR_CC_EMAIL"] != DBNull.Value)
+                        prodManagerCC += Convert.ToString(dr["PRODUCTION_MNGR_CC_EMAIL"]) + ";";
+                }
+
+                if (!string.IsNullOrEmpty(prodManagerCC))
+                    prodManagerCC = prodManagerCC.TrimEnd(';');
+
+                if (!string.IsNullOrEmpty(prodManagerCC))
+                    objLOTMailInfoProperties.ProdMngrEmailCC = prodManagerCC;
+            }
+
+
+            if (dsMailInfo.Tables[5].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dsMailInfo.Tables[5].Rows)
+                {
+                    if (dr["QUALITY_MNGR_NAME"] != DBNull.Value)
+                        qualityManagerNames += Convert.ToString(dr["QUALITY_MNGR_NAME"]) + ";";
+
+                    if (dr["QUALITY_MNGR_EMAIL"] != DBNull.Value)
+                        qualityManagerEmails += Convert.ToString(dr["QUALITY_MNGR_EMAIL"]) + ";";
+                }
+
+                if (!string.IsNullOrEmpty(qualityManagerNames))
+                    qualityManagerNames = qualityManagerNames.TrimEnd(';');
+
+                if (!string.IsNullOrEmpty(qualityManagerEmails))
+                    qualityManagerEmails = qualityManagerEmails.TrimEnd(';');
+
+
+                if (!string.IsNullOrEmpty(qualityManagerNames))
+                    objLOTMailInfoProperties.QualityMngrNames = qualityManagerNames;
+
+                if (!string.IsNullOrEmpty(qualityManagerEmails))
+                    objLOTMailInfoProperties.QualityMngrEmails = qualityManagerEmails;
+
+            }
+
+            if (dsMailInfo.Tables[6].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dsMailInfo.Tables[6].Rows)
+                {
+                    if (dr["PLANNING_MNGR_NAME"] != DBNull.Value)
+                        planningManagerNames += Convert.ToString(dr["PLANNING_MNGR_NAME"]) + ";";
+
+                    if (dr["PLANNING_MNGR_EMAIL"] != DBNull.Value)
+                        planningManagerEmails += Convert.ToString(dr["PLANNING_MNGR_EMAIL"]) + ";";
+                }
+
+                if (!string.IsNullOrEmpty(planningManagerNames))
+                    planningManagerNames = planningManagerNames.TrimEnd(';');
+
+                if (!string.IsNullOrEmpty(planningManagerEmails))
+                    planningManagerEmails = planningManagerEmails.TrimEnd(';');
+
+
+                if (!string.IsNullOrEmpty(planningManagerNames))
+                    objLOTMailInfoProperties.PlanningMngrNames = planningManagerNames;
+
+                if (!string.IsNullOrEmpty(planningManagerEmails))
+                    objLOTMailInfoProperties.PlanningMngrEmails = planningManagerEmails;
+            }
+
+
+
+
+
+            return objLOTMailInfoProperties;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+}

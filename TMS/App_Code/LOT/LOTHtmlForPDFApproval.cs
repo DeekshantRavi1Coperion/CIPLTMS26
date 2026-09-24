@@ -1,0 +1,2786 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+using System.Text;
+using System.Net.Mime;
+using iTextSharp.tool.xml.pipeline.css;
+using iTextSharp.tool.xml;
+using iTextSharp.tool.xml.pipeline.html;
+using iTextSharp.tool.xml.pipeline.end;
+using iTextSharp.tool.xml.parser;
+using System.Xml;
+using iTextSharp.tool.xml.css;
+using System.Data;
+
+
+public class LOTHtmlForPDFApproval
+{
+    #region Variables
+    string companyName = string.Empty;
+    string customerName = string.Empty;
+    string custCode = string.Empty;
+    string jobNo = string.Empty;
+    string LOTCreatedOn = string.Empty;
+    string TFNo = string.Empty;
+    string productionNo = string.Empty;
+    string poNo = string.Empty;
+    string LOTDate = string.Empty;
+    string itemName = string.Empty;
+    int oldLOTTFID = 0;
+    string oldLOTNo = string.Empty;
+    string oldLOTCreatedOn = string.Empty;
+
+    int isTransferred = 0;
+    
+    int oldTransferredLOTTFID = 0;
+    string oldTransferredLOTNo = string.Empty;
+    string oldTransferredLOTCreatedOn = string.Empty;
+    string transferredRemarks = string.Empty;
+
+    string impNotes = string.Empty;
+
+    int firstQualityPersonID = 0;
+    int secondQualityPersonID = 0;
+    string firstQualityPerson = string.Empty;
+    string secondQualityPerson = string.Empty;
+
+    int statusID = 0;
+    int PEID = 0;
+    int PMID = 0;
+
+    int LOTTFSubitemID = 0;
+    string LOTItemName = string.Empty;
+
+
+    string createdBy = string.Empty;
+    string createdOn = string.Empty;
+
+    string editedBy = string.Empty;
+    string editedOn = string.Empty;
+    string editedRemarks = string.Empty;
+
+    int approvedByID = 0;
+    string approvedBy = string.Empty;
+    string approvedOn = string.Empty;
+    string approvedRemarks = string.Empty;
+
+    int planningAcceptedByID = 0;
+    string planningAcceptedBy = string.Empty;
+    string planningAcceptedOn = string.Empty;
+    string planningAcceptedRemarks = string.Empty;
+
+    int forwardededByID = 0;
+    string forwardededBy = string.Empty;
+    string forwardededOn = string.Empty;
+    string forwardededRemarks = string.Empty;
+
+    int productionAcceptedByID = 0;
+    string productionAcceptedBy = string.Empty;
+    string productionAcceptedOn = string.Empty;
+    string productionAcceptedRemarks = string.Empty;
+
+    int qualityAcceptedByID = 0;
+    string qualityAcceptedBy = string.Empty;
+    string qualityAcceptedOn = string.Empty;
+    string qualityAcceptedRemarks = string.Empty;
+
+
+    int amendmentCount = 0;
+
+    int amendedByID = 0;
+    string amendedBy = string.Empty;
+    string amendedOn = string.Empty;
+    string amendedRemarks = string.Empty;
+
+    int amendedApprovedByID = 0;
+    string amendedApprovedBy = string.Empty;
+    string amendedApprovedOn = string.Empty;
+    string amendedApprovedRemarks = string.Empty;
+
+    int planningAmendedAcceptedByID = 0;
+    string planningAmendedAcceptedBy = string.Empty;
+    string planningAmendedAcceptedOn = string.Empty;
+    string planningAmendedAcceptedRemarks = string.Empty;
+
+    int forwardededAmendedByID = 0;
+    string forwardededAmendedBy = string.Empty;
+    string forwardededAmendedOn = string.Empty;
+    string forwardededAmendedRemarks = string.Empty;
+
+    int productionAmendedAcceptedByID = 0;
+    string productionAmendedAcceptedBy = string.Empty;
+    string productionAmendedAcceptedOn = string.Empty;
+    string productionAmendedAcceptedRemarks = string.Empty;
+
+    int qualityAmendedAcceptedByID = 0;
+    string qualityAmendedAcceptedBy = string.Empty;
+    string qualityAmendedAcceptedOn = string.Empty;
+    string qualityAmendedAcceptedRemarks = string.Empty;
+
+
+
+
+    int productionManagerID = 0;
+
+    int sendToIntlInspByID = 0;
+    string sendToIntlInspBy = string.Empty;
+    string sendToIntlInspOn = string.Empty;
+    string sendToIntlInspRemarks = string.Empty;
+    string sendToIntlInspQty = "0";
+
+    int qaAcceptedForIntlInspByID = 0;
+    string qaAcceptedForIntlInspBy = string.Empty;
+    string qaAcceptedForIntlInspOn = string.Empty;
+    string qaAcceptedForIntlInspRemarks = string.Empty;
+    string qaAcceptedForIntlInspQty = "0";
+
+    int qaNotAcceptedForIntlInspByID = 0;
+    string qaNotAcceptedForIntlInspBy = string.Empty;
+    string qaNotAcceptedForIntlInspOn = string.Empty;
+    string qaNotAcceptedForIntlInspRemarks = string.Empty;
+    string qaNotAcceptedForIntlInspQty = "0";
+
+
+
+    int sentToFinalIntlInspByID = 0;
+    string sentToFinalIntlInspBy = string.Empty;
+    string sentToFinalIntlInspOn = string.Empty;
+    string sentToFinalIntlInspRemarks = string.Empty;
+    string sentToFinalIntlInspQty = "0";
+
+    int sentToReworkByID = 0;
+    string sentToReworkBy = string.Empty;
+    string sentToReworkOn = string.Empty;
+    string sentToReworkRemarks = string.Empty;
+    string sentToReworkQty = "0";
+
+
+
+
+
+    int sendToAmendmentByID = 0;
+    string sendToAmendmentBy = string.Empty;
+    string sendToAmendmentOn = string.Empty;
+    string sendToAmendmentRemarks = string.Empty;
+
+    int prodSendToAmendmentByID = 0;
+    string prodSendToAmendmentBy = string.Empty;
+    string prodSendToAmendmentOn = string.Empty;
+    string prodSendToAmendmentRemarks = string.Empty;
+
+    int completedByID = 0;
+    string completedBy = string.Empty;
+    string completedOn = string.Empty;
+    string completedRemarks = string.Empty;
+    string completedQty = "0";
+
+
+    string standardDrawingFileName = string.Empty;
+    string standardDrawingSavedOn = string.Empty;
+    int standardDrawingSavedByID = 0;
+    string standardDrawingSavedBy = string.Empty;
+    string standardDrawingSavedRemarks = string.Empty;
+    int isLotCancelled = 0;
+    int lotCancelledBy = 0;
+    string lotCancelledByName = string.Empty;
+    string lotCancelledOn = string.Empty;
+    string lotCancelledRemarks = string.Empty;
+
+    #endregion
+
+
+    public string GetHtmlForPDF(DataTable dtLOT, DataTable dtSubitems, DataTable dtQuantityDetails, DataTable dtEditedOrAmended, int PDFType)
+    {
+        try
+        {
+            companyName = string.Empty;
+            customerName = string.Empty;
+            custCode = string.Empty;
+            jobNo = string.Empty;
+            TFNo = string.Empty;
+            LOTCreatedOn = string.Empty;
+            poNo = string.Empty;
+            LOTDate = string.Empty;
+            oldLOTTFID = 0;
+            oldLOTNo = string.Empty;
+            oldLOTCreatedOn = string.Empty;
+            transferredRemarks = string.Empty;
+            
+
+            isTransferred = 0;
+            oldTransferredLOTTFID = 0;
+            oldTransferredLOTNo = string.Empty;
+            oldTransferredLOTCreatedOn = string.Empty;
+
+            itemName = string.Empty;
+            impNotes = string.Empty;
+
+            firstQualityPersonID = 0;
+            secondQualityPersonID = 0;
+            firstQualityPerson = string.Empty;
+            secondQualityPerson = string.Empty;
+
+            statusID = 0;
+            PEID = 0;
+            PMID = 0;
+
+            if (dtLOT.Rows.Count > 0)
+            {
+                DataRow dr0 = dtLOT.Rows[0];
+
+                if (dr0["TF_NO"] != DBNull.Value)
+                    TFNo = Convert.ToString(dr0["TF_NO"]).Trim();
+
+                if (dr0["UNIT_NAME"] != DBNull.Value)
+                    companyName = Convert.ToString(dr0["UNIT_NAME"]).Trim();
+
+                if (dr0["DATE"] != DBNull.Value)
+                    LOTDate = Convert.ToString(dr0["DATE"]);
+
+                if (dr0["CUSTOMER_CODE"] != DBNull.Value)
+                    custCode = Convert.ToString(dr0["CUSTOMER_CODE"]).Trim();
+
+                if (dr0["CUSTOMER_NAME"] != DBNull.Value)
+                    customerName = Convert.ToString(dr0["CUSTOMER_NAME"]).Trim();
+
+                if (dr0["JOB_NO"] != DBNull.Value)
+                    jobNo = Convert.ToString(dr0["JOB_NO"]).Trim();
+
+
+                if (dr0["PO_NO"] != DBNull.Value)
+                    poNo = Convert.ToString(dr0["PO_NO"]).Trim();
+
+                if (dr0["ITEM_NAME"] != DBNull.Value)
+                    itemName = Convert.ToString(dr0["ITEM_NAME"]).Trim();
+
+                if (dr0["LOT_CREATED_ON"] != DBNull.Value)
+                    LOTCreatedOn = Convert.ToString(dr0["LOT_CREATED_ON"]).Trim();
+
+                if (dr0["OLD_LOT_TF_ID"] != DBNull.Value)
+                    oldLOTTFID = Convert.ToInt32(dr0["OLD_LOT_TF_ID"]);
+
+                if (dr0["OLD_TF_NO"] != DBNull.Value)
+                    oldLOTNo = Convert.ToString(dr0["OLD_TF_NO"]).Trim();
+
+                if (dr0["OLD_CREATED_ON"] != DBNull.Value)
+                    oldLOTCreatedOn = Convert.ToString(dr0["OLD_CREATED_ON"]).Trim(); 
+
+                //if (dr0["IS_TRANSFERRED"] != DBNull.Value)
+                //    isTransferred = Convert.ToInt32(dr0["IS_TRANSFERRED"]);
+
+                //if (dr0["TRANSFERRED_LOT_TF_ID"] != DBNull.Value)
+                //    oldTransferredLOTTFID = Convert.ToInt32(dr0["TRANSFERRED_LOT_TF_ID"]);
+
+                //if (dr0["OLD_TRANSFERRED_TF_NO"] != DBNull.Value)
+                //    oldTransferredLOTNo = Convert.ToString(dr0["OLD_TRANSFERRED_TF_NO"]).Trim();
+
+                //if (dr0["OLD_TRANSFERRED_CREATED_ON"] != DBNull.Value)
+                //    oldTransferredLOTCreatedOn = Convert.ToString(dr0["OLD_TRANSFERRED_CREATED_ON"]).Trim();
+
+                //if (dr0["TRANSFERRED_REMARKS"] != DBNull.Value)
+                //    transferredRemarks = Convert.ToString(dr0["TRANSFERRED_REMARKS"]).Trim();
+
+                if (dr0["IMP_NOTES"] != DBNull.Value)
+                    impNotes = Convert.ToString(dr0["IMP_NOTES"]).Trim();
+
+                if (dr0["FIRST_QUALITY_PERSON_ID"] != DBNull.Value)
+                    firstQualityPersonID = Convert.ToInt32(dr0["FIRST_QUALITY_PERSON_ID"]);
+
+                if (dr0["SECOND_QUALITY_PERSON_ID"] != DBNull.Value)
+                    secondQualityPersonID = Convert.ToInt32(dr0["SECOND_QUALITY_PERSON_ID"]);
+
+                if (dr0["FIRST_QUALITY_PERSON"] != DBNull.Value)
+                    firstQualityPerson = Convert.ToString(dr0["FIRST_QUALITY_PERSON"]).Trim();
+
+                if (dr0["SECOND_QUALITY_PERSON"] != DBNull.Value)
+                    secondQualityPerson = Convert.ToString(dr0["SECOND_QUALITY_PERSON"]).Trim();
+
+                if (dr0["PE_ID"] != DBNull.Value)
+                    PEID = Convert.ToInt32(dr0["PE_ID"]);
+
+                if (dr0["PM_ID"] != DBNull.Value)
+                    PMID = Convert.ToInt32(dr0["PM_ID"]);
+
+                if (dr0["STANDARD_DRAWING_NAME"] != DBNull.Value)
+                    standardDrawingFileName = Convert.ToString(dr0["STANDARD_DRAWING_NAME"]).Trim();
+
+                if (dr0["STANDARD_DRAWING_SAVED_ON"] != DBNull.Value)
+                    standardDrawingSavedOn = Convert.ToString(dr0["STANDARD_DRAWING_SAVED_ON"]).Trim();
+
+                if (dr0["STANDARD_DRAWING_SAVED_BY_ID"] != DBNull.Value)
+                    standardDrawingSavedByID = Convert.ToInt32(dr0["STANDARD_DRAWING_SAVED_BY_ID"]);
+
+                if (dr0["STANDARD_DRAWING_SAVED_BY"] != DBNull.Value)
+                    standardDrawingSavedBy = Convert.ToString(dr0["STANDARD_DRAWING_SAVED_BY"]).Trim();
+
+                if (dr0["STANDARD_DRAWING_SAVED_REMARKS"] != DBNull.Value)
+                    standardDrawingSavedRemarks = Convert.ToString(dr0["STANDARD_DRAWING_SAVED_REMARKS"]).Trim();
+            }
+
+            string htmlText = string.Empty;
+            htmlText = string.Empty;
+            StringBuilder sb = new StringBuilder();
+
+            if (isTransferred > 0)
+                sb.Append("<h2 class='headerStyle'>TRANSMITTAL TO FACTORY [TRANSFERRED]</h2>\n");
+            else
+                sb.Append("<h2 class='headerStyle'>TRANSMITTAL TO FACTORY</h2>\n");
+
+
+            sb.Append("<hr />\n");
+            sb.Append("<table class='tblheader'>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Company:</td>\n");
+            sb.Append("<td class='td2header'>{#Company#}</td>\n");
+
+            sb.Append("<td class='td1header'>&nbsp;</td>\n");
+            sb.Append("<td class='td2header'>&nbsp;</td>\n");
+
+            sb.Append("</tr>\n");
+
+
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header' >Customer Name:</td>\n");
+            sb.Append("<td class='td2header' >{#customerName#}</td>\n");
+            
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>JOB Number:</td>\n");
+            sb.Append("<td class='td2header'>{#JOBNo#}</td>\n");
+            sb.Append("<td class='td1header'>TF Number:</td>\n");
+            sb.Append("<td class='td2header'><b>{#TFNo#}</b></td>\n");
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Customer PO Number:</td>\n");
+            sb.Append("<td class='td2header'>{#PONo#}</td>\n");
+
+            if (isTransferred > 0)
+            {
+                sb.Append("<td class='td1header'>TF Created Date:</td>\n");
+                sb.Append("<td class='td2header'>{#LOTCreatedOn#}</td>\n");
+            }
+            else
+            {
+                sb.Append("<td class='td1header'>TF Date:</td>\n");
+                sb.Append("<td class='td2header'>{#Date#}</td>\n");
+            }
+
+            sb.Append("</tr>\n");
+
+            sb.Append("<tr>\n");
+            sb.Append("<td class='td1header'>Item:</td>\n");
+            sb.Append("<td class='td2header'>{#item#}</td>\n");
+
+
+            if (oldLOTTFID > 0)
+            {
+                sb.Append("<td class='td1header'>TF Revised Date:</td>\n");
+                sb.Append("<td class='td2header'>{#LOTCreatedOn#}</td>\n");
+            }
+           
+
+
+            sb.Append("</tr>\n");
+
+            if (oldLOTTFID > 0 || isTransferred > 0)
+            {
+                sb.Append("<tr>\n");
+
+                if (oldLOTTFID > 0)
+                {
+                    sb.Append("<td class='td1header'>TF Number (Old):</td>\n");
+                    sb.Append("<td class='td2header'><b>{#oldLOTNo#}</b></td>\n");
+                }
+               
+
+                if (oldTransferredLOTTFID > 0)
+                {
+                    sb.Append("<td class='td1header'>Transferred TF Number (Old):</td>\n");
+                    sb.Append("<td class='td2header'><b>{#oldTransferredLOTNo#}</b></td>\n");
+                }
+              
+
+
+                sb.Append("</tr>\n");
+                sb.Append("<tr>\n");
+
+                if (oldLOTTFID > 0)
+                {
+                    sb.Append("<td class='td1header'>TF Date (Old):</td>\n");
+                    sb.Append("<td class='td2header'><b>{#Date#}</b></td>\n");
+                }
+               
+
+                if (oldTransferredLOTTFID > 0)
+                {
+                    sb.Append("<td class='td1header'>Transferred TF Date (Old):</td>\n");
+                    sb.Append("<td class='td2header'><b>{#Date#}</b></td>\n");
+                }
+               
+
+                sb.Append("</tr>\n");
+                sb.Append("<tr>\n");
+
+                if (oldLOTTFID > 0)
+                {
+                    sb.Append("<td class='td1header'>Old TF Created Date:</td>\n");
+                    sb.Append("<td class='td2header'><b>{#oldLOTCreatedOn#}</b></td>\n");
+                }
+               
+
+
+                //if (oldTransferredLOTTFID > 0)
+                //{
+                //    sb.Append("<td class='td1header'>Old Transferred TF Created Date:</td>\n");
+                //    sb.Append("<td class='td2header'><b>{#oldTransferredLOTCreatedOn#}</b></td>\n");
+                //}
+
+                sb.Append("</tr>\n");
+            }
+
+            sb.Append("</table>\n");
+            sb.Append("<hr />\n");
+            //}
+
+            int srNo = 0;
+
+            //SUBITEM DETAILS
+            if (dtSubitems.Rows.Count > 0)
+            {
+                sb.Append("<h3 class='header2'>Subitems</h3>\n");
+               
+                sb.Append("<table class='tblsubitems'>\n");
+
+                sb.Append("<tr class='trsubitems'>\n");
+
+                sb.Append("<th class='tdsrno'>Sr.No.</th>\n");
+
+                sb.Append("<th class='tdpono'>Production Order No.</th>\n");
+                sb.Append("<th class='tdexpdateno'>Expected Completion Date</th>\n");
+
+                sb.Append("<th class='tddesc'>Description</th>\n");
+                sb.Append("<th class='tdtag'>Tag No.</th>\n");
+
+                sb.Append("<th class='tddrgno'>Drg./Doc.No.</th>\n");
+                sb.Append("<th class='tdrev'>Rev.</th>\n");
+                sb.Append("<th class='tdcate'>Cat.</th>\n");
+                sb.Append("<th class='tdquantity'>Qty.</th>\n");
+                sb.Append("</tr>\n");
+
+                foreach (DataRow dr in dtSubitems.Rows)
+                {
+                    srNo++;
+                    sb.Append("<tr>\n");
+                    sb.Append("<td class='tdsrno'>{#SRNo#}</td>\n");
+
+                    sb.Append("<td class='tdsrno'>{#ProductionOrderNo#}</td>\n");
+                    sb.Append("<td class='tdsrno'>{#ExpectedCompletionDate#}</td>\n");
+
+                    sb.Append("<td class='tddesc'>{#subitemdesc#}</td>\n");
+                    sb.Append("<td class='tdtag'>{#tagno#}</td>\n");
+
+
+                    sb.Append("<td class='tddrgno'>{#drawingno#}</td>\n");
+
+                    sb.Append("<td class='tdrev'>{#revisionno#}</td>\n");
+                    sb.Append("<td class='tdcate'>{#category#}</td>\n");
+                    sb.Append("<td class='tdquantity'>{#quantity#}</td>\n");
+                    sb.Append("</tr>\n");
+
+
+                    sb.Replace("{#SRNo#}", Convert.ToString(srNo));
+
+                    sb.Replace("{#ProductionOrderNo#}", Convert.ToString(dr["PRODUCTION_ORDER_NO"]));
+                    sb.Replace("{#ExpectedCompletionDate#}", Convert.ToString(dr["EXPECTED_COMPLETION_DATE"]));
+
+                    sb.Replace("{#subitemdesc#}", Convert.ToString(dr["SUBITEM_DESC"]).Replace('&', ' '));
+                    sb.Replace("{#tagno#}", Convert.ToString(dr["TAG_NO"]).Replace('&', ' '));
+                    sb.Replace("{#lotmainitem#}", Convert.ToString(dr["LOT_MAIN_ITEM"]));
+                    sb.Replace("{#drawingno#}", Convert.ToString(dr["DRAWING_NO"]).Replace('&',' '));
+                    //sb.Replace("{#revisionno#}", Convert.ToString(dr["REVISION_NO_TEXT"]));
+                    sb.Replace("{#revisionno#}", Convert.ToString(dr["REVISION_NO"]));
+                    sb.Replace("{#category#}", Convert.ToString(dr["CATEGORY"]));
+
+
+                    sb.Replace("{#quantity#}", Convert.ToString(dr["QUANTITY"]));
+                }
+                sb.Append("</table>\n");
+            }
+
+
+            sb.Append("<h3 class='header2'>Category (For Factory)</h3>\n");
+            sb.Append("<table class='tblcategory'>\n");
+            sb.Append("<tr>\n");
+            sb.Append("<th class='td1category'>1</th>\n");
+            sb.Append("<td class='td2category'>Fabrication</td>\n");
+            sb.Append("<th class='td1category'>2</th>\n");
+            sb.Append("<td class='td2category'>Inspection</td>\n");
+            sb.Append("<th class='td1category'>3</th>\n");
+            sb.Append("<td class='td2category'>Information</td>\n");
+            sb.Append("</tr>\n");
+            sb.Append("</table>\n");
+
+
+
+
+            //SIGNATORIES DETAILS START[=========================]
+
+
+            #region CREATION, PE/PM APPROVED AND PLANNING ACCEPTED
+
+            foreach (DataRow dr in dtSubitems.Rows)
+            {
+                createdBy = string.Empty;
+                createdOn = string.Empty;
+
+                amendedBy = string.Empty;
+                amendedOn = string.Empty;
+
+                approvedByID = 0;
+                approvedBy = string.Empty;
+                approvedOn = string.Empty;
+                approvedRemarks = string.Empty;
+
+                planningAcceptedByID = 0;
+                planningAcceptedBy = string.Empty;
+                planningAcceptedOn = string.Empty;
+                planningAcceptedRemarks = string.Empty;
+
+                sendToAmendmentByID = 0;
+                sendToAmendmentBy = string.Empty;
+                sendToAmendmentOn = string.Empty;
+                sendToAmendmentRemarks = string.Empty;
+
+                prodSendToAmendmentByID = 0;
+                prodSendToAmendmentBy = string.Empty;
+                prodSendToAmendmentOn = string.Empty;
+                prodSendToAmendmentRemarks = string.Empty;
+
+                amendedApprovedByID = 0;
+                amendedApprovedBy = string.Empty;
+                amendedApprovedOn = string.Empty;
+                amendedApprovedRemarks = string.Empty;
+
+                planningAmendedAcceptedByID = 0;
+                planningAmendedAcceptedBy = string.Empty;
+                planningAmendedAcceptedOn = string.Empty;
+                planningAmendedAcceptedRemarks = string.Empty;
+
+
+
+                 isLotCancelled = 0;
+                lotCancelledBy = 0;
+                 lotCancelledByName = string.Empty;
+                 lotCancelledOn = string.Empty;
+                 lotCancelledRemarks = string.Empty;
+
+
+                //if (dr["IS_DELETED"] != DBNull.Value)
+                //    isLotCancelled = Convert.ToInt32(dr["IS_DELETED"]);
+
+                //if (dr["CANCELLED_BY"] != DBNull.Value)
+                //    lotCancelledBy = Convert.ToInt32(dr["CANCELLED_BY"]);
+
+                //if (dr["CANCELLED_BY_NAME"] != DBNull.Value)
+                //    lotCancelledByName = Convert.ToString(dr["CANCELLED_BY_NAME"]);
+
+                //if (dr["CANCELLED_ON"] != DBNull.Value)
+                //    lotCancelledOn = Convert.ToString(dr["CANCELLED_ON"]);
+
+                //if (dr["CANCELLED_REMARKS"] != DBNull.Value)
+                //    lotCancelledRemarks = Convert.ToString(dr["CANCELLED_REMARKS"]);
+
+                
+
+                if (dr["CREATED_BY"] != DBNull.Value)
+                    createdBy = Convert.ToString(dr["CREATED_BY"]);
+
+                if (dr["CREATED_ON"] != DBNull.Value)
+                    createdOn = Convert.ToString(dr["CREATED_ON"]);
+
+                if (dr["AMENDED_BY"] != DBNull.Value)
+                    amendedBy = Convert.ToString(dr["AMENDED_BY"]);
+
+                if (dr["AMENDED_ON"] != DBNull.Value)
+                    amendedOn = Convert.ToString(dr["AMENDED_ON"]);
+
+                if (dr["APPROVED_BY_ID"] != DBNull.Value)
+                    approvedByID = Convert.ToInt32(dr["APPROVED_BY_ID"]);
+
+                if (dr["APPROVED_BY"] != DBNull.Value)
+                    approvedBy = Convert.ToString(dr["APPROVED_BY"]);
+
+                if (dr["APPROVED_ON"] != DBNull.Value)
+                    approvedOn = Convert.ToString(dr["APPROVED_ON"]);
+
+                if (dr["APPROVED_REMARKS"] != DBNull.Value)
+                    approvedRemarks = Convert.ToString(dr["APPROVED_REMARKS"]);
+
+
+                if (dr["PLANNING_ACCEPTED_BY_ID"] != DBNull.Value)
+                    planningAcceptedByID = Convert.ToInt32(dr["PLANNING_ACCEPTED_BY_ID"]);
+
+                if (dr["PLANNING_ACCEPTED_BY"] != DBNull.Value)
+                    planningAcceptedBy = Convert.ToString(dr["PLANNING_ACCEPTED_BY"]);
+
+                if (dr["PLANNING_ACCEPTED_ON"] != DBNull.Value)
+                    planningAcceptedOn = Convert.ToString(dr["PLANNING_ACCEPTED_ON"]);
+
+                if (dr["PLANNING_ACCEPTED_REMARKS"] != DBNull.Value)
+                    planningAcceptedRemarks = Convert.ToString(dr["PLANNING_ACCEPTED_REMARKS"]);
+
+
+                if (dr["FORWARDED_BY_ID"] != DBNull.Value)
+                    forwardededByID = Convert.ToInt32(dr["FORWARDED_BY_ID"]);
+
+                if (dr["FORWARDED_BY"] != DBNull.Value)
+                    forwardededBy = Convert.ToString(dr["FORWARDED_BY"]);
+
+                if (dr["FORWARDED_ON"] != DBNull.Value)
+                    forwardededOn = Convert.ToString(dr["FORWARDED_ON"]);
+
+                if (dr["FORWARDED_REMARKS"] != DBNull.Value)
+                    forwardededRemarks = Convert.ToString(dr["FORWARDED_REMARKS"]);
+
+
+                if (dr["ACCEPTED_BY_ID"] != DBNull.Value)
+                    productionAcceptedByID = Convert.ToInt32(dr["ACCEPTED_BY_ID"]);
+
+                if (dr["ACCEPTED_BY"] != DBNull.Value)
+                    productionAcceptedBy = Convert.ToString(dr["ACCEPTED_BY"]);
+
+                if (dr["ACCEPTED_ON"] != DBNull.Value)
+                    productionAcceptedOn = Convert.ToString(dr["ACCEPTED_ON"]);
+
+                if (dr["ACCEPTED_REMARKS"] != DBNull.Value)
+                    productionAcceptedRemarks = Convert.ToString(dr["ACCEPTED_REMARKS"]);
+
+
+                if (dr["QUALITY_ACCEPTED_BY_ID"] != DBNull.Value)
+                    qualityAcceptedByID = Convert.ToInt32(dr["QUALITY_ACCEPTED_BY_ID"]);
+
+                if (dr["QUALITY_ACCEPTED_BY"] != DBNull.Value)
+                    qualityAcceptedBy = Convert.ToString(dr["QUALITY_ACCEPTED_BY"]);
+
+                if (dr["QUALITY_ACCEPTED_ON"] != DBNull.Value)
+                    qualityAcceptedOn = Convert.ToString(dr["QUALITY_ACCEPTED_ON"]);
+
+                if (dr["QUALITY_ACCEPTED_REMARKS"] != DBNull.Value)
+                    qualityAcceptedRemarks = Convert.ToString(dr["QUALITY_ACCEPTED_REMARKS"]);
+
+
+
+
+
+
+                if (dr["AMENDMENT_COUNT"] != DBNull.Value)
+                    amendmentCount = Convert.ToInt32(dr["AMENDMENT_COUNT"]);
+
+
+                if (dr["AMENDED_BY_ID"] != DBNull.Value)
+                    amendedByID = Convert.ToInt32(dr["AMENDED_BY_ID"]);
+
+                if (dr["AMENDED_BY"] != DBNull.Value)
+                    amendedBy = Convert.ToString(dr["AMENDED_BY"]);
+
+                if (dr["AMENDED_ON"] != DBNull.Value)
+                    amendedOn = Convert.ToString(dr["AMENDED_ON"]);
+
+                if (dr["AMENDED_REMARKS"] != DBNull.Value)
+                    amendedRemarks = Convert.ToString(dr["AMENDED_REMARKS"]);
+
+
+                if (dr["AMENDMENT_BY_ID"] != DBNull.Value)
+                    sendToAmendmentByID = Convert.ToInt32(dr["AMENDMENT_BY_ID"]);
+
+                if (dr["AMENDMENT_BY"] != DBNull.Value)
+                    sendToAmendmentBy = Convert.ToString(dr["AMENDMENT_BY"]);
+
+                if (dr["AMENDMENT_ON"] != DBNull.Value)
+                    sendToAmendmentOn = Convert.ToString(dr["AMENDMENT_ON"]);
+
+                if (dr["AMENDMENT_REMARKS"] != DBNull.Value)
+                    sendToAmendmentRemarks = Convert.ToString(dr["AMENDMENT_REMARKS"]);
+
+
+                if (dr["PROD_AMENDMENT_BY_ID"] != DBNull.Value)
+                    prodSendToAmendmentByID = Convert.ToInt32(dr["PROD_AMENDMENT_BY_ID"]);
+
+                if (dr["PROD_AMENDMENT_BY"] != DBNull.Value)
+                    prodSendToAmendmentBy = Convert.ToString(dr["PROD_AMENDMENT_BY"]);
+
+                if (dr["PROD_AMENDMENT_ON"] != DBNull.Value)
+                    prodSendToAmendmentOn = Convert.ToString(dr["PROD_AMENDMENT_ON"]);
+
+                if (dr["PROD_AMENDMENT_REMARKS"] != DBNull.Value)
+                    prodSendToAmendmentRemarks = Convert.ToString(dr["PROD_AMENDMENT_REMARKS"]);
+
+
+                if (dr["AMENDED_APPROVED_BY_ID"] != DBNull.Value)
+                    amendedApprovedByID = Convert.ToInt32(dr["AMENDED_APPROVED_BY_ID"]);
+
+                if (dr["AMENDED_APPROVED_BY"] != DBNull.Value)
+                    amendedApprovedBy = Convert.ToString(dr["AMENDED_APPROVED_BY"]);
+
+                if (dr["AMENDED_APPROVED_ON"] != DBNull.Value)
+                    amendedApprovedOn = Convert.ToString(dr["AMENDED_APPROVED_ON"]);
+
+                if (dr["AMENDED_APPROVED_REMARKS"] != DBNull.Value)
+                    amendedApprovedRemarks = Convert.ToString(dr["AMENDED_APPROVED_REMARKS"]);
+
+
+                if (dr["AMENDED_PLANNING_ACCEPTED_BY_ID"] != DBNull.Value)
+                    planningAmendedAcceptedByID = Convert.ToInt32(dr["AMENDED_PLANNING_ACCEPTED_BY_ID"]);
+
+                if (dr["AMENDED_PLANNING_ACCEPTED_BY"] != DBNull.Value)
+                    planningAmendedAcceptedBy = Convert.ToString(dr["AMENDED_PLANNING_ACCEPTED_BY"]);
+
+                if (dr["AMENDED_PLANNING_ACCEPTED_ON"] != DBNull.Value)
+                    planningAmendedAcceptedOn = Convert.ToString(dr["AMENDED_PLANNING_ACCEPTED_ON"]);
+
+                if (dr["AMENDED_PLANNING_ACCEPTED_REMARKS"] != DBNull.Value)
+                    planningAmendedAcceptedRemarks = Convert.ToString(dr["AMENDED_PLANNING_ACCEPTED_REMARKS"]);
+
+
+                if (dr["AMENDED_FORWARDED_BY_ID"] != DBNull.Value)
+                    forwardededAmendedByID = Convert.ToInt32(dr["AMENDED_FORWARDED_BY_ID"]);
+
+                if (dr["AMENDED_FORWARDED_BY"] != DBNull.Value)
+                    forwardededAmendedBy = Convert.ToString(dr["AMENDED_FORWARDED_BY"]);
+
+                if (dr["AMENDED_FORWARDED_ON"] != DBNull.Value)
+                    forwardededAmendedOn = Convert.ToString(dr["AMENDED_FORWARDED_ON"]);
+
+                if (dr["AMENDED_FORWARDED_REMARKS"] != DBNull.Value)
+                    forwardededAmendedRemarks = Convert.ToString(dr["AMENDED_FORWARDED_REMARKS"]);
+
+
+                if (dr["AMENDED_ACCEPTED_BY_ID"] != DBNull.Value)
+                    productionAmendedAcceptedByID = Convert.ToInt32(dr["AMENDED_ACCEPTED_BY_ID"]);
+
+                if (dr["AMENDED_ACCEPTED_BY"] != DBNull.Value)
+                    productionAmendedAcceptedBy = Convert.ToString(dr["AMENDED_ACCEPTED_BY"]);
+
+                if (dr["AMENDED_ACCEPTED_ON"] != DBNull.Value)
+                    productionAmendedAcceptedOn = Convert.ToString(dr["AMENDED_ACCEPTED_ON"]);
+
+                if (dr["AMENDED_ACCEPTED_REMARKS"] != DBNull.Value)
+                    productionAmendedAcceptedRemarks = Convert.ToString(dr["AMENDED_ACCEPTED_REMARKS"]);
+
+
+                if (dr["AMENDED_QUALITY_ACCEPTED_BY_ID"] != DBNull.Value)
+                    qualityAmendedAcceptedByID = Convert.ToInt32(dr["AMENDED_QUALITY_ACCEPTED_BY_ID"]);
+
+                if (dr["AMENDED_QUALITY_ACCEPTED_BY"] != DBNull.Value)
+                    qualityAmendedAcceptedBy = Convert.ToString(dr["AMENDED_QUALITY_ACCEPTED_BY"]);
+
+                if (dr["AMENDED_QUALITY_ACCEPTED_ON"] != DBNull.Value)
+                    qualityAmendedAcceptedOn = Convert.ToString(dr["AMENDED_QUALITY_ACCEPTED_ON"]);
+
+                if (dr["AMENDED_QUALITY_ACCEPTED_REMARKS"] != DBNull.Value)
+                    qualityAmendedAcceptedRemarks = Convert.ToString(dr["AMENDED_QUALITY_ACCEPTED_REMARKS"]);
+
+
+                //if (amendmentCount > 0 && amendedByID > 0)
+                //{
+                //    sb.Append("<table class='tblimpnotes'>\n");
+
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td colspan='3'>Amended Remarks:</td>\n");
+                //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                //    sb.Append("</tr>\n");
+
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td colspan='4'>{#amendedRemarks#}</td>\n");
+                //    sb.Append("</tr>\n");
+
+                //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td class='tdsignatories1'>Amended By:</td>\n");
+                //    sb.Append("<td class='tdsignatories2'>{#amendedBy#}</td>\n");
+
+                //    sb.Append("<td class='tdsignatories1'>Amended On:</td>\n");
+                //    sb.Append("<td class='tdsignatories2'>{#amendedOn#}</td>\n");
+                //    sb.Append("</tr>\n");
+
+                //    sb.Append("</table>\n");
+                //    sb.Append("<hr />\n");
+                //}
+
+                //sb.Replace("{#amendedRemarks#}", amendedRemarks);
+                //sb.Replace("{#amendedBy#}", amendedBy);
+                //sb.Replace("{#amendedOn#}", amendedOn);
+
+
+                sb.Append("<hr class='hrsignatories' />\n");
+                sb.Append("<h3 class='header2'>Signatories</h3>\n");
+
+
+
+
+                if (PDFType == (int)LOTAllStatusAndTypes.EnumPDFType.Edit_Preview)
+                {
+                    if (dtEditedOrAmended.Rows.Count > 0)
+                    {
+                        DataRow dr0 = dtEditedOrAmended.Rows[0];
+
+                        if (dr0["EDITED_OR_AMENDED_BY"] != DBNull.Value)
+                            editedBy = Convert.ToString(dr0["EDITED_OR_AMENDED_BY"]);
+
+                        if (dr0["EDITED_OR_AMENDED_ON"] != DBNull.Value)
+                            editedOn = Convert.ToString(dr0["EDITED_OR_AMENDED_ON"]);
+
+                        if (dr0["EDITED_OR_AMENDED_REMARKS"] != DBNull.Value)
+                            editedRemarks = Convert.ToString(dr0["EDITED_OR_AMENDED_REMARKS"]);
+
+
+                        if (dr0["EDITED_OR_AMENDED_BY"] != DBNull.Value)
+                            amendedBy = Convert.ToString(dr0["EDITED_OR_AMENDED_BY"]);
+
+                        if (dr0["EDITED_OR_AMENDED_ON"] != DBNull.Value)
+                            amendedOn = Convert.ToString(dr0["EDITED_OR_AMENDED_ON"]);
+
+                        if (dr0["EDITED_OR_AMENDED_REMARKS"] != DBNull.Value)
+                            amendedRemarks = Convert.ToString(dr0["EDITED_OR_AMENDED_REMARKS"]);
+                    }
+                }
+
+
+                if (isTransferred == 0)
+                {
+                    #region CREATED[========================]
+
+                    sb.Append("<hr />\n");
+
+                    sb.Append("<fieldset class='pdffieldset'>\n");
+                    sb.Append("<legend class='pdflegend'>Created</legend>\n");
+
+
+                    sb.Append("<table class='tblsignatories'>\n");
+
+                    sb.Append("<tr>\n");
+                    sb.Append("<td colspan='3'>Important Notes:</td>\n");
+                    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                    sb.Append("</tr>\n");
+
+                    sb.Append("<tr>\n");
+                    sb.Append("<td colspan='4'>{#impNotes#}</td>\n");
+                    sb.Append("</tr>\n");
+
+                    //sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                    //if (isTransferred > 0 && oldTransferredLOTTFID > 0)
+                    //{
+                    //    sb.Append("<tr>\n");
+                    //    sb.Append("<td colspan='3'>Transferred Remarks:</td>\n");
+                    //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                    //    sb.Append("</tr>\n");
+
+                    //    sb.Append("<tr>\n");
+                    //    sb.Append("<td colspan='4'>{#transferredRemarks#}</td>\n");
+                    //    sb.Append("</tr>\n");
+
+                    //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                    //}
+
+                    sb.Append("<tr>\n");
+                    sb.Append("<td class='tdsignatories1'>Created By:</td>\n");
+                    sb.Append("<td class='tdsignatories2'>{#createdBy#}</td>\n");
+                    sb.Append("<td class='tdsignatories1'>Created On:</td>\n");
+                    sb.Append("<td class='tdsignatories2'>{#createdOn#}</td>\n");
+                    sb.Append("</tr>\n");
+
+                    sb.Append("</table>\n");
+                    sb.Append("</fieldset>\n");
+
+                    sb.Replace("{#createdBy#}", createdBy);
+                    sb.Replace("{#createdOn#}", createdOn);
+
+
+                    if (amendmentCount == 0 && PDFType == (int)LOTAllStatusAndTypes.EnumPDFType.Edit_Preview)
+                    {
+                        sb.Append("<hr />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Edited</legend>\n");
+
+
+                        sb.Append("<table class='tblsignatories'>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Important Notes:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#editedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Edited By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#editedBy#}</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Edited On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#editedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#editedRemarks#}", editedRemarks);
+                        sb.Replace("{#editedBy#}", editedBy);
+                        sb.Replace("{#editedOn#}", editedOn);
+                    }
+
+
+                    #endregion
+
+
+                    #region AMENDMENT[======================]
+
+                    if (amendmentCount > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Amendment</legend>\n");
+
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Send To Amendment Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                       
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#sendToAmendmentRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Send To Amendment By:</td>\n");
+
+                        if (sendToAmendmentByID == PEID)
+                            sb.Append("<td class='tdsignatories2'>{#sendToAmendmentBy#} [Project Engineer]</td>\n");
+                        else if (sendToAmendmentByID == PMID)
+                            sb.Append("<td class='tdsignatories2'>{#sendToAmendmentBy#} [Project Manager]</td>\n");
+                        else
+                            sb.Append("<td class='tdsignatories2'>{#sendToAmendmentBy#}</td>\n");
+
+
+                        sb.Append("<td class='tdsignatories1'>Send To Amendment On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#sendToAmendmentOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#sendToAmendmentRemarks#}", sendToAmendmentRemarks);
+                        sb.Replace("{#sendToAmendmentBy#}", sendToAmendmentBy);
+                        sb.Replace("{#sendToAmendmentOn#}", sendToAmendmentOn);
+                    }
+
+                    #endregion
+
+
+                    #region PRODUCTION AMENDMENT[===========]
+
+                    if (amendmentCount > 0 && prodSendToAmendmentByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Amendment By Production</legend>\n");
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Send To Amendment By Production Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#prodSendToAmendmentRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Send To Amendment By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#prodSendToAmendmentBy#} [Production]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Send To Amendment On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#prodSendToAmendmentOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#prodSendToAmendmentRemarks#}", prodSendToAmendmentRemarks);
+                        sb.Replace("{#prodSendToAmendmentBy#}", prodSendToAmendmentBy);
+                        sb.Replace("{#prodSendToAmendmentOn#}", prodSendToAmendmentOn);
+                    }
+
+                    #endregion
+
+
+                    #region AMENDED[========================]
+
+                    if (amendmentCount > 0)
+                    {
+                        if (amendedByID > 0 || PDFType == (int)LOTAllStatusAndTypes.EnumPDFType.Edit_Preview)
+                        {
+                            sb.Append("<hr class='hrsignatories' />\n");
+
+                            sb.Append("<fieldset class='pdffieldset'>\n");
+                            sb.Append("<legend class='pdflegend'>Amended</legend>\n");
+
+                            sb.Append("<table class='tblsignatories'>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Amended Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                         
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#amendedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Amended By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#amendedBy#}</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Amended On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#amendedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Replace("{#amendedRemarks#}", amendedRemarks);
+                            sb.Replace("{#amendedBy#}", amendedBy);
+                            sb.Replace("{#amendedOn#}", amendedOn);
+
+                            sb.Append("</table>\n");
+                            sb.Append("</fieldset>\n");
+                        }
+                    }
+
+
+
+                    #endregion
+
+
+                    #region PM/PE APPROVED[=================]
+
+                    if (approvedByID > 0 || amendedApprovedByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>PM/PE Approved</legend>\n");
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        if (approvedByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Approved Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#approvedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Approved By:</td>\n");
+
+
+                            if (approvedByID == PEID)
+                                sb.Append("<td class='tdsignatories2'>{#approvedBy#} [Project Engineer]</td>\n");
+                            else if (approvedByID == PMID)
+                                sb.Append("<td class='tdsignatories2'>{#approvedBy#} [Project Manager]</td>\n");
+                            else
+                                sb.Append("<td class='tdsignatories2'>{#approvedBy#}</td>\n");
+
+
+                            sb.Append("<td class='tdsignatories1'>Approved On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#approvedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Replace("{#approvedRemarks#}", approvedRemarks);
+                            sb.Replace("{#approvedBy#}", approvedBy);
+                            sb.Replace("{#approvedOn#}", approvedOn);
+                        }
+
+                        if (amendedApprovedByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Amended Approved Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#amendedApprovedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+
+                            sb.Append("<td class='tdsignatories1'>Amended Approved By:</td>\n");
+                            if (amendedApprovedByID == PEID)
+                                sb.Append("<td class='tdsignatories2'>{#amendedApprovedBy#} [Project Engineer]</td>\n");
+                            else if (amendedApprovedByID == PMID)
+                                sb.Append("<td class='tdsignatories2'>{#amendedApprovedBy#} [Project Manager]</td>\n");
+                            else
+                                sb.Append("<td class='tdsignatories2'>{#amendedApprovedBy#}</td>\n");
+
+
+                            sb.Append("<td class='tdsignatories1'>Amended Approved On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#amendedApprovedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Replace("{#amendedApprovedRemarks#}", amendedApprovedRemarks);
+                            sb.Replace("{#amendedApprovedBy#}", amendedApprovedBy);
+                            sb.Replace("{#amendedApprovedOn#}", amendedApprovedOn);
+                        }
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+                    }
+
+                    #endregion
+
+
+                    #region PLANNING ACCEPTED[==============]
+
+                    if (planningAcceptedByID > 0 || planningAmendedAcceptedByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Planning Accepted</legend>\n");
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        //PLANNING
+                        if (planningAcceptedByID > 0)
+                        {
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Accepted Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                           
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#planningAcceptedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Accepted By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#planningAcceptedBy#} [Planning]</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Accepted On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#planningAcceptedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+                        }
+
+                        if (planningAmendedAcceptedByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Amnd. Accepted Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#planningAmendedAcceptedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Amnd. Accepted By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#planningAmendedAcceptedBy#}  [Planning]</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Amnd. Accepted On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#planningAmendedAcceptedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+                        }
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#planningAcceptedRemarks#}", planningAcceptedRemarks);
+                        sb.Replace("{#planningAcceptedBy#}", planningAcceptedBy);
+                        sb.Replace("{#planningAcceptedOn#}", planningAcceptedOn);
+                        sb.Replace("{#planningAmendedAcceptedRemarks#}", planningAmendedAcceptedRemarks);
+                        sb.Replace("{#planningAmendedAcceptedBy#}", planningAmendedAcceptedBy);
+                        sb.Replace("{#planningAmendedAcceptedOn#}", planningAmendedAcceptedOn);
+
+
+
+                        if (standardDrawingSavedByID > 0)
+                        {
+                            sb.Append("<hr class='hrsignatories' />\n");
+
+                            sb.Append("<fieldset class='pdffieldset'>\n");
+                            sb.Append("<legend class='pdflegend'>Standard Drawing</legend>\n");
+                            sb.Append("<table class='tblsignatories'>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Standard Drawning Reason:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#standardDrawingSavedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Standard Drawning File Name:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#standardDrawingFileName#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Saved By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#standardDrawingSavedBy#} [Planning]</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Saved On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#standardDrawingSavedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("</table>\n");
+                            sb.Append("</fieldset>\n");
+
+                            sb.Replace("{#standardDrawingFileName#}", standardDrawingFileName);
+                            sb.Replace("{#standardDrawingSavedBy#}", standardDrawingSavedBy);
+                            sb.Replace("{#standardDrawingSavedOn#}", standardDrawingSavedOn);
+                            sb.Replace("{#standardDrawingSavedRemarks#}", standardDrawingSavedRemarks);
+
+                            //sb.Append("</table>\n");
+                            //sb.Append("</fieldset>\n");
+                        }
+
+                    }
+
+                    #endregion
+
+
+                    #region PLANNING FORWARDED[==============]
+
+                    if (forwardededByID > 0 || forwardededAmendedByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+
+                        sb.Append("<legend class='pdflegend'>Forwarded By Planning</legend>\n");
+
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        //PLANNING
+                        if (forwardededByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+
+                            sb.Append("<td colspan='3'>Forwarded Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#forwardededRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Forwarded By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#forwardededBy#} [Planning]</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Forwarded On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#forwardededOn#}</td>\n");
+
+                            sb.Append("</tr>\n");
+                        }
+
+                        if (forwardededAmendedByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Amnd. Forwarded Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#forwardededAmendedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Amnd. Forwarded By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#forwardededAmendedBy#}  [Planning]</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Amnd. Forwarded On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#forwardededAmendedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+                        }
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#forwardededRemarks#}", forwardededRemarks);
+                        sb.Replace("{#forwardededBy#}", forwardededBy);
+                        sb.Replace("{#forwardededOn#}", forwardededOn);
+
+                        sb.Replace("{#forwardededAmendedRemarks#}", forwardededAmendedRemarks);
+                        sb.Replace("{#forwardededAmendedBy#}", forwardededAmendedBy);
+                        sb.Replace("{#forwardededAmendedOn#}", forwardededAmendedOn);
+
+                        //sb.Append("</table>\n");
+                        //sb.Append("</fieldset>\n");
+
+                    }
+
+                    #endregion
+                }
+                else
+                {
+                    #region PLANNING FORWARDED[==============]
+
+                    // if (forwardededByID > 0 || forwardededAmendedByID > 0)
+                    if (forwardededByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+
+                        sb.Append("<legend class='pdflegend'>Forwarded/Transrerred By Planning</legend>\n");
+
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        //PLANNING
+                        //if (forwardededByID > 0)
+                        //{
+                        sb.Append("<tr>\n");
+
+                        sb.Append("<td colspan='3'>Forwarded/Transrerred Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#forwardededRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Forwarded/Transrerred By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#forwardededBy#} [Planning]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Forwarded/Transrerred On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#forwardededOn#}</td>\n");
+
+                        sb.Append("</tr>\n");
+                        //}
+
+                        //if (forwardededAmendedByID > 0)
+                        //{
+                        //    sb.Append("<tr>\n");
+                        //    sb.Append("<td colspan='3'>Amnd. Forwarded Remarks:</td>\n");
+                        //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        //    sb.Append("</tr>\n");
+                        //    sb.Append("<tr>\n");
+                        //    sb.Append("<td colspan='4'>{#forwardededAmendedRemarks#}</td>\n");
+                        //    sb.Append("</tr>\n");
+                        //    sb.Append("<tr>\n");
+                        //    sb.Append("<td class='tdsignatories1'>Amnd. Forwarded By:</td>\n");
+                        //    sb.Append("<td class='tdsignatories2'>{#forwardededAmendedBy#}  [Planning]</td>\n");
+                        //    sb.Append("<td class='tdsignatories1'>Amnd. Forwarded On:</td>\n");
+                        //    sb.Append("<td class='tdsignatories2'>{#forwardededAmendedOn#}</td>\n");
+                        //    sb.Append("</tr>\n");
+                        //}
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#forwardededRemarks#}", forwardededRemarks);
+                        sb.Replace("{#forwardededBy#}", forwardededBy);
+                        sb.Replace("{#forwardededOn#}", forwardededOn);
+
+                        sb.Replace("{#forwardededAmendedRemarks#}", forwardededAmendedRemarks);
+                        sb.Replace("{#forwardededAmendedBy#}", forwardededAmendedBy);
+                        sb.Replace("{#forwardededAmendedOn#}", forwardededAmendedOn);
+
+                        //sb.Append("</table>\n");
+                        //sb.Append("</fieldset>\n");
+
+                    }
+
+                    #endregion
+
+                    #region PRODUCTION AMENDMENT[============]
+
+                    if (amendmentCount > 0 && prodSendToAmendmentByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Amendment By Production</legend>\n");
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Send To Amendment By Production Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#prodSendToAmendmentRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Send To Amendment By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#prodSendToAmendmentBy#} [Production]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Send To Amendment On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#prodSendToAmendmentOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#prodSendToAmendmentRemarks#}", prodSendToAmendmentRemarks);
+                        sb.Replace("{#prodSendToAmendmentBy#}", prodSendToAmendmentBy);
+                        sb.Replace("{#prodSendToAmendmentOn#}", prodSendToAmendmentOn);
+                    }
+
+                    #endregion
+
+                    #region AMENDED[========================]
+
+                    if (amendmentCount > 0)
+                    {
+                        if (amendedByID > 0 || PDFType == (int)LOTAllStatusAndTypes.EnumPDFType.Edit_Preview)
+                        {
+                            sb.Append("<hr class='hrsignatories' />\n");
+
+                            sb.Append("<fieldset class='pdffieldset'>\n");
+                            sb.Append("<legend class='pdflegend'>Amended</legend>\n");
+
+                            sb.Append("<table class='tblsignatories'>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Amended Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#amendedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Amended By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#amendedBy#}</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Amended On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#amendedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Replace("{#amendedRemarks#}", amendedRemarks);
+                            sb.Replace("{#amendedBy#}", amendedBy);
+                            sb.Replace("{#amendedOn#}", amendedOn);
+
+                            sb.Append("</table>\n");
+                            sb.Append("</fieldset>\n");
+                        }
+                    }
+
+                    #endregion
+
+                    #region AMENDED PM/PE APPROVED[=================]
+
+                    if (amendmentCount > 0)
+                    {
+                        if (amendedApprovedByID > 0)
+                        {
+                            sb.Append("<hr class='hrsignatories' />\n");
+
+                            sb.Append("<fieldset class='pdffieldset'>\n");
+                            sb.Append("<legend class='pdflegend'>PM/PE Approved</legend>\n");
+                            sb.Append("<table class='tblsignatories'>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Amended Approved Remarks:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#amendedApprovedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+                            sb.Append("<tr>\n");
+
+                            sb.Append("<td class='tdsignatories1'>Amended Approved By:</td>\n");
+                            if (amendedApprovedByID == PEID)
+                                sb.Append("<td class='tdsignatories2'>{#amendedApprovedBy#} [Project Engineer]</td>\n");
+                            else if (amendedApprovedByID == PMID)
+                                sb.Append("<td class='tdsignatories2'>{#amendedApprovedBy#} [Project Manager]</td>\n");
+                            else
+                                sb.Append("<td class='tdsignatories2'>{#amendedApprovedBy#}</td>\n");
+
+
+                            sb.Append("<td class='tdsignatories1'>Amended Approved On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#amendedApprovedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Replace("{#amendedApprovedRemarks#}", amendedApprovedRemarks);
+                            sb.Replace("{#amendedApprovedBy#}", amendedApprovedBy);
+                            sb.Replace("{#amendedApprovedOn#}", amendedApprovedOn);
+
+
+                            sb.Append("</table>\n");
+                            sb.Append("</fieldset>\n");
+                        }
+                    }
+                    #endregion
+
+                    #region AMENDED PLANNING ACCEPTED[==============]
+
+                    if (planningAmendedAcceptedByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Planning Accepted</legend>\n");
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        //PLANNING
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Amnd. Accepted Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#planningAmendedAcceptedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Amnd. Accepted By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#planningAmendedAcceptedBy#}  [Planning]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Amnd. Accepted On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#planningAmendedAcceptedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#planningAcceptedRemarks#}", planningAcceptedRemarks);
+                        sb.Replace("{#planningAcceptedBy#}", planningAcceptedBy);
+                        sb.Replace("{#planningAcceptedOn#}", planningAcceptedOn);
+                        sb.Replace("{#planningAmendedAcceptedRemarks#}", planningAmendedAcceptedRemarks);
+                        sb.Replace("{#planningAmendedAcceptedBy#}", planningAmendedAcceptedBy);
+                        sb.Replace("{#planningAmendedAcceptedOn#}", planningAmendedAcceptedOn);
+
+
+
+                        if (standardDrawingSavedByID > 0)
+                        {
+                            sb.Append("<hr class='hrsignatories' />\n");
+
+                            sb.Append("<fieldset class='pdffieldset'>\n");
+                            sb.Append("<legend class='pdflegend'>Standard Drawing</legend>\n");
+                            sb.Append("<table class='tblsignatories'>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Standard Drawning Reason:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#standardDrawingSavedRemarks#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='3'>Standard Drawning File Name:</td>\n");
+                            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'>{#standardDrawingFileName#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td class='tdsignatories1'>Saved By:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#standardDrawingSavedBy#} [Planning]</td>\n");
+                            sb.Append("<td class='tdsignatories1'>Saved On:</td>\n");
+                            sb.Append("<td class='tdsignatories2'>{#standardDrawingSavedOn#}</td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("</table>\n");
+                            sb.Append("</fieldset>\n");
+
+                            sb.Replace("{#standardDrawingFileName#}", standardDrawingFileName);
+                            sb.Replace("{#standardDrawingSavedBy#}", standardDrawingSavedBy);
+                            sb.Replace("{#standardDrawingSavedOn#}", standardDrawingSavedOn);
+                            sb.Replace("{#standardDrawingSavedRemarks#}", standardDrawingSavedRemarks);
+
+                            //sb.Append("</table>\n");
+                            //sb.Append("</fieldset>\n");
+                        }
+
+                    }
+
+                    #endregion
+
+                    #region AMENDED PLANNING FORWARDED[==============]
+
+                    if (forwardededAmendedByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+
+                        sb.Append("<legend class='pdflegend'>Forwarded By Planning</legend>\n");
+
+                        sb.Append("<table class='tblsignatories'>\n");
+                        
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Amnd. Forwarded Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#forwardededAmendedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Amnd. Forwarded By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#forwardededAmendedBy#}  [Planning]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Amnd. Forwarded On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#forwardededAmendedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+
+                        sb.Replace("{#forwardededRemarks#}", forwardededRemarks);
+                        sb.Replace("{#forwardededBy#}", forwardededBy);
+                        sb.Replace("{#forwardededOn#}", forwardededOn);
+
+                        sb.Replace("{#forwardededAmendedRemarks#}", forwardededAmendedRemarks);
+                        sb.Replace("{#forwardededAmendedBy#}", forwardededAmendedBy);
+                        sb.Replace("{#forwardededAmendedOn#}", forwardededAmendedOn);
+
+                        //sb.Append("</table>\n");
+                        //sb.Append("</fieldset>\n");
+
+                    }
+
+                    #endregion
+
+                }
+
+
+                #region PLANNING FORWARDED[==============]
+
+                //if (forwardededByID > 0 || forwardededAmendedByID > 0)
+                //{
+                //    sb.Append("<hr class='hrsignatories' />\n");
+
+                //    sb.Append("<fieldset class='pdffieldset'>\n");
+
+                //    if (isTransferred > 0)
+                //        sb.Append("<legend class='pdflegend'>Forwarded/Transrerred By Planning</legend>\n");
+                //    else
+                //        sb.Append("<legend class='pdflegend'>Forwarded By Planning</legend>\n");
+
+
+
+
+                //    sb.Append("<table class='tblsignatories'>\n");
+
+                //    //PLANNING
+                //    if (forwardededByID > 0)
+                //    {
+
+                //        sb.Append("<tr>\n");
+
+
+                //        if (isTransferred > 0)
+                //        {
+                //            sb.Append("<td colspan='3'>Forwarded/Transrerred Remarks:</td>\n");
+                //            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                //            sb.Append("</tr>\n");
+                //            sb.Append("<tr>\n");
+                //            sb.Append("<td colspan='4'>{#forwardededRemarks#}</td>\n");
+                //            sb.Append("</tr>\n");
+                //            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                //            sb.Append("<tr>\n");
+                //            sb.Append("<td class='tdsignatories1'>Forwarded/Transrerred By:</td>\n");
+                //            sb.Append("<td class='tdsignatories2'>{#forwardededBy#} [Planning]</td>\n");
+                //            sb.Append("<td class='tdsignatories1'>Forwarded/Transrerred On:</td>\n");
+                //            sb.Append("<td class='tdsignatories2'>{#forwardededOn#}</td>\n");
+                //        }
+                //        else
+                //        {
+                //            sb.Append("<td colspan='3'>Forwarded Remarks:</td>\n");
+                //            sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                //            sb.Append("</tr>\n");
+                //            sb.Append("<tr>\n");
+                //            sb.Append("<td colspan='4'>{#forwardededRemarks#}</td>\n");
+                //            sb.Append("</tr>\n");
+                //            sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                //            sb.Append("<tr>\n");
+                //            sb.Append("<td class='tdsignatories1'>Forwarded By:</td>\n");
+                //            sb.Append("<td class='tdsignatories2'>{#forwardededBy#} [Planning]</td>\n");
+                //            sb.Append("<td class='tdsignatories1'>Forwarded On:</td>\n");
+                //            sb.Append("<td class='tdsignatories2'>{#forwardededOn#}</td>\n");
+                //        }
+
+                //        sb.Append("</tr>\n");
+                //    }
+
+                //    if (forwardededAmendedByID > 0)
+                //    {
+                //        sb.Append("<tr>\n");
+                //        sb.Append("<td colspan='3'>Amnd. Forwarded Remarks:</td>\n");
+                //        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                //        sb.Append("</tr>\n");
+                //        sb.Append("<tr>\n");
+                //        sb.Append("<td colspan='4'>{#forwardededAmendedRemarks#}</td>\n");
+                //        sb.Append("</tr>\n");
+                //        sb.Append("<tr>\n");
+                //        sb.Append("<td class='tdsignatories1'>Amnd. Forwarded By:</td>\n");
+                //        sb.Append("<td class='tdsignatories2'>{#forwardededAmendedBy#}  [Planning]</td>\n");
+                //        sb.Append("<td class='tdsignatories1'>Amnd. Forwarded On:</td>\n");
+                //        sb.Append("<td class='tdsignatories2'>{#forwardededAmendedOn#}</td>\n");
+                //        sb.Append("</tr>\n");
+                //    }
+
+                //    sb.Append("</table>\n");
+                //    sb.Append("</fieldset>\n");
+
+                //    sb.Replace("{#forwardededRemarks#}", forwardededRemarks);
+                //    sb.Replace("{#forwardededBy#}", forwardededBy);
+                //    sb.Replace("{#forwardededOn#}", forwardededOn);
+
+                //    sb.Replace("{#forwardededAmendedRemarks#}", forwardededAmendedRemarks);
+                //    sb.Replace("{#forwardededAmendedBy#}", forwardededAmendedBy);
+                //    sb.Replace("{#forwardededAmendedOn#}", forwardededAmendedOn);
+
+                //    //sb.Append("</table>\n");
+                //    //sb.Append("</fieldset>\n");
+
+                //}
+
+                #endregion
+
+
+                #region LOT-PRODUCTION ACCEPTED[========]
+
+                if (productionAcceptedByID > 0 || productionAmendedAcceptedByID > 0)
+                {
+
+                    sb.Append("<hr class='hrsignatories' />\n");
+                    sb.Append("<fieldset class='pdffieldset'>\n");
+                    sb.Append("<legend class='pdflegend'>Production Accepted</legend>\n");
+
+                    sb.Append("<table class='tblsignatories'>\n");
+
+                    if (productionAcceptedByID > 0)
+                    {
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Accepted Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#productionAcceptedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Accepted By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#productionAcceptedBy#} [Production]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Accepted On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#productionAcceptedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#productionAcceptedBy#}", productionAcceptedBy);
+                        sb.Replace("{#productionAcceptedOn#}", productionAcceptedOn);
+                        sb.Replace("{#productionAcceptedRemarks#}", productionAcceptedRemarks);
+                    }
+
+
+                    if (productionAmendedAcceptedByID > 0)
+                    {
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Amended Accepted Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#productionAmendedAcceptedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Amended Accepted By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#productionAmendedAcceptedBy#} [Production]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Amended Accepted On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#productionAmendedAcceptedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#productionAmendedAcceptedBy#}", productionAmendedAcceptedBy);
+                        sb.Replace("{#productionAmendedAcceptedOn#}", productionAmendedAcceptedOn);
+                        sb.Replace("{#productionAmendedAcceptedRemarks#}", productionAmendedAcceptedRemarks);
+                    }
+
+                    sb.Append("</table>\n");
+                    sb.Append("</fieldset>\n");
+                }
+
+                //if (amendmentCount > 0 && sendToAmendmentByID == productionManagerID)
+                //{
+                //    sb.Append("<table class='tblsignatories'>\n");
+
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                //    sb.Append("</tr>\n");
+
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td colspan='3'>Send To Amenment Remarks:</td>\n");
+                //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                //    sb.Append("</tr>\n");
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td colspan='4'>{#sendToAmendmentRemarks#}</td>\n");
+                //    sb.Append("</tr>\n");
+                //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                //    sb.Append("<tr>\n");
+                //    sb.Append("<td class='tdsignatories1'>Send To Amendment By:</td>\n");
+                //    sb.Append("<td class='tdsignatories2'>{#sendToAmendmentBy#} [Production]</td>\n");
+                //    sb.Append("<td class='tdsignatories1'>Send To Amendment On:</td>\n");
+                //    sb.Append("<td class='tdsignatories2'>{#sendToAmendmentOn#}</td>\n");
+                //    sb.Append("</tr>\n");
+
+                //    sb.Replace("{#sendToAmendmentRemarks#}", sendToAmendmentRemarks);
+                //    sb.Replace("{#sendToAmendmentBy#}", sendToAmendmentBy);
+                //    sb.Replace("{#sendToAmendmentOn#}", sendToAmendmentOn);
+
+                //    sb.Append("</table>\n");
+                //}
+
+                #endregion
+
+
+                #region LOT-QUALITY ACCEPTED[===========]
+
+                if (qualityAcceptedByID > 0 || qualityAmendedAcceptedByID > 0)
+                {
+                    sb.Append("<hr class='hrsignatories' />\n");
+                    sb.Append("<fieldset class='pdffieldset'>\n");
+                    sb.Append("<legend class='pdflegend'>Quality Accepted</legend>\n");
+
+                    sb.Append("<table class='tblsignatories'>\n");
+
+                    if (qualityAcceptedByID > 0)
+                    {
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Accepted Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#qualityAcceptedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Accepted By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#qualityAcceptedBy#} [Quality]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Accepted On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#qualityAcceptedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#qualityAcceptedBy#}", qualityAcceptedBy);
+                        sb.Replace("{#qualityAcceptedOn#}", qualityAcceptedOn);
+                        sb.Replace("{#qualityAcceptedRemarks#}", qualityAcceptedRemarks);
+                    }
+
+                    if (qualityAmendedAcceptedByID > 0)
+                    {
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>Amended Accepted Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#qualityAmendedAcceptedRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Amended Accepted By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#qualityAmendedAcceptedBy#} [Quality]</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Amended Accepted On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#qualityAmendedAcceptedOn#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#qualityAmendedAcceptedBy#}", qualityAmendedAcceptedBy);
+                        sb.Replace("{#qualityAmendedAcceptedOn#}", qualityAmendedAcceptedOn);
+                        sb.Replace("{#qualityAmendedAcceptedRemarks#}", qualityAmendedAcceptedRemarks);
+                    }
+
+
+
+                    if (firstQualityPersonID > 0)
+                    {
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>First Quality Person:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#firstQualityPerson#}</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Second Quality Person:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#secondQualityPerson#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#firstQualityPerson#}", firstQualityPerson);
+                        sb.Replace("{#secondQualityPerson#}", secondQualityPerson);
+                    }
+
+
+                    sb.Append("</table>\n");
+                    sb.Append("</fieldset>\n");
+
+
+                    //#region QUALITY RESPONSIBLE PERSONS
+
+                    //if (firstQualityPersonID > 0)
+                    //{
+                    //    sb.Append("<hr />\n");
+
+                    //    sb.Append("<fieldset class='pdffieldset'>\n");
+                    //    sb.Append("<legend class='pdflegend'>Quality Responsible Persons</legend>\n");
+
+                    //    sb.Append("<table class='tblsignatories'>\n");
+                    //    sb.Append("<tr>\n");
+                    //    sb.Append("<td class='tdsignatories1'>First Quality Person:</td>\n");
+                    //    sb.Append("<td class='tdsignatories2'>{#firstQualityPerson#}</td>\n");
+                    //    sb.Append("<td class='tdsignatories1'>Second Quality Person:</td>\n");
+                    //    sb.Append("<td class='tdsignatories2'>{#secondQualityPerson#}</td>\n");
+                    //    sb.Append("</tr>\n");
+
+                    //    sb.Replace("{#firstQualityPerson#}", firstQualityPerson);
+                    //    sb.Replace("{#secondQualityPerson#}", secondQualityPerson);
+
+
+
+                    //    sb.Append("</table>\n");
+                    //    sb.Append("</fieldset>\n");
+
+                    //}
+
+                    //#endregion
+
+
+                }
+                #endregion
+
+
+                if (dr.Table.Columns.Contains("IS_DELETED"))
+                {
+
+                    if (dr["IS_DELETED"] != DBNull.Value)
+                        isLotCancelled = Convert.ToInt32(dr["IS_DELETED"]);
+                }
+
+                if (dr.Table.Columns.Contains("CANCELLED_BY"))
+                {
+
+                    if (dr["CANCELLED_BY"] != DBNull.Value)
+                        lotCancelledBy = Convert.ToInt32(dr["CANCELLED_BY"]);
+                }
+
+                if (dr.Table.Columns.Contains("CANCELLED_BY_NAME"))
+                {
+
+                    if (dr["CANCELLED_BY_NAME"] != DBNull.Value)
+                        lotCancelledByName = Convert.ToString(dr["CANCELLED_BY_NAME"]);
+                }
+
+                if (dr.Table.Columns.Contains("CANCELLED_ON"))
+                {
+
+                    if (dr["CANCELLED_ON"] != DBNull.Value)
+                        lotCancelledOn = Convert.ToString(dr["CANCELLED_ON"]);
+                }
+
+                if (dr.Table.Columns.Contains("CANCELLED_REMARKS"))
+                {
+
+                    if (dr["CANCELLED_REMARKS"] != DBNull.Value)
+                        lotCancelledRemarks = Convert.ToString(dr["CANCELLED_REMARKS"]);
+                }
+
+
+
+
+
+                if (isLotCancelled > 0 || lotCancelledBy > 0)
+                {
+                    sb.Append("<hr class='hrsignatories' />\n");
+                    sb.Append("<fieldset class='pdffieldset'>\n");
+                    sb.Append("<legend class='pdflegend'>LOT Cancellation </legend>\n");
+
+                    sb.Append("<table class='tblsignatories'>\n");
+
+                    if (lotCancelledBy > 0)
+                    {
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='3'>LOT Cancellation Remarks:</td>\n");
+                        sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>{#lotCancelRemarks#}</td>\n");
+                        sb.Append("</tr>\n");
+                        sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        sb.Append("<tr>\n");
+                        sb.Append("<td class='tdsignatories1'>Cancelled By:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#lotCancelledBy#}</td>\n");
+                        sb.Append("<td class='tdsignatories1'>Cancelled On:</td>\n");
+                        sb.Append("<td class='tdsignatories2'>{#lotCancelledOn#}</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#lotCancelledBy#}", lotCancelledByName);
+                        sb.Replace("{#lotCancelledOn#}", lotCancelledOn);
+                        sb.Replace("{#lotCancelRemarks#}", lotCancelledRemarks);
+                    }
+                    sb.Append("</table>\n");
+                    sb.Append("</fieldset>\n");
+
+                }
+
+
+
+
+
+
+
+                break;
+
+            }
+
+            #endregion
+
+
+
+            #region POST PRODUCTION ACCEPTED
+
+
+            string LOTMainsubitemIDs = string.Empty;
+
+            foreach (DataRow dr in dtSubitems.Rows)
+            {
+                if (!LOTMainsubitemIDs.Contains(Convert.ToString(dr["LOT_MAIN_SUBITEM_ID"])))
+                    LOTMainsubitemIDs += Convert.ToString(dr["LOT_MAIN_SUBITEM_ID"]) + ",";
+            }
+
+            if (!string.IsNullOrEmpty(LOTMainsubitemIDs))
+                LOTMainsubitemIDs = LOTMainsubitemIDs.TrimEnd(',');
+
+            string[] strLOTMainsubitemIDs = LOTMainsubitemIDs.Split(',');
+
+
+
+
+            foreach (string item in strLOTMainsubitemIDs)
+            {
+                foreach (DataRow dr in dtSubitems.Select("LOT_MAIN_SUBITEM_ID='" + Convert.ToInt32(item) + "'"))
+                {
+                    LOTTFSubitemID = 0;
+                    LOTItemName = string.Empty;
+
+                    productionManagerID = 0;
+
+                    productionAcceptedByID = 0;
+                    productionAcceptedBy = string.Empty;
+                    productionAcceptedOn = string.Empty;
+                    productionAcceptedRemarks = string.Empty;
+
+                    qualityAcceptedByID = 0;
+                    qualityAcceptedBy = string.Empty;
+                    qualityAcceptedOn = string.Empty;
+                    qualityAcceptedRemarks = string.Empty;
+
+                    sendToIntlInspByID = 0;
+                    sendToIntlInspBy = string.Empty;
+                    sendToIntlInspOn = string.Empty;
+                    sendToIntlInspRemarks = string.Empty;
+                    sendToIntlInspQty = "0";
+
+                    qaAcceptedForIntlInspByID = 0;
+                    qaAcceptedForIntlInspBy = string.Empty;
+                    qaAcceptedForIntlInspOn = string.Empty;
+                    qaAcceptedForIntlInspRemarks = string.Empty;
+                    qaAcceptedForIntlInspQty = "0";
+
+                    qaNotAcceptedForIntlInspByID = 0;
+                    qaNotAcceptedForIntlInspBy = string.Empty;
+                    qaNotAcceptedForIntlInspOn = string.Empty;
+                    qaNotAcceptedForIntlInspRemarks = string.Empty;
+                    qaNotAcceptedForIntlInspQty = "0";
+
+
+                    sentToFinalIntlInspByID = 0;
+                    sentToFinalIntlInspBy = string.Empty;
+                    sentToFinalIntlInspOn = string.Empty;
+                    sentToFinalIntlInspRemarks = string.Empty;
+                    sentToFinalIntlInspQty = "0";
+
+                    sentToReworkByID = 0;
+                    sentToReworkBy = string.Empty;
+                    sentToReworkOn = string.Empty;
+                    sentToReworkRemarks = string.Empty;
+                    sentToReworkQty = "0";
+
+
+                    amendmentCount = 0;
+
+                    sendToAmendmentByID = 0;
+                    sendToAmendmentBy = string.Empty;
+                    sendToAmendmentOn = string.Empty;
+                    sendToAmendmentRemarks = string.Empty;
+
+
+                    productionAmendedAcceptedByID = 0;
+                    productionAmendedAcceptedBy = string.Empty;
+                    productionAmendedAcceptedOn = string.Empty;
+                    productionAmendedAcceptedRemarks = string.Empty;
+
+                    qualityAmendedAcceptedByID = 0;
+                    qualityAmendedAcceptedBy = string.Empty;
+                    qualityAmendedAcceptedOn = string.Empty;
+                    qualityAmendedAcceptedRemarks = string.Empty;
+
+                    completedByID = 0;
+                    completedBy = string.Empty;
+                    completedOn = string.Empty;
+                    completedRemarks = string.Empty;
+                    completedQty = "0";
+
+
+
+                    if (dr["LOT_TF_SUBITEM_ID"] != DBNull.Value)
+                        LOTTFSubitemID = Convert.ToInt32(dr["LOT_TF_SUBITEM_ID"]);
+
+                    if (dr["LOT_MAIN_ITEM"] != DBNull.Value)
+                        LOTItemName = Convert.ToString(dr["LOT_MAIN_ITEM"]);
+
+                    if (dr["SENT_TO_INTL_INSP_BY_ID"] != DBNull.Value)
+                        sendToIntlInspByID = Convert.ToInt32(dr["SENT_TO_INTL_INSP_BY_ID"]);
+
+                    if (dr["SENT_TO_INTL_INSP_BY"] != DBNull.Value)
+                        sendToIntlInspBy = Convert.ToString(dr["SENT_TO_INTL_INSP_BY"]);
+
+                    if (dr["SENT_TO_INTL_INSP_ON"] != DBNull.Value)
+                        sendToIntlInspOn = Convert.ToString(dr["SENT_TO_INTL_INSP_ON"]);
+
+                    if (dr["SENT_TO_INTL_INSP_REMARKS"] != DBNull.Value)
+                        sendToIntlInspRemarks = Convert.ToString(dr["SENT_TO_INTL_INSP_REMARKS"]);
+                    //sendToIntlInspQty = "0";
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_BY_ID"] != DBNull.Value)
+                        qaAcceptedForIntlInspByID = Convert.ToInt32(dr["QA_INTL_INSP_ACCEPTED_BY_ID"]);
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_BY"] != DBNull.Value)
+                        qaAcceptedForIntlInspBy = Convert.ToString(dr["QA_INTL_INSP_ACCEPTED_BY"]);
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_ON"] != DBNull.Value)
+                        qaAcceptedForIntlInspOn = Convert.ToString(dr["QA_INTL_INSP_ACCEPTED_ON"]);
+
+                    if (dr["QA_INTL_INSP_ACCEPTED_REMARKS"] != DBNull.Value)
+                        qaAcceptedForIntlInspRemarks = Convert.ToString(dr["QA_INTL_INSP_ACCEPTED_REMARKS"]);
+                    //qaAcceptedForIntlInspQty = "0";
+
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"] != DBNull.Value)
+                        qaNotAcceptedForIntlInspByID = Convert.ToInt32(dr["QA_INTL_INSP_NOT_ACCEPTED_BY_ID"]);
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_BY"] != DBNull.Value)
+                        qaNotAcceptedForIntlInspBy = Convert.ToString(dr["QA_INTL_INSP_NOT_ACCEPTED_BY"]);
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_ON"] != DBNull.Value)
+                        qaNotAcceptedForIntlInspOn = Convert.ToString(dr["QA_INTL_INSP_NOT_ACCEPTED_ON"]);
+
+                    if (dr["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"] != DBNull.Value)
+                        qaNotAcceptedForIntlInspRemarks = Convert.ToString(dr["QA_INTL_INSP_NOT_ACCEPTED_REMARKS"]);
+
+
+
+                    if (dr["SENT_TO_FINAL_INSP_BY_ID"] != DBNull.Value)
+                        sentToFinalIntlInspByID = Convert.ToInt32(dr["SENT_TO_FINAL_INSP_BY_ID"]);
+
+                    if (dr["SENT_TO_FINAL_INSP_BY"] != DBNull.Value)
+                        sentToFinalIntlInspBy = Convert.ToString(dr["SENT_TO_FINAL_INSP_BY"]);
+
+                    if (dr["SENT_TO_FINAL_INSP_ON"] != DBNull.Value)
+                        sentToFinalIntlInspOn = Convert.ToString(dr["SENT_TO_FINAL_INSP_ON"]);
+
+                    if (dr["SENT_TO_FINAL_INSP_REMARKS"] != DBNull.Value)
+                        sentToFinalIntlInspRemarks = Convert.ToString(dr["SENT_TO_FINAL_INSP_REMARKS"]);
+
+
+                    if (dr["SENT_TO_REWORK_BY_ID"] != DBNull.Value)
+                        sentToReworkByID = Convert.ToInt32(dr["SENT_TO_REWORK_BY_ID"]);
+
+                    if (dr["SENT_TO_REWORK_BY"] != DBNull.Value)
+                        sentToReworkBy = Convert.ToString(dr["SENT_TO_REWORK_BY"]);
+
+                    if (dr["SENT_TO_REWORK_ON"] != DBNull.Value)
+                        sentToReworkOn = Convert.ToString(dr["SENT_TO_REWORK_ON"]);
+
+                    if (dr["SENT_TO_REWORK_REMARKS"] != DBNull.Value)
+                        sentToReworkRemarks = Convert.ToString(dr["SENT_TO_REWORK_REMARKS"]);
+
+
+
+                    //qaNotAcceptedForIntlInspQty = "0";
+
+                    if (dr["AMENDMENT_COUNT"] != DBNull.Value)
+                        amendmentCount = Convert.ToInt32(dr["AMENDMENT_COUNT"]);
+
+                    if (dr["AMENDMENT_BY_ID"] != DBNull.Value)
+                        sendToAmendmentByID = Convert.ToInt32(dr["AMENDMENT_BY_ID"]);
+
+                    if (dr["AMENDMENT_BY"] != DBNull.Value)
+                        sendToAmendmentBy = Convert.ToString(dr["AMENDMENT_BY"]);
+
+                    if (dr["AMENDMENT_ON"] != DBNull.Value)
+                        sendToAmendmentOn = Convert.ToString(dr["AMENDMENT_ON"]);
+
+                    if (dr["AMENDMENT_REMARKS"] != DBNull.Value)
+                        sendToAmendmentRemarks = Convert.ToString(dr["AMENDMENT_REMARKS"]);
+
+
+                    if (dr["COMPLETED_BY_ID"] != DBNull.Value)
+                        completedByID = Convert.ToInt32(dr["COMPLETED_BY_ID"]);
+
+                    if (dr["COMPLETED_BY"] != DBNull.Value)
+                        completedBy = Convert.ToString(dr["COMPLETED_BY"]);
+
+                    if (dr["COMPLETED_ON"] != DBNull.Value)
+                        completedOn = Convert.ToString(dr["COMPLETED_ON"]);
+
+                    if (dr["COMPLETED_REMARKS"] != DBNull.Value)
+                        completedRemarks = Convert.ToString(dr["COMPLETED_REMARKS"]);
+
+
+
+                    if (sendToIntlInspByID > 0)
+                    {
+                        sb.Append("<hr class='hrsignatories' />\n");
+                        sb.Append("<fieldset class='pdffieldset'>\n");
+                        sb.Append("<legend class='pdflegend'>Item - {#LOTItemName#}</legend>\n");
+
+                        sb.Append("<table class='tblsignatories'>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'><b>Item - {#LOTItemName#}</b></td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'>&nbsp;</td>\n");
+                        sb.Append("</tr>\n");
+
+                        sb.Replace("{#LOTItemName#}", LOTItemName);
+
+                        #region ITEM(S) SENT TO FITUP-INSPECTION
+
+                        sb.Append("<tr>\n");
+                        sb.Append("<td colspan='4'><b>Sent To Fitup Inspection</b></td>\n");
+                        sb.Append("</tr>\n");
+
+                        //if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.Mail))
+                        //{
+                        //    sb.Append("<tr>\n");
+                        //    sb.Append("<td colspan='3'>Sent To Intl. Insp. Remarks:</td>\n");
+                        //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                        //    sb.Append("</tr>\n");
+                        //    sb.Append("<tr>\n");
+                        //    sb.Append("<td colspan='4'>{#sendToIntlInspRemarks#}</td>\n");
+                        //    sb.Append("</tr>\n");
+                        //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                        //    sb.Append("<tr>\n");
+                        //    sb.Append("<td class='tdsignatories1'>Sent To Intl. Insp. By:</td>\n");
+                        //    sb.Append("<td class='tdsignatories2'>{#sendToIntlInspBy#}</td>\n");
+                        //    sb.Append("<td class='tdsignatories1'>Sent To Intl. Insp. On:</td>\n");
+                        //    sb.Append("<td class='tdsignatories2'>{#sendToIntlInspOn#}</td>\n");
+                        //    sb.Append("</tr>\n");
+
+                        //    sb.Replace("{#sendToIntlInspBy#}", sendToIntlInspBy);
+                        //    sb.Replace("{#sendToIntlInspOn#}", sendToIntlInspOn);
+                        //    sb.Replace("{#sendToIntlInspRemarks#}", sendToIntlInspRemarks);
+
+                        //}
+                        //else if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.List))
+                        //{
+                        foreach (DataRow drii in dtQuantityDetails.Select("LOT_TF_SUBITEM_ID='" + LOTTFSubitemID + "'"))
+                        {
+                            if (drii["INTERNAL_INSPECTION_BY"] != DBNull.Value)
+                                sendToIntlInspBy = Convert.ToString(drii["INTERNAL_INSPECTION_BY"]);
+
+                            if (drii["INTERNAL_INSPECTION_ON"] != DBNull.Value)
+                                sendToIntlInspOn = Convert.ToString(drii["INTERNAL_INSPECTION_ON"]);
+
+                            if (drii["INTERNAL_INSPECTION_REMARKS"] != DBNull.Value)
+                                sendToIntlInspRemarks = Convert.ToString(drii["INTERNAL_INSPECTION_REMARKS"]);
+
+                            if (drii["INTERNAL_INSPECTION"] != DBNull.Value)
+                                sendToIntlInspQty = Convert.ToString(drii["INTERNAL_INSPECTION"]);
+
+                            if (Convert.ToInt32(sendToIntlInspQty) > 0)
+                            {
+                                sb.Append("<tr>\n");
+                                sb.Append("<td colspan='3'>Sent To Fitup Insp. Remarks:</td>\n");
+                                sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                                sb.Append("</tr>\n");
+                                sb.Append("<tr>\n");
+                                sb.Append("<td colspan='4'>{#sendToIntlInspRemarks#}</td>\n");
+                                sb.Append("</tr>\n");
+                                sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                                sb.Append("<tr>\n");
+                                sb.Append("<td class='tdsignatories1'>Sent To Fitup Insp. By:</td>\n");
+                                sb.Append("<td class='tdsignatories2'>{#sendToIntlInspBy#}</td>\n");
+                                sb.Append("<td class='tdsignatories1'>Sent To Fitup Insp. On:</td>\n");
+                                sb.Append("<td class='tdsignatories2'>{#sendToIntlInspOn#}</td>\n");
+                                sb.Append("</tr>\n");
+                                sb.Append("<tr>\n");
+                                sb.Append("<td class='tdsignatories1'>Quantity:</td>\n");
+                                sb.Append("<td class='tdsignatories2'>{#sendToIntlInspQty#}</td>\n");
+                                sb.Append("</tr>\n");
+
+                                sb.Replace("{#sendToIntlInspBy#}", sendToIntlInspBy);
+                                sb.Replace("{#sendToIntlInspOn#}", sendToIntlInspOn);
+                                sb.Replace("{#sendToIntlInspRemarks#}", sendToIntlInspRemarks);
+                                sb.Replace("{#sendToIntlInspQty#}", sendToIntlInspQty);
+                            }
+                        }
+                        //}
+
+                        #endregion
+
+
+                        #region ITEM(S) ACCEPTED BY QA
+
+                        if (qaAcceptedForIntlInspByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'><b>QA Accepted For Fitup Inspection</b></td>\n");
+                            sb.Append("</tr>\n");
+
+
+                            //if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.Mail))
+                            //{
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td colspan='3'> QA Accepted For Intl. Insp. Remarks:</td>\n");
+                            //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            //    sb.Append("</tr>\n");
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td colspan='4'>{#qaAcceptedForIntlInspRemarks#}</td>\n");
+                            //    sb.Append("</tr>\n");
+                            //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td class='tdsignatories1'>QA Accepted For Intl. Insp. By:</td>\n");
+                            //    sb.Append("<td class='tdsignatories2'>{#qaAcceptedForIntlInspBy#}</td>\n");
+                            //    sb.Append("<td class='tdsignatories1'>QA Accepted For Intl. Insp. On:</td>\n");
+                            //    sb.Append("<td class='tdsignatories2'>{#qaAcceptedForIntlInspOn#}</td>\n");
+                            //    sb.Append("</tr>\n");
+
+                            //    sb.Replace("{#qaAcceptedForIntlInspBy#}", qaAcceptedForIntlInspBy);
+                            //    sb.Replace("{#qaAcceptedForIntlInspOn#}", qaAcceptedForIntlInspOn);
+                            //    sb.Replace("{#qaAcceptedForIntlInspRemarks#}", qaAcceptedForIntlInspRemarks);
+                            //}
+                            //else if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.List))
+                            //{
+                            foreach (DataRow drqi in dtQuantityDetails.Select("LOT_TF_SUBITEM_ID='" + LOTTFSubitemID + "'"))
+                            {
+                                if (drqi["QA_ITEM_ACCEPTED_BY"] != DBNull.Value)
+                                    qaAcceptedForIntlInspBy = Convert.ToString(drqi["QA_ITEM_ACCEPTED_BY"]);
+
+                                if (drqi["QA_ITEM_ACCEPTED_ON"] != DBNull.Value)
+                                    qaAcceptedForIntlInspOn = Convert.ToString(drqi["QA_ITEM_ACCEPTED_ON"]);
+
+                                if (drqi["QA_ITEM_ACCEPTED_REMARKS"] != DBNull.Value)
+                                    qaAcceptedForIntlInspRemarks = Convert.ToString(drqi["QA_ITEM_ACCEPTED_REMARKS"]);
+
+                                if (drqi["QA_ITEM_ACCEPTED"] != DBNull.Value)
+                                    qaAcceptedForIntlInspQty = Convert.ToString(drqi["QA_ITEM_ACCEPTED"]);
+
+                                if (Convert.ToInt32(qaAcceptedForIntlInspQty) > 0)
+                                {
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='3'> QA Accepted For Intl. Insp. Remarks:</td>\n");
+                                    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='4'>{#qaAcceptedForIntlInspRemarks#}</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>QA Accepted For Intl. Insp. By:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#qaAcceptedForIntlInspBy#}</td>\n");
+                                    sb.Append("<td class='tdsignatories1'>QA Accepted For Intl. Insp. On:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#qaAcceptedForIntlInspOn#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Quantity:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#qaAcceptedForIntlInspQty#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Replace("{#qaAcceptedForIntlInspBy#}", qaAcceptedForIntlInspBy);
+                                    sb.Replace("{#qaAcceptedForIntlInspOn#}", qaAcceptedForIntlInspOn);
+                                    sb.Replace("{#qaAcceptedForIntlInspRemarks#}", qaAcceptedForIntlInspRemarks);
+                                    sb.Replace("{#qaAcceptedForIntlInspQty#}", qaAcceptedForIntlInspQty);
+                                }
+                            }
+                            //}
+                        }
+
+                        #endregion
+
+
+                        #region ITEM(S) NOT ACCEPTED BY QA
+
+                        if (qaNotAcceptedForIntlInspByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'><b>QA Not Accepted For Fitup Inspection</b></td>\n");
+                            sb.Append("</tr>\n");
+
+                            //if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.Mail))
+                            //{
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td colspan='3'> QA Not Accepted For Intl. Insp. Remarks:</td>\n");
+                            //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            //    sb.Append("</tr>\n");
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td colspan='4'>{#qaNotAcceptedForIntlInspRemarks#}</td>\n");
+                            //    sb.Append("</tr>\n");
+                            //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td class='tdsignatories1'>QA Not Accepted For Intl. Insp. By:</td>\n");
+                            //    sb.Append("<td class='tdsignatories2'>{#qaNotAcceptedForIntlInspBy#}</td>\n");
+                            //    sb.Append("<td class='tdsignatories1'>QA Not Accepted For Intl. Insp. On:</td>\n");
+                            //    sb.Append("<td class='tdsignatories2'>{#qaNotAcceptedForIntlInspOn#}</td>\n");
+                            //    sb.Append("</tr>\n");
+
+                            //    sb.Replace("{#qaNotAcceptedForIntlInspBy#}", qaNotAcceptedForIntlInspBy);
+                            //    sb.Replace("{#qaNotAcceptedForIntlInspOn#}", qaNotAcceptedForIntlInspOn);
+                            //    sb.Replace("{#qaNotAcceptedForIntlInspRemarks#}", qaNotAcceptedForIntlInspRemarks);
+
+                            //}
+                            //else if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.List))
+                            //{
+                            foreach (DataRow drqni in dtQuantityDetails.Select("LOT_TF_SUBITEM_ID='" + LOTTFSubitemID + "'"))
+                            {
+                                if (drqni["QA_ITEM_NOT_ACCEPTED_BY"] != DBNull.Value)
+                                    qaNotAcceptedForIntlInspBy = Convert.ToString(drqni["QA_ITEM_NOT_ACCEPTED_BY"]);
+
+                                if (drqni["QA_ITEM_NOT_ACCEPTED_ON"] != DBNull.Value)
+                                    qaNotAcceptedForIntlInspOn = Convert.ToString(drqni["QA_ITEM_NOT_ACCEPTED_ON"]);
+
+                                if (drqni["QA_ITEM_NOT_ACCEPTED_REMARKS"] != DBNull.Value)
+                                    qaNotAcceptedForIntlInspRemarks = Convert.ToString(drqni["QA_ITEM_NOT_ACCEPTED_REMARKS"]);
+
+                                if (drqni["QA_ITEM_NOT_ACCEPTED"] != DBNull.Value)
+                                    qaNotAcceptedForIntlInspQty = Convert.ToString(drqni["QA_ITEM_NOT_ACCEPTED"]);
+
+                                if (Convert.ToInt32(qaNotAcceptedForIntlInspQty) > 0)
+                                {
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='3'> QA Not Accepted For Intl. Insp. Remarks:</td>\n");
+                                    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='4'>{#qaNotAcceptedForIntlInspRemarks#}</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>QA Not Accepted For Intl. Insp. By:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#qaNotAcceptedForIntlInspBy#}</td>\n");
+                                    sb.Append("<td class='tdsignatories1'>QA Not Accepted For Intl. Insp. On:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#qaNotAcceptedForIntlInspOn#}</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Quantity:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#qaNotAcceptedForIntlInspQty#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Replace("{#qaNotAcceptedForIntlInspBy#}", qaNotAcceptedForIntlInspBy);
+                                    sb.Replace("{#qaNotAcceptedForIntlInspOn#}", qaNotAcceptedForIntlInspOn);
+                                    sb.Replace("{#qaNotAcceptedForIntlInspRemarks#}", qaNotAcceptedForIntlInspRemarks);
+                                    sb.Replace("{#qaNotAcceptedForIntlInspQty#}", qaNotAcceptedForIntlInspQty);
+                                }
+                            }
+                            //}
+                        }
+
+                        #endregion
+
+
+
+
+
+
+
+                        #region FINAL INSPECTION
+
+                        if (sentToFinalIntlInspByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'><b>Sent To Final Inspection</b></td>\n");
+                            sb.Append("</tr>\n");
+
+                            foreach (DataRow drqni in dtQuantityDetails.Select("LOT_TF_SUBITEM_ID='" + LOTTFSubitemID + "'"))
+                            {
+                                if (drqni["SENT_TO_FINAL_INSPECTION_BY"] != DBNull.Value)
+                                    sentToFinalIntlInspBy = Convert.ToString(drqni["SENT_TO_FINAL_INSPECTION_BY"]);
+
+                                if (drqni["SENT_TO_FINAL_INSPECTION_ON"] != DBNull.Value)
+                                    sentToFinalIntlInspOn = Convert.ToString(drqni["SENT_TO_FINAL_INSPECTION_ON"]);
+
+                                if (drqni["SENT_TO_FINAL_INSPECTION_REMARKS"] != DBNull.Value)
+                                    sentToFinalIntlInspRemarks = Convert.ToString(drqni["SENT_TO_FINAL_INSPECTION_REMARKS"]);
+
+                                if (drqni["IN_FINAL_INSPECTION"] != DBNull.Value)
+                                    sentToFinalIntlInspQty = Convert.ToString(drqni["IN_FINAL_INSPECTION"]);
+
+                                if (Convert.ToInt32(sentToFinalIntlInspQty) > 0)
+                                {
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='3'>Sent To Final Insp. Remarks:</td>\n");
+                                    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='4'>{#sentToFinalIntlInspRemarks#}</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Sent To Final Insp. By:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#sentToFinalIntlInspBy#}</td>\n");
+                                    sb.Append("<td class='tdsignatories1'>Sent To Final Insp. On:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#sentToFinalIntlInspOn#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Quantity:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#sentToFinalIntlInspQty#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Replace("{#sentToFinalIntlInspBy#}", sentToFinalIntlInspBy);
+                                    sb.Replace("{#sentToFinalIntlInspOn#}", sentToFinalIntlInspOn);
+                                    sb.Replace("{#sentToFinalIntlInspRemarks#}", sentToFinalIntlInspRemarks);
+                                    sb.Replace("{#sentToFinalIntlInspQty#}", sentToFinalIntlInspQty);
+                                }
+                            }
+                            //}
+                        }
+
+                        #endregion
+
+
+
+
+
+
+
+                        #region REWORK
+
+                        if (sentToReworkByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'><b>Sent To Rework</b></td>\n");
+                            sb.Append("</tr>\n");
+
+                            foreach (DataRow drqni in dtQuantityDetails.Select("LOT_TF_SUBITEM_ID='" + LOTTFSubitemID + "'"))
+                            {
+                                if (drqni["SENT_TO_REWORK_BY"] != DBNull.Value)
+                                    sentToReworkBy = Convert.ToString(drqni["SENT_TO_REWORK_BY"]);
+
+                                if (drqni["SENT_TO_REWORK_ON"] != DBNull.Value)
+                                    sentToReworkOn = Convert.ToString(drqni["SENT_TO_REWORK_ON"]);
+
+                                if (drqni["SENT_TO_REWORK_REMARKS"] != DBNull.Value)
+                                    sentToReworkRemarks = Convert.ToString(drqni["SENT_TO_REWORK_REMARKS"]);
+
+                                if (drqni["IN_REWORK"] != DBNull.Value)
+                                    sentToReworkQty = Convert.ToString(drqni["IN_REWORK"]);
+
+                                if (Convert.ToInt32(sentToReworkQty) > 0)
+                                {
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='3'>Sent To Rework Remarks:</td>\n");
+                                    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='4'>{#sentToReworkRemarks#}</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Sent To Rework By:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#sentToReworkBy#}</td>\n");
+                                    sb.Append("<td class='tdsignatories1'>Sent To Rework On:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#sentToReworkOn#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Quantity:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#sentToReworkQty#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Replace("{#sentToReworkBy#}", sentToReworkBy);
+                                    sb.Replace("{#sentToReworkOn#}", sentToReworkOn);
+                                    sb.Replace("{#sentToReworkRemarks#}", sentToReworkRemarks);
+                                    sb.Replace("{#sentToReworkQty#}", sentToReworkQty);
+                                }
+                            }
+                            //}
+                        }
+
+                        #endregion
+
+
+
+
+                        #region ITEM(S) COMPLETED BY QA
+
+                        if (completedByID > 0)
+                        {
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='2'> <hr class='hrsignatories' /></td>\n");
+                            sb.Append("</tr>\n");
+
+                            sb.Append("<tr>\n");
+                            sb.Append("<td colspan='4'><b>Completed With Final Inspection</b></td>\n");
+                            sb.Append("</tr>\n");
+
+                            //if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.Mail))
+                            //{
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td colspan='3'>Completed Remarks:</td>\n");
+                            //    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                            //    sb.Append("</tr>\n");
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td colspan='4'>{#completedRemarks#}</td>\n");
+                            //    sb.Append("</tr>\n");
+                            //    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                            //    sb.Append("<tr>\n");
+                            //    sb.Append("<td class='tdsignatories1'>Completed By:</td>\n");
+                            //    sb.Append("<td class='tdsignatories2'>{#completedBy#}</td>\n");
+                            //    sb.Append("<td class='tdsignatories1'>Completed On:</td>\n");
+                            //    sb.Append("<td class='tdsignatories2'>{#completedOn#}</td>\n");
+                            //    sb.Append("</tr>\n");
+
+                            //    sb.Replace("{#completedBy#}", completedBy);
+                            //    sb.Replace("{#completedOn#}", completedOn);
+                            //    sb.Replace("{#completedRemarks#}", completedRemarks);
+                            //}
+                            //else if (PDFType == Convert.ToInt32(LOTAllStatusAndTypes.EnumPDFType.List))
+                            //{
+                            foreach (DataRow drc in dtQuantityDetails.Select("LOT_TF_SUBITEM_ID='" + LOTTFSubitemID + "'"))
+                            {
+                                if (drc["COMPLETE_BY"] != DBNull.Value)
+                                    completedBy = Convert.ToString(drc["COMPLETE_BY"]);
+
+                                if (drc["COMPLETE_ON"] != DBNull.Value)
+                                    completedOn = Convert.ToString(drc["COMPLETE_ON"]);
+
+                                if (drc["COMPLETE_REMARKS"] != DBNull.Value)
+                                    completedRemarks = Convert.ToString(drc["COMPLETE_REMARKS"]);
+
+                                if (drc["COMPLETE"] != DBNull.Value)
+                                    completedQty = Convert.ToString(drc["COMPLETE"]);
+
+                                if (Convert.ToInt32(completedQty) > 0)
+                                {
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='3'>Completed Remarks:</td>\n");
+                                    sb.Append("<td colspan='3'>&nbsp;</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td colspan='4'>{#completedRemarks#}</td>\n");
+                                    sb.Append("</tr>\n");
+                                    sb.Append("<tr><td colspan='4'>&nbsp;</td></tr>\n");
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Completed By:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#completedBy#}</td>\n");
+                                    sb.Append("<td class='tdsignatories1'>Completed On:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#completedOn#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Append("<tr>\n");
+                                    sb.Append("<td class='tdsignatories1'>Quantity:</td>\n");
+                                    sb.Append("<td class='tdsignatories2'>{#completedQty#}</td>\n");
+                                    sb.Append("</tr>\n");
+
+                                    sb.Replace("{#completedBy#}", completedBy);
+                                    sb.Replace("{#completedOn#}", completedOn);
+                                    sb.Replace("{#completedRemarks#}", completedRemarks);
+                                    sb.Replace("{#completedQty#}", completedQty);
+                                }
+                            }
+                            //}
+                        }
+
+                        #endregion
+
+                        sb.Append("</table>\n");
+                        sb.Append("</fieldset>\n");
+                    }
+                }
+            }
+
+
+            #endregion
+
+
+            //SIGNATORIES DETAILS END[===========================]
+
+
+
+
+
+            sb.Replace("{#TFNo#}", TFNo);
+            sb.Replace("{#ProductionNo#}", productionNo);
+            sb.Replace("{#Company#}", companyName);
+            sb.Replace("{#Date#}", LOTDate);
+
+            sb.Replace("{#LOTCreatedOn#}", LOTCreatedOn);
+            sb.Replace("{#oldLOTCreatedOn#}", oldLOTCreatedOn);
+
+            sb.Replace("{#customerName#}", ("[" + custCode + "] - " + customerName));
+            sb.Replace("{#JOBNo#}", jobNo);
+            sb.Replace("{#PONo#}", poNo);
+            sb.Replace("{#item#}", itemName);
+            sb.Replace("{#oldLOTNo#}", oldLOTNo);
+
+            sb.Replace("{#impNotes#}", impNotes);
+
+
+            sb.Replace("{#oldTransferredLOTNo#}", oldTransferredLOTNo);
+            sb.Replace("{#oldTransferredLOTCreatedOn#}", oldTransferredLOTCreatedOn);
+            sb.Replace("{#transferredRemarks#}", transferredRemarks);
+
+            htmlText = sb.ToString();
+            return htmlText;
+
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+}
+

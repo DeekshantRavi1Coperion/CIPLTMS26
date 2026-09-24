@@ -1,0 +1,177 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+
+public class GetLOTMailType
+{
+    int mailType = 0;
+
+    public int GetMailType(int createdByID, int PEID, int PMID, int prodMngrID, int amendmentCount)
+    {
+        try
+        {
+            mailType = 0;
+
+            if (amendmentCount > 0)
+                mailType = GetAmendedMailType(createdByID, PEID, PMID, prodMngrID);
+            else
+                mailType = GetMailType(createdByID, PEID, PMID, prodMngrID);
+
+
+            return mailType;
+        }
+        catch (Exception)
+        {
+            return 0;
+        }
+    }
+
+    private int GetMailType(int createdByID, int PEID, int PMID, int prodMngrID)
+    {
+        try
+        {
+            mailType = 0;
+            ////Case 1: Creater can be pe, pm or prod mngr----------------------------
+            //if (createdByID == PEID || createdByID == PMID || createdByID == prodMngrID)
+            //{
+            //    if (createdByID == PEID)
+            //    {
+            //        if (PEID == PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptedMail);
+
+            //        else if (PEID == PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+
+            //        else if (PEID != PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+
+            //        else if (PEID != PMID && PEID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+
+            //        else if (PEID != PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+            //    }
+            //    else if (createdByID == PMID)
+            //    {
+            //        if (PEID == PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptedMail);
+
+            //        else if (PEID == PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+
+            //        else if (PEID != PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptedMail);
+
+            //        else if (PEID != PMID && PEID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+
+            //        else if (PEID != PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptanceMail);
+            //    }
+            //    else if (createdByID == prodMngrID)
+            //    {
+            //        if (PEID == PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AcceptedMail);
+
+            //        else if (PEID == PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.ApprovalMail);
+
+            //        else if (PEID != PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.ApprovalMail);
+
+            //        else if (PEID != PMID && PEID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.ApprovalMail);
+
+            //        else if (PEID != PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.ApprovalMail);
+            //    }
+            //}
+            ////Case 2: Creater is an indiviual person--------------------
+            //else
+            //{
+            //    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.ApprovalMail);
+            //}
+
+            return mailType;
+        }
+        catch (Exception)
+        {
+            return 0;
+        }
+    }
+
+    private int GetAmendedMailType(int amendedByID, int PEID, int PMID, int prodMngrID)
+    {
+        try
+        {
+            ////Case 1: Creater can be pe, pm or prod mngr----------------------------
+            //if (amendedByID == PEID || amendedByID == PMID || amendedByID == prodMngrID)
+            //{
+            //    if (amendedByID == PEID)
+            //    {
+            //        if (PEID == PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptedMail);
+
+            //        else if (PEID == PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+
+            //        else if (PEID != PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+
+            //        else if (PEID != PMID && PEID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+
+            //        else if (PEID != PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+            //    }
+            //    else if (amendedByID == PMID)
+            //    {
+            //        if (PEID == PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptedMail);
+
+            //        else if (PEID == PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+
+            //        else if (PEID != PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptedMail);
+
+            //        else if (PEID != PMID && PEID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+
+            //        else if (PEID != PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptanceMail);
+            //    }
+            //    else if (amendedByID == prodMngrID)
+            //    {
+            //        if (PEID == PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptedMail);
+
+            //        else if (PEID == PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedApprovalMail);
+
+            //        else if (PEID != PMID && PMID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedApprovalMail);
+
+            //        else if (PEID != PMID && PEID == prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedAcceptedMail);
+
+            //        else if (PEID != PMID && PMID != prodMngrID)
+            //            mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedApprovalMail);
+            //    }
+            //}
+            ////Case 2: Creater is an indiviual person--------------------
+            //else
+            //{
+            //    mailType = Convert.ToInt32(LOTAllStatusAndTypes.EnumEmailType.AmendedApprovalMail);
+            //}
+
+            return mailType;
+        }
+        catch (Exception)
+        {
+            return 0;
+        }
+    }
+}
