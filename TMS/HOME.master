@@ -1,0 +1,465 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="HOME.master.cs" Inherits="HOME" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIPLTMS</title>
+
+    <%--<link href="<%= ResolveUrl("~/Styles/Site.css") %>" rel="stylesheet" type="text/css" />
+    <link href="<%= ResolveUrl("~/Styles/MasterPage.css") %>" rel="stylesheet" type="text/css" />--%>
+    
+    
+    <link href="Styles/Site.css" rel="stylesheet" />
+    <link href="Styles/MasterPage.css" rel="stylesheet" />
+
+    <asp:ContentPlaceHolder ID="head" runat="server" />
+
+
+    <style>
+        .login-logo {
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 18px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+            .login-logo img {
+                max-width: 72px;
+                max-height: 72px;
+                object-fit: contain;
+            }
+    </style>
+
+</head>
+
+
+<body>
+
+    <form id="form1"
+        runat="server">
+
+        <div class="app-layout">
+
+            <!-- =====================================================
+                 LEFT SIDEBAR
+                 ===================================================== -->
+
+            <aside class="sidebar">
+
+                <!-- =================================================
+                     SIDEBAR HEADER
+                     ================================================= -->
+
+                <div class="sidebar-header">
+                    <div class="app-logo">
+
+                        <!-- Logo -->
+                        <%--<div class="logo-icon">
+                            <span>
+                                c
+                            </span>
+                        </div>--%>
+
+                      <%--  <div class="login-logo">
+
+                        <img src="Images/Icon04.png"
+                             alt="CIPLTMS" />
+
+                    </div>--%>
+
+                        <div class="login-logo">
+ 
+                            <%--<img src="Images/Icon04.png"
+                             alt="CIPLTMS" />--%>
+ 
+                            <img src="<%= ResolveUrl("~/Images/Icon04.png") %>" alt="CIPLTMS" />
+ 
+                        </div>
+
+                        <!-- Application Name -->
+                        <div class="logo-text">
+                            <span class="app-name">CIPLTMS</span>
+                            <span class="app-subtitle">Customized Solution</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- =================================================
+                     SCROLLABLE MENU AREA
+                     ================================================= -->
+
+                <div class="sidebar-menu">
+
+                    <!-- Menu Title -->
+                    <div class="menu-title">
+                        <span>MAIN MENU</span>
+                    </div>
+
+
+                    <!-- =================================================
+                         DYNAMIC MENU
+
+                         HOME.master.cs will generate:
+
+                         <ul class="menu-tree">
+
+                             <li>
+                                 <a>Dashboard</a>
+                             </li>
+
+                             <li class="has-children">
+
+                                 <div class="menu-toggle">
+                                     Administration
+                                     <span>›</span>
+                                 </div>
+
+                                 <ul class="submenu">
+
+                                     <li>
+                                         <a>Users</a>
+                                     </li>
+
+                                 </ul>
+
+                             </li>
+
+                         </ul>
+
+                         ================================================= -->
+
+                    <div id="MenuContainer"
+                        runat="server"
+                        class="main-menu">
+                    </div>
+                </div>
+
+                <!-- =====================================================
+                     FIXED BOTTOM USER PANEL
+                     ===================================================== -->
+
+                <div class="sidebar-footer">
+                    <div class="employee-card">
+
+                        <!-- =================================================
+                             EMPLOYEE HEADER
+                             ================================================= -->
+
+                        <div class="employee-header">
+
+                            <!-- Employee Avatar -->
+                            <div class="employee-avatar">
+                                <asp:Label
+                                    ID="lblEmployeeInitial"
+                                    runat="server"
+                                    Text="U" />
+                            </div>
+
+
+                            <!-- Employee Details -->
+                            <div class="employee-details">
+                                <asp:Label
+                                    ID="lblEmployeeName"
+                                    runat="server"
+                                    CssClass="employee-name" />
+
+                                <span class="employee-role">Logged In</span>
+                            </div>
+
+
+                            <!-- Logout -->
+
+                            <a href="/Login.aspx"
+                                class="logout-button"
+                                title="Logout">
+
+                                <img src="/images/logout.png"
+                                    alt="Logout"
+                                    class="logout-icon" />
+                            </a>
+                        </div>
+
+
+
+                        <!-- =================================================
+                             EMPLOYEE INFORMATION
+                             ================================================= -->
+
+                        <div class="employee-info">
+
+                            <!-- Login Time -->
+                            <div class="info-row">
+
+                                <span class="info-label">Login Time</span>
+
+                                <asp:Label
+                                    ID="lblLoginTime"
+                                    runat="server"
+                                    CssClass="info-value" />
+
+                            </div>
+
+                            <!-- Punch In -->
+                            <div class="info-row">
+
+                                <span class="info-label">Punch In</span>
+
+                                <asp:Label
+                                    ID="lblPunchIn"
+                                    runat="server"
+                                    CssClass="info-value" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+
+
+            <!-- =====================================================
+                 MAIN AREA
+                 ===================================================== -->
+
+            <main class="main-area">
+
+                <!-- =================================================
+                     TOP HEADER
+                     ================================================= -->
+
+                <header class="top-header">
+                    <div class="page-heading">
+                        <asp:ContentPlaceHolder
+                            ID="PageHeaderContent"
+                            runat="server" />
+                    </div>
+                </header>
+
+
+
+                <!-- =================================================
+                     PAGE CONTENT
+                     ================================================= -->
+
+                <section class="content-area">
+                    <asp:ContentPlaceHolder
+                        ID="ContentPlaceHolder2"
+                        runat="server">
+                    </asp:ContentPlaceHolder>
+                </section>
+            </main>
+        </div>
+
+
+
+        <!-- =========================================================
+             MENU JAVASCRIPT
+             ========================================================= -->
+
+        <script type="text/javascript">
+
+            function fixMenuUrls() {
+
+                const menuLinks =
+                    document.querySelectorAll(".menu-tree a.menu-link");
+
+                menuLinks.forEach(function (link) {
+
+                    let url =
+                        link.getAttribute("href");
+
+                    if (!url) {
+                        return;
+                    }
+
+                    /*
+                     * Ignore external URLs, anchors and javascript URLs.
+                     */
+                    if (url.startsWith("http://") ||
+                        url.startsWith("https://") ||
+                        url.startsWith("#") ||
+                        url.toLowerCase().startsWith("javascript:")) {
+
+                        return;
+                    }
+
+                    /*
+                     * Remove ~/ if it exists.
+                     */
+                    url = url.replace(/^~\//, "");
+
+                    /*
+                     * Make the URL root-relative.
+                     */
+                    if (!url.startsWith("/")) {
+
+                        url = "/" + url;
+
+                    }
+
+                    /*
+                     * Update the href.
+                     */
+                    link.setAttribute("href", url);
+
+                });
+            }
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+
+                /*
+                * Fix relative menu URLs.
+                */
+                //fixMenuUrls();
+
+                /*
+                 * Find all menu items that contain children.
+                 */
+
+                const menuToggles =
+                    document.querySelectorAll(".menu-toggle");
+
+
+                /*
+                 * Add click event to each parent menu.
+                 */
+
+                menuToggles.forEach(function (toggle) {
+
+
+                    toggle.addEventListener("click", function (event) {
+
+
+                        /*
+                         * Prevent default browser behavior.
+                         */
+
+                        event.preventDefault();
+
+
+                        /*
+                         * Get the parent <li>.
+                         */
+
+                        const parent =
+                            toggle.closest(".has-children");
+
+
+                        if (!parent) {
+
+                            return;
+
+                        }
+
+
+                        /*
+                         * Toggle open/close state.
+                         */
+
+                        parent.classList.toggle("open");
+
+
+                    });
+
+                });
+
+
+                /*
+                 * =====================================================
+                 * ACTIVE MENU
+                 * =====================================================
+                 *
+                 * Automatically highlight the current page.
+                 */
+
+                const currentUrl =
+                    window.location.pathname.toLowerCase();
+
+
+                const menuLinks =
+                    document.querySelectorAll(".menu-tree a.menu-link");
+
+
+                menuLinks.forEach(function (link) {
+
+
+                    const linkUrl =
+                        link.getAttribute("href");
+
+
+                    if (!linkUrl) {
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Remove query string.
+                     */
+
+                    const cleanUrl =
+                        linkUrl.split("?")[0].toLowerCase();
+
+
+                    /*
+                     * Compare current page.
+                     */
+
+                    if (cleanUrl === currentUrl ||
+                        currentUrl.endsWith(cleanUrl)) {
+
+
+                        /*
+                         * Highlight current menu.
+                         */
+
+                        link.classList.add("active");
+
+
+                        /*
+                         * Open all parent menus.
+                         */
+
+                        let parent =
+                            link.closest(".has-children");
+
+
+                        while (parent) {
+
+
+                            parent.classList.add("open");
+
+
+                            parent =
+                                parent.parentElement.closest(".has-children");
+
+
+                        }
+
+                    }
+
+                });
+
+            });
+
+        </script>
+
+
+    </form>
+
+</body>
+
+</html>
