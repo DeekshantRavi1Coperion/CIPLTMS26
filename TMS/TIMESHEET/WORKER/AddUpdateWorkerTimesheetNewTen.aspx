@@ -1,0 +1,697 @@
+<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    MaintainScrollPositionOnPostback="true" CodeFile="AddUpdateWorkerTimesheetNewTen.aspx.cs"
+    Inherits="TIMESHEET_WORKER_AddUpdateWorkerTimesheetNewTen" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link rel="icon" href="../../Images/Icon04.png" />
+    <link href="../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .modalBackground
+        {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+        .style1
+        {
+            width: 10px;
+        }
+    </style>
+
+    <script type="text/Javascript">
+        function preventInput(event) {
+           if(event.which!=9)
+            {
+            event.preventDefault();
+            }
+        }
+    </script>
+
+    <script type="text/javascript" language="javascript">
+        function pageLoad() {
+            document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
+        }
+
+        function clientChanged(sender, args) {
+            document.getElementById('<%=hdDate.ClientID %>').value = document.getElementById('<%=txtDate.ClientID %>').value;
+            
+            var formatLowerCase = "dd-MMM-yyyy".toLowerCase();
+            var formatItems = formatLowerCase.split("-");
+            var dateItems = document.getElementById('<%=hdDate.ClientID %>').value.split("-");
+            var monthIndex = formatItems.indexOf("mmm");
+            var dayIndex = formatItems.indexOf("dd");
+            var yearIndex = formatItems.indexOf("yyyy");
+            var month;
+            if (dateItems[monthIndex] == 'Jan') {
+                month = 1;
+            }
+            else if (dateItems[monthIndex] == 'Feb') {
+                month = 2;
+            }
+            else if (dateItems[monthIndex] == 'Mar') {
+                month = 3;
+            }
+            else if (dateItems[monthIndex] == 'Apr') {
+                month = 4;
+            }
+            else if (dateItems[monthIndex] == 'May') {
+                month = 5;
+            }
+            else if (dateItems[monthIndex] == 'Jun') {
+                month = 6;
+            }
+            else if (dateItems[monthIndex] == 'Jul') {
+                month = 7;
+            }
+            else if (dateItems[monthIndex] == 'Aug') {
+                month = 8;
+            }
+            else if (dateItems[monthIndex] == 'Sep') {
+                month = 9;
+            }
+            else if (dateItems[monthIndex] == 'Oct') {
+                month = 10;
+            }
+            else if (dateItems[monthIndex] == 'Nov') {
+                month = 11;
+            }
+            else if (dateItems[monthIndex] == 'Dec') {
+                month = 12;
+            }
+            month -= 1;
+            var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+
+            var endFormatLowerCase = "dd-MMM-yyyy".toLowerCase();
+            var endFormatItems = endFormatLowerCase.split("-");
+            var endDateItems = document.getElementById('<%=hdCurrentDate.ClientID %>').value.split("-");
+            var endMonthIndex = endFormatItems.indexOf("mmm");
+            var endDayIndex = endFormatItems.indexOf("dd");
+            var endYearIndex = endFormatItems.indexOf("yyyy");
+            var endMonth;
+            if (endDateItems[endMonthIndex] == 'Jan') {
+                endMonth = 1;
+            }
+            else if (endDateItems[endMonthIndex] == 'Feb') {
+                endMonth = 2;
+            }
+            else if (endDateItems[endMonthIndex] == 'Mar') {
+                endMonth = 3;
+            }
+            else if (endDateItems[endMonthIndex] == 'Apr') {
+                endMonth = 4;
+            }
+            else if (endDateItems[endMonthIndex] == 'May') {
+                endMonth = 5;
+            }
+            else if (endDateItems[endMonthIndex] == 'Jun') {
+                endMonth = 6;
+            }
+            else if (endDateItems[endMonthIndex] == 'Jul') {
+                endMonth = 7;
+            }
+            else if (endDateItems[endMonthIndex] == 'Aug') {
+                endMonth = 8;
+            }
+            else if (endDateItems[endMonthIndex] == 'Sep') {
+                endMonth = 9;
+            }
+            else if (endDateItems[endMonthIndex] == 'Oct') {
+                endMonth = 10;
+            }
+            else if (endDateItems[endMonthIndex] == 'Nov') {
+                endMonth = 11;
+            }
+            else if (endDateItems[endMonthIndex] == 'Dec') {
+                endMonth = 12;
+            }
+            endMonth -= 1;
+            var endFormatedDate = new Date(endDateItems[endYearIndex], endMonth, endDateItems[endDayIndex]);
+
+            if (endFormatedDate < formatedDate) {
+                alert("Entry Date must be lesser than or equal to current date!");
+                return false;
+            }
+        }                         
+    </script>
+
+    <script type="text/Javascript">
+        function ValidateDateRange() {
+            var formatLowerCase = "dd-MMM-yyyy".toLowerCase();
+            var formatItems = formatLowerCase.split("-");
+            var dateItems = document.getElementById('<%=hdDate.ClientID %>').value.split("-");
+            var monthIndex = formatItems.indexOf("mmm");
+            var dayIndex = formatItems.indexOf("dd");
+            var yearIndex = formatItems.indexOf("yyyy");
+            var month;
+            if (dateItems[monthIndex] == 'Jan') {
+                month = 1;
+            }
+            else if (dateItems[monthIndex] == 'Feb') {
+                month = 2;
+            }
+            else if (dateItems[monthIndex] == 'Mar') {
+                month = 3;
+            }
+            else if (dateItems[monthIndex] == 'Apr') {
+                month = 4;
+            }
+            else if (dateItems[monthIndex] == 'May') {
+                month = 5;
+            }
+            else if (dateItems[monthIndex] == 'Jun') {
+                month = 6;
+            }
+            else if (dateItems[monthIndex] == 'Jul') {
+                month = 7;
+            }
+            else if (dateItems[monthIndex] == 'Aug') {
+                month = 8;
+            }
+            else if (dateItems[monthIndex] == 'Sep') {
+                month = 9;
+            }
+            else if (dateItems[monthIndex] == 'Oct') {
+                month = 10;
+            }
+            else if (dateItems[monthIndex] == 'Nov') {
+                month = 11;
+            }
+            else if (dateItems[monthIndex] == 'Dec') {
+                month = 12;
+            }
+            month -= 1;
+            var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+
+            var endFormatLowerCase = "dd-MMM-yyyy".toLowerCase();
+            var endFormatItems = endFormatLowerCase.split("-");
+            var endDateItems = document.getElementById('<%=hdCurrentDate.ClientID %>').value.split("-");
+            var endMonthIndex = endFormatItems.indexOf("mmm");
+            var endDayIndex = endFormatItems.indexOf("dd");
+            var endYearIndex = endFormatItems.indexOf("yyyy");
+            var endMonth;
+            if (endDateItems[endMonthIndex] == 'Jan') {
+                endMonth = 1;
+            }
+            else if (endDateItems[endMonthIndex] == 'Feb') {
+                endMonth = 2;
+            }
+            else if (endDateItems[endMonthIndex] == 'Mar') {
+                endMonth = 3;
+            }
+            else if (endDateItems[endMonthIndex] == 'Apr') {
+                endMonth = 4;
+            }
+            else if (endDateItems[endMonthIndex] == 'May') {
+                endMonth = 5;
+            }
+            else if (endDateItems[endMonthIndex] == 'Jun') {
+                endMonth = 6;
+            }
+            else if (endDateItems[endMonthIndex] == 'Jul') {
+                endMonth = 7;
+            }
+            else if (endDateItems[endMonthIndex] == 'Aug') {
+                endMonth = 8;
+            }
+            else if (endDateItems[endMonthIndex] == 'Sep') {
+                endMonth = 9;
+            }
+            else if (endDateItems[endMonthIndex] == 'Oct') {
+                endMonth = 10;
+            }
+            else if (endDateItems[endMonthIndex] == 'Nov') {
+                endMonth = 11;
+            }
+            else if (endDateItems[endMonthIndex] == 'Dec') {
+                endMonth = 12;
+            }
+            endMonth -= 1;
+            var endFormatedDate = new Date(endDateItems[endYearIndex], endMonth, endDateItems[endDayIndex]);
+
+            if (endFormatedDate < formatedDate) {
+                alert("Entry Date must be lesser than or equal to current date!");
+                return false;
+            }
+        }
+    </script>
+
+    <script type="text/javascript" language="javascript">
+        function ValidateAllNew() {
+            var check = true;
+            if (ValidateDateRange()) {
+                return false;
+            }
+            return true;
+        }   
+    </script>
+
+    <script type="text/Javascript"> 
+     
+     function ValidateJOBNo() {            
+            var JOBNo = document.getElementById('<%=ddlJOBNo.ClientID %>').selectedIndex;
+            if (JOBNo== '' || JOBNo == '0') {
+                document.getElementById('<%=ddlJOBNo.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlJOBNo.ClientID %>').style.borderColor = "";
+                return false;
+            }            
+        }   
+         
+         function ValidateUnit() {            
+            var Unit = document.getElementById('<%=ddlUnit.ClientID %>').selectedIndex;
+            if (Unit== '' || Unit == '0') {
+                document.getElementById('<%=ddlUnit.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlUnit.ClientID %>').style.borderColor = "";
+                return false;
+            }            
+        }                             
+    </script>
+
+    <script type="text/javascript" language="javascript">
+    
+        function ValidateAll() {
+            var check = true;            
+            if (ValidateJOBNo()) {return false;}
+            if (ValidateDateRange()) {return false;}            
+            if (ValidateUnit()) {return false;}
+            return true;
+        }
+    </script>
+
+    <script type="text/Javascript">
+        function preventInput(event) {
+           if(event.which!=9)
+            {
+                event.preventDefault();
+            }
+        }
+        
+        function checkDec(el) {
+        
+            var ex = /^[0-9]+\:?[0-9]*$/;
+            if (ex.test(el.value) == false) {
+                el.value = el.value.substring(0, el.value.length - 1);                
+                
+            }
+            else{
+                
+            }
+        }
+    </script>
+
+    <script type="text/Javascript">
+        function checkDec1(el) {
+            var totalMinuts='0';            
+            var row = el.parentNode.parentNode;
+            var lblTotalMinuts = row.cells[8].innerText;
+            var lblLastTotalAdjustedHours = row.cells[9].innerText;
+
+            var workingHours = row.cells[10].getElementsByTagName("input")[0].value;
+            if(String (workingHours)!='')
+            {
+                var a=workingHours.split(':');
+                var hours=a[0];
+                var minuts=a[1];
+                                                                                                 
+                if(parseInt(hours)>0)                
+                {
+                    hours=hours;                
+                }
+                else    
+                {
+                    hours=0;
+                }
+                
+                
+                if(parseInt(minuts)>0 && parseInt(minuts)<60)                
+                {
+                    minuts=minuts;
+                }
+                else if(parseInt(minuts)>59){
+                    row.cells[10].getElementsByTagName("input")[0].value=hours+':00';
+                    minuts=0;
+                }
+                else    
+                {
+                    minuts=0;
+                }
+                
+                var totalMinuts=Number((hours*60)+Number(minuts));
+                if(parseFloat(totalMinuts)>0)       
+                {                    
+                    row.cells[9].getElementsByTagName("input")[0].value=Number(row.cells[9].getElementsByTagName("input")[0].value)+Number(totalMinuts);                                            
+                }
+                else
+                {
+                    row.cells[9].getElementsByTagName("input")[0].value='';
+                }
+            }
+            else
+            {
+                row.cells[9].getElementsByTagName("input")[0].value='';               
+            }                       
+        }
+    </script>
+
+    <script type="text/javascript">
+       window.onload=function(){
+        var div=document.getElementById("dvScroll");
+        var div_position=document.getElementById("div_position");
+        var position=parseInt('<%=Request.Form["div_position"] %>');
+            if(isNaN(position))
+            {
+                position=0;
+            }
+            div.scrollTop=position;
+            div.onscroll=function(){
+                div_position.value=div.scrollTop;
+            };
+       };
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <asp:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </asp:ToolkitScriptManager>
+    <%--<asp:UpdatePanel runat="server" ID="uppanel1">
+        <ContentTemplate>--%>
+    <div align="center" style="margin-top: 20px;">
+        <fieldset style="width: 80%">
+            <legend style="text-align: center;">Add Worker Timesheet</legend>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    JOB No.:
+                                </td>
+                                <td>
+                                    <asp:DropDownList ID="ddlJOBNo" runat="server" Width="100%" Height="25px" onblur="return ValidateJOBNo();">
+                                    </asp:DropDownList>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td align="right">
+                                    Entry Date:
+                                </td>
+                                <td>
+                                    <table width="100%">
+                                        <tr>
+                                            <td>
+                                                <asp:TextBox ID="txtDate" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
+                                                <asp:HiddenField ID="hdDate" runat="server" />
+                                                <asp:HiddenField ID="hdCurrentDate" runat="server" />
+                                                <asp:CalendarExtender ID="calendarDate" PopupButtonID="imgbtnDate" runat="server"
+                                                    TargetControlID="txtDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChanged">
+                                                </asp:CalendarExtender>
+                                            </td>
+                                            <td align="right">
+                                                <asp:ImageButton ID="imgbtnDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                                    ToolTip="Start Date Calendar" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td align="right">
+                                    Unit :
+                                </td>
+                                <td>
+                                    <asp:DropDownList ID="ddlUnit" runat="server" Width="100%" Height="25px" OnSelectedIndexChanged="ddlUnit_SelectedIndexChanged"
+                                        AutoPostBack="true">
+                                    </asp:DropDownList>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    <asp:Button ID="btnAddNewRow" CssClass="button" Width="100%" runat="server" Text="Add New"
+                                        OnClick="btnAddNewRow_Click" OnClientClick="return ValidateAll();" />
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server" Text="Save"
+                                        OnClick="btnSave_Click" OnClientClick="return ValidateAllNew();" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Project Head:
+                                </td>
+                                <td>
+                                    <asp:DropDownList ID="ddlProjectHead" runat="server" Width="100%" Height="25px" AutoPostBack="true"
+                                        OnSelectedIndexChanged="ddlProjectHead_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td align="right">
+                                    Project Supervisor:
+                                </td>
+                                <td>
+                                    <asp:DropDownList ID="ddlProjectSupervisor" runat="server" Width="100%" Height="25px">
+                                    </asp:DropDownList>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <br />
+    <div align="center">
+        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+        </asp:Panel>
+    </div>
+    <div align="center">
+        <fieldset style="width: 95%;">
+            <asp:HiddenField ID="hdMinuts" runat="server" />
+            <asp:HiddenField ID="hdTotalMinuts" runat="server" />
+            <legend style="text-align: center;">
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+            <div id="dvScroll" style='overflow: scroll; width: 100%; height: 450px; border: 1px solid lightgray;'>
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView ID="gvWorkerTimesheetList" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                            OnRowDataBound="gvWorkerTimesheetList_RowDataBound" OnRowCommand="gvWorkerTimesheetList_RowCommand">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+                                <asp:TemplateField HeaderText="EMPLOYEE_NAME">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblEmployeeName" runat="server" Text='<%# Eval("EMPLOYEE_NAME") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="EMP_CODE">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblEmpCode" runat="server" Text='<%# Eval("EMPLOYEE_CODE") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="UNIT">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblUnit" runat="server" Text='<%# Eval("UNIT") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="JOB_NO">
+                                    <ItemTemplate>
+                                        <asp:DropDownList ID="ddlJOBNo" Width="140px" runat="server">
+                                        </asp:DropDownList>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="ENTRY_DATE">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblEntryDate" runat="server" Text='<%# Eval("ENTRY_DATE") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="IN_TIME">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblInTime" runat="server" Text='<%# Eval("IN_TIME") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="OUT_TIME">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblOutTime" runat="server" Text='<%# Eval("OUT_TIME") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="WRK_HRS">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblWorkingHours" runat="server" Text='<%# Eval("WORKING_HOURS") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="OT_HRS">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblOTHours" runat="server" Text='<%# Eval("OT_HOURS") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="ADJ_HRS">
+                                    <ItemTemplate>
+                                        <asp:DropDownList ID="ddlHours" runat="server" Width="96%" OnSelectedIndexChanged="ddlHours_SelectedIndexChanged"
+                                            AutoPostBack="true">
+                                            <asp:ListItem Text="00" Value="0" />
+                                            <asp:ListItem Text="01" Value="1" />
+                                            <asp:ListItem Text="02" Value="2" />
+                                            <asp:ListItem Text="03" Value="3" />
+                                            <asp:ListItem Text="04" Value="4" />
+                                            <asp:ListItem Text="05" Value="5" />
+                                            <asp:ListItem Text="06" Value="6" />
+                                            <asp:ListItem Text="07" Value="7" />
+                                            <asp:ListItem Text="08" Value="8" />
+                                            <asp:ListItem Text="09" Value="9" />
+                                            <asp:ListItem Text="10" Value="10" />
+                                            <asp:ListItem Text="11" Value="11" />
+                                            <asp:ListItem Text="12" Value="12" />
+                                            <asp:ListItem Text="13" Value="13" />
+                                            <asp:ListItem Text="14" Value="14" />
+                                            <asp:ListItem Text="15" Value="15" />
+                                            <asp:ListItem Text="16" Value="16" />
+                                            <asp:ListItem Text="17" Value="17" />
+                                            <asp:ListItem Text="18" Value="18" />
+                                            <asp:ListItem Text="19" Value="19" />
+                                            <asp:ListItem Text="20" Value="20" />
+                                        </asp:DropDownList>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="ADJ_MNS">
+                                    <ItemTemplate>
+                                        <asp:DropDownList ID="ddlMins" runat="server" Width="96%" OnSelectedIndexChanged="ddlMins_SelectedIndexChanged"
+                                            AutoPostBack="true">
+                                            <asp:ListItem Text="00" Value="0" />
+                                            <asp:ListItem Text="01" Value="1" />
+                                            <asp:ListItem Text="02" Value="2" />
+                                            <asp:ListItem Text="03" Value="3" />
+                                            <asp:ListItem Text="04" Value="4" />
+                                            <asp:ListItem Text="05" Value="5" />
+                                            <asp:ListItem Text="06" Value="6" />
+                                            <asp:ListItem Text="07" Value="7" />
+                                            <asp:ListItem Text="08" Value="8" />
+                                            <asp:ListItem Text="09" Value="9" />
+                                            <asp:ListItem Text="10" Value="10" />
+                                            <asp:ListItem Text="11" Value="11" />
+                                            <asp:ListItem Text="12" Value="12" />
+                                            <asp:ListItem Text="13" Value="13" />
+                                            <asp:ListItem Text="14" Value="14" />
+                                            <asp:ListItem Text="15" Value="15" />
+                                            <asp:ListItem Text="16" Value="16" />
+                                            <asp:ListItem Text="17" Value="17" />
+                                            <asp:ListItem Text="18" Value="18" />
+                                            <asp:ListItem Text="19" Value="19" />
+                                            <asp:ListItem Text="20" Value="20" />
+                                            <asp:ListItem Text="21" Value="21" />
+                                            <asp:ListItem Text="22" Value="22" />
+                                            <asp:ListItem Text="23" Value="23" />
+                                            <asp:ListItem Text="24" Value="24" />
+                                            <asp:ListItem Text="25" Value="25" />
+                                            <asp:ListItem Text="26" Value="26" />
+                                            <asp:ListItem Text="27" Value="27" />
+                                            <asp:ListItem Text="28" Value="28" />
+                                            <asp:ListItem Text="29" Value="29" />
+                                            <asp:ListItem Text="30" Value="30" />
+                                            <asp:ListItem Text="31" Value="31" />
+                                            <asp:ListItem Text="32" Value="32" />
+                                            <asp:ListItem Text="33" Value="33" />
+                                            <asp:ListItem Text="34" Value="34" />
+                                            <asp:ListItem Text="35" Value="35" />
+                                            <asp:ListItem Text="36" Value="36" />
+                                            <asp:ListItem Text="37" Value="37" />
+                                            <asp:ListItem Text="38" Value="38" />
+                                            <asp:ListItem Text="39" Value="39" />
+                                            <asp:ListItem Text="40" Value="40" />
+                                            <asp:ListItem Text="41" Value="41" />
+                                            <asp:ListItem Text="42" Value="42" />
+                                            <asp:ListItem Text="43" Value="43" />
+                                            <asp:ListItem Text="44" Value="44" />
+                                            <asp:ListItem Text="45" Value="45" />
+                                            <asp:ListItem Text="46" Value="46" />
+                                            <asp:ListItem Text="47" Value="47" />
+                                            <asp:ListItem Text="48" Value="48" />
+                                            <asp:ListItem Text="49" Value="49" />
+                                            <asp:ListItem Text="50" Value="50" />
+                                            <asp:ListItem Text="51" Value="51" />
+                                            <asp:ListItem Text="52" Value="52" />
+                                            <asp:ListItem Text="53" Value="53" />
+                                            <asp:ListItem Text="54" Value="54" />
+                                            <asp:ListItem Text="55" Value="55" />
+                                            <asp:ListItem Text="56" Value="56" />
+                                            <asp:ListItem Text="57" Value="57" />
+                                            <asp:ListItem Text="58" Value="58" />
+                                            <asp:ListItem Text="59" Value="59" />
+                                        </asp:DropDownList>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="ADJ_WRK_HRS">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblWorkingMinuts" runat="server" Text='<%# Eval("WORKING_MINUTS") %>'
+                                            Visible="false" />
+                                        <asp:Label ID="lblAdjustedWorkingHours" runat="server" Text='<%# Eval("ADJUSTED_WORKING_HOURS") %>'
+                                            Visible="false" />
+                                        <asp:Label ID="lblSerialNo" runat="server" Text='<%# Eval("SERIAL_NO") %>' Visible="false" />
+                                        <asp:TextBox ID="txtAdjustedWorkingHours" Width="100%" runat="server" Text='<%# Eval("ADJUSTED_WORKING_HOURS") %>'
+                                            Enabled="false" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="BAL_WRK_HRS">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblBalanceWorkingHours" runat="server" Text='<%# Eval("BAL_WRK_HRS") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="REMARKS">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtRemarks" Width="100%" runat="server" TextMode="MultiLine" Rows="2"
+                                            Columns="50" Text='<%# Eval("REMARKS") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="ADD">
+                                    <ItemTemplate>
+                                        <asp:ImageButton ID="imgBtnAddNewRecord" ImageUrl="~/Images/Icons/ADD05.png" ToolTip="Add New Record"
+                                            runat="server" CommandArgument="ADD" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="REMOVE">
+                                    <ItemTemplate>
+                                        <asp:ImageButton ID="imgBtnRemoveRecord" ImageUrl="~/Images/Icons/REMOVE03.png" ToolTip="Remove Record"
+                                            runat="server" CommandArgument="REMOVE" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <input type="hidden" id="div_position" name="div_position" />
+        </fieldset>
+    </div>
+    <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
+</asp:Content>

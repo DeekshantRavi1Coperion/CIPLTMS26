@@ -1,0 +1,3530 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class TIMESHEET_WORKER_UpdateWorkerTimesheetListTwo : System.Web.UI.Page
+{
+
+    #region VARIABLES[=====================]
+
+    BAL.Timesheet objTimesheet = new BAL.Timesheet();
+    DataSet dsWorker = new DataSet();
+    DataSet dsJOBNo = new DataSet();
+    DataSet dsActivity = new DataSet();
+    DataTable dt = new DataTable();
+
+    bool chkJobNo = false;
+    bool chkBalHours = false;
+
+    string employeeCode = string.Empty;
+    string entryDate = string.Empty;
+    #endregion
+
+
+    #region EVENTS[========================]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (Session["EMP_RECORD_ID"] != null)
+        {
+            if (!IsPostBack)
+            {
+                HideMessagePanel();
+                hdRemovedRecordIDs.Value = string.Empty;
+                //hdDeleteRecordID.Value = "0";
+
+                Session["dsJOBNo"] = null;
+
+                Session["dtJOBNo"] = null;
+                Session["dtProductionOrderNo"] = null;
+                Session["dtProductionOrderItemCode"] = null;
+                Session["dtItemName"] = null;
+                Session["dtTagNo"] = null;
+                Session["dtActivity"] = null;
+
+                Session["dtSubitems"] = null;
+                Session["dtChanged"] = null;
+                Session["dtTemp"] = null;
+
+
+                if (Request.QueryString["employeecode"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["employeecode"])))
+                    employeeCode = Convert.ToString(Request.QueryString["employeecode"]);
+                else
+                    employeeCode = string.Empty;
+
+                if (Request.QueryString["entrydate"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["entrydate"])))
+                    entryDate = Convert.ToDateTime(Request.QueryString["entrydate"]).ToString("yyyy-MMM-dd");
+                else
+                    entryDate = string.Empty;
+
+                if (!string.IsNullOrEmpty(employeeCode) && !string.IsNullOrEmpty(entryDate))
+                {
+                    hdRemovedRecordIDs.Value = string.Empty;
+                    GetWorkerTimesheetListDetail();
+                }
+            }
+        }
+        else
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+    }
+
+    /// <summary>
+    /// Click
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnRefresh_Click(object sender, EventArgs e)
+    {
+        if (Request.QueryString["employeecode"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["employeecode"])))
+            employeeCode = Convert.ToString(Request.QueryString["employeecode"]);
+        else
+            employeeCode = string.Empty;
+
+        if (Request.QueryString["entrydate"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["entrydate"])))
+            entryDate = Convert.ToDateTime(Request.QueryString["entrydate"]).ToString("yyyy-MMM-dd");
+        else
+            entryDate = string.Empty;
+
+        if (!string.IsNullOrEmpty(employeeCode) && !string.IsNullOrEmpty(entryDate))
+        {
+            HideMessagePanel();
+            hdRemovedRecordIDs.Value = string.Empty;
+            GetWorkerTimesheetListDetail();
+        }
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        HideMessagePanel();
+        UpdateWorkerTimesheet();
+    }
+
+    /// <summary>
+    /// SelectedIndexChanged
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    //protected void ddlJOBNo_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    try
+    //    {
+    //        GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+
+    //        DropDownList ddlJOBNos = (DropDownList)gvr.FindControl("ddlJOBNo");
+    //        DropDownList ddlProductionOrderNo = (DropDownList)gvr.FindControl("ddlProductionOrderNo");
+    //        DropDownList ddlProductionOrderItemCode = (DropDownList)gvr.FindControl("ddlProductionOrderItemCode");
+    //        DropDownList ddlItemName = (DropDownList)gvr.FindControl("ddlItemName");
+    //        DropDownList ddlTagNo = (DropDownList)gvr.FindControl("ddlTagNo");
+
+    //        //TextBox txtJOBNo = (TextBox)gvr.FindControl("txtJOBNo");
+    //        //TextBox txtItemName = (TextBox)gvr.FindControl("txtItemName");
+
+    //        //DataSet dsJOBNo = (DataSet)Session["dsJOBNo"];
+    //        DataTable dtJOBNo = (DataTable)Session["dtJOBNo"];
+    //        DataTable dtProductionOrderNo = (DataTable)Session["dtProductionOrderNo"];
+    //        DataTable dtProductionOrderItemCode = (DataTable)Session["dtProductionOrderItemCode"];
+    //        DataTable dtItemName = (DataTable)Session["dtItemName"];
+    //        DataTable dtTagNo = (DataTable)Session["dtTagNo"];
+
+
+    //        ddlProductionOrderNo.Items.Clear();
+    //        ddlProductionOrderNo.Items.Insert(0, "SELECT");
+    //        ddlProductionOrderNo.SelectedIndex = 0;
+
+    //        ddlProductionOrderItemCode.Items.Clear();
+    //        ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+    //        ddlProductionOrderItemCode.SelectedIndex = 0;
+
+    //        ddlItemName.Items.Clear();
+    //        ddlItemName.Items.Insert(0, "SELECT");
+    //        ddlItemName.SelectedIndex = 0;
+
+    //        ddlTagNo.Items.Clear();
+    //        ddlTagNo.Items.Insert(0, "SELECT");
+    //        ddlTagNo.SelectedIndex = 0;
+
+
+    //        int jobNoSI = 0;
+    //        int productionOrderNoSI = 0;
+
+    //        string jobNoSV = string.Empty;
+    //        string productionOrderNoSV = string.Empty;
+
+    //        jobNoSI = Convert.ToInt32(ddlJOBNos.SelectedIndex);
+    //        productionOrderNoSI = Convert.ToInt32(ddlProductionOrderNo.SelectedIndex);
+
+    //        if (jobNoSI > 0)
+    //            jobNoSV = Convert.ToString(ddlJOBNos.SelectedValue);
+
+    //        if (productionOrderNoSI > 0)
+    //            productionOrderNoSV = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+
+    //        //Binding of Production Order No
+    //        if (jobNoSI > 0)
+    //        {
+    //            DataTable dtProductionOrderNoNew = new DataTable();
+    //            dtProductionOrderNoNew = dtProductionOrderNo.Copy();
+    //            dtProductionOrderNoNew.Rows.Clear();
+
+    //            foreach (DataRow dr1 in dtProductionOrderNo.Select("JOB_NO='" + jobNoSV + "'"))
+    //            {
+    //                DataRow drn = dtProductionOrderNoNew.NewRow();
+    //                drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+    //                drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+    //                dtProductionOrderNoNew.Rows.Add(drn);
+    //            }
+
+    //            if (dtProductionOrderNoNew != null && dtProductionOrderNoNew.Rows.Count > 0)
+    //            {
+    //                ddlProductionOrderNo.DataSource = dtProductionOrderNoNew;
+    //                ddlProductionOrderNo.DataTextField = "PRODUCTION_ORDER_NO";
+    //                ddlProductionOrderNo.DataValueField = "PRODUCTION_ORDER_NO";
+    //                ddlProductionOrderNo.DataBind();
+    //                ddlProductionOrderNo.Items.Insert(0, "SELECT");
+    //                ddlProductionOrderNo.SelectedIndex = 0;
+    //            }
+    //        }
+
+
+    //        //Binding of Production Order Item Code
+    //        if (jobNoSI > 0 && productionOrderNoSI > 0)
+    //        {
+    //            DataTable dtProductionOrderItemCodeNew = new DataTable();
+    //            dtProductionOrderItemCodeNew = dtProductionOrderItemCode.Copy();
+    //            dtProductionOrderItemCodeNew.Rows.Clear();
+
+    //            foreach (DataRow dr1 in dtProductionOrderItemCode.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+    //            {
+    //                DataRow drn = dtProductionOrderItemCodeNew.NewRow();
+    //                drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+    //                drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+    //                drn["SUBITEM_DESC"] = Convert.ToString(dr1["SUBITEM_DESC"]);
+    //                dtProductionOrderItemCodeNew.Rows.Add(drn);
+    //            }
+
+    //            if (dtProductionOrderItemCodeNew != null && dtProductionOrderItemCodeNew.Rows.Count > 0)
+    //            {
+    //                ddlProductionOrderItemCode.DataSource = dtProductionOrderItemCodeNew;
+    //                ddlProductionOrderItemCode.DataTextField = "SUBITEM_DESC";
+    //                ddlProductionOrderItemCode.DataValueField = "SUBITEM_DESC";
+    //                ddlProductionOrderItemCode.DataBind();
+    //                ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+    //                ddlProductionOrderItemCode.SelectedIndex = 0;
+    //            }
+    //        }
+
+
+    //        //Binding of Item Name
+    //        if (jobNoSI > 0 && productionOrderNoSI > 0)
+    //        {
+    //            DataTable dtItemNameNew = new DataTable();
+    //            dtItemNameNew = dtItemName.Copy();
+    //            dtItemNameNew.Rows.Clear();
+
+    //            foreach (DataRow dr1 in dtItemName.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+    //            {
+    //                DataRow drn = dtItemNameNew.NewRow();
+    //                drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+    //                drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+    //                drn["ITEM_NAME"] = Convert.ToString(dr1["ITEM_NAME"]);
+    //                dtItemNameNew.Rows.Add(drn);
+    //            }
+
+    //            if (dtItemNameNew != null && dtItemNameNew.Rows.Count > 0)
+    //            {
+    //                ddlItemName.DataSource = dtItemNameNew;
+    //                ddlItemName.DataTextField = "ITEM_NAME";
+    //                ddlItemName.DataValueField = "ITEM_NAME";
+    //                ddlItemName.DataBind();
+    //                ddlItemName.Items.Insert(0, "SELECT");
+    //                ddlItemName.SelectedIndex = 0;
+    //            }
+    //        }
+
+
+
+    //        //Binding of Tag No
+    //        if (jobNoSI > 0 && productionOrderNoSI > 0)
+    //        {
+    //            DataTable dtTagNoNew = new DataTable();
+    //            dtTagNoNew = dtTagNo.Copy();
+    //            dtTagNoNew.Rows.Clear();
+
+    //            foreach (DataRow dr1 in dtTagNo.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+    //            {
+    //                DataRow drn = dtTagNoNew.NewRow();
+    //                drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+    //                drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+    //                drn["TAG_NO"] = Convert.ToString(dr1["TAG_NO"]);
+    //                dtTagNoNew.Rows.Add(drn);
+    //            }
+
+    //            if (dtTagNoNew != null && dtTagNoNew.Rows.Count > 0)
+    //            {
+    //                ddlTagNo.DataSource = dtTagNoNew;
+    //                ddlTagNo.DataTextField = "TAG_NO";
+    //                ddlTagNo.DataValueField = "TAG_NO";
+    //                ddlTagNo.DataBind();
+    //                ddlTagNo.Items.Insert(0, "SELECT");
+    //                ddlTagNo.SelectedIndex = 0;
+    //            }
+    //        }
+
+
+
+    //        //txtJOBNo.Enabled = true;
+    //        //txtItemName.Enabled = true;
+
+    //        //if (ddlJOBNos.SelectedIndex > 0)
+    //        //{
+    //        //    txtJOBNo.Text = string.Empty;
+    //        //    txtItemName.Text = string.Empty;
+    //        //    txtJOBNo.Enabled = false;
+    //        //    txtItemName.Enabled = false;
+    //        //}
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ExceptionMessage(ex.ToString());
+    //        return;
+    //    }
+    //}
+
+    protected void ddlJOBNo_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+
+            DropDownList ddlJOBNos = (DropDownList)gvr.FindControl("ddlJOBNo");
+            DropDownList ddlEquipment = (DropDownList)gvr.FindControl("ddlEquipment");
+            DropDownList ddlProductionOrderNo = (DropDownList)gvr.FindControl("ddlProductionOrderNo");
+            DropDownList ddlProductionOrderItemCode = (DropDownList)gvr.FindControl("ddlProductionOrderItemCode");
+            DropDownList ddlItemName = (DropDownList)gvr.FindControl("ddlItemName");
+            DropDownList ddlTagNo = (DropDownList)gvr.FindControl("ddlTagNo");
+
+            TextBox txtJOBNo = (TextBox)gvr.FindControl("txtJOBNo");
+            TextBox txtItemName = (TextBox)gvr.FindControl("txtItemName");
+
+
+            //DataSet dsJOBNo = (DataSet)Session["dsJOBNo"];
+            DataTable dtJOBNo = (DataTable)Session["dtJOBNo"];
+            DataTable dtEquipment = (DataTable)Session["dtEquipment"];
+            DataTable dtProductionOrderNo = (DataTable)Session["dtProductionOrderNo"];
+            DataTable dtProductionOrderItemCode = (DataTable)Session["dtProductionOrderItemCode"];
+            DataTable dtItemName = (DataTable)Session["dtItemName"];
+            DataTable dtTagNo = (DataTable)Session["dtTagNo"];
+
+
+            ddlEquipment.Items.Clear();
+            ddlEquipment.Items.Insert(0, "SELECT");
+            ddlEquipment.SelectedIndex = 0;
+
+            ddlProductionOrderNo.Items.Clear();
+            ddlProductionOrderNo.Items.Insert(0, "SELECT");
+            ddlProductionOrderNo.SelectedIndex = 0;
+
+            ddlProductionOrderItemCode.Items.Clear();
+            ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+            ddlProductionOrderItemCode.SelectedIndex = 0;
+
+            ddlItemName.Items.Clear();
+            ddlItemName.Items.Insert(0, "SELECT");
+            ddlItemName.SelectedIndex = 0;
+
+            ddlTagNo.Items.Clear();
+            ddlTagNo.Items.Insert(0, "SELECT");
+            ddlTagNo.SelectedIndex = 0;
+
+
+            int jobNoSI = 0;
+            int equipmentSI = 0;
+            int productionOrderNoSI = 0;
+
+            string jobNoSV = string.Empty;
+            string equipmentSV = string.Empty;
+            string productionOrderNoSV = string.Empty;
+
+            jobNoSI = Convert.ToInt32(ddlJOBNos.SelectedIndex);
+            if (jobNoSI > 0)
+                jobNoSV = Convert.ToString(ddlJOBNos.SelectedValue);
+
+            //Binding of Equipment
+            if (jobNoSI > 0)
+            {
+                DataTable dtEquipmentNew = new DataTable();
+                dtEquipmentNew = dtEquipment.Copy();
+                dtEquipmentNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtEquipment.Select("JOB_NO='" + jobNoSV + "'"))
+                {
+                    DataRow drn = dtEquipmentNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["EQUIPMENT"] = Convert.ToString(dr1["EQUIPMENT"]);
+                    dtEquipmentNew.Rows.Add(drn);
+                }
+
+                if (dtEquipmentNew != null && dtEquipmentNew.Rows.Count > 0)
+                {
+                    ddlEquipment.DataSource = dtEquipmentNew;
+                    ddlEquipment.DataTextField = "EQUIPMENT";
+                    ddlEquipment.DataValueField = "EQUIPMENT";
+                    ddlEquipment.DataBind();
+                    ddlEquipment.Items.Insert(0, "SELECT");
+                    ddlEquipment.SelectedIndex = 0;
+                }
+            }
+
+
+            equipmentSI = Convert.ToInt32(ddlEquipment.SelectedIndex);
+            if (equipmentSI > 0)
+                equipmentSV = Convert.ToString(ddlEquipment.SelectedValue);
+
+            //Binding of Production Order No
+            if (jobNoSI > 0)
+            {
+                DataTable dtProductionOrderNoNew = new DataTable();
+                dtProductionOrderNoNew = dtProductionOrderNo.Copy();
+                dtProductionOrderNoNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtProductionOrderNo.Select("JOB_NO='" + jobNoSV + "' AND EQUIPMENT ='" + equipmentSV + "'"))
+                {
+                    DataRow drn = dtProductionOrderNoNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["EQUIPMENT"] = Convert.ToString(dr1["EQUIPMENT"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    dtProductionOrderNoNew.Rows.Add(drn);
+                }
+
+                if (dtProductionOrderNoNew != null && dtProductionOrderNoNew.Rows.Count > 0)
+                {
+                    ddlProductionOrderNo.DataSource = dtProductionOrderNoNew;
+                    ddlProductionOrderNo.DataTextField = "PRODUCTION_ORDER_NO";
+                    ddlProductionOrderNo.DataValueField = "PRODUCTION_ORDER_NO";
+                    ddlProductionOrderNo.DataBind();
+                    ddlProductionOrderNo.Items.Insert(0, "SELECT");
+                    ddlProductionOrderNo.SelectedIndex = 0;
+                }
+            }
+
+
+            productionOrderNoSI = Convert.ToInt32(ddlProductionOrderNo.SelectedIndex);
+            if (productionOrderNoSI > 0)
+                productionOrderNoSV = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+
+            //Binding of Production Order Item Code
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtProductionOrderItemCodeNew = new DataTable();
+                dtProductionOrderItemCodeNew = dtProductionOrderItemCode.Copy();
+                dtProductionOrderItemCodeNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtProductionOrderItemCode.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtProductionOrderItemCodeNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["SUBITEM_DESC"] = Convert.ToString(dr1["SUBITEM_DESC"]);
+                    dtProductionOrderItemCodeNew.Rows.Add(drn);
+                }
+
+                if (dtProductionOrderItemCodeNew != null && dtProductionOrderItemCodeNew.Rows.Count > 0)
+                {
+                    ddlProductionOrderItemCode.DataSource = dtProductionOrderItemCodeNew;
+                    ddlProductionOrderItemCode.DataTextField = "SUBITEM_DESC";
+                    ddlProductionOrderItemCode.DataValueField = "SUBITEM_DESC";
+                    ddlProductionOrderItemCode.DataBind();
+                    ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+                    ddlProductionOrderItemCode.SelectedIndex = 0;
+                }
+            }
+
+
+            //Binding of Item Name
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtItemNameNew = new DataTable();
+                dtItemNameNew = dtItemName.Copy();
+                dtItemNameNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtItemName.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtItemNameNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["ITEM_NAME"] = Convert.ToString(dr1["ITEM_NAME"]);
+                    dtItemNameNew.Rows.Add(drn);
+                }
+
+                if (dtItemNameNew != null && dtItemNameNew.Rows.Count > 0)
+                {
+                    ddlItemName.DataSource = dtItemNameNew;
+                    ddlItemName.DataTextField = "ITEM_NAME";
+                    ddlItemName.DataValueField = "ITEM_NAME";
+                    ddlItemName.DataBind();
+                    ddlItemName.Items.Insert(0, "SELECT");
+                    ddlItemName.SelectedIndex = 0;
+                }
+            }
+
+
+
+            //Binding of Tag No
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtTagNoNew = new DataTable();
+                dtTagNoNew = dtTagNo.Copy();
+                dtTagNoNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtTagNo.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtTagNoNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["TAG_NO"] = Convert.ToString(dr1["TAG_NO"]);
+                    dtTagNoNew.Rows.Add(drn);
+                }
+
+                if (dtTagNoNew != null && dtTagNoNew.Rows.Count > 0)
+                {
+                    ddlTagNo.DataSource = dtTagNoNew;
+                    ddlTagNo.DataTextField = "TAG_NO";
+                    ddlTagNo.DataValueField = "TAG_NO";
+                    ddlTagNo.DataBind();
+                    ddlTagNo.Items.Insert(0, "SELECT");
+                    ddlTagNo.SelectedIndex = 0;
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+    protected void ddlEquipment_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+
+            DropDownList ddlJOBNos = (DropDownList)gvr.FindControl("ddlJOBNo");
+            DropDownList ddlEquipment = (DropDownList)gvr.FindControl("ddlEquipment");
+            DropDownList ddlProductionOrderNo = (DropDownList)gvr.FindControl("ddlProductionOrderNo");
+            DropDownList ddlProductionOrderItemCode = (DropDownList)gvr.FindControl("ddlProductionOrderItemCode");
+            DropDownList ddlItemName = (DropDownList)gvr.FindControl("ddlItemName");
+            DropDownList ddlTagNo = (DropDownList)gvr.FindControl("ddlTagNo");
+
+            TextBox txtJOBNo = (TextBox)gvr.FindControl("txtJOBNo");
+            TextBox txtItemName = (TextBox)gvr.FindControl("txtItemName");
+
+
+            //DataSet dsJOBNo = (DataSet)Session["dsJOBNo"];
+            DataTable dtJOBNo = (DataTable)Session["dtJOBNo"];
+            DataTable dtEquipment = (DataTable)Session["dtEquipment"];
+            DataTable dtProductionOrderNo = (DataTable)Session["dtProductionOrderNo"];
+            DataTable dtProductionOrderItemCode = (DataTable)Session["dtProductionOrderItemCode"];
+            DataTable dtItemName = (DataTable)Session["dtItemName"];
+            DataTable dtTagNo = (DataTable)Session["dtTagNo"];
+
+
+            ddlProductionOrderNo.Items.Clear();
+            ddlProductionOrderNo.Items.Insert(0, "SELECT");
+            ddlProductionOrderNo.SelectedIndex = 0;
+
+            ddlProductionOrderItemCode.Items.Clear();
+            ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+            ddlProductionOrderItemCode.SelectedIndex = 0;
+
+            ddlItemName.Items.Clear();
+            ddlItemName.Items.Insert(0, "SELECT");
+            ddlItemName.SelectedIndex = 0;
+
+            ddlTagNo.Items.Clear();
+            ddlTagNo.Items.Insert(0, "SELECT");
+            ddlTagNo.SelectedIndex = 0;
+
+
+            int jobNoSI = 0;
+            int equipmentSI = 0;
+            int productionOrderNoSI = 0;
+
+            string jobNoSV = string.Empty;
+            string equipmentSV = string.Empty;
+            string productionOrderNoSV = string.Empty;
+
+            jobNoSI = Convert.ToInt32(ddlJOBNos.SelectedIndex);
+            if (jobNoSI > 0)
+                jobNoSV = Convert.ToString(ddlJOBNos.SelectedValue);
+
+            ////Binding of Equipment
+            //if (jobNoSI > 0)
+            //{
+            //    DataTable dtEquipmentNew = new DataTable();
+            //    dtEquipmentNew = dtEquipment.Copy();
+            //    dtEquipmentNew.Rows.Clear();
+
+            //    foreach (DataRow dr1 in dtEquipment.Select("JOB_NO='" + jobNoSV + "'"))
+            //    {
+            //        DataRow drn = dtEquipmentNew.NewRow();
+            //        drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+            //        drn["EQUIPMENT"] = Convert.ToString(dr1["EQUIPMENT"]);
+            //        dtEquipmentNew.Rows.Add(drn);
+            //    }
+
+            //    if (dtEquipmentNew != null && dtEquipmentNew.Rows.Count > 0)
+            //    {
+            //        ddlEquipment.DataSource = dtEquipmentNew;
+            //        ddlEquipment.DataTextField = "EQUIPMENT";
+            //        ddlEquipment.DataValueField = "EQUIPMENT";
+            //        ddlEquipment.DataBind();
+            //        ddlEquipment.Items.Insert(0, "SELECT");
+            //        ddlEquipment.SelectedIndex = 0;
+            //    }
+            //}
+
+
+            equipmentSI = Convert.ToInt32(ddlEquipment.SelectedIndex);
+            if (equipmentSI > 0)
+                equipmentSV = Convert.ToString(ddlEquipment.SelectedValue);
+
+            //Binding of Production Order No
+            if (jobNoSI > 0)
+            {
+                DataTable dtProductionOrderNoNew = new DataTable();
+                dtProductionOrderNoNew = dtProductionOrderNo.Copy();
+                dtProductionOrderNoNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtProductionOrderNo.Select("JOB_NO='" + jobNoSV + "' AND EQUIPMENT ='" + equipmentSV + "'"))
+                {
+                    DataRow drn = dtProductionOrderNoNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["EQUIPMENT"] = Convert.ToString(dr1["EQUIPMENT"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    dtProductionOrderNoNew.Rows.Add(drn);
+                }
+
+                if (dtProductionOrderNoNew != null && dtProductionOrderNoNew.Rows.Count > 0)
+                {
+                    ddlProductionOrderNo.DataSource = dtProductionOrderNoNew;
+                    ddlProductionOrderNo.DataTextField = "PRODUCTION_ORDER_NO";
+                    ddlProductionOrderNo.DataValueField = "PRODUCTION_ORDER_NO";
+                    ddlProductionOrderNo.DataBind();
+                    ddlProductionOrderNo.Items.Insert(0, "SELECT");
+                    ddlProductionOrderNo.SelectedIndex = 0;
+                }
+            }
+
+
+            productionOrderNoSI = Convert.ToInt32(ddlProductionOrderNo.SelectedIndex);
+            if (productionOrderNoSI > 0)
+                productionOrderNoSV = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+
+            //Binding of Production Order Item Code
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtProductionOrderItemCodeNew = new DataTable();
+                dtProductionOrderItemCodeNew = dtProductionOrderItemCode.Copy();
+                dtProductionOrderItemCodeNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtProductionOrderItemCode.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtProductionOrderItemCodeNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["SUBITEM_DESC"] = Convert.ToString(dr1["SUBITEM_DESC"]);
+                    dtProductionOrderItemCodeNew.Rows.Add(drn);
+                }
+
+                if (dtProductionOrderItemCodeNew != null && dtProductionOrderItemCodeNew.Rows.Count > 0)
+                {
+                    ddlProductionOrderItemCode.DataSource = dtProductionOrderItemCodeNew;
+                    ddlProductionOrderItemCode.DataTextField = "SUBITEM_DESC";
+                    ddlProductionOrderItemCode.DataValueField = "SUBITEM_DESC";
+                    ddlProductionOrderItemCode.DataBind();
+                    ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+                    ddlProductionOrderItemCode.SelectedIndex = 0;
+                }
+            }
+
+
+            //Binding of Item Name
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtItemNameNew = new DataTable();
+                dtItemNameNew = dtItemName.Copy();
+                dtItemNameNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtItemName.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtItemNameNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["ITEM_NAME"] = Convert.ToString(dr1["ITEM_NAME"]);
+                    dtItemNameNew.Rows.Add(drn);
+                }
+
+                if (dtItemNameNew != null && dtItemNameNew.Rows.Count > 0)
+                {
+                    ddlItemName.DataSource = dtItemNameNew;
+                    ddlItemName.DataTextField = "ITEM_NAME";
+                    ddlItemName.DataValueField = "ITEM_NAME";
+                    ddlItemName.DataBind();
+                    ddlItemName.Items.Insert(0, "SELECT");
+                    ddlItemName.SelectedIndex = 0;
+                }
+            }
+
+
+
+            //Binding of Tag No
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtTagNoNew = new DataTable();
+                dtTagNoNew = dtTagNo.Copy();
+                dtTagNoNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtTagNo.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtTagNoNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["TAG_NO"] = Convert.ToString(dr1["TAG_NO"]);
+                    dtTagNoNew.Rows.Add(drn);
+                }
+
+                if (dtTagNoNew != null && dtTagNoNew.Rows.Count > 0)
+                {
+                    ddlTagNo.DataSource = dtTagNoNew;
+                    ddlTagNo.DataTextField = "TAG_NO";
+                    ddlTagNo.DataValueField = "TAG_NO";
+                    ddlTagNo.DataBind();
+                    ddlTagNo.Items.Insert(0, "SELECT");
+                    ddlTagNo.SelectedIndex = 0;
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+    protected void ddlProductionOrderNo_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+
+            DropDownList ddlJOBNos = (DropDownList)gvr.FindControl("ddlJOBNo");
+            DropDownList ddlProductionOrderNo = (DropDownList)gvr.FindControl("ddlProductionOrderNo");
+            DropDownList ddlProductionOrderItemCode = (DropDownList)gvr.FindControl("ddlProductionOrderItemCode");
+            DropDownList ddlItemName = (DropDownList)gvr.FindControl("ddlItemName");
+            DropDownList ddlTagNo = (DropDownList)gvr.FindControl("ddlTagNo");
+
+            //TextBox txtJOBNo = (TextBox)gvr.FindControl("txtJOBNo");
+            //TextBox txtItemName = (TextBox)gvr.FindControl("txtItemName");
+
+
+            //DataSet dsJOBNo = (DataSet)Session["dsJOBNo"];
+            DataTable dtJOBNo = (DataTable)Session["dtJOBNo"];
+            DataTable dtProductionOrderNo = (DataTable)Session["dtProductionOrderNo"];
+            DataTable dtProductionOrderItemCode = (DataTable)Session["dtProductionOrderItemCode"];
+            DataTable dtItemName = (DataTable)Session["dtItemName"];
+            DataTable dtTagNo = (DataTable)Session["dtTagNo"];
+
+
+            ddlProductionOrderItemCode.Items.Clear();
+            ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+            ddlProductionOrderItemCode.SelectedIndex = 0;
+
+            ddlItemName.Items.Clear();
+            ddlItemName.Items.Insert(0, "SELECT");
+            ddlItemName.SelectedIndex = 0;
+
+            ddlTagNo.Items.Clear();
+            ddlTagNo.Items.Insert(0, "SELECT");
+            ddlTagNo.SelectedIndex = 0;
+
+
+            int jobNoSI = 0;
+            int productionOrderNoSI = 0;
+
+            string jobNoSV = string.Empty;
+            string productionOrderNoSV = string.Empty;
+
+            jobNoSI = Convert.ToInt32(ddlJOBNos.SelectedIndex);
+            productionOrderNoSI = Convert.ToInt32(ddlProductionOrderNo.SelectedIndex);
+
+            if (jobNoSI > 0)
+                jobNoSV = Convert.ToString(ddlJOBNos.SelectedValue);
+
+            if (productionOrderNoSI > 0)
+                productionOrderNoSV = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+
+
+
+            //Binding of Production Order Item Code
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtProductionOrderItemCodeNew = new DataTable();
+                dtProductionOrderItemCodeNew = dtProductionOrderItemCode.Copy();
+                dtProductionOrderItemCodeNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtProductionOrderItemCode.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtProductionOrderItemCodeNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["SUBITEM_DESC"] = Convert.ToString(dr1["SUBITEM_DESC"]);
+                    dtProductionOrderItemCodeNew.Rows.Add(drn);
+                }
+
+                if (dtProductionOrderItemCodeNew != null && dtProductionOrderItemCodeNew.Rows.Count > 0)
+                {
+                    ddlProductionOrderItemCode.DataSource = dtProductionOrderItemCodeNew;
+                    ddlProductionOrderItemCode.DataTextField = "SUBITEM_DESC";
+                    ddlProductionOrderItemCode.DataValueField = "SUBITEM_DESC";
+                    ddlProductionOrderItemCode.DataBind();
+                    ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+                    ddlProductionOrderItemCode.SelectedIndex = 0;
+                }
+            }
+
+
+            //Binding of Item Name
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtItemNameNew = new DataTable();
+                dtItemNameNew = dtItemName.Copy();
+                dtItemNameNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtItemName.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtItemNameNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["ITEM_NAME"] = Convert.ToString(dr1["ITEM_NAME"]);
+                    dtItemNameNew.Rows.Add(drn);
+                }
+
+                if (dtItemNameNew != null && dtItemNameNew.Rows.Count > 0)
+                {
+                    ddlItemName.DataSource = dtItemNameNew;
+                    ddlItemName.DataTextField = "ITEM_NAME";
+                    ddlItemName.DataValueField = "ITEM_NAME";
+                    ddlItemName.DataBind();
+                    ddlItemName.Items.Insert(0, "SELECT");
+                    ddlItemName.SelectedIndex = 0;
+                }
+            }
+
+
+
+            //Binding of Tag No
+            if (jobNoSI > 0 && productionOrderNoSI > 0)
+            {
+                DataTable dtTagNoNew = new DataTable();
+                dtTagNoNew = dtTagNo.Copy();
+                dtTagNoNew.Rows.Clear();
+
+                foreach (DataRow dr1 in dtTagNo.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                {
+                    DataRow drn = dtTagNoNew.NewRow();
+                    drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                    drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                    drn["TAG_NO"] = Convert.ToString(dr1["TAG_NO"]);
+                    dtTagNoNew.Rows.Add(drn);
+                }
+
+                if (dtTagNoNew != null && dtTagNoNew.Rows.Count > 0)
+                {
+                    ddlTagNo.DataSource = dtTagNoNew;
+                    ddlTagNo.DataTextField = "TAG_NO";
+                    ddlTagNo.DataValueField = "TAG_NO";
+                    ddlTagNo.DataBind();
+                    ddlTagNo.Items.Insert(0, "SELECT");
+                    ddlTagNo.SelectedIndex = 0;
+                }
+            }
+
+
+            //txtJOBNo.Enabled = true;
+            //txtItemName.Enabled = true;
+
+            //if (ddlJOBNos.SelectedIndex > 0)
+            //{
+            //    txtJOBNo.Text = string.Empty;
+            //    txtItemName.Text = string.Empty;
+            //    txtJOBNo.Enabled = false;
+            //    txtItemName.Enabled = false;
+            //}
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void ddlHours_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+
+            string balanceWorkingHrs = string.Empty;
+            string hours = string.Empty;
+            string mins = string.Empty;
+            DropDownList ddlHours = (DropDownList)gvr.FindControl("ddlHours");
+            DropDownList ddlMins = (DropDownList)gvr.FindControl("ddlMins");
+            TextBox txtAdjustedWorkingHours = (TextBox)gvr.FindControl("txtAdjustedWorkingHours");
+            Label lblSerialNo = (Label)gvr.FindControl("lblSerialNo");
+
+            ImageButton imgBtnRemoveRecord = (ImageButton)gvr.FindControl("imgBtnRemoveRecord");
+            imgBtnRemoveRecord.Visible = false;
+            if (ddlHours.SelectedIndex == 0 && ddlMins.SelectedIndex == 0)
+            {
+                imgBtnRemoveRecord.Visible = true;
+            }
+
+
+            if (Convert.ToInt32(ddlHours.SelectedValue) < 10)
+                hours = "0" + Convert.ToString(ddlHours.SelectedValue);
+            else
+                hours = Convert.ToString(ddlHours.SelectedValue);
+
+            if (Convert.ToInt32(ddlMins.SelectedValue) < 10)
+                mins = "0" + Convert.ToString(ddlMins.SelectedValue);
+            else
+                mins = Convert.ToString(ddlMins.SelectedValue);
+
+            txtAdjustedWorkingHours.Text = hours + ":" + mins;
+
+            Label lblWorkingHours = (Label)gvr.FindControl("lblWorkingHours");
+            Label lblEmployeeName = (Label)gvr.FindControl("lblEmployeeName");
+            Label lblEmpCode = (Label)gvr.FindControl("lblEmpCode");
+            Label lblBalanceWorkingHours = (Label)gvr.FindControl("lblBalanceWorkingHours");
+
+            balanceWorkingHrs = Convert.ToString(lblBalanceWorkingHours.Text);
+
+            int wrkHrs = 0;
+            int wrkMins = 0;
+            int wrkTotalTime = 0;
+
+            if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+            {
+                if (lblWorkingHours.Text.Contains(':'))
+                {
+                    string[] srtWrkHours = lblWorkingHours.Text.Split(':');
+
+                    if (Convert.ToInt32(srtWrkHours[0]) > 0)
+                        wrkHrs = Convert.ToInt32(srtWrkHours[0]);
+                    else
+                        wrkHrs = 0;
+
+                    if (Convert.ToInt32(srtWrkHours[1]) > 0)
+                        wrkMins = Convert.ToInt32(srtWrkHours[1]);
+                    else
+                        wrkMins = 0;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(lblWorkingHours.Text) && Convert.ToInt32(lblWorkingHours.Text) > 0)
+                        wrkHrs = Convert.ToInt32(lblWorkingHours.Text);
+                    else
+                        wrkHrs = 0;
+                }
+            }
+            else
+            {
+                wrkHrs = 0;
+                wrkMins = 0;
+            }
+            wrkTotalTime = (wrkHrs * 60) + wrkMins;
+
+
+
+
+            int adjHrs = 0;
+            int adjMins = 0;
+            int adjTotalHrs = 0;
+            int adjTotalMins = 0;
+            int adjTotalTime = 0;
+
+
+            int adjCurrentHrs = 0;
+            int adjCurrentMins = 0;
+            int adjCurrentTotalTime = 0;
+
+            foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+            {
+                Label lblSerialNoGR = (Label)gr.FindControl("lblSerialNo");
+                Label lblEmployeeNameGR = (Label)gr.FindControl("lblEmployeeName");
+                Label lblEmpCodeGR = (Label)gr.FindControl("lblEmpCode");
+                TextBox txtAdjustedWorkingHoursGR = (TextBox)gr.FindControl("txtAdjustedWorkingHours");
+                Label lblBalanceWorkingHoursGR = (Label)gr.FindControl("lblBalanceWorkingHours");
+
+                lblBalanceWorkingHoursGR.Text = string.Empty;
+
+                if (lblEmployeeName.Text == lblEmployeeNameGR.Text && lblEmpCode.Text == lblEmpCodeGR.Text)
+                {
+                    if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text))
+                    {
+                        if (txtAdjustedWorkingHoursGR.Text.Contains(':'))
+                        {
+                            string[] srtAdjustedHours = txtAdjustedWorkingHoursGR.Text.Split(':');
+
+                            if (Convert.ToInt32(srtAdjustedHours[0]) > 0)
+                                adjHrs = Convert.ToInt32(srtAdjustedHours[0]);
+                            else
+                                adjHrs = 0;
+
+                            if (Convert.ToInt32(srtAdjustedHours[1]) > 0)
+                                adjMins = Convert.ToInt32(srtAdjustedHours[1]);
+                            else
+                                adjMins = 0;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text) && Convert.ToInt32(txtAdjustedWorkingHoursGR.Text) > 0)
+                                adjHrs = Convert.ToInt32(txtAdjustedWorkingHoursGR.Text);
+                            else
+                                adjHrs = 0;
+                        }
+                    }
+                    else
+                    {
+                        adjHrs = 0;
+                        adjMins = 0;
+                    }
+
+                    adjTotalHrs += adjHrs;
+                    adjTotalMins += adjMins;
+
+
+
+                    if (lblSerialNo.Text == lblSerialNoGR.Text)
+                    {
+                        if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text))
+                        {
+                            if (txtAdjustedWorkingHoursGR.Text.Contains(':'))
+                            {
+                                string[] srtAdjustedHours = txtAdjustedWorkingHoursGR.Text.Split(':');
+
+                                if (Convert.ToInt32(srtAdjustedHours[0]) > 0)
+                                    adjCurrentHrs = Convert.ToInt32(srtAdjustedHours[0]);
+                                else
+                                    adjCurrentHrs = 0;
+
+                                if (Convert.ToInt32(srtAdjustedHours[1]) > 0)
+                                    adjCurrentMins = Convert.ToInt32(srtAdjustedHours[1]);
+                                else
+                                    adjCurrentMins = 0;
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text) && Convert.ToInt32(txtAdjustedWorkingHoursGR.Text) > 0)
+                                    adjCurrentHrs = Convert.ToInt32(txtAdjustedWorkingHoursGR.Text);
+                                else
+                                    adjCurrentHrs = 0;
+                            }
+                        }
+                        else
+                        {
+                            adjCurrentHrs = 0;
+                            adjCurrentMins = 0;
+                        }
+                    }
+                    adjCurrentTotalTime = (adjCurrentHrs * 60) + adjCurrentMins;
+                }
+            }
+            adjTotalTime = (adjTotalHrs * 60) + adjTotalMins;
+
+            int newBalanceTime = 0;
+            int completeBalanceTime = 0;
+
+            string balHrs = string.Empty;
+            string balMins = string.Empty;
+
+            completeBalanceTime = wrkTotalTime - adjTotalTime;
+
+            if (wrkTotalTime >= adjTotalTime)
+            {
+                if (Convert.ToInt32(completeBalanceTime / 60) < 10)
+                    balHrs = Convert.ToString("0" + Convert.ToInt32(completeBalanceTime / 60));
+                else
+                    balHrs = Convert.ToString(completeBalanceTime / 60);
+
+                if (Convert.ToInt32(completeBalanceTime % 60) < 10)
+                    balMins = Convert.ToString("0" + Convert.ToInt32(completeBalanceTime % 60));
+                else
+                    balMins = Convert.ToString(completeBalanceTime % 60);
+
+                lblBalanceWorkingHours.Text = balHrs + ":" + balMins;
+                lblBalanceWorkingHours.ForeColor = System.Drawing.Color.Green;
+            }
+            else
+            {
+                if (completeBalanceTime < 0)
+                    completeBalanceTime = completeBalanceTime * (-1);
+
+                newBalanceTime = adjCurrentTotalTime - completeBalanceTime;
+
+                if (Convert.ToInt32(newBalanceTime / 60) < 10)
+                    balHrs = Convert.ToString("0" + Convert.ToInt32(newBalanceTime / 60));
+                else
+                    balHrs = Convert.ToString(newBalanceTime / 60);
+
+                if (Convert.ToInt32(newBalanceTime % 60) < 10)
+                    balMins = Convert.ToString("0" + Convert.ToInt32(newBalanceTime % 60));
+                else
+                    balMins = Convert.ToString(newBalanceTime % 60);
+
+                ddlHours.SelectedValue = Convert.ToString(Convert.ToInt32(balHrs));
+                ddlMins.SelectedValue = Convert.ToString(Convert.ToInt32(balMins));
+
+                txtAdjustedWorkingHours.Text = balHrs + ":" + balMins;
+                lblBalanceWorkingHours.Text = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    protected void ddlMins_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            GridViewRow gvr = (GridViewRow)(((Control)sender).NamingContainer);
+
+            string balanceWorkingHrs = string.Empty;
+            string hours = string.Empty;
+            string mins = string.Empty;
+            DropDownList ddlHours = (DropDownList)gvr.FindControl("ddlHours");
+            DropDownList ddlMins = (DropDownList)gvr.FindControl("ddlMins");
+            TextBox txtAdjustedWorkingHours = (TextBox)gvr.FindControl("txtAdjustedWorkingHours");
+            Label lblSerialNo = (Label)gvr.FindControl("lblSerialNo");
+
+            ImageButton imgBtnRemoveRecord = (ImageButton)gvr.FindControl("imgBtnRemoveRecord");
+            imgBtnRemoveRecord.Visible = false;
+            if (ddlHours.SelectedIndex == 0 && ddlMins.SelectedIndex == 0)
+            {
+                imgBtnRemoveRecord.Visible = true;
+            }
+
+            if (Convert.ToInt32(ddlHours.SelectedValue) < 10)
+                hours = "0" + Convert.ToString(ddlHours.SelectedValue);
+            else
+                hours = Convert.ToString(ddlHours.SelectedValue);
+
+            if (Convert.ToInt32(ddlMins.SelectedValue) < 10)
+                mins = "0" + Convert.ToString(ddlMins.SelectedValue);
+            else
+                mins = Convert.ToString(ddlMins.SelectedValue);
+
+            txtAdjustedWorkingHours.Text = hours + ":" + mins;
+
+            Label lblWorkingHours = (Label)gvr.FindControl("lblWorkingHours");
+            Label lblEmployeeName = (Label)gvr.FindControl("lblEmployeeName");
+            Label lblEmpCode = (Label)gvr.FindControl("lblEmpCode");
+            Label lblBalanceWorkingHours = (Label)gvr.FindControl("lblBalanceWorkingHours");
+
+            balanceWorkingHrs = Convert.ToString(lblBalanceWorkingHours.Text);
+
+            int wrkHrs = 0;
+            int wrkMins = 0;
+            int wrkTotalTime = 0;
+
+            if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+            {
+                if (lblWorkingHours.Text.Contains(':'))
+                {
+                    string[] srtWrkHours = lblWorkingHours.Text.Split(':');
+
+                    if (Convert.ToInt32(srtWrkHours[0]) > 0)
+                        wrkHrs = Convert.ToInt32(srtWrkHours[0]);
+                    else
+                        wrkHrs = 0;
+
+                    if (Convert.ToInt32(srtWrkHours[1]) > 0)
+                        wrkMins = Convert.ToInt32(srtWrkHours[1]);
+                    else
+                        wrkMins = 0;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(lblWorkingHours.Text) && Convert.ToInt32(lblWorkingHours.Text) > 0)
+                        wrkHrs = Convert.ToInt32(lblWorkingHours.Text);
+                    else
+                        wrkHrs = 0;
+                }
+            }
+            else
+            {
+                wrkHrs = 0;
+                wrkMins = 0;
+            }
+            wrkTotalTime = (wrkHrs * 60) + wrkMins;
+
+
+
+
+            int adjHrs = 0;
+            int adjMins = 0;
+            int adjTotalHrs = 0;
+            int adjTotalMins = 0;
+            int adjTotalTime = 0;
+
+
+            int adjCurrentHrs = 0;
+            int adjCurrentMins = 0;
+            int adjCurrentTotalTime = 0;
+
+            foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+            {
+                Label lblSerialNoGR = (Label)gr.FindControl("lblSerialNo");
+                Label lblEmployeeNameGR = (Label)gr.FindControl("lblEmployeeName");
+                Label lblEmpCodeGR = (Label)gr.FindControl("lblEmpCode");
+                TextBox txtAdjustedWorkingHoursGR = (TextBox)gr.FindControl("txtAdjustedWorkingHours");
+                Label lblBalanceWorkingHoursGR = (Label)gr.FindControl("lblBalanceWorkingHours");
+
+                lblBalanceWorkingHoursGR.Text = string.Empty;
+
+                if (lblEmployeeName.Text == lblEmployeeNameGR.Text && lblEmpCode.Text == lblEmpCodeGR.Text)
+                {
+                    if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text))
+                    {
+                        if (txtAdjustedWorkingHoursGR.Text.Contains(':'))
+                        {
+                            string[] srtAdjustedHours = txtAdjustedWorkingHoursGR.Text.Split(':');
+
+                            if (Convert.ToInt32(srtAdjustedHours[0]) > 0)
+                                adjHrs = Convert.ToInt32(srtAdjustedHours[0]);
+                            else
+                                adjHrs = 0;
+
+                            if (Convert.ToInt32(srtAdjustedHours[1]) > 0)
+                                adjMins = Convert.ToInt32(srtAdjustedHours[1]);
+                            else
+                                adjMins = 0;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text) && Convert.ToInt32(txtAdjustedWorkingHoursGR.Text) > 0)
+                                adjHrs = Convert.ToInt32(txtAdjustedWorkingHoursGR.Text);
+                            else
+                                adjHrs = 0;
+                        }
+                    }
+                    else
+                    {
+                        adjHrs = 0;
+                        adjMins = 0;
+                    }
+
+                    adjTotalHrs += adjHrs;
+                    adjTotalMins += adjMins;
+
+
+
+                    if (lblSerialNo.Text == lblSerialNoGR.Text)
+                    {
+                        if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text))
+                        {
+                            if (txtAdjustedWorkingHoursGR.Text.Contains(':'))
+                            {
+                                string[] srtAdjustedHours = txtAdjustedWorkingHoursGR.Text.Split(':');
+
+                                if (Convert.ToInt32(srtAdjustedHours[0]) > 0)
+                                    adjCurrentHrs = Convert.ToInt32(srtAdjustedHours[0]);
+                                else
+                                    adjCurrentHrs = 0;
+
+                                if (Convert.ToInt32(srtAdjustedHours[1]) > 0)
+                                    adjCurrentMins = Convert.ToInt32(srtAdjustedHours[1]);
+                                else
+                                    adjCurrentMins = 0;
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(txtAdjustedWorkingHoursGR.Text) && Convert.ToInt32(txtAdjustedWorkingHoursGR.Text) > 0)
+                                    adjCurrentHrs = Convert.ToInt32(txtAdjustedWorkingHoursGR.Text);
+                                else
+                                    adjCurrentHrs = 0;
+                            }
+                        }
+                        else
+                        {
+                            adjCurrentHrs = 0;
+                            adjCurrentMins = 0;
+                        }
+                    }
+                    adjCurrentTotalTime = (adjCurrentHrs * 60) + adjCurrentMins;
+                }
+            }
+            adjTotalTime = (adjTotalHrs * 60) + adjTotalMins;
+
+            int newBalanceTime = 0;
+            int completeBalanceTime = 0;
+
+            string balHrs = string.Empty;
+            string balMins = string.Empty;
+
+            completeBalanceTime = wrkTotalTime - adjTotalTime;
+
+            if (wrkTotalTime >= adjTotalTime)
+            {
+                if (Convert.ToInt32(completeBalanceTime / 60) < 10)
+                    balHrs = Convert.ToString("0" + Convert.ToInt32(completeBalanceTime / 60));
+                else
+                    balHrs = Convert.ToString(completeBalanceTime / 60);
+
+                if (Convert.ToInt32(completeBalanceTime % 60) < 10)
+                    balMins = Convert.ToString("0" + Convert.ToInt32(completeBalanceTime % 60));
+                else
+                    balMins = Convert.ToString(completeBalanceTime % 60);
+
+                lblBalanceWorkingHours.Text = balHrs + ":" + balMins;
+                lblBalanceWorkingHours.ForeColor = System.Drawing.Color.Green;
+            }
+            else
+            {
+                if (completeBalanceTime < 0)
+                    completeBalanceTime = completeBalanceTime * (-1);
+
+                newBalanceTime = adjCurrentTotalTime - completeBalanceTime;
+
+                if (Convert.ToInt32(newBalanceTime / 60) < 10)
+                    balHrs = Convert.ToString("0" + Convert.ToInt32(newBalanceTime / 60));
+                else
+                    balHrs = Convert.ToString(newBalanceTime / 60);
+
+                if (Convert.ToInt32(newBalanceTime % 60) < 10)
+                    balMins = Convert.ToString("0" + Convert.ToInt32(newBalanceTime % 60));
+                else
+                    balMins = Convert.ToString(newBalanceTime % 60);
+
+                ddlHours.SelectedValue = Convert.ToString(Convert.ToInt32(balHrs));
+                ddlMins.SelectedValue = Convert.ToString(Convert.ToInt32(balMins));
+
+                txtAdjustedWorkingHours.Text = balHrs + ":" + balMins;
+                lblBalanceWorkingHours.Text = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+    /// <summary>
+    /// RowDataBound
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void gvWorkerTimesheetList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        try
+        {
+            //hdDeleteRecordID.Value = "0";
+            int hrs = 0;
+            int mns = 0;
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+
+                Label lblSerialNo = (Label)e.Row.FindControl("lblSerialNo");
+                Label lblEmpCode = (Label)e.Row.FindControl("lblEmpCode");
+
+                Label lblRecordID = (Label)e.Row.FindControl("lblRecordID");
+                Label lblJOBNo = (Label)e.Row.FindControl("lblJOBNo");
+                Label lblEquipment = (Label)e.Row.FindControl("lblEquipment");
+                Label lblProductionOrderNo = (Label)e.Row.FindControl("lblProductionOrderNo");
+                Label lblProductionOrderItemCode = (Label)e.Row.FindControl("lblProductionOrderItemCode");
+                Label lblItemName = (Label)e.Row.FindControl("lblItemName");
+                Label lblTagNo = (Label)e.Row.FindControl("lblTagNo");
+                Label lblActivityID = (Label)e.Row.FindControl("lblActivityID");
+
+
+                Label lblUnitID = (Label)e.Row.FindControl("lblUnitID");
+                Button btnAddNewRecord = (Button)e.Row.FindControl("btnAddNewRecord");
+                TextBox txtWorkingHours = (TextBox)e.Row.FindControl("txtWorkingHours");
+
+
+                DropDownList ddlJOBNos = (DropDownList)e.Row.FindControl("ddlJOBNo");
+                DropDownList ddlEquipment = (DropDownList)e.Row.FindControl("ddlEquipment");
+                DropDownList ddlProductionOrderNo = (DropDownList)e.Row.FindControl("ddlProductionOrderNo");
+                DropDownList ddlProductionOrderItemCode = (DropDownList)e.Row.FindControl("ddlProductionOrderItemCode");
+                DropDownList ddlItemName = (DropDownList)e.Row.FindControl("ddlItemName");
+                DropDownList ddlTagNo = (DropDownList)e.Row.FindControl("ddlTagNo");
+                DropDownList ddlActivity = (DropDownList)e.Row.FindControl("ddlActivity");
+
+
+                //TextBox txtJOBNo = (TextBox)e.Row.FindControl("txtJOBNo");
+                //TextBox txtItemName = (TextBox)e.Row.FindControl("txtItemName");
+
+                Label lblLOTTFSubitem = (Label)e.Row.FindControl("lblLOTTFSubitem");
+                DropDownList ddlSubitems = (DropDownList)e.Row.FindControl("ddlSubitems");
+                //TextBox txtActivityMatrix = (TextBox)e.Row.FindControl("txtActivityMatrix");
+
+                Label lblAdjustedWorkingHours = (Label)e.Row.FindControl("lblAdjustedWorkingHours");
+                DropDownList ddlHours = (DropDownList)e.Row.FindControl("ddlHours");
+                DropDownList ddlMins = (DropDownList)e.Row.FindControl("ddlMins");
+
+                ImageButton imgBtnRemoveRecord = (ImageButton)e.Row.FindControl("imgBtnRemoveRecord");
+                ImageButton imgBtnDeleteRecord = (ImageButton)e.Row.FindControl("imgBtnDeleteRecord");
+
+                imgBtnDeleteRecord.Visible = false;
+
+                if (!string.IsNullOrEmpty(Convert.ToString(lblRecordID.Text)) && Convert.ToInt32(lblRecordID.Text) > 0)
+                {
+                    imgBtnDeleteRecord.Visible = true;
+                }
+
+                if (Convert.ToInt32(e.Row.RowIndex) == 0)
+                {
+                    imgBtnRemoveRecord.Visible = false;
+                }
+
+                DataTable dtChanged = (DataTable)Session["dtChanged"];
+
+                //DataSet dsJOBNo = new DataSet();
+
+                //if (Session["dsJOBNo"] == null)
+                //{
+                //    dsJOBNo = objTimesheet.GetLOTJOBs(Convert.ToInt32(lblUnitID.Text));
+                //    Session["dsJOBNo"] = dsJOBNo;
+                //}
+                //else
+                //{
+                //    dsJOBNo = (DataSet)Session["dsJOBNo"];
+                //}
+
+                //if (dsJOBNo.Tables.Count > 0 && dsJOBNo.Tables[1].Rows.Count > 0)
+                //{
+                //    Session["dtSubitems"] = dsJOBNo.Tables[1];
+                //}
+                //else
+                //{
+                //    Session["dtSubitems"] = null;
+                //}
+
+                DataTable dtJOBNo = (DataTable)Session["dtJOBNo"];
+                DataTable dtEquipment = (DataTable)Session["dtEquipment"];
+                DataTable dtProductionOrderNo = (DataTable)Session["dtProductionOrderNo"];
+                DataTable dtProductionOrderItemCode = (DataTable)Session["dtProductionOrderItemCode"];
+                DataTable dtItemName = (DataTable)Session["dtItemName"];
+                DataTable dtTagNo = (DataTable)Session["dtTagNo"];
+
+                DataTable dtActivity = new DataTable();
+                if (Session["dtActivity"] != null)
+                    dtActivity = (DataTable)Session["dtActivity"];
+                else
+                {
+                    GetActivity();
+                    dtActivity = (DataTable)Session["dtActivity"];
+                }
+
+                if (dtJOBNo.Rows.Count > 0)
+                {
+                    ddlJOBNos.DataSource = dtJOBNo;
+                    ddlJOBNos.DataTextField = "JOB_NO";
+                    ddlJOBNos.DataValueField = "JOB_NO";
+                    ddlJOBNos.DataBind();
+                    ddlJOBNos.Items.Insert(0, "SELECT");
+
+                    foreach (DataRow dr in dtChanged.Select("SERIAL_NO='" + Convert.ToString(lblSerialNo.Text) + "' AND EMPLOYEE_CODE='" + Convert.ToString(lblEmpCode.Text) + "'"))
+                    {
+                        if (!string.IsNullOrEmpty(Convert.ToString(dr["JOB_NO"])))
+                        {
+                            ddlJOBNos.SelectedValue = Convert.ToString(dr["JOB_NO"]);
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(Convert.ToString(lblJOBNo.Text)))
+                                ddlJOBNos.SelectedValue = Convert.ToString(lblJOBNo.Text);
+                        }
+                    }
+                }
+
+
+
+
+                int jobNoSI = 0;
+                int equipmentSI = 0;
+                int productionOrderNoSI = 0;
+
+                string jobNoSV = string.Empty;
+                string equipmentSV = string.Empty;
+                string productionOrderNoSV = string.Empty;
+
+                jobNoSI = Convert.ToInt32(ddlJOBNos.SelectedIndex);
+
+                if (jobNoSI > 0)
+                    jobNoSV = Convert.ToString(ddlJOBNos.SelectedValue);
+
+                //Binding of Equipment
+                if (jobNoSI > 0)
+                {
+                    DataTable dtEquipmentNew = new DataTable();
+                    dtEquipmentNew = dtEquipment.Copy();
+                    dtEquipmentNew.Rows.Clear();
+
+                    foreach (DataRow dr1 in dtEquipment.Select("JOB_NO='" + jobNoSV + "'"))
+                    {
+                        DataRow drn = dtEquipmentNew.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                        drn["EQUIPMENT"] = Convert.ToString(dr1["EQUIPMENT"]);
+                        dtEquipmentNew.Rows.Add(drn);
+                    }
+
+                    if (dtEquipmentNew != null && dtEquipmentNew.Rows.Count > 0)
+                    {
+                        ddlEquipment.DataSource = dtEquipmentNew;
+                        ddlEquipment.DataTextField = "EQUIPMENT";
+                        ddlEquipment.DataValueField = "EQUIPMENT";
+                        ddlEquipment.DataBind();
+                        ddlEquipment.Items.Insert(0, "SELECT");
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(lblEquipment.Text)))
+                        {
+                            ddlEquipment.SelectedValue = Convert.ToString(lblEquipment.Text);
+                        }
+                    }
+                }
+                else
+                {
+                    //ddlEquipment.Items.Clear();
+                    ddlEquipment.Items.Insert(0, "SELECT");
+                    ddlEquipment.SelectedIndex = 0;
+                }
+
+
+                equipmentSI = Convert.ToInt32(ddlEquipment.SelectedIndex);
+                if (equipmentSI > 0)
+                    equipmentSV = Convert.ToString(ddlEquipment.SelectedValue);
+
+                //Binding of Production Order No
+                if (jobNoSI > 0 && equipmentSI > 0)
+                {
+                    DataTable dtProductionOrderNoNew = new DataTable();
+                    dtProductionOrderNoNew = dtProductionOrderNo.Copy();
+                    dtProductionOrderNoNew.Rows.Clear();
+
+                    foreach (DataRow dr1 in dtProductionOrderNo.Select("JOB_NO='" + jobNoSV + "' AND EQUIPMENT='" + equipmentSV + "'"))
+                    {
+                        DataRow drn = dtProductionOrderNoNew.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                        drn["EQUIPMENT"] = Convert.ToString(dr1["EQUIPMENT"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                        dtProductionOrderNoNew.Rows.Add(drn);
+                    }
+
+                    if (dtProductionOrderNoNew != null && dtProductionOrderNoNew.Rows.Count > 0)
+                    {
+                        ddlProductionOrderNo.DataSource = dtProductionOrderNoNew;
+                        ddlProductionOrderNo.DataTextField = "PRODUCTION_ORDER_NO";
+                        ddlProductionOrderNo.DataValueField = "PRODUCTION_ORDER_NO";
+                        ddlProductionOrderNo.DataBind();
+                        ddlProductionOrderNo.Items.Insert(0, "SELECT");
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(lblProductionOrderNo.Text)))
+                        {
+                            ddlProductionOrderNo.SelectedValue = Convert.ToString(lblProductionOrderNo.Text);
+                        }
+                    }
+                }
+                else
+                {
+                    //ddlProductionOrderNo.Items.Clear();
+                    ddlProductionOrderNo.Items.Insert(0, "SELECT");
+                    ddlProductionOrderNo.SelectedIndex = 0;
+                }
+
+
+                productionOrderNoSI = Convert.ToInt32(ddlProductionOrderNo.SelectedIndex);
+                if (productionOrderNoSI > 0)
+                    productionOrderNoSV = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+
+                //Binding of Production Order Item Code
+                if (jobNoSI > 0 && productionOrderNoSI > 0)
+                {
+                    DataTable dtProductionOrderItemCodeNew = new DataTable();
+                    dtProductionOrderItemCodeNew = dtProductionOrderItemCode.Copy();
+                    dtProductionOrderItemCodeNew.Rows.Clear();
+
+                    foreach (DataRow dr1 in dtProductionOrderItemCode.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                    {
+                        DataRow drn = dtProductionOrderItemCodeNew.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                        drn["SUBITEM_DESC"] = Convert.ToString(dr1["SUBITEM_DESC"]);
+                        dtProductionOrderItemCodeNew.Rows.Add(drn);
+                    }
+
+                    if (dtProductionOrderItemCodeNew != null && dtProductionOrderItemCodeNew.Rows.Count > 0)
+                    {
+                        ddlProductionOrderItemCode.DataSource = dtProductionOrderItemCodeNew;
+                        ddlProductionOrderItemCode.DataTextField = "SUBITEM_DESC";
+                        ddlProductionOrderItemCode.DataValueField = "SUBITEM_DESC";
+                        ddlProductionOrderItemCode.DataBind();
+                        ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+                        ddlProductionOrderItemCode.SelectedIndex = 0;
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(lblProductionOrderItemCode.Text)))
+                        {
+                            ddlProductionOrderItemCode.SelectedValue = Convert.ToString(lblProductionOrderItemCode.Text);
+                        }
+                    }
+                }
+                else
+                {
+                    //ddlProductionOrderItemCode.Items.Clear();
+                    ddlProductionOrderItemCode.Items.Insert(0, "SELECT");
+                    ddlProductionOrderItemCode.SelectedIndex = 0;
+                }
+
+
+                //Binding of Item Name
+                if (jobNoSI > 0 && productionOrderNoSI > 0)
+                {
+                    DataTable dtItemNameNew = new DataTable();
+                    dtItemNameNew = dtItemName.Copy();
+                    dtItemNameNew.Rows.Clear();
+
+                    foreach (DataRow dr1 in dtItemName.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                    {
+                        DataRow drn = dtItemNameNew.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                        drn["ITEM_NAME"] = Convert.ToString(dr1["ITEM_NAME"]);
+                        dtItemNameNew.Rows.Add(drn);
+                    }
+
+                    if (dtItemNameNew != null && dtItemNameNew.Rows.Count > 0)
+                    {
+                        ddlItemName.DataSource = dtItemNameNew;
+                        ddlItemName.DataTextField = "ITEM_NAME";
+                        ddlItemName.DataValueField = "ITEM_NAME";
+                        ddlItemName.DataBind();
+                        ddlItemName.Items.Insert(0, "SELECT");
+                        ddlItemName.SelectedIndex = 0;
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(lblItemName.Text)))
+                        {
+                            ddlItemName.SelectedValue = Convert.ToString(lblItemName.Text);
+                        }
+                    }
+                }
+                else
+                {
+                    //ddlItemName.Items.Clear();
+                    ddlItemName.Items.Insert(0, "SELECT");
+                    ddlItemName.SelectedIndex = 0;
+                }
+
+
+                //Binding of Tag No
+                if (jobNoSI > 0 && productionOrderNoSI > 0)
+                {
+                    DataTable dtTagNoNew = new DataTable();
+                    dtTagNoNew = dtTagNo.Copy();
+                    dtTagNoNew.Rows.Clear();
+
+                    foreach (DataRow dr1 in dtTagNo.Select("JOB_NO='" + jobNoSV + "' AND PRODUCTION_ORDER_NO='" + productionOrderNoSV + "'"))
+                    {
+                        DataRow drn = dtTagNoNew.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr1["JOB_NO"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr1["PRODUCTION_ORDER_NO"]);
+                        drn["TAG_NO"] = Convert.ToString(dr1["TAG_NO"]);
+                        dtTagNoNew.Rows.Add(drn);
+                    }
+
+                    if (dtTagNoNew != null && dtTagNoNew.Rows.Count > 0)
+                    {
+                        ddlTagNo.DataSource = dtTagNoNew;
+                        ddlTagNo.DataTextField = "TAG_NO";
+                        ddlTagNo.DataValueField = "TAG_NO";
+                        ddlTagNo.DataBind();
+                        ddlTagNo.Items.Insert(0, "SELECT");
+                        ddlTagNo.SelectedIndex = 0;
+
+                        if (!string.IsNullOrEmpty(Convert.ToString(lblTagNo.Text)))
+                        {
+                            ddlTagNo.SelectedValue = Convert.ToString(lblTagNo.Text);
+                        }
+                    }
+                }
+                else
+                {
+                    //ddlTagNo.Items.Clear();
+                    ddlTagNo.Items.Insert(0, "SELECT");
+                    ddlTagNo.SelectedIndex = 0;
+                }
+
+
+
+
+                //Binding of Activity
+                ddlActivity.Items.Clear();
+                ddlActivity.Items.Insert(0, "SELECT");
+
+                if (dtActivity != null && dtActivity.Rows.Count > 0)
+                {
+                    ddlActivity.DataSource = dtActivity;
+                    ddlActivity.DataTextField = "ACTIVITY_NAME";
+                    ddlActivity.DataValueField = "ACTIVITY_PID";
+                    ddlActivity.DataBind();
+                    ddlActivity.Items.Insert(0, "SELECT");
+
+                    foreach (DataRow dr in dtChanged.Select("SERIAL_NO='" + Convert.ToString(lblSerialNo.Text) + "' AND EMPLOYEE_CODE='" + Convert.ToString(lblEmpCode.Text) + "' AND JOB_NO ='" + Convert.ToString(ddlJOBNos.SelectedValue) + "'"))
+                    {
+                        if (!string.IsNullOrEmpty(Convert.ToString(dr["ACTIVITY_ID"])))
+                        {
+                            ddlActivity.SelectedValue = Convert.ToString(dr["ACTIVITY_ID"]);
+                        }
+                    }
+                }
+
+
+                //if (dsJOBNo.Tables.Count > 0 && dsJOBNo.Tables[0].Rows.Count > 0)
+                //{
+                //    ddlJOBNos.DataSource = dsJOBNo.Tables[0];
+                //    ddlJOBNos.DataTextField = "JOB_NO";
+                //    ddlJOBNos.DataValueField = "JOB_NO";
+                //    ddlJOBNos.DataBind();
+                //    ddlJOBNos.Items.Insert(0, "SELECT");
+
+                //    foreach (DataRow dr in dtChanged.Select("SERIAL_NO='" + Convert.ToString(lblSerialNo.Text) + "' AND EMPLOYEE_CODE='" + Convert.ToString(lblEmpCode.Text) + "'"))
+                //    {
+                //        if (!string.IsNullOrEmpty(Convert.ToString(dr["JOB_NO"])))
+                //            ddlJOBNos.SelectedValue = Convert.ToString(dr["JOB_NO"]);
+                //    }
+                //}
+
+
+                //ddlSubitems.Items.Clear();
+                //ddlSubitems.Items.Insert(0, "SELECT");
+                //ddlSubitems.SelectedIndex = 0;
+
+                //if (dtSubitems.Rows.Count > 0)
+                //{
+                //    if (ddlJOBNos.SelectedIndex > 0)
+                //    {
+                //        DataTable dtNew = new DataTable();
+                //        dtNew.Columns.Add("SUBITEM_DESC", typeof(string));
+
+                //        foreach (DataRow drs in dtSubitems.Select("JOB_NO='" + Convert.ToString(ddlJOBNos.SelectedValue) + "'"))
+                //        {
+                //            if (!string.IsNullOrEmpty(Convert.ToString(drs["SUBITEM_DESC"])))
+                //            {
+                //                DataRow drn = dtNew.NewRow();
+                //                drn["SUBITEM_DESC"] = drs["SUBITEM_DESC"];
+                //                dtNew.Rows.Add(drn);
+                //            }
+                //        }
+
+                //        if (dtNew.Rows.Count > 0)
+                //        {
+                //            ddlSubitems.DataSource = dtNew;
+                //            ddlSubitems.DataTextField = "SUBITEM_DESC";
+                //            ddlSubitems.DataValueField = "SUBITEM_DESC";
+                //            ddlSubitems.DataBind();
+                //            ddlSubitems.Items.Insert(0, "SELECT");
+
+                //            if (!string.IsNullOrEmpty(lblLOTTFSubitem.Text))
+                //            {
+                //                ddlSubitems.SelectedValue = Convert.ToString(lblLOTTFSubitem.Text);
+                //            }
+                //            else
+                //            {
+                //                ddlSubitems.SelectedIndex = 0;
+                //            }
+                //        }
+                //    }
+
+
+
+
+                //    foreach (DataRow dr in dtChanged.Select("SERIAL_NO='" + Convert.ToString(lblSerialNo.Text) + "' AND EMPLOYEE_CODE='" + Convert.ToString(lblEmpCode.Text) + "'"))
+                //    {
+                //        ddlSubitems.SelectedValue = Convert.ToString(dr["SUBITEM_DESC"]);
+                //        txtActivityMatrix.Text = Convert.ToString(dr["ACTIVITY_MATRIX"]);
+
+                //        if (ddlJOBNos.SelectedIndex == 0)
+                //        {
+                //            txtJOBNo.Text = Convert.ToString(dr["JOB_NO1"]);
+                //            txtItemName.Text = Convert.ToString(dr["ITEM_NAME"]);
+
+                //            txtJOBNo.Enabled = true;
+                //            txtItemName.Enabled = true;
+                //        }
+                //        else
+                //        {
+                //            txtJOBNo.Text = string.Empty;
+                //            txtItemName.Text = string.Empty;
+
+                //            txtJOBNo.Enabled = false;
+                //            txtItemName.Enabled = false;
+                //        }
+
+                //    }
+                //}
+
+
+
+
+                if (!string.IsNullOrEmpty(lblAdjustedWorkingHours.Text) && Convert.ToString(lblAdjustedWorkingHours.Text) != "00:00" && Convert.ToString(lblAdjustedWorkingHours.Text) != "0:0")
+                {
+                    string[] srtWorkingHours = Convert.ToString(lblAdjustedWorkingHours.Text).Split(':');
+
+                    if (Convert.ToInt32(srtWorkingHours[0]) > 0 && !string.IsNullOrEmpty(Convert.ToString(srtWorkingHours[0])))
+                        hrs = Convert.ToInt32(srtWorkingHours[0]);
+                    else
+                        hrs = 0;
+
+                    if (hrs > 0)
+                        ddlHours.SelectedValue = Convert.ToString(hrs);
+                    else
+                        ddlHours.SelectedValue = "0";
+
+                    if (Convert.ToInt32(srtWorkingHours[1]) > 0 && !string.IsNullOrEmpty(Convert.ToString(srtWorkingHours[1])))
+                        mns = Convert.ToInt32(srtWorkingHours[1]);
+                    else
+                        mns = 0;
+
+                    if (mns > 0)
+                        ddlMins.SelectedValue = Convert.ToString(mns);
+                    else
+                        ddlMins.SelectedValue = "0";
+                }
+                else
+                {
+                    ddlHours.SelectedValue = "0";
+                    ddlMins.SelectedValue = "0";
+                }
+
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    e.Row.Cells[i].Attributes.Add("style", "white-space:nowrap;");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    /// <summary>
+    /// RowCommand
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// 
+    protected void gvWorkerTimesheetList_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        try
+        {
+            DataTable dt = new DataTable();
+            hdTotalMinuts.Value = "0";
+            dt.Columns.Add("SERIAL_NO", typeof(string));
+            dt.Columns.Add("RECORD_ID", typeof(string));
+            dt.Columns.Add("EMPLOYEE_NAME", typeof(string));
+            dt.Columns.Add("EMPLOYEE_CODE", typeof(string));
+            dt.Columns.Add("UNIT", typeof(string));
+            dt.Columns.Add("UNIT_ID", typeof(int));
+            dt.Columns.Add("JOB_NO", typeof(string));
+            dt.Columns.Add("JOB_NO1", typeof(string));
+
+            dt.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dt.Columns.Add("SUBITEM_DESC", typeof(string));
+            dt.Columns.Add("ITEM_NAME", typeof(string));
+            dt.Columns.Add("TAG_NO", typeof(string));
+            dt.Columns.Add("ACTIVITY_ID", typeof(int));
+
+            dt.Columns.Add("ACTIVITY_MATRIX", typeof(string));
+
+            dt.Columns.Add("ENTRY_DATE", typeof(string));
+            dt.Columns.Add("IN_TIME", typeof(string));
+            dt.Columns.Add("OUT_TIME", typeof(string));
+            dt.Columns.Add("WORKING_HOURS", typeof(string));
+            dt.Columns.Add("WORKING_MINUTS", typeof(string));
+            dt.Columns.Add("ADJUSTED_WORKING_HOURS", typeof(string));
+            dt.Columns.Add("OT_HOURS", typeof(string));
+            dt.Columns.Add("BAL_WRK_HRS", typeof(string));
+
+            dt.Columns.Add("REMARKS", typeof(string));
+
+            int rindex = 0;
+            if (Session["EMP_RECORD_ID"] != null)
+            {
+                int rowindex = 0;
+                if (Convert.ToString(e.CommandArgument) == "ADD" ||
+                    Convert.ToString(e.CommandArgument) == "REMOVE" ||
+                    Convert.ToString(e.CommandArgument) == "DELETE")
+                {
+                    GridViewRow rowSelect = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+                    rowindex = rowSelect.RowIndex;
+                }
+
+
+
+
+
+                #region ADD[===================]
+
+                if (Convert.ToString(e.CommandArgument) == "ADD")
+                {
+                    int hoursOfCurrentRowAdjustedHours = 0;
+                    int minutsOfCurrentRowAdjustedHours = 0;
+                    int totalMinutsOfCurrentRowAdjustedHours = 0;
+
+                    TextBox txtCurrentRowAdjustedWorkingHours = (TextBox)gvWorkerTimesheetList.Rows[rowindex].FindControl("txtAdjustedWorkingHours");
+                    //ImageButton imgBtnAddNewRecord = (ImageButton)gvWorkerTimesheetList.Rows[rowindex].FindControl("imgBtnAddNewRecord");
+                    if (!string.IsNullOrEmpty(txtCurrentRowAdjustedWorkingHours.Text))
+                    {
+                        if (txtCurrentRowAdjustedWorkingHours.Text.Contains(':'))
+                        {
+                            string[] strCurrentRowAdjustedHours = txtCurrentRowAdjustedWorkingHours.Text.Split(':');
+
+                            if (Convert.ToInt32(strCurrentRowAdjustedHours[0]) > 0)
+                                hoursOfCurrentRowAdjustedHours = Convert.ToInt32(strCurrentRowAdjustedHours[0]);
+                            else
+                                hoursOfCurrentRowAdjustedHours = 0;
+
+                            if (Convert.ToInt32(strCurrentRowAdjustedHours[1]) > 0)
+                                minutsOfCurrentRowAdjustedHours = Convert.ToInt32(strCurrentRowAdjustedHours[1]);
+                            else
+                                minutsOfCurrentRowAdjustedHours = 0;
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(txtCurrentRowAdjustedWorkingHours.Text) && Convert.ToInt32(txtCurrentRowAdjustedWorkingHours.Text) > 0)
+                                hoursOfCurrentRowAdjustedHours = Convert.ToInt32(txtCurrentRowAdjustedWorkingHours.Text);
+                            else
+                                hoursOfCurrentRowAdjustedHours = 0;
+                        }
+                    }
+                    else
+                    {
+                        hoursOfCurrentRowAdjustedHours = 0;
+                        minutsOfCurrentRowAdjustedHours = 0;
+                    }
+
+                    totalMinutsOfCurrentRowAdjustedHours = (hoursOfCurrentRowAdjustedHours * 60 + minutsOfCurrentRowAdjustedHours);
+
+                    if (totalMinutsOfCurrentRowAdjustedHours > 0)
+                    {
+                        foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+                        {
+                            DataRow dr = dt.NewRow();
+                            rindex++;
+
+                            Label lblRecordID = (Label)gr.FindControl("lblRecordID");
+                            Label lblEmployeeName = (Label)gr.FindControl("lblEmployeeName");
+                            Label lblEmpCode = (Label)gr.FindControl("lblEmpCode");
+                            Label lblUnit = (Label)gr.FindControl("lblUnit");
+                            Label lblUnitID = (Label)gr.FindControl("lblUnitID");
+                            DropDownList ddlJOBNos = (DropDownList)gr.FindControl("ddlJOBNo");
+
+                            DropDownList ddlProductionOrderNo = gr.FindControl("ddlProductionOrderNo") as DropDownList;
+                            DropDownList ddlProductionOrderItemCode = gr.FindControl("ddlProductionOrderItemCode") as DropDownList;
+                            DropDownList ddlItemName = gr.FindControl("ddlItemName") as DropDownList;
+                            DropDownList ddlTagNo = gr.FindControl("ddlTagNo") as DropDownList;
+                            DropDownList ddlActivity = gr.FindControl("ddlActivity") as DropDownList;
+
+                            //TextBox txtJOBNo = (TextBox)gr.FindControl("txtJOBNo");
+                            //TextBox txtItemName = (TextBox)gr.FindControl("txtItemName");
+
+                            DropDownList ddlSubitems = (DropDownList)gr.FindControl("ddlSubitems");
+                            TextBox txtActivityMatrix = (TextBox)gr.FindControl("txtActivityMatrix");
+
+                            Label lblEntryDate = (Label)gr.FindControl("lblEntryDate");
+                            Label lblInTime = (Label)gr.FindControl("lblInTime");
+                            Label lblOutTime = (Label)gr.FindControl("lblOutTime");
+                            Label lblWorkingHours = (Label)gr.FindControl("lblWorkingHours");
+                            Label lblWorkingMinuts = (Label)gr.FindControl("lblWorkingMinuts");
+                            TextBox txtAdjustedWorkingHours = (TextBox)gr.FindControl("txtAdjustedWorkingHours");
+                            Label lblOTHours = (Label)gr.FindControl("lblOTHours");
+                            Label lblBalanceWorkingHours = (Label)gr.FindControl("lblBalanceWorkingHours");
+                            DropDownList ddlHours = (DropDownList)gr.FindControl("ddlHours");
+                            DropDownList ddlMins = (DropDownList)gr.FindControl("ddlMins");
+
+
+                            TextBox txtRemarks = (TextBox)gr.FindControl("txtRemarks");
+
+                            dr["SERIAL_NO"] = Convert.ToString(rindex);
+
+                            if (!string.IsNullOrEmpty(lblRecordID.Text))
+                                dr["RECORD_ID"] = lblRecordID.Text;
+                            else dr["RECORD_ID"] = "0";
+
+                            if (!string.IsNullOrEmpty(lblEmployeeName.Text))
+                                dr["EMPLOYEE_NAME"] = lblEmployeeName.Text;
+
+                            if (!string.IsNullOrEmpty(lblEmpCode.Text))
+                                dr["EMPLOYEE_CODE"] = lblEmpCode.Text;
+
+                            if (!string.IsNullOrEmpty(lblUnit.Text))
+                                dr["UNIT"] = lblUnit.Text;
+
+                            if (!string.IsNullOrEmpty(lblUnitID.Text))
+                                dr["UNIT_ID"] = lblUnitID.Text;
+
+                            if (ddlJOBNos.SelectedIndex > 0)
+                                dr["JOB_NO"] = Convert.ToString(ddlJOBNos.SelectedValue);
+
+                            //if (!string.IsNullOrEmpty(txtJOBNo.Text))
+                            //    dr["JOB_NO1"] = Convert.ToString(txtJOBNo.Text).ToUpper().Trim();
+
+                            if (ddlProductionOrderNo.SelectedIndex > 0)
+                                dr["PRODUCTION_ORDER_NO"] = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+
+                            if (ddlProductionOrderItemCode.SelectedIndex > 0)
+                                dr["SUBITEM_DESC"] = Convert.ToString(ddlProductionOrderItemCode.SelectedValue);
+
+                            if (ddlItemName.SelectedIndex > 0)
+                                dr["ITEM_NAME"] = Convert.ToString(ddlItemName.SelectedValue);
+
+                            if (ddlTagNo.SelectedIndex > 0)
+                                dr["TAG_NO"] = Convert.ToString(ddlTagNo.SelectedValue);
+
+                            if (ddlActivity.SelectedIndex > 0)
+                                dr["ACTIVITY_ID"] = Convert.ToInt32(ddlActivity.SelectedValue);
+
+                            //if (!string.IsNullOrEmpty(txtActivityMatrix.Text))
+                            //    dr["ACTIVITY_MATRIX"] = txtActivityMatrix.Text;
+
+
+                            if (!string.IsNullOrEmpty(lblEntryDate.Text))
+                                dr["ENTRY_DATE"] = lblEntryDate.Text;
+
+                            if (!string.IsNullOrEmpty(lblInTime.Text))
+                                dr["IN_TIME"] = lblInTime.Text;
+
+                            if (!string.IsNullOrEmpty(lblOutTime.Text))
+                                dr["OUT_TIME"] = lblOutTime.Text;
+
+                            if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+                                dr["WORKING_HOURS"] = lblWorkingHours.Text;
+
+                            if (!string.IsNullOrEmpty(lblWorkingMinuts.Text))
+                                dr["WORKING_MINUTS"] = lblWorkingMinuts.Text;
+
+                            if (!string.IsNullOrEmpty(txtAdjustedWorkingHours.Text))
+                                dr["ADJUSTED_WORKING_HOURS"] = txtAdjustedWorkingHours.Text;
+
+                            if (!string.IsNullOrEmpty(lblOTHours.Text))
+                                dr["OT_HOURS"] = lblOTHours.Text;
+
+                            if (!string.IsNullOrEmpty(txtRemarks.Text))
+                                dr["REMARKS"] = txtRemarks.Text;
+
+                            dt.Rows.Add(dr);
+                        }
+
+                        if (dt.Rows.Count > 0)
+                        {
+                            int totalWorkingMinuts = 0;
+
+                            DataRow drnew = dt.NewRow();
+
+                            drnew["SERIAL_NO"] = Convert.ToString(Convert.ToInt32(dt.Rows[rowindex]["SERIAL_NO"]) + Convert.ToInt32(gvWorkerTimesheetList.Rows.Count));
+                            drnew["EMPLOYEE_NAME"] = Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_NAME"]);
+                            drnew["EMPLOYEE_CODE"] = Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_CODE"]);
+                            drnew["ENTRY_DATE"] = Convert.ToString(dt.Rows[rowindex]["ENTRY_DATE"]);
+                            drnew["WORKING_HOURS"] = Convert.ToString(dt.Rows[rowindex]["WORKING_HOURS"]);
+                            drnew["WORKING_MINUTS"] = Convert.ToString(dt.Rows[rowindex]["WORKING_MINUTS"]);
+
+                            int adjustedWorkingHours = 0;
+                            int adjustedWorkingMins = 0;
+                            int adjustedWorkingTotalMins = 0;
+
+                            foreach (DataRow dr in dt.Select("EMPLOYEE_NAME='" + Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_NAME"]) + "' AND EMPLOYEE_CODE='" + Convert.ToString(dt.Rows[rowindex]["EMPLOYEE_CODE"]) + "'"))
+                            {
+                                if (!string.IsNullOrEmpty(Convert.ToString(dr["ADJUSTED_WORKING_HOURS"])))
+                                {
+                                    if (Convert.ToString(dr["ADJUSTED_WORKING_HOURS"]).Contains(':'))
+                                    {
+                                        string[] strAdjustedWorkingHours = Convert.ToString(dr["ADJUSTED_WORKING_HOURS"]).Split(':');
+
+                                        if (Convert.ToInt32(strAdjustedWorkingHours[0]) > 0)
+                                            adjustedWorkingHours = Convert.ToInt32(strAdjustedWorkingHours[0]);
+                                        else
+                                            adjustedWorkingHours = 0;
+
+                                        if (Convert.ToInt32(strAdjustedWorkingHours[1]) > 0)
+                                            adjustedWorkingMins = Convert.ToInt32(strAdjustedWorkingHours[1]);
+                                        else
+                                            adjustedWorkingMins = 0;
+                                    }
+                                    else
+                                    {
+                                        adjustedWorkingHours = Convert.ToInt32(Convert.ToString(dr["ADJUSTED_WORKING_HOURS"]));
+                                        adjustedWorkingMins = 0;
+                                    }
+                                }
+                                else
+                                {
+                                    adjustedWorkingHours = 0;
+                                    adjustedWorkingMins = 0;
+                                }
+
+                                adjustedWorkingTotalMins += adjustedWorkingHours * 60 + adjustedWorkingMins;
+                            }
+
+                            if (!string.IsNullOrEmpty(Convert.ToString(drnew["WORKING_MINUTS"])) && Convert.ToInt32(drnew["WORKING_MINUTS"]) > 0)
+                                totalWorkingMinuts = Convert.ToInt32(drnew["WORKING_MINUTS"]);
+                            else
+                                totalWorkingMinuts = 0;
+
+
+                            int balanceWorkingMinuts = 0;
+
+                            balanceWorkingMinuts = totalWorkingMinuts - adjustedWorkingTotalMins;
+
+                            if (!string.IsNullOrEmpty(Convert.ToString(balanceWorkingMinuts)))
+                            {
+                                string balWorkingHrs = string.Empty;
+                                string balWorkingMins = string.Empty;
+
+                                if (Convert.ToInt32(balanceWorkingMinuts / 60) < 10)
+                                    balWorkingHrs = Convert.ToString("0" + Convert.ToInt32(balanceWorkingMinuts / 60));
+                                else
+                                    balWorkingHrs = Convert.ToString(balanceWorkingMinuts / 60);
+
+                                if (Convert.ToInt32(balanceWorkingMinuts % 60) < 10)
+                                    balWorkingMins = Convert.ToString("0" + Convert.ToInt32(balanceWorkingMinuts % 60));
+                                else
+                                    balWorkingMins = Convert.ToString(balanceWorkingMinuts % 60);
+
+                                drnew["ADJUSTED_WORKING_HOURS"] = (balWorkingHrs + ":" + balWorkingMins);
+                            }
+                            else
+                            {
+                                drnew["ADJUSTED_WORKING_HOURS"] = string.Empty;
+                            }
+
+                            if (balanceWorkingMinuts > 0)
+                            {
+                                dt.Rows.InsertAt(drnew, rowindex + 1);
+                            }
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                chkJobNo = true;
+                                Session["dtChanged"] = dt;
+                                gvWorkerTimesheetList.DataSource = dt.DefaultView;
+                                gvWorkerTimesheetList.DataBind();
+                                lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+                            }
+                            else
+                            {
+                                chkJobNo = false;
+                                Session["dtChanged"] = null;
+                                gvWorkerTimesheetList.DataSource = null;
+                                gvWorkerTimesheetList.DataBind();
+                                lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //
+                    }
+                }
+
+                #endregion
+
+
+
+                #region REMOVE[================]
+
+                else if (Convert.ToString(e.CommandArgument) == "REMOVE")
+                {
+                    DataTable dtChanged = (DataTable)Session["dtChanged"];
+                    Label lblRecordID = gvWorkerTimesheetList.Rows[rowindex].FindControl("lblRecordID") as Label;
+                    Label lblSerialNo = gvWorkerTimesheetList.Rows[rowindex].FindControl("lblSerialNo") as Label;
+                    hdRemovedRecordIDs.Value = Convert.ToString(hdRemovedRecordIDs.Value) + "," + Convert.ToString(lblRecordID.Text) + ",";
+                    RemoveRecords(dtChanged, Convert.ToString(lblSerialNo.Text));
+
+                    if (gvWorkerTimesheetList.Rows.Count > 0)
+                    {
+                        btnSave.Visible = true;
+                    }
+                    else
+                    {
+                        btnSave.Visible = false;
+                        ExceptionMessage("No data found! Please close window and click on search button to refresh worker timesheet list...!!!");
+                        return;
+                    }
+                }
+
+                #endregion
+
+                #region DELETE[================]
+
+                else if (Convert.ToString(e.CommandArgument) == "DELETE")
+                {
+                    //hdDeleteRecordID.Value = "0";
+
+                    DataTable dtPrimaryDetails = new DataTable();
+
+                    dtPrimaryDetails.Columns.Add("EMPLOYEE_NAME", typeof(string));
+                    dtPrimaryDetails.Columns.Add("UNIT", typeof(string));
+                    dtPrimaryDetails.Columns.Add("ENTRY_DATE", typeof(string));
+                    dtPrimaryDetails.Columns.Add("WORKING_HOURS", typeof(string));
+                    dtPrimaryDetails.Columns.Add("IN_TIME", typeof(string));
+                    dtPrimaryDetails.Columns.Add("OUT_TIME", typeof(string));
+                    dtPrimaryDetails.Columns.Add("OT_HOURS", typeof(string));
+                    dtPrimaryDetails.Columns.Add("SAVED_TIMESHEET_HOURS", typeof(string));
+                    dtPrimaryDetails.Columns.Add("BAL_TIMESHEET_HRS", typeof(string));
+
+                    DataRow dr0 = dtPrimaryDetails.NewRow();
+
+                    dr0["EMPLOYEE_NAME"] = Convert.ToString(lblLegend.Text);
+                    dr0["UNIT"] = Convert.ToString(txtUnit.Text);
+                    dr0["ENTRY_DATE"] = Convert.ToString(txtEntryDate.Text);
+                    dr0["WORKING_HOURS"] = Convert.ToString(txtWorkingHours.Text);
+                    dr0["IN_TIME"] = Convert.ToString(txtInTime.Text);
+                    dr0["OUT_TIME"] = Convert.ToString(txtOutTime.Text);
+                    dr0["OT_HOURS"] = Convert.ToString(txtOTHours.Text);
+                    dr0["SAVED_TIMESHEET_HOURS"] = Convert.ToString(txtSavedTimesheetHours.Text);
+                    dr0["BAL_TIMESHEET_HRS"] = Convert.ToString(txtBalanceTimesheetHours.Text);
+
+                    dtPrimaryDetails.Rows.Add(dr0);
+
+
+                    DataTable dtChanged = (DataTable)Session["dtChanged"];
+                    Label lblRecordID = gvWorkerTimesheetList.Rows[rowindex].FindControl("lblRecordID") as Label;
+                    DeleteRecords(dtChanged, dtPrimaryDetails, Convert.ToInt32(lblRecordID.Text));
+
+                    if (gvWorkerTimesheetList.Rows.Count > 0)
+                    {
+                        btnSave.Visible = true;
+                    }
+                    else
+                    {
+                        btnSave.Visible = false;
+                        ExceptionMessage("No data found! Please close window and click on search button to refresh worker timesheet list...!!!");
+                        return;
+                    }
+                }
+
+                #endregion
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    bool ReturnValue()
+    {
+        return false;
+    }
+
+    #endregion
+
+
+    #region METHODS[=======================]
+
+
+    private void GetJOBNoAndOtherData(int unitID)
+    {
+        try
+        {
+            Session["dtJOBNo"] = null;
+            Session["dtEquipment"] = null;
+            Session["dtProductionOrderNo"] = null;
+            Session["dtProductionOrderItemCode"] = null;
+            Session["dtItemName"] = null;
+            Session["dtTagNo"] = null;
+
+            dsJOBNo = objTimesheet.GetLOTJOBsNew(unitID);
+            if (dsJOBNo.Tables.Count > 0 && dsJOBNo.Tables[0].Rows.Count > 0)
+            {
+                DataTable dtJOBNo = new DataTable();
+                dtJOBNo.Columns.Add("JOB_NO", typeof(string));
+
+                foreach (DataRow dr0 in dsJOBNo.Tables[0].Rows)
+                {
+                    int count = 0;
+                    string jobNo = string.Empty;
+
+                    jobNo = Convert.ToString(dr0["JOB_NO"]);
+                    foreach (DataRow dr1 in dtJOBNo.Select("JOB_NO='" + jobNo + "'"))
+                    {
+                        count++;
+                        break;
+                    }
+                    if (count == 0)
+                    {
+                        DataRow drn = dtJOBNo.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr0["JOB_NO"]);
+                        dtJOBNo.Rows.Add(drn);
+                    }
+                }
+
+                if (dtJOBNo.Rows.Count > 0)
+                {
+                    Session["dtJOBNo"] = dtJOBNo;
+                }
+
+
+
+
+                DataTable dtEquipment = new DataTable();
+                dtEquipment.Columns.Add("JOB_NO", typeof(string));
+                dtEquipment.Columns.Add("EQUIPMENT", typeof(string));
+
+                foreach (DataRow dr0 in dsJOBNo.Tables[0].Rows)
+                {
+                    int count = 0;
+                    string jobNo = string.Empty;
+                    string equipment = string.Empty;
+
+                    jobNo = Convert.ToString(dr0["JOB_NO"]);
+                    equipment = Convert.ToString(dr0["EQUIPMENT"]);
+                    foreach (DataRow dr1 in dtEquipment.Select("JOB_NO='" + jobNo + "' AND EQUIPMENT='" + equipment + "'"))
+                    {
+                        count++;
+                        break;
+                    }
+                    if (count == 0)
+                    {
+                        DataRow drn = dtEquipment.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr0["JOB_NO"]);
+                        drn["EQUIPMENT"] = Convert.ToString(dr0["EQUIPMENT"]);
+                        dtEquipment.Rows.Add(drn);
+                    }
+                }
+
+                if (dtEquipment.Rows.Count > 0)
+                {
+                    Session["dtEquipment"] = dtEquipment;
+                }
+
+
+
+                DataTable dtProductionOrderNo = new DataTable();
+                dtProductionOrderNo.Columns.Add("JOB_NO", typeof(string));
+                dtProductionOrderNo.Columns.Add("EQUIPMENT", typeof(string));
+                dtProductionOrderNo.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+
+                foreach (DataRow dr0 in dsJOBNo.Tables[0].Rows)
+                {
+                    int count = 0;
+                    string jobNo = string.Empty;
+                    string equipment = string.Empty;
+                    string productionOrderNo = string.Empty;
+
+                    jobNo = Convert.ToString(dr0["JOB_NO"]);
+                    equipment = Convert.ToString(dr0["EQUIPMENT"]);
+                    productionOrderNo = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                    foreach (DataRow dr1 in dtProductionOrderNo.Select("JOB_NO='" + jobNo + "' AND EQUIPMENT='" + equipment + "' AND PRODUCTION_ORDER_NO='" + productionOrderNo + "'"))
+                    {
+                        count++;
+                        break;
+                    }
+                    if (count == 0)
+                    {
+                        DataRow drn = dtProductionOrderNo.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr0["JOB_NO"]);
+                        drn["EQUIPMENT"] = Convert.ToString(dr0["EQUIPMENT"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                        dtProductionOrderNo.Rows.Add(drn);
+                    }
+                }
+
+                if (dtProductionOrderNo.Rows.Count > 0)
+                {
+                    Session["dtProductionOrderNo"] = dtProductionOrderNo;
+                }
+
+
+
+                DataTable dtProductionOrderItemCode = new DataTable();
+                dtProductionOrderItemCode.Columns.Add("JOB_NO", typeof(string));
+                dtProductionOrderItemCode.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+                dtProductionOrderItemCode.Columns.Add("SUBITEM_DESC", typeof(string));
+
+                foreach (DataRow dr0 in dsJOBNo.Tables[0].Rows)
+                {
+                    int count = 0;
+                    string jobNo = string.Empty;
+                    string productionOrderNo = string.Empty;
+                    string subitemDesc = string.Empty;
+
+                    jobNo = Convert.ToString(dr0["JOB_NO"]);
+                    productionOrderNo = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                    subitemDesc = Convert.ToString(dr0["SUBITEM_DESC"]);
+                    foreach (DataRow dr1 in dtProductionOrderItemCode.Select("JOB_NO='" + jobNo + "' AND PRODUCTION_ORDER_NO='" + productionOrderNo + "' AND SUBITEM_DESC='" + subitemDesc + "'"))
+                    {
+                        count++;
+                        break;
+                    }
+                    if (count == 0)
+                    {
+                        DataRow drn = dtProductionOrderItemCode.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr0["JOB_NO"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                        drn["SUBITEM_DESC"] = Convert.ToString(dr0["SUBITEM_DESC"]);
+                        dtProductionOrderItemCode.Rows.Add(drn);
+                    }
+                }
+
+                if (dtProductionOrderItemCode.Rows.Count > 0)
+                {
+                    Session["dtProductionOrderItemCode"] = dtProductionOrderItemCode;
+                }
+
+                DataTable dtItemName = new DataTable();
+                dtItemName.Columns.Add("JOB_NO", typeof(string));
+                dtItemName.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+                dtItemName.Columns.Add("ITEM_NAME", typeof(string));
+
+                foreach (DataRow dr0 in dsJOBNo.Tables[0].Rows)
+                {
+                    int count = 0;
+                    string jobNo = string.Empty;
+                    string productionOrderNo = string.Empty;
+                    string itemName = string.Empty;
+
+                    jobNo = Convert.ToString(dr0["JOB_NO"]);
+                    productionOrderNo = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                    itemName = Convert.ToString(dr0["ITEM_NAME"]);
+                    foreach (DataRow dr1 in dtItemName.Select("JOB_NO='" + jobNo + "' AND PRODUCTION_ORDER_NO='" + productionOrderNo + "' AND ITEM_NAME='" + itemName + "'"))
+                    {
+                        count++;
+                        break;
+                    }
+                    if (count == 0)
+                    {
+                        DataRow drn = dtItemName.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr0["JOB_NO"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                        drn["ITEM_NAME"] = Convert.ToString(dr0["ITEM_NAME"]);
+                        dtItemName.Rows.Add(drn);
+                    }
+                }
+
+                if (dtItemName.Rows.Count > 0)
+                {
+                    Session["dtItemName"] = dtItemName;
+                }
+
+
+
+                DataTable dtTagNo = new DataTable();
+                dtTagNo.Columns.Add("JOB_NO", typeof(string));
+                dtTagNo.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+                dtTagNo.Columns.Add("TAG_NO", typeof(string));
+
+                foreach (DataRow dr0 in dsJOBNo.Tables[0].Rows)
+                {
+                    int count = 0;
+                    string jobNo = string.Empty;
+                    string productionOrderNo = string.Empty;
+                    string tagNo = string.Empty;
+
+                    jobNo = Convert.ToString(dr0["JOB_NO"]);
+                    productionOrderNo = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                    tagNo = Convert.ToString(dr0["TAG_NO"]);
+
+                    foreach (DataRow dr1 in dtTagNo.Select("JOB_NO='" + jobNo + "' AND PRODUCTION_ORDER_NO='" + productionOrderNo + "' AND TAG_NO='" + tagNo + "'"))
+                    {
+                        count++;
+                        break;
+                    }
+                    if (count == 0)
+                    {
+                        DataRow drn = dtTagNo.NewRow();
+                        drn["JOB_NO"] = Convert.ToString(dr0["JOB_NO"]);
+                        drn["PRODUCTION_ORDER_NO"] = Convert.ToString(dr0["PRODUCTION_ORDER_NO"]);
+                        drn["TAG_NO"] = Convert.ToString(dr0["TAG_NO"]);
+                        dtTagNo.Rows.Add(drn);
+                    }
+                }
+
+                if (dtTagNo.Rows.Count > 0)
+                {
+                    Session["dtTagNo"] = dtTagNo;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void GetActivity()
+    {
+        try
+        {
+            Session["dtActivity"] = null;
+            dsActivity = objTimesheet.GetActivities("");
+            if (dsActivity.Tables.Count > 0 && dsActivity.Tables[0].Rows.Count > 0)
+            {
+                Session["dtActivity"] = dsActivity.Tables[0];
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void GetWorkerTimesheetListDetail()
+    {
+        try
+        {
+            DataTable dtTemp = new DataTable();
+
+            dtTemp.Columns.Add("SERIAL_NO", typeof(string));
+            dtTemp.Columns.Add("RECORD_ID", typeof(string));
+            dtTemp.Columns.Add("EMPLOYEE_NAME", typeof(string));
+            dtTemp.Columns.Add("EMPLOYEE_CODE", typeof(string));
+            dtTemp.Columns.Add("UNIT", typeof(string));
+            dtTemp.Columns.Add("UNIT_ID", typeof(int));
+            dtTemp.Columns.Add("JOB_NO", typeof(string));
+            dtTemp.Columns.Add("JOB_NO1", typeof(string));
+
+            dt.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+            dt.Columns.Add("SUBITEM_DESC", typeof(string));
+            dt.Columns.Add("ITEM_NAME", typeof(string));
+            dt.Columns.Add("TAG_NO", typeof(string));
+            dt.Columns.Add("ACTIVITY_ID", typeof(int));
+
+            dtTemp.Columns.Add("ACTIVITY_MATRIX", typeof(string));
+
+            dtTemp.Columns.Add("ENTRY_DATE", typeof(string));
+            dtTemp.Columns.Add("IN_TIME", typeof(string));
+            dtTemp.Columns.Add("OUT_TIME", typeof(string));
+            dtTemp.Columns.Add("WORKING_HOURS", typeof(string));
+            dtTemp.Columns.Add("WORKING_MINUTS", typeof(string));
+            dtTemp.Columns.Add("ADJUSTED_WORKING_HOURS", typeof(string));
+            dtTemp.Columns.Add("OT_HOURS", typeof(string));
+            dtTemp.Columns.Add("BAL_WRK_HRS", typeof(string));
+
+            dtTemp.Columns.Add("REMARKS", typeof(string));
+
+            if (Request.QueryString["employeecode"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["employeecode"])))
+                employeeCode = Convert.ToString(Request.QueryString["employeecode"]);
+            else
+                employeeCode = string.Empty;
+
+            if (Request.QueryString["entrydate"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["entrydate"])))
+                entryDate = Convert.ToDateTime(Request.QueryString["entrydate"]).ToString("yyyy-MM-dd");
+            else
+                entryDate = string.Empty;
+
+
+            dsWorker = objTimesheet.GetWorkerTimesheetListDetail(employeeCode, entryDate);
+
+            if (dsWorker.Tables.Count > 0 && dsWorker.Tables[0].Rows.Count > 0)
+            {
+                if (dsWorker.Tables[0].Rows.Count > 0)
+                {
+                    DataRow dr0 = dsWorker.Tables[0].Rows[0];
+
+                    if (dr0["EMPLOYEE_NAME"] != DBNull.Value)
+                        lblLegend.Text = Convert.ToString(dr0["EMPLOYEE_NAME"]) + " [" + Convert.ToString(dr0["EMPLOYEE_CODE"]) + "]";
+                    else
+                        lblLegend.Text = string.Empty;
+
+                    if (dr0["UNIT"] != DBNull.Value)
+                        txtUnit.Text = Convert.ToString(dr0["UNIT"]);
+                    else
+                        txtUnit.Text = string.Empty;
+
+                    if (dr0["ENTRY_DATE"] != DBNull.Value)
+                        txtEntryDate.Text = Convert.ToString(dr0["ENTRY_DATE"]);
+                    else
+                        txtEntryDate.Text = string.Empty;
+
+                    if (dr0["WORKING_HOURS"] != DBNull.Value)
+                        txtWorkingHours.Text = Convert.ToString(dr0["WORKING_HOURS"]);
+                    else
+                        txtWorkingHours.Text = "00:00";
+
+
+                    if (dr0["IN_TIME"] != DBNull.Value)
+                        txtInTime.Text = Convert.ToString(dr0["IN_TIME"]);
+                    else
+                        txtInTime.Text = "00:00";
+
+                    if (dr0["OUT_TIME"] != DBNull.Value)
+                        txtOutTime.Text = Convert.ToString(dr0["OUT_TIME"]);
+                    else
+                        txtOutTime.Text = "00:00";
+
+                    if (dr0["OT_HOURS"] != DBNull.Value)
+                        txtOTHours.Text = Convert.ToString(dr0["OT_HOURS"]);
+                    else
+                        txtOTHours.Text = "0";
+
+                    if (dr0["SAVED_TIMESHEET_HOURS"] != DBNull.Value)
+                        txtSavedTimesheetHours.Text = Convert.ToString(dr0["SAVED_TIMESHEET_HOURS"]);
+                    else
+                        txtSavedTimesheetHours.Text = "00:00";
+
+                    if (dr0["BAL_TIMESHEET_HRS"] != DBNull.Value)
+                        txtBalanceTimesheetHours.Text = Convert.ToString(dr0["BAL_TIMESHEET_HRS"]);
+                    else
+                        txtBalanceTimesheetHours.Text = "00:00";
+                }
+
+
+                Session["dtJOBNo"] = null;
+                Session["dtProductionOrderNo"] = null;
+                Session["dtProductionOrderItemCode"] = null;
+                Session["dtItemName"] = null;
+                Session["dtTagNo"] = null;
+
+                if (dsWorker.Tables[1].Rows.Count > 0)
+                {
+
+                    GetJOBNoAndOtherData(Convert.ToInt32(Request.QueryString["unitid"]));
+
+                    Session["dtTemp"] = dsWorker.Tables[1];
+                    Session["dtChanged"] = dsWorker.Tables[1];
+                    gvWorkerTimesheetList.DataSource = dsWorker.Tables[1].DefaultView;
+                    gvWorkerTimesheetList.DataBind();
+                }
+                else
+                {
+                    Session["dtTemp"] = null;
+                    Session["dtChanged"] = null;
+                    gvWorkerTimesheetList.DataSource = null;
+                    gvWorkerTimesheetList.DataBind();
+                }
+                lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+            }
+            else
+            {
+                Session["dtTemp"] = null;
+                gvWorkerTimesheetList.DataSource = null;
+                gvWorkerTimesheetList.DataBind();
+                lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+            }
+
+            if (gvWorkerTimesheetList.Rows.Count > 0)
+            {
+                btnSave.Visible = true;
+            }
+            else
+            {
+                btnSave.Visible = false;
+                ExceptionMessage("No data found! Please close window and click on search button to refresh worker timesheet list...!!!");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+
+
+    private void UpdateWorkerTimesheet()
+    {
+        try
+        {
+            int value = 0;
+            int count = 0;
+
+            int recordID = 0;
+            string employeeCode = string.Empty;
+            string jobNo = string.Empty;
+            string equipment = string.Empty;
+            string productionOrderNo = string.Empty;
+            string subitem = string.Empty;
+            string itemName = string.Empty;
+            string tagNo = string.Empty;
+            int activityID = 0;
+            string entryDate = string.Empty;
+
+            string subitemDesc = string.Empty;
+            string activityMatrix = string.Empty;
+
+            string remarks = string.Empty;
+
+            string inTime = string.Empty;
+            string outTime = string.Empty;
+
+            string hours = string.Empty;
+            string workingHours = string.Empty;
+            string workingHoursh = string.Empty;
+            string workingHoursm = string.Empty;
+            string otHours = string.Empty;
+
+            string serialNos = string.Empty;
+            string serialNo = string.Empty;
+            string recordIDSToRemove = string.Empty;
+
+
+
+            if (!string.IsNullOrEmpty(Convert.ToString(hdRemovedRecordIDs.Value)))
+                recordIDSToRemove = Convert.ToString(hdRemovedRecordIDs.Value).TrimEnd(',');
+
+
+            //if (gvWorkerTimesheetList.Rows.Count > 0)
+            //{
+            //    foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+            //    {
+            //        TextBox txtJOBNo = gr.FindControl("txtJOBNo") as TextBox;
+            //        DropDownList ddlJOBNo = gr.FindControl("ddlJOBNo") as DropDownList;
+
+            //        if (ddlJOBNo.SelectedIndex > 0 || !string.IsNullOrEmpty(txtJOBNo.Text))
+            //            chkJobNo = true;
+            //        else
+            //        {
+            //            chkJobNo = false;
+            //            break;
+            //        }
+            //    }
+
+            //    foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+            //    {
+            //        Label lblBalanceWorkingHours = gr.FindControl("lblBalanceWorkingHours") as Label;
+
+            //        if (string.IsNullOrEmpty(Convert.ToString(lblBalanceWorkingHours.Text)) || Convert.ToString(lblBalanceWorkingHours.Text) == "00:00" || Convert.ToString(lblBalanceWorkingHours.Text) == "")
+            //            chkBalHours = true;
+            //        else
+            //        {
+            //            chkBalHours = false;
+            //            break;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    ExceptionMessage("No data found...!");
+            //    return;
+            //}
+
+
+            //if (chkJobNo == false)
+            //{
+            //    ExceptionMessage("Please select or enter JOB No..!");
+            //    return;
+            //}
+
+            //if (chkBalHours == false)
+            //{
+            //    ExceptionMessage("Balance hours must be zero..!");
+            //    return;
+            //}
+
+            if (gvWorkerTimesheetList.Rows.Count > 0)
+            {
+                int h = 0;
+                int m = 0;
+                string hs = string.Empty;
+                string ms = string.Empty;
+
+                foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+                {
+                    DropDownList ddlJOBNos = gr.FindControl("ddlJOBNo") as DropDownList;
+                    DropDownList ddlEquipment = gr.FindControl("ddlEquipment") as DropDownList;
+                    DropDownList ddlProductionOrderNo = gr.FindControl("ddlProductionOrderNo") as DropDownList;
+                    DropDownList ddlProductionOrderItemCode = gr.FindControl("ddlProductionOrderItemCode") as DropDownList;
+                    DropDownList ddlItemName = gr.FindControl("ddlItemName") as DropDownList;
+                    DropDownList ddlTagNo = gr.FindControl("ddlTagNo") as DropDownList;
+                    DropDownList ddlActivity = gr.FindControl("ddlActivity") as DropDownList;
+
+
+                    //TextBox txtJOBNo = gr.FindControl("txtJOBNo") as TextBox;
+
+                    DropDownList ddlHours = gr.FindControl("ddlHours") as DropDownList;
+                    DropDownList ddlMins = gr.FindControl("ddlMins") as DropDownList;
+
+                    Label lblBalanceWorkingHours = gr.FindControl("lblBalanceWorkingHours") as Label;
+
+                    ddlJOBNos.BackColor = System.Drawing.Color.Transparent;
+                    ddlEquipment.BackColor = System.Drawing.Color.Transparent;
+                    ddlProductionOrderNo.BackColor = System.Drawing.Color.Transparent;
+                    ddlProductionOrderItemCode.BackColor = System.Drawing.Color.Transparent;
+                    ddlItemName.BackColor = System.Drawing.Color.Transparent;
+                    ddlTagNo.BackColor = System.Drawing.Color.Transparent;
+                    ddlActivity.BackColor = System.Drawing.Color.Transparent;
+
+                    ddlHours.BackColor = System.Drawing.Color.Transparent;
+                    ddlMins.BackColor = System.Drawing.Color.Transparent;
+
+                    if (ddlJOBNos.SelectedIndex == 0)
+                    {
+                        jobNo = string.Empty;
+                        ExceptionMessage("Please select job no...!!");
+                        ddlJOBNos.BackColor = System.Drawing.Color.LightPink;
+                        ddlJOBNos.Focus();
+                        return;
+                    }
+
+                    if (ddlEquipment.SelectedIndex == 0)
+                    {
+                        equipment = string.Empty;
+                        ExceptionMessage("Please select equipment...!!");
+                        ddlEquipment.BackColor = System.Drawing.Color.LightPink;
+                        ddlEquipment.Focus();
+                        return;
+                    }
+
+                    if (ddlProductionOrderNo.SelectedIndex == 0)
+                    {
+                        jobNo = string.Empty;
+                        ExceptionMessage("Please select production order no...!!");
+                        ddlProductionOrderNo.BackColor = System.Drawing.Color.LightPink;
+                        ddlProductionOrderNo.Focus();
+                        return;
+                    }
+
+                    if (ddlProductionOrderItemCode.SelectedIndex == 0)
+                    {
+                        jobNo = string.Empty;
+                        ExceptionMessage("Please select subitem...!!");
+                        ddlProductionOrderItemCode.BackColor = System.Drawing.Color.LightPink;
+                        ddlProductionOrderItemCode.Focus();
+                        return;
+                    }
+
+                    if (ddlItemName.SelectedIndex == 0)
+                    {
+                        jobNo = string.Empty;
+                        ExceptionMessage("Please select item name...!!");
+                        ddlItemName.BackColor = System.Drawing.Color.LightPink;
+                        ddlItemName.Focus();
+                        return;
+                    }
+
+                    if (ddlTagNo.SelectedIndex == 0)
+                    {
+                        jobNo = string.Empty;
+                        ExceptionMessage("Please select tag no...!!");
+                        ddlTagNo.BackColor = System.Drawing.Color.LightPink;
+                        ddlTagNo.Focus();
+                        return;
+                    }
+
+                    if (ddlActivity.SelectedIndex == 0)
+                    {
+                        jobNo = string.Empty;
+                        ExceptionMessage("Please select activity...!!");
+                        ddlActivity.BackColor = System.Drawing.Color.LightPink;
+                        ddlActivity.Focus();
+                        return;
+                    }
+
+
+                    if (ddlHours.SelectedIndex > 0 | ddlMins.SelectedIndex > 0)
+                    {
+                        //                                    
+                    }
+                    else
+                    {
+                        ExceptionMessage("Please select adjustment hours or adjustment minuts...!!");
+                        workingHours = "00:00";
+                        ddlHours.BackColor = System.Drawing.Color.LightPink;
+                        ddlMins.BackColor = System.Drawing.Color.LightPink;
+                        ddlHours.Focus();
+                        ddlMins.Focus();
+                        return;
+                    }
+
+
+                    //if (string.IsNullOrEmpty(Convert.ToString(lblBalanceWorkingHours.Text)) ||
+                    //    Convert.ToString(lblBalanceWorkingHours.Text) == "00:00" ||
+                    //    Convert.ToString(lblBalanceWorkingHours.Text) == "")
+                    //{
+                    //    //
+                    //}
+                    //else
+                    //{
+                    //    ExceptionMessage("Balance hours must be zero..!");
+                    //    return;
+                    //}
+
+                }
+
+
+
+                foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+                {
+
+                    Label lblSerialNo = gr.FindControl("lblSerialNo") as Label;
+                    Label lblRecordID = gr.FindControl("lblRecordID") as Label;
+                    Label lblEmpCode = gr.FindControl("lblEmpCode") as Label;
+                    Label lblEmployeeName = gr.FindControl("lblEmployeeName") as Label;
+
+                    DropDownList ddlJOBNos = gr.FindControl("ddlJOBNo") as DropDownList;
+                    DropDownList ddlEquipment = gr.FindControl("ddlEquipment") as DropDownList;
+                    DropDownList ddlProductionOrderNo = gr.FindControl("ddlProductionOrderNo") as DropDownList;
+                    DropDownList ddlProductionOrderItemCode = gr.FindControl("ddlProductionOrderItemCode") as DropDownList;
+                    DropDownList ddlItemName = gr.FindControl("ddlItemName") as DropDownList;
+                    DropDownList ddlTagNo = gr.FindControl("ddlTagNo") as DropDownList;
+                    DropDownList ddlActivity = gr.FindControl("ddlActivity") as DropDownList;
+
+                    DropDownList ddlHours = gr.FindControl("ddlHours") as DropDownList;
+                    DropDownList ddlMins = gr.FindControl("ddlMins") as DropDownList;
+
+                    //TextBox txtJOBNo = gr.FindControl("txtJOBNo") as TextBox;
+                    //TextBox txtItemName = gr.FindControl("txtItemName") as TextBox;
+
+                    DropDownList ddlSubitems = gr.FindControl("ddlSubitems") as DropDownList;
+                    TextBox txtActivityMatrix = gr.FindControl("txtActivityMatrix") as TextBox;
+
+                    Label lblEntryDate = gr.FindControl("lblEntryDate") as Label;
+                    Label lblInTime = gr.FindControl("lblInTime") as Label;
+                    Label lblOutTime = gr.FindControl("lblOutTime") as Label;
+                    Label lblWorkingHours = gr.FindControl("lblWorkingHours") as Label;
+                    Label lblOTHours = gr.FindControl("lblOTHours") as Label;
+                    TextBox txtAdjustedWorkingHours = gr.FindControl("txtAdjustedWorkingHours") as TextBox;
+                    Label lblBalanceWorkingHours = gr.FindControl("lblBalanceWorkingHours") as Label;
+                    TextBox txtRemarks = gr.FindControl("txtRemarks") as TextBox;
+
+                    ddlJOBNos.BackColor = System.Drawing.Color.Transparent;
+                    ddlEquipment.BackColor = System.Drawing.Color.Transparent;
+                    ddlProductionOrderNo.BackColor = System.Drawing.Color.Transparent;
+                    ddlProductionOrderItemCode.BackColor = System.Drawing.Color.Transparent;
+                    ddlItemName.BackColor = System.Drawing.Color.Transparent;
+                    ddlTagNo.BackColor = System.Drawing.Color.Transparent;
+                    ddlActivity.BackColor = System.Drawing.Color.Transparent;
+
+                    ddlHours.BackColor = System.Drawing.Color.Transparent;
+                    ddlMins.BackColor = System.Drawing.Color.Transparent;
+
+                    if (!string.IsNullOrEmpty(lblSerialNo.Text))
+                        serialNo = Convert.ToString(lblSerialNo.Text);
+                    else
+                        serialNo = "0";
+
+                    if (!string.IsNullOrEmpty(lblRecordID.Text))
+                        recordID = Convert.ToInt32(lblRecordID.Text);
+                    else
+                        recordID = 0;
+
+                    if (!string.IsNullOrEmpty(lblEmpCode.Text))
+                        employeeCode = Convert.ToString(lblEmpCode.Text);
+                    else
+                        employeeCode = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblEntryDate.Text))
+                        entryDate = Convert.ToDateTime(lblEntryDate.Text).ToString("yyyy-MM-dd");
+                    else
+                        entryDate = string.Empty;
+
+
+                    if (ddlJOBNos.SelectedIndex > 0)
+                        jobNo = Convert.ToString(ddlJOBNos.SelectedValue);
+                    else jobNo = string.Empty;
+
+                    if (ddlEquipment.SelectedIndex > 0)
+                        equipment = Convert.ToString(ddlEquipment.SelectedValue);
+                    else equipment = string.Empty;
+
+                    if (ddlProductionOrderNo.SelectedIndex > 0)
+                        productionOrderNo = Convert.ToString(ddlProductionOrderNo.SelectedValue);
+                    else productionOrderNo = string.Empty;
+
+                    if (ddlProductionOrderItemCode.SelectedIndex > 0)
+                        subitem = Convert.ToString(ddlProductionOrderItemCode.SelectedValue);
+                    else subitem = string.Empty;
+
+                    if (ddlItemName.SelectedIndex > 0)
+                        itemName = Convert.ToString(ddlItemName.SelectedValue);
+                    else itemName = string.Empty;
+
+                    if (ddlTagNo.SelectedIndex > 0)
+                        tagNo = Convert.ToString(ddlTagNo.SelectedValue);
+                    else tagNo = string.Empty;
+
+                    if (ddlActivity.SelectedIndex > 0)
+                        activityID = Convert.ToInt32(ddlActivity.SelectedValue);
+                    else activityID = 0;
+
+
+                    if (!string.IsNullOrEmpty(txtInTime.Text))
+                        inTime = Convert.ToString(txtInTime.Text);
+                    else
+                        inTime = string.Empty;
+
+                    if (!string.IsNullOrEmpty(txtOutTime.Text))
+                        outTime = Convert.ToString(txtOutTime.Text);
+                    else
+                        outTime = string.Empty;
+
+                    if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+                        hours = Convert.ToString(lblWorkingHours.Text);
+                    else
+                        hours = string.Empty;
+
+
+                    if (!string.IsNullOrEmpty(txtOTHours.Text))
+                        otHours = Convert.ToString(txtOTHours.Text);
+                    else
+                        otHours = string.Empty;
+
+
+                    if (ddlHours.SelectedIndex > 0 | ddlMins.SelectedIndex > 0)
+                    {
+                        h = (ddlHours.SelectedIndex > 0) ? (Convert.ToInt32(ddlHours.SelectedValue)) : 0;
+                        m = (ddlMins.SelectedIndex > 0) ? (Convert.ToInt32(ddlMins.SelectedValue)) : 0;
+
+                        hs = (h < 10) ? ("0" + Convert.ToString(h)) : (Convert.ToString(h));
+                        ms = (m < 10) ? ("0" + Convert.ToString(m)) : (Convert.ToString(m));
+
+                        workingHours = hs + ":" + ms;
+                    }
+                    //else
+                    //{
+                    //    ExceptionMessage("Please select adjustment hours or adjustment minuts...!!");
+                    //    workingHours = "00:00";
+                    //    ddlHours.BackColor = System.Drawing.Color.LightPink;
+                    //    ddlMins.BackColor = System.Drawing.Color.LightPink;
+                    //    ddlHours.Focus();
+                    //    ddlMins.Focus();
+                    //    return;
+                    //}
+
+
+
+                    if (!string.IsNullOrEmpty(txtRemarks.Text))
+                        remarks = Convert.ToString(txtRemarks.Text);
+                    else
+                        remarks = string.Empty;
+
+                    if (workingHours != "00:00")
+                    {
+                        value = objTimesheet.UpdateWorkerTimesheet(recordID, recordIDSToRemove, employeeCode, entryDate,
+                                                                    jobNo, equipment, productionOrderNo, subitem, itemName, tagNo, activityID,
+                                                                    inTime, outTime, hours, otHours, workingHours, remarks,
+                                                                    Convert.ToInt32(Session["EMP_RECORD_ID"]));
+                    }
+
+
+                    if (value > 0)
+                    {
+                        count++;
+                        serialNos += serialNo + ",";
+                    }
+                }
+            }
+
+
+            if (!string.IsNullOrEmpty(serialNos))
+            {
+                serialNos = serialNos.TrimEnd(',');
+                RemoveRecords((DataTable)Session["dtChanged"], serialNos);
+                SuccessMessage(count + " Records updated successfully..!");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void RemoveRecords(DataTable dtTextChanged, string serialNos)
+    {
+        string[] strSerialNo = serialNos.Split(',');
+        if (dtTextChanged.Rows.Count > 0)
+        {
+            foreach (string sr in strSerialNo)
+            {
+                if (!string.IsNullOrEmpty(sr))
+                {
+                    foreach (DataRow drremove in dtTextChanged.Select("SERIAL_NO='" + sr + "'"))
+                    {
+                        dtTextChanged.Rows.Remove(drremove);
+                    }
+                }
+            }
+
+            if (dtTextChanged.Rows.Count > 0)
+            {
+                Session["dtChanged"] = dtTextChanged;
+                gvWorkerTimesheetList.DataSource = dtTextChanged;
+                gvWorkerTimesheetList.DataBind();
+            }
+            else
+            {
+                Session["dtChanged"] = null;
+                gvWorkerTimesheetList.DataSource = null;
+                gvWorkerTimesheetList.DataBind();
+            }
+
+            lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+        }
+        else
+        {
+            Session["dtChanged"] = null;
+        }
+        lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+    }
+
+
+    private void DeleteRecords(DataTable dtTextChanged, DataTable dtPrimaryDetails, int recordID)
+    {
+        int value = objTimesheet.DeleteWorkerTimesheet(recordID, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+
+        if (value > 0)
+        {
+            GetWorkerTimesheetListPrimaryDetail(dtPrimaryDetails);
+
+            if (dtTextChanged.Rows.Count > 0)
+            {
+                foreach (DataRow drremove in dtTextChanged.Select("RECORD_ID=" + recordID + ""))
+                {
+                    dtTextChanged.Rows.Remove(drremove);
+                }
+
+                if (dtTextChanged.Rows.Count > 0)
+                {
+                    Session["dtChanged"] = dtTextChanged;
+                    gvWorkerTimesheetList.DataSource = dtTextChanged;
+                    gvWorkerTimesheetList.DataBind();
+                }
+                else
+                {
+                    Session["dtChanged"] = null;
+                    gvWorkerTimesheetList.DataSource = null;
+                    gvWorkerTimesheetList.DataBind();
+                }
+            }
+            else
+            {
+                Session["dtChanged"] = null;
+            }
+        }
+        else
+        {
+            Session["dtChanged"] = null;
+        }
+
+        lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+    }
+
+
+    private void GetWorkerTimesheetListPrimaryDetail(DataTable dtPrimaryDetails)
+    {
+        try
+        {
+            if (Request.QueryString["employeecode"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["employeecode"])))
+                employeeCode = Convert.ToString(Request.QueryString["employeecode"]);
+            else
+                employeeCode = string.Empty;
+
+            if (Request.QueryString["entrydate"] != null && !string.IsNullOrEmpty(Convert.ToString(Request.QueryString["entrydate"])))
+                entryDate = Convert.ToDateTime(Request.QueryString["entrydate"]).ToString("yyyy-MM-dd");
+            else
+                entryDate = string.Empty;
+
+
+            dsWorker = objTimesheet.GetWorkerTimesheetListDetail(employeeCode, entryDate);
+
+            if (dsWorker.Tables.Count > 0 && dsWorker.Tables[0].Rows.Count > 0)
+            {
+                DataRow dr0 = dsWorker.Tables[0].Rows[0];
+
+                if (dr0["EMPLOYEE_NAME"] != DBNull.Value)
+                    lblLegend.Text = Convert.ToString(dr0["EMPLOYEE_NAME"]) + " [" + Convert.ToString(dr0["EMPLOYEE_CODE"]) + "]";
+                else
+                    lblLegend.Text = string.Empty;
+
+                if (dr0["UNIT"] != DBNull.Value)
+                    txtUnit.Text = Convert.ToString(dr0["UNIT"]);
+                else
+                    txtUnit.Text = string.Empty;
+
+                if (dr0["ENTRY_DATE"] != DBNull.Value)
+                    txtEntryDate.Text = Convert.ToString(dr0["ENTRY_DATE"]);
+                else
+                    txtEntryDate.Text = string.Empty;
+
+                if (dr0["WORKING_HOURS"] != DBNull.Value)
+                    txtWorkingHours.Text = Convert.ToString(dr0["WORKING_HOURS"]);
+                else
+                    txtWorkingHours.Text = "00:00";
+
+
+                if (dr0["IN_TIME"] != DBNull.Value)
+                    txtInTime.Text = Convert.ToString(dr0["IN_TIME"]);
+                else
+                    txtInTime.Text = "00:00";
+
+                if (dr0["OUT_TIME"] != DBNull.Value)
+                    txtOutTime.Text = Convert.ToString(dr0["OUT_TIME"]);
+                else
+                    txtOutTime.Text = "00:00";
+
+                if (dr0["OT_HOURS"] != DBNull.Value)
+                    txtOTHours.Text = Convert.ToString(dr0["OT_HOURS"]);
+                else
+                    txtOTHours.Text = "0";
+
+                if (dr0["SAVED_TIMESHEET_HOURS"] != DBNull.Value)
+                    txtSavedTimesheetHours.Text = Convert.ToString(dr0["SAVED_TIMESHEET_HOURS"]);
+                else
+                    txtSavedTimesheetHours.Text = "00:00";
+
+                if (dr0["BAL_TIMESHEET_HRS"] != DBNull.Value)
+                    txtBalanceTimesheetHours.Text = Convert.ToString(dr0["BAL_TIMESHEET_HRS"]);
+                else
+                    txtBalanceTimesheetHours.Text = "00:00";
+            }
+            else
+            {
+                if (gvWorkerTimesheetList.Rows.Count > 0)
+                {
+                    DataRow dr0 = dtPrimaryDetails.Rows[0];
+
+                    if (dr0["EMPLOYEE_NAME"] != DBNull.Value)
+                        lblLegend.Text = Convert.ToString(dr0["EMPLOYEE_NAME"]);
+                    else
+                        lblLegend.Text = string.Empty;
+
+                    if (dr0["UNIT"] != DBNull.Value)
+                        txtUnit.Text = Convert.ToString(dr0["UNIT"]);
+                    else
+                        txtUnit.Text = string.Empty;
+
+                    if (dr0["ENTRY_DATE"] != DBNull.Value)
+                        txtEntryDate.Text = Convert.ToString(dr0["ENTRY_DATE"]);
+                    else
+                        txtEntryDate.Text = string.Empty;
+
+                    if (dr0["WORKING_HOURS"] != DBNull.Value)
+                        txtWorkingHours.Text = Convert.ToString(dr0["WORKING_HOURS"]);
+                    else
+                        txtWorkingHours.Text = "00:00";
+
+
+                    if (dr0["IN_TIME"] != DBNull.Value)
+                        txtInTime.Text = Convert.ToString(dr0["IN_TIME"]);
+                    else
+                        txtInTime.Text = "00:00";
+
+                    if (dr0["OUT_TIME"] != DBNull.Value)
+                        txtOutTime.Text = Convert.ToString(dr0["OUT_TIME"]);
+                    else
+                        txtOutTime.Text = "00:00";
+
+                    if (dr0["OT_HOURS"] != DBNull.Value)
+                        txtOTHours.Text = Convert.ToString(dr0["OT_HOURS"]);
+                    else
+                        txtOTHours.Text = "0";
+
+                    txtSavedTimesheetHours.Text = "00:00";
+
+                    TimeSpan duration = DateTime.Parse(txtOutTime.Text).Subtract(DateTime.Parse(txtInTime.Text));
+                    int totalMinutes = Convert.ToInt32(duration.TotalMinutes);
+                    if (totalMinutes > 0)
+                    {
+                        if (totalMinutes >= 360)
+                            totalMinutes = totalMinutes - 30;
+
+                        txtBalanceTimesheetHours.Text = Convert.ToDateTime(totalMinutes / 60 + ":" + totalMinutes % 60).ToString("HH:mm");
+                    }
+                    else txtBalanceTimesheetHours.Text = "00:00";
+                }
+                else
+                {
+                    if (gvWorkerTimesheetList.Rows.Count > 0)
+                    {
+                        btnSave.Visible = true;
+                    }
+                    else
+                    {
+                        btnSave.Visible = false;
+                        ExceptionMessage("No data found! Please close window and click on search button to refresh worker timesheet list...!!!");
+                        return;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void DeleteRecords(string serialNos)
+    {
+        int recordID = 0;
+        int value = 0;
+
+        DataTable dt = new DataTable();
+        hdTotalMinuts.Value = "0";
+        dt.Columns.Add("SERIAL_NO", typeof(string));
+        dt.Columns.Add("RECORD_ID", typeof(string));
+        dt.Columns.Add("EMPLOYEE_NAME", typeof(string));
+        dt.Columns.Add("EMPLOYEE_CODE", typeof(string));
+        dt.Columns.Add("UNIT", typeof(string));
+        dt.Columns.Add("JOB_NO", typeof(string));
+        dt.Columns.Add("JOB_NO1", typeof(string));
+
+        dt.Columns.Add("PRODUCTION_ORDER_NO", typeof(string));
+        dt.Columns.Add("SUBITEM_DESC", typeof(string));
+        dt.Columns.Add("ITEM_NAME", typeof(string));
+        dt.Columns.Add("TAG_NO", typeof(string));
+        dt.Columns.Add("ACTIVITY_ID", typeof(int));
+
+        dt.Columns.Add("ENTRY_DATE", typeof(string));
+        dt.Columns.Add("IN_TIME", typeof(string));
+        dt.Columns.Add("OUT_TIME", typeof(string));
+        dt.Columns.Add("WORKING_HOURS", typeof(string));
+        dt.Columns.Add("WORKING_MINUTS", typeof(string));
+        dt.Columns.Add("ADJUSTED_WORKING_HOURS", typeof(string));
+        dt.Columns.Add("OT_HOURS", typeof(string));
+        dt.Columns.Add("BAL_WRK_HRS", typeof(string));
+
+        dt.Columns.Add("REMARKS", typeof(string));
+
+        if (gvWorkerTimesheetList.Rows.Count > 0)
+        {
+            foreach (GridViewRow gr in gvWorkerTimesheetList.Rows)
+            {
+                DataRow dr = dt.NewRow();
+
+                Label lblRecordID = (Label)gr.FindControl("lblRecordID");
+                Label lblSerialNo = (Label)gr.FindControl("lblSerialNo");
+                Label lblEmployeeName = (Label)gr.FindControl("lblEmployeeName");
+                Label lblEmpCode = (Label)gr.FindControl("lblEmpCode");
+                Label lblUnit = (Label)gr.FindControl("lblUnit");
+                Label lblUnitID = (Label)gr.FindControl("lblUnitID");
+                DropDownList ddlJOBNo = (DropDownList)gr.FindControl("ddlJOBNo");
+
+                TextBox txtJOBNo = (TextBox)gr.FindControl("txtJOBNo");
+                TextBox txtItemName = (TextBox)gr.FindControl("txtItemName");
+
+                Label lblEntryDate = (Label)gr.FindControl("lblEntryDate");
+                Label lblInTime = (Label)gr.FindControl("lblInTime");
+                Label lblOutTime = (Label)gr.FindControl("lblOutTime");
+                Label lblWorkingHours = (Label)gr.FindControl("lblWorkingHours");
+                Label lblWorkingMinuts = (Label)gr.FindControl("lblWorkingMinuts");
+                TextBox txtAdjustedWorkingHours = (TextBox)gr.FindControl("txtAdjustedWorkingHours");
+                Label lblOTHours = (Label)gr.FindControl("lblOTHours");
+                Label lblBalanceWorkingHours = (Label)gr.FindControl("lblBalanceWorkingHours");
+                DropDownList ddlHours = (DropDownList)gr.FindControl("ddlHours");
+                DropDownList ddlMins = (DropDownList)gr.FindControl("ddlMins");
+                TextBox txtRemarks = (TextBox)gr.FindControl("txtRemarks");
+
+                if (!string.IsNullOrEmpty(lblSerialNo.Text))
+                    dr["SERIAL_NO"] = lblSerialNo.Text;
+
+                if (!string.IsNullOrEmpty(lblRecordID.Text))
+                    dr["RECORD_ID"] = lblRecordID.Text;
+
+                if (!string.IsNullOrEmpty(lblEmployeeName.Text))
+                    dr["EMPLOYEE_NAME"] = lblEmployeeName.Text;
+
+                if (!string.IsNullOrEmpty(lblEmpCode.Text))
+                    dr["EMPLOYEE_CODE"] = lblEmpCode.Text;
+
+                if (!string.IsNullOrEmpty(lblUnit.Text))
+                    dr["UNIT"] = lblUnit.Text;
+
+                if (!string.IsNullOrEmpty(lblUnitID.Text))
+                    dr["UNIT_ID"] = lblUnit.Text;
+
+                if (ddlJOBNo.SelectedIndex > 0)
+                    dr["JOB_NO"] = Convert.ToString(ddlJOBNo.SelectedValue);
+
+
+                if (!string.IsNullOrEmpty(txtJOBNo.Text))
+                    dr["JOB_NO1"] = Convert.ToString(txtJOBNo.Text).ToUpper().Trim();
+
+                if (!string.IsNullOrEmpty(txtItemName.Text))
+                    dr["ITEM_NAME"] = Convert.ToString(txtItemName.Text).ToUpper();
+
+                if (!string.IsNullOrEmpty(lblEntryDate.Text))
+                    dr["ENTRY_DATE"] = lblEntryDate.Text;
+
+                if (!string.IsNullOrEmpty(lblInTime.Text))
+                    dr["IN_TIME"] = lblInTime.Text;
+
+                if (!string.IsNullOrEmpty(lblOutTime.Text))
+                    dr["OUT_TIME"] = lblOutTime.Text;
+
+                if (!string.IsNullOrEmpty(lblWorkingHours.Text))
+                    dr["WORKING_HOURS"] = lblWorkingHours.Text;
+
+                if (!string.IsNullOrEmpty(lblWorkingMinuts.Text))
+                    dr["WORKING_MINUTS"] = lblWorkingMinuts.Text;
+
+                if (!string.IsNullOrEmpty(txtAdjustedWorkingHours.Text))
+                    dr["ADJUSTED_WORKING_HOURS"] = txtAdjustedWorkingHours.Text;
+
+                if (!string.IsNullOrEmpty(lblOTHours.Text))
+                    dr["OT_HOURS"] = lblOTHours.Text;
+
+                if (!string.IsNullOrEmpty(txtRemarks.Text))
+                    dr["REMARKS"] = txtRemarks.Text;
+
+                dt.Rows.Add(dr);
+            }
+
+            if (dt.Rows.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(serialNos))
+                {
+                    foreach (DataRow drremove in dt.Select("SERIAL_NO='" + serialNos.TrimEnd(',') + "'"))
+                    {
+                        if (!string.IsNullOrEmpty(Convert.ToString(drremove["RECORD_ID"])))
+                            ViewState["RECORD_IDS"] += Convert.ToString(drremove["RECORD_ID"]) + ",";
+                        //else
+                        //    recordID = 0;
+
+                        //if (recordID > 0)
+                        //{
+                        //    value = objTimesheet.RemoveTimesheetRecord(recordID, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+                        //}
+
+                        //if (value > 0 || recordID == 0)
+
+
+                        dt.Rows.Remove(drremove);
+                        if (dt.Rows.Count > 0)
+                        {
+                            Session["dtChanged"] = dt;
+                            gvWorkerTimesheetList.DataSource = dt;
+                            gvWorkerTimesheetList.DataBind();
+                        }
+                        else
+                        {
+                            Session["dtChanged"] = null;
+                            gvWorkerTimesheetList.DataSource = null;
+                            gvWorkerTimesheetList.DataBind();
+                        }
+
+                        lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+                    }
+                }
+            }
+            else
+            {
+                Session["dtChanged"] = null;
+                lblRecords.Text = "Records[0]";
+            }
+        }
+
+        //string[] strSerialNo = serialNos.Split(',');
+        //if (dtTextChanged.Rows.Count > 0)
+        //{
+        //    foreach (string sr in strSerialNo)
+        //    {
+        //        if (!string.IsNullOrEmpty(sr))
+        //        {
+        //            foreach (DataRow drremove in dtTextChanged.Select("SERIAL_NO='" + sr + "'"))
+        //            {
+        //                dtTextChanged.Rows.Remove(drremove);
+        //            }
+        //        }
+        //    }
+
+        //    if (dtTextChanged.Rows.Count > 0)
+        //    {
+        //        Session["dtChanged"] = dtTextChanged;
+        //        gvWorkerTimesheetList.DataSource = dtTextChanged;
+        //        gvWorkerTimesheetList.DataBind();
+        //    }
+        //    else
+        //    {
+        //        Session["dtChanged"] = null;
+        //        gvWorkerTimesheetList.DataSource = null;
+        //        gvWorkerTimesheetList.DataBind();
+        //    }
+
+        //    lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+        //}
+        //else
+        //{
+        //    Session["dtChanged"] = null;
+        //}
+        //lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+
+    }
+
+    private void BindNotAddedList(DataTable dtNew)
+    {
+        try
+        {
+            if (dtNew.Rows.Count > 0)
+            {
+                Session["dtTemp"] = dtNew;
+                gvWorkerTimesheetList.DataSource = dtNew.DefaultView;
+                gvWorkerTimesheetList.DataBind();
+                lblRecords.Text = "Records[" + gvWorkerTimesheetList.Rows.Count + "]";
+            }
+            else
+            {
+                gvWorkerTimesheetList.DataSource = null;
+                gvWorkerTimesheetList.DataBind();
+                lblRecords.Text = "Records[0]";
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+    private void HideMessagePanel()
+    {
+        pnlMsg.Visible = false;
+        lblMsg.Text = string.Empty;
+    }
+
+    #endregion
+
+}
