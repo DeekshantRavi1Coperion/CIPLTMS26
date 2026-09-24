@@ -1,0 +1,480 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+
+public partial class ORDER_REGISTRATION_ReviseOrderNew : System.Web.UI.Page
+{
+
+    #region VARIABLE[=============]
+
+    BAL.Order objOrder = new BAL.Order();
+    DataSet dsOrderReviseList = new DataSet();
+    DataSet dsCurrency = new DataSet();
+   
+
+    #endregion
+
+
+    #region EVENTS[===============]
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            hdExchangeRateDate.Value = DateTime.Now.ToString("dd-MMM-yyyy");
+            txtExchangeRateDate.Text = hdExchangeRateDate.Value.ToString();            
+            BindCurrency();
+            GetAndBindDetails();
+        }
+    }
+
+    protected void btnRevise_Click(object sender, EventArgs e)
+    {
+        InsertNewRevision();
+    }
+
+    #endregion
+
+
+    #region METHODS[==============]
+
+    private void BindCurrency()
+    {
+        try
+        {
+            dsCurrency = objOrder.GetPrimaryDetails("sp_get_currency_list");
+            if (dsCurrency.Tables.Count > 0 && dsCurrency.Tables[0].Rows.Count > 0)
+            {
+                ddlCurrency.DataSource = dsCurrency.Tables[0];
+                ddlCurrency.DataTextField = "CURRENCY_CODE";
+                ddlCurrency.DataValueField = "CURRENCY_ID";
+                ddlCurrency.DataBind();
+                ddlCurrency.SelectedValue = "68";
+
+                ddlRevisionValueCurrency.DataSource = dsCurrency.Tables[0];
+                ddlRevisionValueCurrency.DataTextField = "CURRENCY_CODE";
+                ddlRevisionValueCurrency.DataValueField = "CURRENCY_ID";
+                ddlRevisionValueCurrency.DataBind();
+                ddlRevisionValueCurrency.SelectedValue = "68";
+            }
+        }
+        catch (Exception ex)
+        {
+            //ExceptionMessage(ex.ToString());
+            //return;
+        }
+    }
+
+    private void GetAndBindDetails()
+    {
+        try
+        {
+            int orderID = Convert.ToInt32(Request.QueryString["orderid"]);
+            dsOrderReviseList = objOrder.GetOrderReviseList(orderID);
+            if (dsOrderReviseList.Tables.Count > 0)
+            {
+                if (dsOrderReviseList.Tables[0].Rows.Count > 0)
+                {
+                    if (dsOrderReviseList.Tables[0].Rows[0]["BASIC_VALUE"] != DBNull.Value)
+                        txtBasicValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["BASIC_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CURRENCY_CODE"] != DBNull.Value)
+                        txtCurrencyLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CURRENCY_CODE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["EXCHANGE_RATE"] != DBNull.Value)
+                        txtExchangeRateLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["EXCHANGE_RATE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["BASIC_VALUE_INR"] != DBNull.Value)
+                        txtBasicValueINRLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["BASIC_VALUE_INR"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["EXCHANGE_RATE_DATE"] != DBNull.Value)
+                        txtExchangeRateDateLast.Text = Convert.ToDateTime(dsOrderReviseList.Tables[0].Rows[0]["EXCHANGE_RATE_DATE"]).ToString("dd-MMM-yyyy");
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["MATERIAL_COST"] != DBNull.Value)
+                        txtMaterialCostLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["MATERIAL_COST"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["GROSS_MARGIN_VALUE"] != DBNull.Value)
+                        txtGrossMarginValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["GROSS_MARGIN_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["GROSS_MARGIN_PERCENTAGE"] != DBNull.Value)
+                        txtGrossMarginPercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["GROSS_MARGIN_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CID_ENGG_HOURS"] != DBNull.Value)
+                        txtCIDEnggHoursLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CID_ENGG_HOURS"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CID_ENGGHOURS_RATE"] != DBNull.Value)
+                        txtCIDEnggHoursRateLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CID_ENGGHOURS_RATE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CID_ENGG_HOURS_VALUE"] != DBNull.Value)
+                        txtCIDEnggHoursValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CID_ENGG_HOURS_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CWG_ENGG_HOURS"] != DBNull.Value)
+                        txtCWGEnggHoursLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CWG_ENGG_HOURS"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CWG_ENGG_HOURS_RATE"] != DBNull.Value)
+                        txtCWGEnggHoursRateLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CWG_ENGG_HOURS_RATE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["CWG_ENGG_HOURS_VALUE"] != DBNull.Value)
+                        txtCWGEnggHoursValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["CWG_ENGG_HOURS_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["ESTIMATED_TRAVEL_COST"] != DBNull.Value)
+                        txtEstimatedTravelCostLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["ESTIMATED_TRAVEL_COST"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["SUPERVISION"] != DBNull.Value)
+                        txtSupervisionLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["SUPERVISION"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["PURCHASE_RATE_PERCENTAGE"] != DBNull.Value)
+                        txtPurchaseRatePercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["PURCHASE_RATE_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["PURCHASE_RATE_VALUE"] != DBNull.Value)
+                        txtPurchaseRateValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["PURCHASE_RATE_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["WARRANTY_COST_PERCENTAGE"] != DBNull.Value)
+                        txtWarrantyCostPercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["WARRANTY_COST_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["WARRANTY_COST_VALUE"] != DBNull.Value)
+                        txtWarrantyCostValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["WARRANTY_COST_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["ROYALTY_PERCENTAGE"] != DBNull.Value)
+                        txtRoyaltyPercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["ROYALTY_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["ROYALTY_VALUE"] != DBNull.Value)
+                        txtRoyaltyValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["ROYALTY_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["INSURANCE_PERCENTAGE"] != DBNull.Value)
+                        txtInsurancePercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["INSURANCE_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["INSURANCE_VALUE"] != DBNull.Value)
+                        txtInsuranceValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["INSURANCE_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["FRAIGHT"] != DBNull.Value)
+                        txtFraightLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["FRAIGHT"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["COMMISION1_PERCENTAGE"] != DBNull.Value)
+                        txtCommision1PercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["COMMISION1_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["COMMISION1_VALUE"] != DBNull.Value)
+                        txtCommision1ValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["COMMISION1_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["COMMISION2_PERCENTAGE"] != DBNull.Value)
+                        txtCommision2PercentageLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["COMMISION2_PERCENTAGE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["COMMISION2_VALUE"] != DBNull.Value)
+                        txtCommision2ValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["COMMISION2_VALUE"]);
+
+                    if (dsOrderReviseList.Tables[0].Rows[0]["TOTAL_VALUE"] != DBNull.Value)
+                        txtTotalValueLast.Text = Convert.ToString(dsOrderReviseList.Tables[0].Rows[0]["TOTAL_VALUE"]);
+
+                }
+
+                if (dsOrderReviseList.Tables[1].Rows.Count > 0)
+                {
+                    if (dsOrderReviseList.Tables[1].Rows[0]["ORDER_ID_COUNT"] != DBNull.Value)
+                    {
+                        if (Convert.ToInt32(dsOrderReviseList.Tables[1].Rows[0]["ORDER_ID_COUNT"]) > 1)
+                            lblLegend.Text = "Revision No.[" + Convert.ToString(Convert.ToInt32(dsOrderReviseList.Tables[1].Rows[0]["ORDER_ID_COUNT"]) - 1) + "]";
+                        else
+                            lblLegend.Text = "New";
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
+    private void InsertNewRevision()
+    {
+        try
+        {
+            int orderID = 0;
+            double basicValue = 0;
+            int basicValueCurrencyId = 0;
+            double exchangeRate = 0;
+            double basicValueINR = 0;
+            string exchangeRateDate = string.Empty;
+            double materialCost = 0;
+            double grossMarginValue = 0;
+            double grossMarginPercentage = 0;
+            double cidEngghours = 0;
+            double cidEngghoursRate = 0;
+            double cidEngghoursValue = 0;
+            double cwgEngghours = 0;
+            double cwgEngghoursRate = 0;
+            double cwgEngghoursValue = 0;
+            double estimatedTravelCost = 0;
+            double supervision = 0;
+            double purchaseRatePercentage = 0;
+            double purchaseRateValue = 0;
+            double warrantyCostPercentage = 0;
+            double warrantyCostValue = 0;
+            double royaltyPercentage = 0;
+            double royaltyValue = 0;
+            double insurancePercentage = 0;
+            double insuranceValue = 0;
+            double fraight = 0;
+            double commision1Percentage = 0;
+            double commision1Value = 0;
+            double commision2Percentage = 0;
+            double commision2Value = 0;
+            double totalValue = 0;
+
+            if (Request.QueryString["orderid"] != null && Convert.ToInt32(Request.QueryString["orderid"]) > 0)
+                orderID = Convert.ToInt32(Request.QueryString["orderid"]);
+            else
+            {
+                ExceptionMessage("Please try again");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(txtBasicValue.Text))
+                basicValue = Convert.ToDouble(txtBasicValue.Text);
+            else
+                basicValue = 0;
+
+            if (ddlCurrency.SelectedIndex > 0)
+                basicValueCurrencyId = Convert.ToInt32(ddlCurrency.SelectedValue);
+            else
+                basicValueCurrencyId = 0;
+
+            if (!string.IsNullOrEmpty(txtExchangeRate.Text))
+                exchangeRate = Convert.ToDouble(txtExchangeRate.Text);
+            else
+                exchangeRate = 0;
+
+            if (Convert.ToDouble(hdBasicValueINR.Value) > 0)
+                basicValueINR = Convert.ToDouble(hdBasicValueINR.Value);
+            else
+                basicValueINR = 0;
+
+            exchangeRateDate = Convert.ToDateTime(hdExchangeRateDate.Value).ToString("yyyy-MM-dd");
+
+            if (!string.IsNullOrEmpty(txtMaterialCost.Text))
+                materialCost = Convert.ToDouble(txtMaterialCost.Text);
+            else
+                materialCost = 0;
+
+            if (Convert.ToDouble(hdGrossMarginValue.Value) > 0)
+                grossMarginValue = Convert.ToDouble(hdGrossMarginValue.Value);
+            else
+                grossMarginValue = 0;
+
+            if (Convert.ToDouble(hdGrossMarginPercentage.Value) > 0)
+                grossMarginPercentage = Convert.ToDouble(hdGrossMarginPercentage.Value);
+            else
+                grossMarginPercentage = 0;
+
+            if (!string.IsNullOrEmpty(txtCIDEnggHours.Text))
+                cidEngghours = Convert.ToDouble(txtCIDEnggHours.Text);
+            else
+                cidEngghours = 0;
+
+            if (!string.IsNullOrEmpty(txtCIDEnggHoursRate.Text))
+                cidEngghoursRate = Convert.ToDouble(txtCIDEnggHoursRate.Text);
+            else
+                cidEngghoursRate = 0;
+
+            if (Convert.ToDouble(hdCIDEnggHoursValue.Value) > 0)
+                cidEngghoursValue = Convert.ToDouble(hdCIDEnggHoursValue.Value);
+            else
+                cidEngghoursValue = 0;
+
+            if (!string.IsNullOrEmpty(txtCWGEnggHours.Text))
+                cwgEngghours = Convert.ToDouble(txtCWGEnggHours.Text);
+            else
+                cwgEngghours = 0;
+
+            if (!string.IsNullOrEmpty(txtCWGEnggHoursRate.Text))
+                cwgEngghoursRate = Convert.ToDouble(txtCWGEnggHoursRate.Text);
+            else
+                cwgEngghoursRate = 0;
+
+            if (Convert.ToDouble(hdCWGEnggHoursValue.Value) > 0)
+                cwgEngghoursValue = Convert.ToDouble(hdCWGEnggHoursValue.Value);
+            else
+                cwgEngghoursValue = 0;
+
+            if (!string.IsNullOrEmpty(txtEstimatedTravelCost.Text))
+                estimatedTravelCost = Convert.ToDouble(txtEstimatedTravelCost.Text);
+            else
+                estimatedTravelCost = 0;
+
+            if (!string.IsNullOrEmpty(txtSupervision.Text))
+                supervision = Convert.ToDouble(txtSupervision.Text);
+            else
+                supervision = 0;
+
+            if (!string.IsNullOrEmpty(txtPurchaseRatePercentage.Text))
+                purchaseRatePercentage = Convert.ToDouble(txtPurchaseRatePercentage.Text);
+            else
+                purchaseRatePercentage = 0;
+
+            if (Convert.ToDouble(hdPurchaseRateValue.Value) > 0)
+                purchaseRateValue = Convert.ToDouble(hdPurchaseRateValue.Value);
+            else
+                purchaseRateValue = 0;
+
+            if (!string.IsNullOrEmpty(txtWarrantyCostPercentage.Text))
+                warrantyCostPercentage = Convert.ToDouble(txtWarrantyCostPercentage.Text);
+            else
+                warrantyCostPercentage = 0;
+
+            if (!string.IsNullOrEmpty(hdWarrantyCostValue.Value))
+                warrantyCostValue = Convert.ToDouble(hdWarrantyCostValue.Value);
+            else
+                warrantyCostValue = 0;
+
+            if (!string.IsNullOrEmpty(txtRoyaltyPercentage.Text))
+                royaltyPercentage = Convert.ToDouble(txtRoyaltyPercentage.Text);
+            else
+                royaltyPercentage = 0;
+
+            if (!string.IsNullOrEmpty(hdRoyaltyValue.Value))
+                royaltyValue = Convert.ToDouble(hdRoyaltyValue.Value);
+            else
+                royaltyValue = 0;
+
+            if (!string.IsNullOrEmpty(txtInsurancePercentage.Text))
+                insurancePercentage = Convert.ToDouble(txtInsurancePercentage.Text);
+            else
+                insurancePercentage = 0;
+
+            if (!string.IsNullOrEmpty(hdInsuranceValue.Value))
+                insuranceValue = Convert.ToDouble(hdInsuranceValue.Value);
+            else
+                insuranceValue = 0;
+
+            if (!string.IsNullOrEmpty(txtFraight.Text))
+                fraight = Convert.ToDouble(txtFraight.Text);
+            else
+                fraight = 0;
+
+            if (!string.IsNullOrEmpty(txtCommision1Percentage.Text))
+                commision1Percentage = Convert.ToDouble(txtCommision1Percentage.Text);
+            else
+                commision1Percentage = 0;
+
+            if (!string.IsNullOrEmpty(hdCommision1Value.Value))
+                commision1Value = Convert.ToDouble(hdCommision1Value.Value);
+            else
+                commision1Value = 0;
+
+            if (!string.IsNullOrEmpty(txtCommision2Percentage.Text))
+                commision2Percentage = Convert.ToDouble(txtCommision2Percentage.Text);
+            else
+                commision2Percentage = 0;
+
+            if (!string.IsNullOrEmpty(hdCommision2Value.Value))
+                commision2Value = Convert.ToDouble(hdCommision2Value.Value);
+            else
+                commision2Value = 0;
+
+            if (!string.IsNullOrEmpty(hdTotalValue.Value))
+                totalValue = Convert.ToDouble(hdTotalValue.Value);
+            else
+                totalValue = 0;
+
+            int value = objOrder.InsertNewRevision(orderID, basicValue, basicValueINR, basicValueCurrencyId, exchangeRate,
+                                    exchangeRateDate, materialCost, grossMarginValue, grossMarginPercentage, cidEngghours, cidEngghoursRate,
+                                    cidEngghoursValue, cwgEngghours, cwgEngghoursRate, cwgEngghoursValue, estimatedTravelCost, supervision,
+                                    purchaseRatePercentage, purchaseRateValue, warrantyCostPercentage, warrantyCostValue, royaltyPercentage, royaltyValue,
+                                    insurancePercentage, insuranceValue, fraight, commision1Percentage, commision1Value, commision2Percentage,
+                                    commision2Value, totalValue, Convert.ToInt32(Session["EMP_RECORD_ID"]));
+
+
+            if (value > 0)
+            {
+                
+                Reset();
+                btnRevise.Visible = false;                    
+                SuccessMessage("Revised successfully.");
+                return;
+            }
+            else
+            {
+                ExceptionMessage("Please try again");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void Reset()
+    {
+        try
+        {
+            txtRevisionValue.Text = string.Empty;
+            txtRevisionValueExchangeRate.Text = "1";
+            ddlRevisionValueCurrency.SelectedValue = "68";
+            txtBasicValue.Text = string.Empty;
+            txtExchangeRate.Text = "1";
+            ddlCurrency.SelectedValue = "68";
+            txtBasicValueINR.Text = string.Empty;
+            txtExchangeRateDate.Text = DateTime.Now.ToString("dd-MMM-yyyy");
+            txtMaterialCost.Text = string.Empty;
+            txtGrossMarginValue.Text = string.Empty;
+            txtGrossMarginPercentage.Text = string.Empty;
+            txtCIDEnggHours.Text = string.Empty;
+            txtCIDEnggHoursRate.Text = string.Empty;
+            txtCIDEnggHoursValue.Text = string.Empty;
+            txtCWGEnggHours.Text = string.Empty;
+            txtCWGEnggHoursRate.Text = string.Empty;
+            txtCWGEnggHoursValue.Text = string.Empty;
+            txtEstimatedTravelCost.Text = string.Empty;
+            txtSupervision.Text = string.Empty;
+            txtPurchaseRatePercentage.Text = string.Empty;
+            txtPurchaseRateValue.Text = string.Empty;
+            txtWarrantyCostPercentage.Text = string.Empty;
+            txtWarrantyCostValue.Text = string.Empty;
+            txtRoyaltyPercentage.Text = string.Empty;
+            txtRoyaltyValue.Text = string.Empty;
+            txtInsurancePercentage.Text = string.Empty;
+            txtInsuranceValue.Text = string.Empty;
+            txtFraight.Text = string.Empty;
+            txtCommision1Percentage.Text = string.Empty;
+            txtCommision1Value.Text = string.Empty;
+            txtCommision2Percentage.Text = string.Empty;
+            txtCommision2Value.Text = string.Empty;
+            txtTotalValue.Text = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            ExceptionMessage(ex.ToString());
+            return;
+        }
+    }
+
+    private void SuccessMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Green;
+    }
+
+    private void ExceptionMessage(string message)
+    {
+        pnlMsg.Visible = true;
+        lblMsg.Text = message;
+        lblMsg.ForeColor = System.Drawing.Color.Red;
+    }
+
+
+    #endregion
+
+}
