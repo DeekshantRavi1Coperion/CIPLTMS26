@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div>
+
+        <p style="font-family:Calibri; font-size:larger;"><b>Dear Sir/Madam,</b></p>
+        <p style="font-family:Calibri;">Please approve/reject following tour information in the TMS,</p>
+
+        <table width="80%" style="font-family:Calibri; font-size:medium; padding:5px;">
+            <tr>
+                <td>
+
+                    <table width="100%" border="1" cellpadding="5" cellspacing="5" style="border-collapse:collapse;">
+                        <tr>
+                            <td style="width: 20%;">
+                                Tour Request No.:
+                            </td>
+                            <td colspan="2">
+                                {#tourno#}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tour Start Date:
+                            </td>
+                            <td>
+                                {#fromdate#}
+                            </td>
+                            <td>
+                                End Date: &nbsp;{#todate#}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Customer Name:
+                            </td>
+                            <td colspan="2">
+                                {#customername#}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Place of Visit:
+                            </td>
+                            <td colspan="2">
+                                {#place#}
+                            </td>
+                        </tr>
+                        <!--///////-->
+                        <tr>
+                            <td>
+                                Country  of Visit:
+                            </td>
+                            <td colspan="2">
+                                {#countryofvisit#}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tour Based On:
+                            </td>
+                            <td colspan="2">
+                                {#tourbasedon#}
+                            </td>
+                        </tr>
+                        <!--////////-->
+                        <tr>
+                            <td>
+                                Purpose of Visit:
+                            </td>
+                            <td colspan="2">
+                                {#purposeofvisit#}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Job No.:
+                            </td>
+                            <td colspan="2">
+                                {#jobno#}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Type of Trip:
+                            </td>
+                            <td colspan="2">
+                                {#typeoftrip#}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Mode of Travel:
+                            </td>
+                            <td colspan="2">
+                                {#modeOfTravel#}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Expected Expenditure:
+                            </td>
+                            <td>
+                                {#expectedexpenditure#}
+                            </td>
+                            <td>
+                                {#expectedexpenditurecurr#}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Advance Required:
+                            </td>
+                            <td>
+                                {#advancerequired#}
+                            </td>
+                            <td>
+                                {#advancerequiredcurr#}
+                            </td>
+                        </tr>
+
+
+
+                        <tr>
+                            <td>
+                                Created By:
+                            </td>
+                            <td>
+                                {#createdby#}
+                            </td>
+                            <td>
+                                {#createdon#}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Remark:
+                            </td>
+                            <td colspan="2">
+                                {#requesterremarks#}
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+        <p style="font-family:Calibri;">Please approve/delete following tour information in the TMS,</p>
+        <table width="70%" border="1" cellpadding="5" cellspacing="5" style="border-collapse:collapse;">
+            <tr>
+                <td>
+                    {#approvelink#}
+                </td>
+                <td>
+                    {#deletelink#}
+                </td>
+            </tr>
+        </table>
+        <p style="font-family:Calibri;">Regards,<br />{#createdby#}</p>
+
+        <p style="font-family:Calibri;"> Note: This email is generated by TMS. If you want to see more details, please log in to TMS.</p>
+       
+
+
+    </div>
+</body>
+</html>
