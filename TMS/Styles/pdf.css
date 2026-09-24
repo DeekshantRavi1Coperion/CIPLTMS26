@@ -1,0 +1,23 @@
+﻿body {
+}
+.color_blue{
+    color:blue;
+    background-color:aqua;
+}
+
+.headerStyle{
+    color:cornflowerblue;
+    font-weight:700;
+    font-family:Arial;
+    font-size:x-large;
+    text-align:center;
+}
+
+.color_green{
+    color:green;
+    font-size:large;
+}
+
+.tbl{
+    background-color:green;
+}

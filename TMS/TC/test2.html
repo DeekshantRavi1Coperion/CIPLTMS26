@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <link href="../Styles/LOT.css" rel="stylesheet" />
+</head>
+<body>
+
+    <h2 class="header2">TC(s) Detail</h2>
+    <hr />
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">PO No:</td>
+            <td class="td2header">{#PONo#}</td>
+            <td class="td1header">PO Date:</td>
+            <td class="td2header">{#PODate#}</td>
+        </tr>
+        <tr>
+            <td class="td1header">Vendor Name:</td>
+            <td class="td2header" colspan='3'>{#VendorName#} - [{#VendorCode#}]</td>
+        </tr>
+
+
+        <tr>
+            <td class="td1header">JOB No:</td>
+            <td class="td2header">{#JOBNo#}</td>
+            <td class="td1header">Unit:</td>
+            <td class="td2header">{#Unit#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Item:</td>
+            <td class="td2header" colspan='3'>{#ItemName#} - [{#ItemCode#}]</td>
+        </tr>
+        <tr>
+            <td class="td1header">Is Completed?:</td>
+            <td class="td2header">{#IsCompleted#}</td>
+            <td class="td1header">Status All:</td>
+            <td class="td2header">{#StatusAll#}</td>
+        </tr>
+        <tr>
+            <td class="td1header">Completed Remarks:</td>
+            <td class="td2header" colspan='3'>{#CompletedRemarks#}</td>
+        </tr>
+    </table>
+    <hr />
+    <h3 class="header2"><u>TC-01</u></h3>
+
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">Status:</td>
+            <td class="td2header">{#Status1#}</td>
+            <td class="td1header">File Name:</td>
+            <td class="td2header">{#FileName1#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Assigned To:</td>
+            <td class="td2header">{#AssignedTo1#}</td>
+            <td class="td1header">Identidfication Reference:</td>
+            <td class="td2header">{#IdentidficationReference1#}</td>
+        </tr>
+
+    </table>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Uploaded</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Uploaded Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#UploadedRemarks1#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Uploaded By:</td>
+                <td class='tdsignatories2'>{#UploadedBy1#}</td>
+                <td class='tdsignatories1'>Uploaded On:</td>
+                <td class='tdsignatories2'>{#UploadedOn1#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Accepted</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Accepted Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#AcceptedRemarks1#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Accepted By:</td>
+                <td class='tdsignatories2'>{#AcceptedBy1#}</td>
+                <td class='tdsignatories1'>Accepted On:</td>
+                <td class='tdsignatories2'>{#AcceptedOn1#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Rejected</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Rejected Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#RejectedRemarks1#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Rejected By:</td>
+                <td class='tdsignatories2'>{#RejectedBy1#}</td>
+                <td class='tdsignatories1'>Rejected On:</td>
+                <td class='tdsignatories2'>{#RejectedOn1#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <h3 class="header2"><u>TC-02</u></h3>
+
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">Status:</td>
+            <td class="td2header">{#Status2#}</td>
+            <td class="td1header">File Name:</td>
+            <td class="td2header">{#FileName2#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Assigned To:</td>
+            <td class="td2header">{#AssignedTo2#}</td>
+            <td class="td1header">Identidfication Reference:</td>
+            <td class="td2header">{#IdentidficationReference2#}</td>
+        </tr>
+
+    </table>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Uploaded</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Uploaded Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#UploadedRemarks2#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Uploaded By:</td>
+                <td class='tdsignatories2'>{#UploadedBy2#}</td>
+                <td class='tdsignatories1'>Uploaded On:</td>
+                <td class='tdsignatories2'>{#UploadedOn2#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Accepted</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Accepted Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#AcceptedRemarks2#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Accepted By:</td>
+                <td class='tdsignatories2'>{#AcceptedBy2#}</td>
+                <td class='tdsignatories1'>Accepted On:</td>
+                <td class='tdsignatories2'>{#AcceptedOn2#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Rejected</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Rejected Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#RejectedRemarks2#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Rejected By:</td>
+                <td class='tdsignatories2'>{#RejectedBy2#}</td>
+                <td class='tdsignatories1'>Rejected On:</td>
+                <td class='tdsignatories2'>{#RejectedOn2#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <h3 class="header2"><u>TC-03</u></h3>
+
+    <table class="tblheader">
+        <tr>
+            <td class="td1header">Status:</td>
+            <td class="td2header">{#Status3#}</td>
+            <td class="td1header">File Name:</td>
+            <td class="td2header">{#FileName3#}</td>
+        </tr>
+
+        <tr>
+            <td class="td1header">Assigned To:</td>
+            <td class="td2header">{#AssignedTo3#}</td>
+            <td class="td1header">Identidfication Reference:</td>
+            <td class="td2header">{#IdentidficationReference3#}</td>
+        </tr>
+
+    </table>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Uploaded</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Uploaded Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#UploadedRemarks3#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Uploaded By:</td>
+                <td class='tdsignatories2'>{#UploadedBy3#}</td>
+                <td class='tdsignatories1'>Uploaded On:</td>
+                <td class='tdsignatories2'>{#UploadedOn3#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Accepted</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Accepted Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#AcceptedRemarks3#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Accepted By:</td>
+                <td class='tdsignatories2'>{#AcceptedBy3#}</td>
+                <td class='tdsignatories1'>Accepted On:</td>
+                <td class='tdsignatories2'>{#AcceptedOn3#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Rejected</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Rejected Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#RejectedRemarks3#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Rejected By:</td>
+                <td class='tdsignatories2'>{#RejectedBy3#}</td>
+                <td class='tdsignatories1'>Rejected On:</td>
+                <td class='tdsignatories2'>{#RejectedOn3#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+</body>
+</html>

@@ -1,0 +1,847 @@
+﻿```css
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #273142;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   MAIN APPLICATION LAYOUT
+   ========================================================= */
+
+.app-layout {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    width: 280px;
+    min-width: 280px;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient( 180deg, #172033 0%, #111827 100% );
+    color: #ffffff;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 100;
+}
+
+
+/* =========================================================
+   SIDEBAR HEADER
+   ========================================================= */
+
+.sidebar-header {
+    flex: 0 0 auto;
+    min-height: 72px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   APPLICATION LOGO
+   ========================================================= */
+
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   LOGO ICON
+   ========================================================= */
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    background: linear-gradient( 135deg, #4f8cff, #2563eb );
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.35);
+}
+
+
+    .logo-icon span {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   LOGO TEXT
+   ========================================================= */
+
+.logo-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.app-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.app-subtitle {
+    margin-top: 2px;
+    font-size: 11px;
+    color: #9ca8bc;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SIDEBAR MENU CONTAINER
+   ========================================================= */
+
+.sidebar-menu {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 18px 12px 15px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.18) transparent;
+}
+
+
+    /* =========================================================
+   SIDEBAR SCROLLBAR
+   ========================================================= */
+
+    .sidebar-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+
+
+    .sidebar-menu::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+
+    .sidebar-menu::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,.18);
+        border-radius: 20px;
+    }
+
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,.30);
+        }
+
+
+/* =========================================================
+   MENU TITLE
+   ========================================================= */
+
+.menu-title {
+    padding: 5px 13px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #738097;
+}
+
+
+/* =========================================================
+   MAIN MENU
+   ========================================================= */
+
+.main-menu {
+    width: 100%;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MENU TREE RESET
+   ========================================================= */
+
+.menu-tree,
+.menu-tree ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+    /* =========================================================
+   MENU LIST ITEM
+   ========================================================= */
+
+    .menu-tree li {
+        margin: 2px 0;
+        padding: 0;
+        list-style: none;
+    }
+
+
+/* =========================================================
+   MENU LINK / TOGGLE
+   ========================================================= */
+
+.menu-link {
+    width: 100%;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #c8d0df;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+
+    /* =========================================================
+   MENU HOVER
+   ========================================================= */
+
+    .menu-link:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.075);
+        transform: translateX(2px);
+    }
+
+
+/* =========================================================
+   MENU TEXT
+   ========================================================= */
+
+.menu-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MENU ARROW
+   ========================================================= */
+
+.menu-arrow {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    color: #8d99ad;
+    font-size: 20px;
+    line-height: 1;
+    transition: transform .20s ease, color .20s ease;
+}
+
+
+/* =========================================================
+   PARENT MENU - CLOSED
+   ========================================================= */
+
+.has-children > .menu-toggle {
+    color: #c8d0df;
+}
+
+
+/* =========================================================
+   PARENT MENU - OPEN
+   ========================================================= */
+
+.has-children.open > .menu-toggle {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.075);
+}
+
+
+    /* =========================================================
+   ARROW - OPEN
+   ========================================================= */
+
+    .has-children.open > .menu-toggle .menu-arrow {
+        transform: rotate(90deg);
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   SUBMENU
+   ========================================================= */
+
+.submenu {
+    display: none;
+    margin-top: 3px !important;
+    margin-left: 12px !important;
+    padding-left: 10px !important;
+    border-left: 1px solid rgba(255,255,255,.10);
+}
+
+
+/* =========================================================
+   OPEN SUBMENU
+   ========================================================= */
+
+.has-children.open > .submenu {
+    display: block;
+}
+
+
+/* =========================================================
+   SUBMENU LINKS
+   ========================================================= */
+
+.submenu .menu-link {
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #aeb8c9;
+}
+
+
+    /* =========================================================
+   SUBMENU HOVER
+   ========================================================= */
+
+    .submenu .menu-link:hover {
+        color: #ffffff;
+        background: rgba(255,255,255,.06);
+    }
+
+
+/* =========================================================
+   DEEP SUBMENU LEVELS
+   ========================================================= */
+
+.submenu .submenu {
+    margin-left: 10px !important;
+    padding-left: 10px !important;
+}
+
+
+/* =========================================================
+   ACTIVE MENU
+   ========================================================= */
+
+.menu-link.active {
+    color: #ffffff !important;
+    background: linear-gradient( 90deg, #2563eb, #3b82f6 ) !important;
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.25);
+    transform: none;
+}
+
+
+    /* =========================================================
+   ACTIVE MENU HOVER
+   ========================================================= */
+
+    .menu-link.active:hover {
+        color: #ffffff !important;
+        background: linear-gradient( 90deg, #2563eb, #3b82f6 ) !important;
+    }
+
+
+/* =========================================================
+   PARENT WITH ACTIVE CHILD
+   ========================================================= */
+
+.has-children.open > .menu-toggle {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   MENU FOCUS
+   ========================================================= */
+
+.menu-link:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+.sidebar-footer {
+    flex: 0 0 auto;
+    padding: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 15, 27, 0.55);
+}
+
+
+/* =========================================================
+   EMPLOYEE CARD
+   ========================================================= */
+
+.employee-card {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.075);
+}
+
+
+/* =========================================================
+   EMPLOYEE HEADER
+   ========================================================= */
+
+.employee-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   EMPLOYEE AVATAR
+   ========================================================= */
+
+.employee-avatar {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient( 135deg, #60a5fa, #2563eb );
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   EMPLOYEE DETAILS
+   ========================================================= */
+
+.employee-details {
+    min-width: 0;
+    flex: 1;
+}
+
+
+/* =========================================================
+   EMPLOYEE NAME
+   ========================================================= */
+
+.employee-name {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPLOYEE ROLE
+   ========================================================= */
+
+.employee-role {
+    display: block;
+    margin-top: 2px;
+    color: #8995aa;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   LOGOUT BUTTON
+   ========================================================= */
+
+.logout-button {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background .18s ease, transform .18s ease;
+}
+
+
+    .logout-button:hover {
+        background: rgba(239,68,68,.15);
+        transform: scale(1.05);
+    }
+
+
+    .logout-button:focus-visible {
+        outline: 2px solid #60a5fa;
+        outline-offset: 2px;
+    }
+
+
+/* =========================================================
+   LOGOUT ICON
+   ========================================================= */
+
+.logout-icon {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+
+/* =========================================================
+   EMPLOYEE INFORMATION
+   ========================================================= */
+
+.employee-info {
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(255,255,255,.07);
+}
+
+
+/* =========================================================
+   INFORMATION ROW
+   ========================================================= */
+
+.info-row {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+}
+
+
+    .info-row + .info-row {
+        margin-top: 2px;
+    }
+
+
+/* =========================================================
+   INFORMATION LABEL
+   ========================================================= */
+
+.info-label {
+    color: #8995aa;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   INFORMATION VALUE
+   ========================================================= */
+
+.info-value {
+    color: #dce3ef;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   MAIN AREA
+   ========================================================= */
+
+.main-area {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: #f4f6f9;
+}
+
+
+/* =========================================================
+   TOP HEADER
+   ========================================================= */
+
+.top-header {
+    flex: 0 0 auto;
+    /*min-height: 64px;*/
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    background: #ffffff;
+    border-bottom: 1px solid #e7eaf0;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+}
+
+
+/* =========================================================
+   PAGE HEADING
+   ========================================================= */
+
+.page-heading {
+    width: 100%;
+}
+
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
+.content-area {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: #c8ced8 #eef1f5;
+}
+
+
+    /* =========================================================
+   CONTENT SCROLLBAR
+   ========================================================= */
+
+    .content-area::-webkit-scrollbar {
+        width: 7px;
+    }
+
+
+    .content-area::-webkit-scrollbar-track {
+        background: #eef1f5;
+    }
+
+
+    .content-area::-webkit-scrollbar-thumb {
+        background: #c8ced8;
+        border-radius: 10px;
+    }
+
+
+        .content-area::-webkit-scrollbar-thumb:hover {
+            background: #aeb6c3;
+        }
+
+
+/* =========================================================
+   COMMON CONTENT CARD
+   ========================================================= */
+
+.content-card {
+    background: #ffffff;
+    border: 1px solid #e7eaf0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, .04);
+}
+
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 250px;
+        min-width: 250px;
+    }
+
+
+    .content-area {
+        padding: 20px;
+    }
+}
+
+
+/* =========================================================
+   SMALLER SCREEN
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 220px;
+        min-width: 220px;
+    }
+
+
+    .sidebar-header {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+
+    .sidebar-menu {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+
+    .sidebar-footer {
+        padding: 9px;
+    }
+
+
+    .employee-card {
+        padding: 9px;
+    }
+
+
+    .menu-link {
+        font-size: 13px;
+    }
+
+
+    .submenu .menu-link {
+        font-size: 12px;
+    }
+
+
+    .content-area {
+        padding: 15px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREEN
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .sidebar {
+        width: 200px;
+        min-width: 200px;
+    }
+
+
+    .logo-text {
+        display: none;
+    }
+
+
+    .sidebar-header {
+        justify-content: center;
+    }
+
+
+    .employee-role {
+        display: none;
+    }
+
+
+    .top-header {
+        min-height: 55px;
+        padding: 0 15px;
+    }
+}
+
+
+/* =========================================================
+   HIGH ZOOM / NARROW VIEWPORT
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .sidebar {
+        width: 185px;
+        min-width: 185px;
+    }
+
+
+    .employee-name {
+        font-size: 5px;
+    }
+
+
+    .info-row {
+        font-size: 1px;
+    }
+
+
+    .content-area {
+        padding: 5px;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.menu-link:focus-visible,
+.logout-button:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}

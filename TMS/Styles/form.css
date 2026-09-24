@@ -1,0 +1,261 @@
+﻿/* ==========================================
+   FORM.CSS
+   Optimized for Master Page Layout
+   ========================================== */
+
+/* Container */
+.form-entry-container {
+    width: 98%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Card */
+.form-card {
+    width: 100%;
+    max-height: calc(100vh - 160px);
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 15px 20px 25px 20px;
+    box-sizing: border-box;
+}
+
+    /* Legend */
+    .form-card legend {
+        padding: 0 10px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+/* Form Grid */
+.form-grid {
+    display: grid;
+    /*grid-template-columns: 140px 1fr 140px 1fr;*/
+    gap: 8px 12px;
+    align-items: center;
+}
+
+.form-grid-2 {
+    grid-template-columns: 140px 1fr 140px 1fr;
+}
+
+.form-grid-3 {
+    grid-template-columns: 120px 1fr 120px 1fr 120px 1fr;
+}
+
+    /* Labels */
+    .form-grid label,
+    .form-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #333333;
+        margin: 0;
+    }
+
+
+
+
+/* Standard Controls */
+.form-control {
+    width: 100%;
+    height: 30px;
+    min-height: 30px;
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: #ffffff;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+/* TextArea */
+textarea.form-control {
+    height: 70px;
+    min-height: 70px;
+    resize: vertical;
+}
+
+/* Focus Effect */
+.form-control:focus {
+    outline: none;
+    border-color: #0078d4;
+    box-shadow: 0 0 3px rgba(0,120,212,0.25);
+}
+
+/* ASP.NET Dropdown */
+select.form-control {
+    cursor: pointer;
+}
+
+/* File Upload */
+.form-file {
+    width: 100%;
+    font-size: 12px;
+}
+
+/* Full Width Row */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Buttons */
+.button {
+    height: 32px;
+    min-height: 32px;
+    border: none;
+    border-radius: 4px;
+    background: #0078d4;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+    .button:hover {
+        background: #005ea6;
+    }
+
+    .button:active {
+        transform: scale(0.98);
+    }
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+    .button-group .button {
+        min-width: 120px;
+    }
+
+/* Validation / Message Panel */
+#pnlMsg {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Readonly Controls */
+.form-control[readonly] {
+    background: #f8f9fa;
+}
+
+/* Disabled Controls */
+.form-control:disabled {
+    background: #eeeeee;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   Modern Scrollbar
+   ========================================== */
+
+.form-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.form-card::-webkit-scrollbar-thumb {
+    background: rgba(120,120,120,.45);
+    border-radius: 20px;
+}
+
+    .form-card::-webkit-scrollbar-thumb:hover {
+        background: rgba(120,120,120,.75);
+    }
+
+/* Firefox */
+.form-card {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120,120,120,.5) transparent;
+}
+
+/* ==========================================
+   ASP.NET Controls Support
+   ========================================== */
+
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=number],
+input[type=date],
+input[type=datetime-local],
+input[type=tel],
+select,
+textarea {
+    font-size: 12px;
+}
+
+/* ==========================================
+   Responsive Layout
+   ========================================== */
+
+@media (max-width: 1200px) {
+
+    .form-grid {
+        /*grid-template-columns: 130px 1fr;*/
+        grid-template-columns: 120px 1fr 120px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .form-entry-container {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .form-card {
+        max-height: none;
+        padding: 12px;
+    }
+
+    .form-grid {
+        /*grid-template-columns: 1fr;*/
+        grid-template-columns: 120px 1fr;
+        gap: 8px;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+        .button-group .button {
+            width: 100%;
+        }
+}
+
+@media (max-width: 480px) {
+
+    .form-card legend {
+        font-size: 16px;
+    }
+
+    .form-control {
+        font-size: 11px;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid label,
+    .form-label {
+        font-size: 11px;
+    }
+
+    .button {
+        font-size: 11px;
+    }
+}

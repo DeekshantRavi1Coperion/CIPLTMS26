@@ -1,0 +1,64 @@
+﻿body {
+}
+
+.headerStyle {
+    font-weight: 400;
+    font-family: Arial;
+    font-size: x-large;
+    text-align: center;
+}
+
+.tblheader {
+    padding: 10px;
+    border-color: black;
+    width: 100%;
+    font-family: Arial;
+    font-size: small;
+}
+
+.td1header {
+    width: 20%;
+}
+
+.td2header {
+    width: 30%;
+}
+
+
+.tblsuitems {
+    width: 100%;
+    font-family: Arial;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: small;
+}
+
+
+.trsubitems {
+    background-color: lightblue;
+}
+
+
+.tdleft {
+    /*width: 6%;*/
+    padding: 2px;
+    text-align: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tdright {
+    /*width: 6%;*/
+    padding: 2px;
+    text-align: right;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.tfcenter {
+    /*width: 6%;*/
+    padding: 2px;
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
