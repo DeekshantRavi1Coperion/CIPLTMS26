@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+
+<html>
+<body>
+    <meta charset='utf-8' />    
+    <link href="../../Styles/LOT.css" rel="stylesheet" />
+
+    <h2 class='headerStyle'>BOM</h2>
+    <hr />
+    <table class='tblheader'>
+        <tr>
+            <td class='td1header'>Unit Name:</td>
+            <td class='td2header'>{#UnitName#}</td>
+            <td class='td1header'>Type:</td>
+            <td class='td2header'>{#Type#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Mr No:</td>
+            <td class='td2header'><b>{#MrNo#}</b></td>
+            <td class='td1header'>Status:</td>
+            <td class='td2header'><b>{#Status#}</b></td>
+        </tr>
+        <tr>
+            <td class='td1header'>Bom No:</td>
+            <td class='td2header'>{#BomNo#}</td>
+            <td class='td1header'>Bom Date:</td>
+            <td class='td2header'>{#BomDate#}</td>
+        </tr>
+
+
+        <tr>
+            <td class='td1header'>Job No:</td>
+            <td class='td2header'>{#JobNo#}</td>
+            <td class='td1header'>Delivery Required By:</td>
+            <td class='td2header'>{#DeliveryRequiredBy#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Acceptable Vendor1:</td>
+            <td class='td2header'>{#AcceptableVendor1#}</td>
+            <td class='td1header'>Acceptable Vendor2:</td>
+            <td class='td2header'>{#AcceptableVendor2#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Acceptable Vendor3:</td>
+            <td class='td2header'>{#AcceptableVendor3#}</td>
+            <td class='td1header'>Acceptable Vendor4:</td>
+            <td class='td2header'>{#AcceptableVendor4#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Acceptable Vendor5:</td>
+            <td class='td2header'>{#AcceptableVendor5#}</td>
+            <td class='td1header'>Revision Number:</td>
+            <td class='td2header'>{#RevisionNumber#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Budgeted Cost:</td>
+            <td class='td2header'>{#BudgetedCost#}</td>
+            <td class='td1header'>Estimated Cost:</td>
+            <td class='td2header'>{#EstimatedCost#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Pivot Group:</td>
+            <td class='td2header'>{#PivotGroup#}</td>
+            <td class='td1header'>Responsible For Po:</td>
+            <td class='td2header'>{#ResponsibleForBom#}</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Is Tc Required:</td>
+            <td class='td2header'>{#IsTcRequired#}</td>
+            <td class='td1header'>&nbsp;</td>
+            <td class='td2header'>&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td class='td1header'>Cost Related Remarks:</td>
+            <td class='td2header' colspan='3'>{#Cost Related Remarks#}</td>
+        </tr>
+    </table>
+    <hr />
+    <h3 class='header2'>Products</h3>
+    <table class='tblsuitems'>
+        <tr class='trsubitems'>
+            <th class='tdsrno'>Sr.No.</th>
+            <th class='tddesc'>Product Code</th>
+            <th class='tddesc'>Product Description</th>
+            <th class='tddesc'>Additional Description</th>
+            <th class='tdtag'>UOM</th>
+            <th class='tdquantity'>Quantity</th>
+        </tr>
+        <tr>
+            <td class='tdsrno'>1</td>
+            <td class='tddesc'>{#ProductCode#}</td>
+            <td class='tddesc'>{#Product Description#}</td>
+            <td class='tddesc'>{#AdditionalDescription#}</td>
+            <td class='tdtag'>{#UOM#}</td>
+            <td class='tdquantity'>{#Quantity#}</td>
+        </tr>
+    </table>
+
+    <hr class='hrsignatories' />
+    <h3 class='header2'>Signatories</h3>
+    <hr />
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Created</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Created Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#CreatedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Created By:</td>
+                <td class='tdsignatories2'>Deekshant Ravi</td>
+                <td class='tdsignatories1'>Created On:</td>
+                <td class='tdsignatories2'>17-Oct-2020  05:08:58 PM</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>Amendment</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>Amendment Remarks:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#AmendmentRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>Amendment By:</td>
+                <td class='tdsignatories2'>{#AmendmentBy#}</td>
+                <td class='tdsignatories1'>Amendment On:</td>
+                <td class='tdsignatories2'>{#AmendmentOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+    <hr class='hrsignatories' />
+
+    <fieldset class='pdffieldset'>
+        <legend class='pdflegend'>{#ApprovedOrAmendedApproved#}</legend>
+        <table class='tblsignatories'>
+            <tr>
+                <td colspan='3'>{#ApprovedOrAmendedApprovedRemarksLabel#}:</td>
+                <td colspan='3'>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan='4'>{#ApprovedOrAmendedApprovedRemarks#}</td>
+            </tr>
+            <tr><td colspan='4'>&nbsp;</td></tr>
+            <tr>
+                <td class='tdsignatories1'>{#ApprovedOrAmendedApprovedByLabel#}:</td>
+                <td class='tdsignatories2'>{#ApprovedOrAmendedApprovedBy#}</td>
+                <td class='tdsignatories1'>{#ApprovedOrAmendedApprovedOnLabel#}:</td>
+                <td class='tdsignatories2'>{#ApprovedOrAmendedApprovedOn#}</td>
+            </tr>
+        </table>
+    </fieldset>
+
+</body>
+</html>
