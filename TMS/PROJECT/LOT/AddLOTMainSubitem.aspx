@@ -1,0 +1,201 @@
+﻿<%@ Page Title="CIPLTMS-Transmittal To Factory" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    CodeFile="AddLOTMainSubitem.aspx.cs" Inherits="PROJECT_LOT_AddLOTMainSubitem" %>
+
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+
+    <link rel="icon" href="../../Images/Icon04.png" />
+
+    <%--<link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
+
+    <link href="../../Styles/form.css" rel="stylesheet" />
+   
+
+    <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/NumericValidation.js" type="text/javascript"></script>
+
+
+
+    <style type="text/css">
+        .modalBackground {
+            background-color: Gray;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+            z-index: 1000;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function ValidateDepartment() {
+            var Department = document.getElementById('<%=ddlDepartment.ClientID %>').selectedIndex;
+            if (Department == '' || Department == 0) {
+                document.getElementById('<%=ddlDepartment.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlDepartment.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateLOTMainItems() {
+            var LOTMainItems = document.getElementById('<%=ddlLOTMainItems.ClientID %>').selectedIndex;
+            if (LOTMainItems == '' || LOTMainItems == 0) {
+                document.getElementById('<%=ddlLOTMainItems.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlLOTMainItems.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateLOTMainSubitem() {
+            var LOTMainSubitem = document.getElementById('<%=txtLOTMainSubitem.ClientID %>').value;
+            if (LOTMainSubitem == '') {
+                document.getElementById('<%=txtLOTMainSubitem.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtLOTMainSubitem.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+        function ValidateManager() {
+            var Manager = document.getElementById('<%=ddlManager.ClientID %>').selectedIndex;
+            if (Manager == '' || Manager == 0) {
+                document.getElementById('<%=ddlManager.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlManager.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+
+    </script>
+
+
+    <script type="text/javascript">
+
+        function ValidateAll() {
+            var check = true;
+
+
+            if (ValidateDepartment()) {
+                check = false;
+            }
+
+            if (ValidateLOTMainItems()) {
+                check = false;
+            }
+
+            if (ValidateLOTMainSubitem()) {
+                check = false;
+            }
+
+            if (ValidateManager()) {
+                check = false;
+            }
+
+            if (check) {
+                if (confirm("Would you like to add lot main subitem?")) {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            return check;
+        }
+
+    </script>
+
+
+
+    <script type="text/javascript">
+        function stopEnterKey(evt) {
+            var evt = (evt) ? evt : ((event) ? event : null);
+            var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+            if (evt.keyCode == 13) {
+                return false;
+            }
+        }
+        document.onkeypress = stopEnterKey;
+    </script>
+
+    <script type="text/javascript">
+
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+
+    </script>
+
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
+    <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
+    </ajax:ToolkitScriptManager>
+    <asp:HiddenField ID="hdConfirmValue" runat="server" />
+
+
+    <div class="form-entry-container">
+        <fieldset class="form-card">
+
+            <legend>Add LOT Main Subitem</legend>
+
+            <div class="form-grid form-grid-2">
+
+
+                <label>Company</label>
+                <asp:DropDownList ID="ddlCompany" runat="server" CssClass="form-control" />
+
+                <label>Department</label>
+                <asp:DropDownList ID="ddlDepartment" runat="server"
+                    CssClass="form-control" />
+
+                <label>LOT Main Item</label>
+                <asp:DropDownList ID="ddlLOTMainItems" runat="server"
+                    CssClass="form-control" />
+
+
+                <label>LOT Subitem Item</label>
+                <asp:TextBox ID="txtLOTMainSubitem" runat="server"
+                    CssClass="form-control" />
+
+                <label>Manager</label>
+                <asp:DropDownList ID="ddlManager" runat="server"
+                    CssClass="form-control" />
+            </div>
+
+        </fieldset>
+
+        <div class="full-width button-group">
+
+            <asp:Button ID="btnSave" runat="server" Width="100%" Text="Save" CssClass="button"
+                OnClick="btnSave_Click" OnClientClick="return ValidateAll();" />
+
+            <asp:Button ID="btnSubitemList" runat="server" Width="100%" Text="Subitem List" CssClass="button"
+                OnClick="btnSubitemList_Click" />
+
+        </div>
+
+        <div class="full-width">
+            <asp:Panel ID="pnlMsg" Visible="false" runat="server" Height="100%">
+                <asp:Label ID="lblMsg" runat="server" Font-Bold="True" Font-Size="Large" />
+            </asp:Panel>
+        </div>
+    </div>
+
+</asp:Content>
