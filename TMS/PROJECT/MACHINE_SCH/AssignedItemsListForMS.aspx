@@ -1481,7 +1481,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -1505,11 +1505,11 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvJOBDetail_RowCommand">
@@ -1560,7 +1560,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -1592,11 +1592,11 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <asp:Label ID="lblDrawingMsg" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvDrawingDetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
@@ -1981,7 +1981,7 @@
         BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
     <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server"
-        CssClass="popup-edit">
+        CssClass="popup-pdf">
         <table width="100%">
             <tr>
                 <td align="right">
@@ -2013,7 +2013,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -2081,10 +2081,10 @@
                             <tr>
                                 <td style="width: 90%;">
                                     <asp:HiddenField ID="hdCommitedDateByShopInchargeToMSch" runat="server" />
-                                    <asp:TextBox ID="txtCommitedDateByShopInchargeToMSch" runat="server" 
+                                    <asp:TextBox ID="txtCommitedDateByShopInchargeToMSch" runat="server"
                                         CssClass="form-control"
                                         onkeyDown="javascript:preventInput(event);"></asp:TextBox>
-                                    <ajax:CalendarExtender ID="calendarCommitedDateByShopInchargeToMSch" 
+                                    <ajax:CalendarExtender ID="calendarCommitedDateByShopInchargeToMSch"
                                         PopupButtonID="imgbtnCommitedDateByShopInchargeToMSch"
                                         runat="server" TargetControlID="txtCommitedDateByShopInchargeToMSch" Format="dd-MMM-yyyy">
                                     </ajax:CalendarExtender>
@@ -2101,10 +2101,10 @@
                             <tr>
                                 <td style="width: 90%;">
                                     <asp:HiddenField ID="hdDateOfReceiptOfMaterialToMSch" runat="server" />
-                                    <asp:TextBox ID="txtDateOfReceiptOfMaterialToMSch" runat="server" 
+                                    <asp:TextBox ID="txtDateOfReceiptOfMaterialToMSch" runat="server"
                                         CssClass="form-control"
                                         onkeyDown="javascript:preventInput(event);"></asp:TextBox>
-                                    <ajax:CalendarExtender ID="calendarDateOfReceiptOfMaterialToMSch" 
+                                    <ajax:CalendarExtender ID="calendarDateOfReceiptOfMaterialToMSch"
                                         PopupButtonID="imgbtnDateOfReceiptOfMaterialToMSch"
                                         runat="server" TargetControlID="txtDateOfReceiptOfMaterialToMSch" Format="dd-MMM-yyyy">
                                     </ajax:CalendarExtender>
@@ -2117,7 +2117,7 @@
                         </table>
 
                         <label>Activity:</label>
-                        <asp:DropDownList ID="ddlActivityToMSch" 
+                        <asp:DropDownList ID="ddlActivityToMSch"
                             CssClass="form-control"
                             runat="server"
                             AutoPostBack="true" OnSelectedIndexChanged="ddlActivityToMSch_SelectedIndexChanged" />
@@ -2143,10 +2143,10 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvMachineSchedulingList" runat="server" AutoGenerateColumns="false" CellPadding="5"
                     AlternatingRowStyle-CssClass="alt"
                     OnRowCommand="gvMachineSchedulingList_RowCommand">
@@ -2337,7 +2337,7 @@
 
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -2422,7 +2422,7 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <div align="center">
                     <asp:Panel ID="pnlScheduleDatesMsg" Visible="false" runat="server">
                         <asp:Label ID="lblScheduleDatesMsg" runat="server" Font-Bold="true" Font-Size="Large" />
@@ -2433,7 +2433,7 @@
                     <ContentTemplate>
 
                         <asp:GridView
-                            CssClass="employee-grid"
+                            CssClass="popup-grid"
                             ID="gvAvailableDatesList" runat="server" AutoGenerateColumns="false" CellPadding="5"
                             AlternatingRowStyle-CssClass="alt"
                             OnRowDataBound="gvMachineDatesList_RowDataBound">
@@ -2647,7 +2647,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -2802,7 +2802,7 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <div align="center">
                     <asp:Panel ID="pnlSchedulingCompletionMsg" Visible="false" runat="server">
@@ -2812,7 +2812,7 @@
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvScheduledMachineListForCompletion" runat="server" AutoGenerateColumns="false" CellPadding="5"
                     AlternatingRowStyle-CssClass="alt"
                     OnRowDataBound="gvScheduledMachineListForCompletion_RowDataBound">

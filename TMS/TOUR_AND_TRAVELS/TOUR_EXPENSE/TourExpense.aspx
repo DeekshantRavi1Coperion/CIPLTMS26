@@ -573,7 +573,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -602,14 +602,14 @@
             </div>
 
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <div align="center">
                     <asp:Label ID="lblTourSanctionNoMsg" runat="server" />
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvTourSanctionNo" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvTourSanctionNo_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />

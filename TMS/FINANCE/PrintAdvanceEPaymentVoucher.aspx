@@ -745,7 +745,7 @@
 
         <asp:Panel ID="pnlViewVouchers" runat="server" Visible="true">
 
-            <div class="page-layout">
+            <div class="popup-layout">
 
                 <div class="form-grid-container">
                     <fieldset class="filter-card">
@@ -764,9 +764,9 @@
                     </div>
                 </div>
 
-                <div class="employee-grid-container">
+                <div class="popup-grid-container">
                     <asp:GridView
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvVouchersDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                         ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                         OnRowDataBound="gvVouchersDetail_RowDataBound">

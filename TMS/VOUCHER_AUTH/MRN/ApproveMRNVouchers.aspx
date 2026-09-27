@@ -933,13 +933,13 @@
                         Enabled="false" />
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
 
                             <asp:GridView ID="gvVoucherDetails"
                                 runat="server"
                                 AutoGenerateColumns="false"
                                 CellPadding="4"
-                                CssClass="myGrid"
+                                CssClass="popup-grid"
                                 ForeColor="#333333" GridLines="Both"
                                 Width="100%"
                                 HorizontalAlign="Center"
@@ -1126,11 +1126,11 @@
                     </div>
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
 
                             <div id="divAttachedFiles" runat="server">
                                 <asp:GridView
-                                    CssClass="employee-grid"
+                                    CssClass="popup-grid"
                                     ID="gvAttachedFiles"
                                     runat="server"
                                     AutoGenerateColumns="false"

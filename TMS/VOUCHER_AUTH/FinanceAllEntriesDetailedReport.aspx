@@ -766,7 +766,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -845,7 +845,7 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <table width="100%" runat="server">
                     <tr>
                         <td id="tdVoucherFiles" style="width: 45%;">
@@ -859,7 +859,7 @@
                                     onscroll="SetDivPosition()">
 
                                     <asp:GridView
-                                        CssClass="employee-grid"
+                                        CssClass="popup-grid"
                                         ID="gvAttachedFiles"
                                         runat="server"
                                         AutoGenerateColumns="false"
@@ -927,7 +927,7 @@
                                     onscroll="SetDivPosition()">
 
                                     <asp:GridView
-                                        CssClass="employee-grid"
+                                        CssClass="popup-grid"
                                         ID="gvAttachedOtherFiles"
                                         runat="server"
                                         AutoGenerateColumns="false"

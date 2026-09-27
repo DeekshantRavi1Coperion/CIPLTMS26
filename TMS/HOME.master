@@ -11,11 +11,11 @@
 
     <%--<link href="<%= ResolveUrl("~/Styles/Site.css") %>" rel="stylesheet" type="text/css" />
     <link href="<%= ResolveUrl("~/Styles/MasterPage.css") %>" rel="stylesheet" type="text/css" />--%>
-    
-    
+
+
     <link href="Styles/Site.css" rel="stylesheet" />
     <link href="Styles/MasterPage.css" rel="stylesheet" />
-
+    <script src="Scripts/mssidebar.js"></script>
     <asp:ContentPlaceHolder ID="head" runat="server" />
 
 
@@ -70,7 +70,7 @@
                             </span>
                         </div>--%>
 
-                      <%--  <div class="login-logo">
+                        <%--  <div class="login-logo">
 
                         <img src="Images/Icon04.png"
                              alt="CIPLTMS" />
@@ -78,12 +78,12 @@
                     </div>--%>
 
                         <div class="login-logo">
- 
+
                             <%--<img src="Images/Icon04.png"
                              alt="CIPLTMS" />--%>
- 
+
                             <img src="<%= ResolveUrl("~/Images/Icon04.png") %>" alt="CIPLTMS" />
- 
+
                         </div>
 
                         <!-- Application Name -->

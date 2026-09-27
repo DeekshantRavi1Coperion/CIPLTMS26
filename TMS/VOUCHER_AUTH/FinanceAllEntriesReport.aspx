@@ -706,7 +706,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -753,7 +753,7 @@
                 </fieldset>               
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <div id="divVoucherDetails" runat="server"
                 style='overflow-y: auto; overflow-x: auto; width: 100%; height: 300px; border: 1px solid lightgray;'
@@ -762,7 +762,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVJV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvJVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -796,7 +796,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVPV" Visible="false">
                     <asp:GridView
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvPVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -841,7 +841,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVMRN" Visible="false">
                     <asp:GridView
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvMRNVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -885,7 +885,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVSV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvSVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -930,7 +930,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVSOV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvSOVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -973,7 +973,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVSIV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvSIVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1017,7 +1017,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVVRPV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvVRPVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1048,7 +1048,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVCRPV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvCRPVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1079,7 +1079,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVCBV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvCBVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1121,7 +1121,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVCV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvCVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1154,7 +1154,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVMR" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvMRVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1186,7 +1186,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVPOV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvPOVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1222,7 +1222,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVIIV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvIIVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1256,7 +1256,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVIRV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvIRVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1292,7 +1292,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVVDNV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvVDNVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1322,7 +1322,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVVCNV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvVCNVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1352,7 +1352,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVCDNV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvCDNVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1382,7 +1382,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVCCNV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvCCNVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1412,7 +1412,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVSTV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvSTVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1447,7 +1447,7 @@
 
                 <asp:Panel runat="server" ID="pnlGVSAV" Visible="false">
                     <asp:GridView 
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         ID="gvSAVVoucherDetails"
                         runat="server"
                         AutoGenerateColumns="false"
@@ -1484,13 +1484,13 @@
 
             </div>
 
-             <div class="employee-grid-container">
+             <div class="popup-grid-container">
 
                  <div id="divAttachedFiles" runat="server"
                 style='overflow-y: auto; overflow-x: auto; width: 100%; height: 200px; border: 1px solid lightgray;'
                 onscroll="SetDivPosition()">
                 <asp:GridView 
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvAttachedFiles"
                     runat="server"
                     AutoGenerateColumns="false"

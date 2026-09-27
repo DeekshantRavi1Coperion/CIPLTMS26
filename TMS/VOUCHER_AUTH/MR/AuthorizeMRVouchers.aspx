@@ -961,12 +961,12 @@
 
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
                             <asp:GridView ID="gvVoucherDetails"
                                 runat="server"
                                 AutoGenerateColumns="false"
                                 CellPadding="4"
-                                CssClass="employee-grid"
+                                CssClass="popup-grid"
                                 ForeColor="#333333" GridLines="Both"
                                 Width="100%"
                                 HorizontalAlign="Center"
@@ -1129,11 +1129,11 @@
                     </div>
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
 
                             <div id="divAttachedFiles" runat="server">
                                 <asp:GridView
-                                    CssClass="employee-grid"
+                                    CssClass="popup-grid"
                                     ID="gvAttachedFiles"
                                     runat="server"
                                     AutoGenerateColumns="false"
@@ -1243,15 +1243,15 @@
 
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
                     <legend>Records: [<asp:Label ID="lblShowFolderDocumentsCount" runat="server" />]</legend>
 
-                    <div class="employee-grid-container">
+                    <div class="popup-grid-container">
                         <asp:GridView
-                            CssClass="employee-grid"
+                            CssClass="popup-grid"
                             ID="gvFolderDocuments"
                             runat="server"
                             AutoGenerateColumns="false"

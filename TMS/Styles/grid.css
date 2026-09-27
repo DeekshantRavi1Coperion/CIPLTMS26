@@ -1,130 +1,438 @@
-﻿.employee-grid-container {
+﻿```css
+/* =========================================================
+   REPORT GRID CSS
+   =========================================================
+
+   Layout:
+       Filter  = 40%
+       Grid    = Remaining available space
+
+   Features:
+       - Independent filter scrollbar
+       - Independent grid vertical scrollbar
+       - Independent grid horizontal scrollbar
+       - Sticky grid header
+       - Browser/page scrolling prevented
+       - Uses available viewport space
+       - Zoom friendly
+       - Responsive
+
+   ========================================================= */
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN REPORT PAGE
+   ========================================================= */
+
+.page-layout {
+    width: 100%;
+    /*
+       Use almost the complete viewport.
+
+       45px is reserved for the surrounding
+       Master Page/content area.
+    */
+    height: calc(100vh - 45px);
+    display: grid;
+    /*
+       Filter = 40%
+       Grid = remaining available space
+    */
+    grid-template-rows: 40% minmax(0, 1fr);
+    /*
+       Small separation between filter and grid
+    */
+    gap: 10px;
+    /*
+       Critical for CSS Grid scrolling
+    */
+    min-height: 0;
+    min-width: 0;
+    /*
+       Prevent browser-level scrolling
+    */
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   FILTER AREA
+   ========================================================= */
+
+.form-grid-container {
     width: 100%;
     height: 100%;
+    /*
+       Critical when inside CSS Grid.
+    */
     min-height: 0;
+    min-width: 0;
+    box-sizing: border-box;
+    /*
+       Filter has its OWN scrollbar.
+    */
+    overflow-y: auto;
+    /*
+       Normal filter controls should not
+       create horizontal scrolling.
+    */
+    overflow-x: hidden;
+    padding: 2px;
+}
+
+
+/* =========================================================
+   FILTER FIELDSET
+   ========================================================= */
+
+.employee-grid-fieldset {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid #d8d8d8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    background: #ffffff;
+}
+
+
+    /* =========================================================
+   FILTER LEGEND
+   ========================================================= */
+
+    .employee-grid-fieldset legend {
+        font-size: 18px;
+        font-weight: 600;
+        padding: 0 10px;
+        color: #334155;
+    }
+
+
+/* =========================================================
+   GRID AREA
+   ========================================================= */
+
+.employee-grid-container {
+    width: 100%;
+    height: 100%;
+    /*
+       Critical.
+
+       Allows the grid container to shrink
+       inside the parent grid and scroll internally.
+    */
+    min-height: 0;
+    min-width: 0;
+    box-sizing: border-box;
+    /*
+       Grid gets BOTH scrollbars.
+    */
     overflow-x: auto;
     overflow-y: auto;
     border: 1px solid #d8d8d8;
     border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Main Layout */
-.page-layout {
-    height: calc(100vh - 25vh);
-    display: grid;
-    grid-template-rows: 2fr 5fr; /* roughly 30% / 70% */
-    gap: 5vh;
-    overflow: hidden;
-}
 
-/* Top Panel */
-.form-grid-container {
-    height: calc(100vh - 70vh);
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-/*.form-grid-container {
-            min-height: 0;
-            overflow-y: auto;
-        }*/
-
-
-/* Bottom Panel */
-/*.employee-grid-container {
-            overflow-y: auto;
-            overflow-x: auto;
-            min-height: 0;
-        }*/
-
-
-
-/* Fieldset */
-.employee-grid-fieldset {
-    width: 50%;
-    margin: 10px auto;
-    border: 1px solid #cfcfcf;
-    border-radius: 8px;
-    padding: 10px;
-}
-
-/* Grid */
-
-/*.employee-grid-container {
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: auto;
-        }*/
+/* =========================================================
+   EMPLOYEE GRID / TABLE
+   ========================================================= */
 
 .employee-grid {
+    /*
+       Allow table to expand horizontally
+       when there are many columns.
+    */
     width: max-content;
+    /*
+       At minimum, table fills the container.
+    */
     min-width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
 }
 
-    /* Header */
+
+    /* =========================================================
+   GRID HEADER
+   ========================================================= */
+
     .employee-grid th {
+        /*
+       Sticky header.
+
+       It remains visible while the grid
+       container is vertically scrolled.
+    */
         position: sticky;
         top: 0;
-        z-index: 1;
+        z-index: 5;
         background: #424242;
-        color: white;
-        padding: 10px 5px;
+        color: #ffffff;
+        padding: 9px 8px;
         white-space: nowrap;
         text-align: center;
-        font-size: 14px;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid #555555;
     }
 
 
+    /* =========================================================
+   GRID DATA CELLS
+   ========================================================= */
 
-    /* Rows */
     .employee-grid td {
-        padding: 5px;
+        padding: 6px 8px;
         white-space: nowrap;
         border: 1px solid #e5e5e5;
+        font-size: 13px;
+        color: #263238;
     }
 
-    /* Alternate Rows */
+
+    /* =========================================================
+   ALTERNATE ROWS
+   ========================================================= */
+
     .employee-grid tr:nth-child(even) {
         background: #f8f9fa;
     }
 
-    /* Hover */
+
+    /* =========================================================
+   ROW HOVER
+   ========================================================= */
+
     .employee-grid tr:hover {
         background: #eef7ff;
     }
 
-/* Legend */
-.employee-grid-fieldset legend {
-    font-size: 18px;
-    font-weight: 600;
-    padding: 0 15px;
+
+    /* =========================================================
+   GRID IMAGES
+   ========================================================= */
+
+    .employee-grid img,
+    .employee-grid input[type="image"] {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+    }
+
+
+    /* =========================================================
+   GRID LINKS
+   ========================================================= */
+
+    .employee-grid a {
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+        .employee-grid a:hover {
+            text-decoration: underline;
+        }
+
+
+/* =========================================================
+   FILTER SCROLLBAR
+   GRID SCROLLBAR
+   ========================================================= */
+
+.form-grid-container::-webkit-scrollbar,
+.employee-grid-container::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
 
-/* Images */
-.employee-grid img,
-.employee-grid input[type=image] {
-    width: 22px;
-    height: 22px;
+
+/* =========================================================
+   SCROLLBAR TRACK
+   ========================================================= */
+
+.form-grid-container::-webkit-scrollbar-track,
+.employee-grid-container::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 8px;
 }
 
-/* Mobile */
-@media screen and (max-width:768px) {
+
+/* =========================================================
+   SCROLLBAR THUMB
+   ========================================================= */
+
+.form-grid-container::-webkit-scrollbar-thumb,
+.employee-grid-container::-webkit-scrollbar-thumb {
+    background: #aeb6c2;
+    border-radius: 8px;
+    border: 2px solid #f1f3f5;
+}
+
+
+    /* =========================================================
+   SCROLLBAR HOVER
+   ========================================================= */
+
+    .form-grid-container::-webkit-scrollbar-thumb:hover,
+    .employee-grid-container::-webkit-scrollbar-thumb:hover {
+        background: #858e9b;
+    }
+
+
+/* =========================================================
+   FIREFOX SCROLLBAR
+   ========================================================= */
+
+.form-grid-container,
+.employee-grid-container {
+    scrollbar-width: auto;
+    scrollbar-color: #aeb6c2 #f1f3f5;
+}
+
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
+   ========================================================= */
+
+@media screen and (max-width: 1200px) {
+
+    .page-layout {
+        /*
+           Use almost all available height.
+        */
+        height: calc(100vh - 40px);
+        /*
+           Filter remains 40%.
+           Grid uses everything else.
+        */
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 8px;
+    }
+
+
+    .employee-grid th {
+        font-size: 12px;
+        padding: 8px 7px;
+    }
+
+
+    .employee-grid td {
+        font-size: 12px;
+        padding: 6px 7px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE / TABLET
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+
+    .page-layout {
+        /*
+           Use almost the entire viewport.
+        */
+        height: calc(100vh - 35px);
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 8px;
+    }
+
+
+    /* -----------------------------------------
+       Filter
+       ----------------------------------------- */
 
     .form-grid-container {
         width: 100%;
-        height: calc(100vh - 70vh);
-        padding: 5px;
+        height: 100%;
+        min-height: 0;
+        overflow-y: auto;
+        /*
+           Allow horizontal scroll if
+           controls become too wide.
+        */
+        overflow-x: auto;
     }
+
+
+    /* -----------------------------------------
+       Grid
+       ----------------------------------------- */
 
     .employee-grid-container {
-        height: 100vh;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
     }
 
+
+    /*
+       Force horizontal scrolling
+       for wide tables.
+    */
     .employee-grid {
-        min-width: 1600px;
+        min-width: 1200px;
+    }
+
+
+        .employee-grid th {
+            font-size: 12px;
+            padding: 8px 6px;
+        }
+
+
+        .employee-grid td {
+            font-size: 12px;
+            padding: 6px;
+        }
+
+
+    .employee-grid-fieldset {
+        width: 100%;
+        padding: 10px 12px;
+    }
+
+
+        .employee-grid-fieldset legend {
+            font-size: 16px;
+        }
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media screen and (max-width: 480px) {
+
+    .page-layout {
+        height: calc(100vh - 30px);
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 6px;
+    }
+
+
+    .employee-grid {
+        min-width: 1100px;
     }
 }
 
+
+/* =========================================================
+   END OF REPORT GRID CSS
+   ========================================================= */
+```

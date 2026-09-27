@@ -713,7 +713,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -736,12 +736,12 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
@@ -788,7 +788,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -817,11 +817,11 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <asp:Label ID="lblVendorMsg" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvVendorDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvVendorDetail_RowCommand">

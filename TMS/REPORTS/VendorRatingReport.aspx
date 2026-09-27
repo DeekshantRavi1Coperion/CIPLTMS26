@@ -888,7 +888,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -928,9 +928,11 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
-                <asp:GridView ID="gvMRNDetailReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
+                <asp:GridView 
+                    CssClass="popup-grid"
+                    ID="gvMRNDetailReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" PageSize="20" Width="100%" HorizontalAlign="Center"
                     AllowPaging="false" OnRowDataBound="gvMRNDetailReport_RowDataBound">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />

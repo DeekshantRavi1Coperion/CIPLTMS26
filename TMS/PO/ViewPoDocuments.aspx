@@ -697,7 +697,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -747,10 +747,10 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvAttachedPoList"
                     runat="server"
                     AutoGenerateColumns="false"

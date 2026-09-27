@@ -3467,7 +3467,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -3490,13 +3490,13 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <div align="center">
                     <asp:Label ID="lblProductonOrderNoMsg" runat="server" />
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvProductonOrderNoDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvProductonOrderNoDetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
@@ -3549,7 +3549,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -3569,13 +3569,13 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <div align="center">
                     <asp:Label ID="lblDMSDrawingNoListMsg" runat="server" />
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvDMSDrawingNoList" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvDMSDrawingNoList_RowCommand">

@@ -498,7 +498,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -650,13 +650,13 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:UpdatePanel runat="server" ID="uppanel">
                     <ContentTemplate>
 
                         <asp:GridView
-                            CssClass="employee-grid"
+                            CssClass="popup-grid"
                             ID="gvAvailableDatesList" runat="server" AutoGenerateColumns="false" CellPadding="5"
                             AlternatingRowStyle-CssClass="alt"
                             OnRowDataBound="gvAvailableDatesList_RowDataBound"
@@ -922,8 +922,8 @@
     <ajax:ModalPopupExtender ID="mpeAssignedDrawingDetails" runat="server" TargetControlID="btnShowPopupAssignedDrawingDetails"
         PopupControlID="pnlPopupAssignedDrawingDetails" CancelControlID="imgBtnCancelAssignedDrawingDetails" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupAssignedDrawingDetails" runat="server" BackColor="White" Height="600px" Width="1200px"
-        Style="display: block">
+    <asp:Panel ID="pnlPopupAssignedDrawingDetails" runat="server"
+        CssClass="popup-edit">
         <table width="100%">
             <tr>
                 <td align="right">
@@ -933,7 +933,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
         <div class="form-grid-container">
             <fieldset class="filter-card">
@@ -967,7 +967,7 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
+        <div class="popup-grid-container">
             <div align="center">
                     <asp:Panel ID="pnlAssignedDrawingDetailsMsg" Visible="false" runat="server">
                         <asp:Label ID="lblAssignedDrawingDetailsMsg" runat="server" Font-Bold="true" Font-Size="Large" />
@@ -975,7 +975,7 @@
                 </div>
 
             <asp:GridView 
-                CssClass="employee-grid"
+                CssClass="popup-grid"
                 ID="gvAssignedDrawingList" runat="server" AutoGenerateColumns="false" CellPadding="5"
                                  AlternatingRowStyle-CssClass="alt"
                                 OnRowCommand="gvAssignedDrawingList_RowCommand">

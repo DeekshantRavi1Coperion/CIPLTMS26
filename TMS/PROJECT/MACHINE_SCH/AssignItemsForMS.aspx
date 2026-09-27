@@ -1029,7 +1029,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -1053,12 +1053,12 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:Label ID="lblJOBMsgLOT" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvJobDetailLOT" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvJobDetailLOT_RowCommand">
@@ -1109,7 +1109,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -1138,12 +1138,12 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:Label ID="lblJOBMsgFact" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvJobDetailFact" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvJobDetailFact_RowCommand">
@@ -1191,7 +1191,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
         <div class="form-grid-container">
             <fieldset class="filter-card">
@@ -1223,11 +1223,11 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
+        <div class="popup-grid-container">
             <asp:Label ID="lblDrawingMsg" runat="server" />
 
             <asp:GridView 
-                CssClass="employee-grid"
+                CssClass="popup-grid"
                 ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                         ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvDrawingDetail_RowCommand">
                         <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />

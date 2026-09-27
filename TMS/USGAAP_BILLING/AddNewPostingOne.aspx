@@ -762,7 +762,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
             <div class="form-entry-container">
                 <fieldset class="form-card">
                     <legend>
@@ -788,13 +788,13 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <div align="center">
                     <asp:Label ID="lblCustomerMsg" runat="server" />
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvCustomerDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvCustomerDetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" VerticalAlign="Top" />
@@ -843,7 +843,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
             <div class="form-entry-container">
                 <fieldset class="form-card">
                     <legend>
@@ -869,13 +869,13 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <div align="center">
                     <asp:Label ID="lblProductMsg" runat="server" />
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvProductDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvProductCode_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
@@ -918,7 +918,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
             <div class="form-entry-container">
                 <fieldset class="form-card">
                     <legend>
@@ -945,13 +945,13 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <div align="center">
                     <asp:Label ID="lblRevenueAccMsg" runat="server" />
                 </div>
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvRevenueAccount" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" 
                     OnRowCommand="gvRevenueAccount_RowCommand">

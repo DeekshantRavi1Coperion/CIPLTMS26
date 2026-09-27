@@ -574,7 +574,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -610,10 +610,10 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvPOList" runat="server" CellPadding="4" ForeColor="#333333"
                     AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
                     OnRowDataBound="gvPOList_RowDataBound"
@@ -682,7 +682,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -732,12 +732,12 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:Label ID="Label1" runat="server" Text="Records[0]" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvPOItemList" runat="server" CellPadding="4" ForeColor="#333333"
                     AutoGenerateColumns="true" Width="100%" HorizontalAlign="Center"
                     OnRowDataBound="gvPOItemList_RowDataBound  ">

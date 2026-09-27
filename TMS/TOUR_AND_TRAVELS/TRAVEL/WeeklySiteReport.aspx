@@ -233,9 +233,7 @@
         <ContentTemplate>
             <div align="center" style="margin-top: 20px;">
 
-
-
-                <div class="page-layout">
+                <%--<div class="page-layout">--%>
 
                     <div class="form-grid-container">
                         <fieldset class="filter-card">
@@ -567,7 +565,7 @@
                     </div>
 
 
-                </div>
+                <%--</div>--%>
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>

@@ -1127,9 +1127,9 @@
 
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
                             <asp:GridView
-                                CssClass="employee-grid"
+                                CssClass="popup-grid"
                                 ID="gvVoucherDetails"
                                 runat="server"
                                 AutoGenerateColumns="false"
@@ -1333,13 +1333,13 @@
                     </div>
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
 
                             <h5 style="text-align: center"><u>Purchase Voucher Attached Files</u></h5>
 
                             <div id="divAttachedFiles" runat="server">
                                 <asp:GridView
-                                    CssClass="employee-grid"
+                                    CssClass="popup-grid"
                                     ID="gvAttachedFiles"
                                     runat="server"
                                     AutoGenerateColumns="false"
@@ -1408,7 +1408,7 @@
                     </div>
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
 
                             <asp:Panel ID="pnlAttachedMRNFilesAu" runat="server">
 
@@ -1418,7 +1418,7 @@
                                     runat="server"
                                     AutoGenerateColumns="false"
                                     CellPadding="4"
-                                    CssClass="myGrid"
+                                    CssClass="popup-grid"
                                     ForeColor="#333333" GridLines="Both"
                                     Width="100%"
                                     HorizontalAlign="Center"
@@ -1474,14 +1474,14 @@
                     </div>
 
                     <div class="full-width">
-                        <div class="employee-grid-container">
+                        <div class="popup-grid-container">
 
                             <div id="divAttachedMRNFiles" runat="server">
 
                                 <h5 style="text-align: center"><u>MRN Attached Files</u></h5>
 
                                 <asp:GridView 
-                                    CssClass="employee-grid"
+                                    CssClass="popup-grid"
                                     ID="gvAttachedMRNFiles"
                                     runat="server"
                                     AutoGenerateColumns="false"
@@ -1584,15 +1584,15 @@
 
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
                     <legend>Records: [<asp:Label ID="lblShowFolderDocumentsCount" runat="server" />]</legend>
 
-                    <div class="employee-grid-container">
+                    <div class="popup-grid-container">
                         <asp:GridView 
-                            CssClass="employee-grid"
+                            CssClass="popup-grid"
                             ID="gvFolderDocuments"
                             runat="server"
                             AutoGenerateColumns="false"

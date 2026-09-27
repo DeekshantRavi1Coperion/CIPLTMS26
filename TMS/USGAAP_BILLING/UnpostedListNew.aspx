@@ -603,7 +603,7 @@
                         AutoPostBack="true" />
 
 
-
+                    &nbsp;
                     <asp:Button
                         ID="btnSearch"
                         CssClass="button"
@@ -611,6 +611,7 @@
                         runat="server" Text="Search"
                         OnClick="btnSearch_Click" />
 
+                    &nbsp;
                     <asp:Button
                         ID="btnPost"
                         CssClass="button"

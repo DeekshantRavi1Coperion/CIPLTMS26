@@ -972,9 +972,9 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <fieldset class="filter-card">
                     <legend>
@@ -986,7 +986,7 @@
                     </div>
 
                     <asp:GridView ID="gvOpenTours"
-                        CssClass="employee-grid"
+                        CssClass="popup-grid"
                         runat="server" AutoGenerateColumns="False" CellPadding="4"
                         ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center">
                         <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />

@@ -361,7 +361,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -387,11 +387,11 @@
 
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <asp:Label ID="lblPOMsg" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvPODetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvPODetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
@@ -443,7 +443,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -469,11 +469,11 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <asp:Label ID="lblPONewPGMsg" runat="server" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvPONewPGDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvPONewPGDetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />

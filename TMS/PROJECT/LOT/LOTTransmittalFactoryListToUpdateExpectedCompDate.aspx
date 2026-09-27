@@ -894,15 +894,16 @@
     </ajax:ModalPopupExtender>
     <asp:Panel ID="pnlViewSubitemDetailPopup" runat="server"
         CssClass="popup-edit">
-        <tr>
-            <td align="right">
-                <asp:ImageButton ID="imgBtnCancelSubitemDetailFile" ImageUrl="~/Images/cancelled_img.png" runat="server" />
-            </td>
-        </tr>
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelSubitemDetailFile" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -925,8 +926,10 @@
                 </div>
             </div>
 
-            <div class="employee-grid-container">
-                <asp:GridView ID="gvSubitemsSI" runat="server" AutoGenerateColumns="False" CellPadding="4"
+            <div class="popup-grid-container">
+                <asp:GridView
+                    CssClass="popup-grid"
+                    ID="gvSubitemsSI" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvSubitemsSI_RowCommand" OnRowDataBound="gvSubitemsSI_RowDataBound">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />

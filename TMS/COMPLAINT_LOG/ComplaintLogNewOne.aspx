@@ -419,7 +419,7 @@
         </table>
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -444,7 +444,7 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
 
                 <asp:Label ID="lblCustomerMsg" runat="server" Font-Bold="True" Visible="false" />
 
@@ -502,7 +502,7 @@
 
 
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -528,11 +528,11 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <div class="popup-grid-container">
                 <asp:Label ID="lblJOBNoMsg" runat="server" Font-Bold="True" Visible="false" />
 
                 <asp:GridView
-                    CssClass="employee-grid"
+                    CssClass="popup-grid"
                     ID="gvCustomerJobList" runat="server" AutoGenerateColumns="False" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" PageSize="8" Width="100%" HorizontalAlign="Center"
                     OnRowCommand="gvCustomerJobList_RowCommand">

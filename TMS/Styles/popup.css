@@ -1,37 +1,636 @@
-﻿.popup-edit {
-    background-color: white;
+﻿/* =========================================================
+   POPUP REPORT GRID CSS
+   =========================================================
+
+   Purpose:
+       Report pages displayed inside popup windows.
+
+   Features:
+       - Fits completely inside popup
+       - Filter = 40%
+       - Grid = remaining available space
+       - Independent filter scrollbar
+       - Independent grid vertical scrollbar
+       - Independent grid horizontal scrollbar
+       - Sticky grid header
+       - Prevents grid from escaping popup
+       - No viewport-based height
+       - Responsive
+       - Zoom friendly
+
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   POPUP WINDOWS
+   ========================================================= */
+
+.popup-edit,
+.popup-pdf,
+.popup-img,
+.popup-iframe {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+}
+
+
+/* =========================================================
+   POPUP EDIT WINDOW
+   ========================================================= */
+
+.popup-edit {
+    background-color: #ffffff;
     height: 90%;
     width: 90%;
-    display: block;
+    /*
+        IMPORTANT:
+        Use flex so popup-layout can consume
+        only the available popup height.
+    */
+    display: flex;
+    flex-direction: column;
     padding: 5px;
     border-radius: 5px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    /*
+        Prevent content from escaping popup.
+    */
+    overflow: hidden;
 }
+
+
+/* =========================================================
+   POPUP PDF WINDOW
+   ========================================================= */
 
 .popup-pdf {
-    background-color: white;
+    background-color: #ffffff;
     height: 85%;
     width: 90%;
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding: 5px;
     border-radius: 5px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
+
+
+/* =========================================================
+   POPUP IMAGE WINDOW
+   ========================================================= */
 
 .popup-img {
-    background-color: white;
+    background-color: #ffffff;
     height: 85%;
     width: 90%;
-    display: block;
+    display: flex;
+    flex-direction: column;
     padding: 5px;
     border-radius: 5px;
-    overflow:auto;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
+
+/* =========================================================
+   POPUP IFRAME WINDOW
+   ========================================================= */
 
 .popup-iframe {
     height: 85%;
     width: 95%;
-    margin-left:2%;
+    margin-left: 2%;
     padding: 5px;
     border-radius: 5px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
+
+    /* =========================================================
+   MAIN POPUP REPORT PAGE
+   =========================================================
+
+   IMPORTANT:
+
+   Do NOT use:
+
+       height: 100vh;
+
+   Do NOT use:
+
+       height: 100%;
+
+   The popup may contain other content such as:
+       - Title
+       - Close button
+       - Header
+       - Search controls
+
+   Therefore popup-layout must consume the
+   REMAINING available height.
+
+   ========================================================= */
+
+    .popup-edit .popup-layout,
+    .popup-pdf .popup-layout,
+    .popup-img .popup-layout,
+    .popup-iframe .popup-layout {
+        width: 100%;
+        /*
+        Let flexbox determine the available height.
+    */
+        height: auto;
+        /*
+        Consume remaining popup height.
+    */
+        flex: 1 1 auto;
+        display: grid;
+        /*
+        Filter = 40%
+        Grid   = remaining space
+    */
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 10px;
+        /*
+        Critical for CSS Grid scrolling.
+    */
+        min-height: 0;
+        min-width: 0;
+        /*
+        Prevent report from escaping popup.
+    */
+        overflow: hidden;
+    }
+
+
+    /* =========================================================
+   FILTER AREA
+   ========================================================= */
+
+    .popup-edit .form-grid-container,
+    .popup-pdf .form-grid-container,
+    .popup-img .form-grid-container,
+    .popup-iframe .form-grid-container {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        min-width: 0;
+        box-sizing: border-box;
+        /*
+        Filter gets its own vertical scrollbar.
+    */
+        overflow-y: auto;
+        /*
+        Prevent unnecessary horizontal scrolling.
+    */
+        overflow-x: hidden;
+        padding: 2px;
+    }
+
+
+    /* =========================================================
+   FILTER FIELDSET
+   ========================================================= */
+
+    .popup-edit .popup-grid-fieldset,
+    .popup-pdf .popup-grid-fieldset,
+    .popup-img .popup-grid-fieldset,
+    .popup-iframe .popup-grid-fieldset {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        box-sizing: border-box;
+        border: 1px solid #d8d8d8;
+        border-radius: 8px;
+        padding: 12px 16px;
+        background: #ffffff;
+        /*
+        Prevent fieldset from forcing
+        the parent wider.
+    */
+        min-width: 0;
+    }
+
+
+        /* =========================================================
+   FILTER LEGEND
+   ========================================================= */
+
+        .popup-edit .popup-grid-fieldset legend,
+        .popup-pdf .popup-grid-fieldset legend,
+        .popup-img .popup-grid-fieldset legend,
+        .popup-iframe .popup-grid-fieldset legend {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 0 10px;
+            color: #334155;
+        }
+
+
+    /* =========================================================
+   GRID AREA
+   ========================================================= */
+
+    .popup-edit .popup-grid-container,
+    .popup-pdf .popup-grid-container,
+    .popup-img .popup-grid-container,
+    .popup-iframe .popup-grid-container {
+        width: 100%;
+        height: 100%;
+        /*
+        CRITICAL:
+        Allows grid container to shrink
+        inside CSS Grid.
+    */
+        min-height: 0;
+        min-width: 0;
+        box-sizing: border-box;
+        /*
+        Grid gets its own scrollbars.
+    */
+        overflow-x: auto;
+        overflow-y: auto;
+        border: 1px solid #d8d8d8;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+
+    /* =========================================================
+   EMPLOYEE GRID / TABLE
+   ========================================================= */
+
+    .popup-edit .popup-grid,
+    .popup-pdf .popup-grid,
+    .popup-img .popup-grid,
+    .popup-iframe .popup-grid {
+        /*
+        Allow table to become wider than
+        the popup when there are many columns.
+    */
+        width: max-content;
+        /*
+        At minimum, table fills container.
+    */
+        min-width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+    }
+
+
+        /* =========================================================
+   GRID HEADER
+   ========================================================= */
+
+        .popup-edit .popup-grid th,
+        .popup-pdf .popup-grid th,
+        .popup-img .popup-grid th,
+        .popup-iframe .popup-grid th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #424242;
+            color: #ffffff;
+            padding: 9px 8px;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #555555;
+        }
+
+
+        /* =========================================================
+   GRID DATA CELLS
+   ========================================================= */
+
+        .popup-edit .popup-grid td,
+        .popup-pdf .popup-grid td,
+        .popup-img .popup-grid td,
+        .popup-iframe .popup-grid td {
+            padding: 6px 8px;
+            white-space: nowrap;
+            border: 1px solid #e5e5e5;
+            font-size: 13px;
+            color: #263238;
+        }
+
+
+        /* =========================================================
+   ALTERNATE ROWS
+   ========================================================= */
+
+        .popup-edit .popup-grid tr:nth-child(even),
+        .popup-pdf .popup-grid tr:nth-child(even),
+        .popup-img .popup-grid tr:nth-child(even),
+        .popup-iframe .popup-grid tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+
+        /* =========================================================
+   ROW HOVER
+   ========================================================= */
+
+        .popup-edit .popup-grid tr:hover,
+        .popup-pdf .popup-grid tr:hover,
+        .popup-img .popup-grid tr:hover,
+        .popup-iframe .popup-grid tr:hover {
+            background: #eef7ff;
+        }
+
+
+        /* =========================================================
+   GRID IMAGES
+   ========================================================= */
+
+        .popup-edit .popup-grid img,
+        .popup-edit .popup-grid input[type="image"],
+        .popup-pdf .popup-grid img,
+        .popup-pdf .popup-grid input[type="image"],
+        .popup-img .popup-grid img,
+        .popup-img .popup-grid input[type="image"],
+        .popup-iframe .popup-grid img,
+        .popup-iframe .popup-grid input[type="image"] {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+
+        /* =========================================================
+   GRID LINKS
+   ========================================================= */
+
+        .popup-edit .popup-grid a,
+        .popup-pdf .popup-grid a,
+        .popup-img .popup-grid a,
+        .popup-iframe .popup-grid a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+
+            .popup-edit .popup-grid a:hover,
+            .popup-pdf .popup-grid a:hover,
+            .popup-img .popup-grid a:hover,
+            .popup-iframe .popup-grid a:hover {
+                text-decoration: underline;
+            }
+
+
+    /* =========================================================
+   POPUP SCROLLBARS
+   ========================================================= */
+
+    .popup-edit .form-grid-container::-webkit-scrollbar,
+    .popup-edit .popup-grid-container::-webkit-scrollbar,
+    .popup-pdf .form-grid-container::-webkit-scrollbar,
+    .popup-pdf .popup-grid-container::-webkit-scrollbar,
+    .popup-img .form-grid-container::-webkit-scrollbar,
+    .popup-img .popup-grid-container::-webkit-scrollbar,
+    .popup-iframe .form-grid-container::-webkit-scrollbar,
+    .popup-iframe .popup-grid-container::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+
+    /* =========================================================
+   SCROLLBAR TRACK
+   ========================================================= */
+
+    .popup-edit .form-grid-container::-webkit-scrollbar-track,
+    .popup-edit .popup-grid-container::-webkit-scrollbar-track,
+    .popup-pdf .form-grid-container::-webkit-scrollbar-track,
+    .popup-pdf .popup-grid-container::-webkit-scrollbar-track,
+    .popup-img .form-grid-container::-webkit-scrollbar-track,
+    .popup-img .popup-grid-container::-webkit-scrollbar-track,
+    .popup-iframe .form-grid-container::-webkit-scrollbar-track,
+    .popup-iframe .popup-grid-container::-webkit-scrollbar-track {
+        background: #f1f3f5;
+        border-radius: 8px;
+    }
+
+
+    /* =========================================================
+   SCROLLBAR THUMB
+   ========================================================= */
+
+    .popup-edit .form-grid-container::-webkit-scrollbar-thumb,
+    .popup-edit .popup-grid-container::-webkit-scrollbar-thumb,
+    .popup-pdf .form-grid-container::-webkit-scrollbar-thumb,
+    .popup-pdf .popup-grid-container::-webkit-scrollbar-thumb,
+    .popup-img .form-grid-container::-webkit-scrollbar-thumb,
+    .popup-img .popup-grid-container::-webkit-scrollbar-thumb,
+    .popup-iframe .form-grid-container::-webkit-scrollbar-thumb,
+    .popup-iframe .popup-grid-container::-webkit-scrollbar-thumb {
+        background: #aeb6c2;
+        border-radius: 8px;
+        border: 2px solid #f1f3f5;
+    }
+
+
+        /* =========================================================
+   SCROLLBAR HOVER
+   ========================================================= */
+
+        .popup-edit .form-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-edit .popup-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-pdf .form-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-pdf .popup-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-img .form-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-img .popup-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-iframe .form-grid-container::-webkit-scrollbar-thumb:hover,
+        .popup-iframe .popup-grid-container::-webkit-scrollbar-thumb:hover {
+            background: #858e9b;
+        }
+
+
+    /* =========================================================
+   FIREFOX SCROLLBAR
+   ========================================================= */
+
+    .popup-edit .form-grid-container,
+    .popup-edit .popup-grid-container,
+    .popup-pdf .form-grid-container,
+    .popup-pdf .popup-grid-container,
+    .popup-img .form-grid-container,
+    .popup-img .popup-grid-container,
+    .popup-iframe .form-grid-container,
+    .popup-iframe .popup-grid-container {
+        scrollbar-width: auto;
+        scrollbar-color: #aeb6c2 #f1f3f5;
+    }
+
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
+   ========================================================= */
+
+@media screen and (max-width: 1200px) {
+
+    .popup-edit .popup-layout,
+    .popup-pdf .popup-layout,
+    .popup-img .popup-layout,
+    .popup-iframe .popup-layout {
+        height: auto;
+        flex: 1 1 auto;
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 8px;
+    }
+
+
+    .popup-edit .popup-grid th,
+    .popup-pdf .popup-grid th,
+    .popup-img .popup-grid th,
+    .popup-iframe .popup-grid th {
+        font-size: 12px;
+        padding: 8px 7px;
+    }
+
+
+    .popup-edit .popup-grid td,
+    .popup-pdf .popup-grid td,
+    .popup-img .popup-grid td,
+    .popup-iframe .popup-grid td {
+        font-size: 12px;
+        padding: 6px 7px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE / TABLET
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+
+    .popup-edit .popup-layout,
+    .popup-pdf .popup-layout,
+    .popup-img .popup-layout,
+    .popup-iframe .popup-layout {
+        height: auto;
+        flex: 1 1 auto;
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 8px;
+    }
+
+
+    /* -----------------------------------------
+       FILTER
+       ----------------------------------------- */
+
+    .popup-edit .form-grid-container,
+    .popup-pdf .form-grid-container,
+    .popup-img .form-grid-container,
+    .popup-iframe .form-grid-container {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+
+    /* -----------------------------------------
+       GRID
+       ----------------------------------------- */
+
+    .popup-edit .popup-grid-container,
+    .popup-pdf .popup-grid-container,
+    .popup-img .popup-grid-container,
+    .popup-iframe .popup-grid-container {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+
+    /*
+        Force horizontal scrolling
+        for wide tables.
+    */
+
+    .popup-edit .popup-grid,
+    .popup-pdf .popup-grid,
+    .popup-img .popup-grid,
+    .popup-iframe .popup-grid {
+        min-width: 1200px;
+    }
+
+
+    .popup-edit .popup-grid-fieldset,
+    .popup-pdf .popup-grid-fieldset,
+    .popup-img .popup-grid-fieldset,
+    .popup-iframe .popup-grid-fieldset {
+        width: 100%;
+        padding: 10px 12px;
+    }
+
+
+        .popup-edit .popup-grid-fieldset legend,
+        .popup-pdf .popup-grid-fieldset legend,
+        .popup-img .popup-grid-fieldset legend,
+        .popup-iframe .popup-grid-fieldset legend {
+            font-size: 16px;
+        }
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media screen and (max-width: 480px) {
+
+    .popup-edit .popup-layout,
+    .popup-pdf .popup-layout,
+    .popup-img .popup-layout,
+    .popup-iframe .popup-layout {
+        height: auto;
+        flex: 1 1 auto;
+        grid-template-rows: 40% minmax(0, 1fr);
+        gap: 6px;
+    }
+
+
+    .popup-edit .popup-grid,
+    .popup-pdf .popup-grid,
+    .popup-img .popup-grid,
+    .popup-iframe .popup-grid {
+        min-width: 1100px;
+    }
+}
+
+
+/* =========================================================
+   END OF POPUP REPORT GRID CSS
+   ========================================================= */

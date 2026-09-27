@@ -1069,11 +1069,12 @@
             <div id="divAttachedFiles" runat="server"
                 style='overflow-y: auto; overflow-x: auto; width: 100%; height: 350px; border: 1px solid lightgray;'
                 onscroll="SetDivPosition()">
+
                 <asp:GridView ID="gvAttachedFiles"
                     runat="server"
                     AutoGenerateColumns="false"
                     CellPadding="4"
-                    CssClass="myGrid"
+                    CssClass="popup-grid"
                     ForeColor="#333333" GridLines="Both"
                     Width="100%"
                     HorizontalAlign="Center"
