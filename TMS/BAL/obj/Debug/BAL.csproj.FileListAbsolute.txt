@@ -192,4 +192,3 @@ C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTM
 C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.csproj.CopyComplete
 C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.dll
 C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.pdb
-C:\DeekshantRavi 2025-07-31\OFFICIAL\DR-Development (Single Company)\2026\CIPLTMS_Repo\TMS\BAL\obj\Debug\BAL.csproj.AssemblyReference.cache

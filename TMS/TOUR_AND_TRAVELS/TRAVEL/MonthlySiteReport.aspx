@@ -85,11 +85,13 @@
                 </div>
             </fieldset>
             <div class="full-width button-group">
-                <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click"
-                    Style="padding: 4px 20px; cursor: pointer;" Width="100%" />
+                <asp:Button ID="btnSearch" runat="server" Text="Search"
+                    OnClick="btnSearch_Click"
+                    CssClass="button"
+                    Width="100%"/>
 
                 <asp:Button ID="btnExport" runat="server" Text="Export" OnClick="btnExport_Click"
-                    Style="padding: 4px 20px; cursor: pointer; background-color: #1C5E55; color: white; border: none;"
+                    CssClass="button"
                     Width="100%"/>
             </div>
         </div>
