@@ -1680,8 +1680,9 @@
                                 <legend>
                                     <asp:Label ID="lblSubitemsRecords" runat="server" Text="Subitems Records[0]" />
                                 </legend>
-
-                                <asp:GridView
+                                
+                        
+                                <asp:GridView 
                                     CssClass="employee-grid"
                                     ID="gvSubItem" runat="server" AutoGenerateColumns="False" CellPadding="4"
                                     ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
@@ -1689,13 +1690,10 @@
                                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                                     <Columns>
 
-                                        <asp:TemplateField HeaderText="Transfer"
-                                            HeaderStyle-HorizontalAlign="Center"
-                                            ItemStyle-HorizontalAlign="Center">
+                                        <asp:TemplateField HeaderText="Revise" HeaderStyle-HorizontalAlign="Center">
                                             <ItemTemplate>
 
                                                 <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
-                                                <asp:Label ID="lblUnitId" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
                                                 <asp:Label ID="lblLOTTFMainSubitemID" runat="server" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' Visible="false" />
                                                 <asp:Label ID="lblStatusID" runat="server" Text='<%# Eval("STATUS_ID") %>' Visible="false" />
                                                 <asp:Label ID="lblNextStatusID" runat="server" Text='<%# Eval("NEXT_STATUS_ID") %>' Visible="false" />
@@ -1716,6 +1714,7 @@
                                                 <asp:Label ID="lblDrgOrDOCNo" runat="server" Text='<%# Eval("DRAWING_NO") %>' Visible="false" />
                                                 <asp:Label ID="lblOldRevNo" runat="server" Text='<%# Eval("OLD_REVISION_NO") %>' Visible="false" />
                                                 <asp:Label ID="lblRevNo" runat="server" Text='<%# Eval("REVISION_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblRevNoText" runat="server" Text='<%# Eval("REVISION_NO_TEXT") %>' Visible="false" />
                                                 <asp:Label ID="lblCategoryID" runat="server" Text='<%# Eval("CATEGORY_ID") %>' Visible="false" />
                                                 <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("CATEGORY") %>' Visible="false" />
                                                 <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("QUANTITY") %>' Visible="false" />
@@ -1727,32 +1726,25 @@
                                                 <asp:Label ID="lblAttachment3" runat="server" Text='<%# Eval("SI_ATTACHMENT3_NAME") %>' Visible="false" />
                                                 <asp:Label ID="lblAttachment4" runat="server" Text='<%# Eval("SI_ATTACHMENT4_NAME") %>' Visible="false" />
 
-                                                <asp:Label ID="lblProductionManagerID" runat="server" Text='<%# Eval("PRODUCTION_MANAGER_ID") %>' Visible="false" />
-                                                <asp:Label ID="lblQualityManagerID" runat="server" Text='<%# Eval("QUALITY_MANAGER_ID") %>' Visible="false" />
-
-                                                <%--<asp:ImageButton ID="imgBtnRevise" CommandArgument="REVISE" runat="server"
-                                                            ToolTip="Transfer of LOT"
-                                                            ImageUrl="~/Images/LOT/transfer.png" Height="35px" Width="35px" />--%>
-
-                                                <asp:CheckBox ID="chkSelectForTransfer" runat="server" />
-
+                                                <asp:ImageButton ID="imgBtnRevise" CommandArgument="REVISE" runat="server" ToolTip="Revise"
+                                                    ImageUrl="~/Images/LOT/revise1.png" />
                                             </ItemTemplate>
                                         </asp:TemplateField>
 
 
-                                        <%--<asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center">
-                                                    <ItemTemplate>
-                                                        <asp:ImageButton ID="imgBtnProperties" CommandArgument="PROPERTIES" runat="server" ToolTip="Edit"
-                                                            ImageUrl="~/Images/LOT/edit5.png" Width="35px" Height="35px" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>--%>
+                                        <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
+                                                <asp:ImageButton ID="imgBtnProperties" CommandArgument="PROPERTIES" runat="server" ToolTip="Edit"
+                                                    ImageUrl="~/Images/LOT/edit5.png" Width="35px" Height="35px" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
-                                        <%--<asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center">
-                                                    <ItemTemplate>
-                                                        <asp:ImageButton ID="imgBtnRemove" CommandArgument="REMOVE" runat="server" ToolTip="Remove"
-                                                            ImageUrl="~/Images/Icons/REMOVE03.png" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>--%>
+                                        <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
+                                                <asp:ImageButton ID="imgBtnRemove" CommandArgument="REMOVE" runat="server" ToolTip="Remove"
+                                                    ImageUrl="~/Images/Icons/REMOVE03.png" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
                                         <asp:TemplateField HeaderText="Sr.No.">
                                             <ItemTemplate>
@@ -1762,29 +1754,8 @@
                                         </asp:TemplateField>
 
 
+
                                         <asp:BoundField DataField="LOT_MAIN_ITEM" HeaderText="LOT For" />
-
-                                        <%--<asp:TemplateField HeaderText="Production Manager"
-                                                    HeaderStyle-HorizontalAlign="Center"
-                                                    ItemStyle-HorizontalAlign="Center"
-                                                    Visible="false">
-                                                    <ItemTemplate>
-                                                        <asp:DropDownList ID="ddlProductionManager" runat="server" Width="100%" Height="25px">
-                                                        </asp:DropDownList>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-
-                                                <asp:TemplateField HeaderText="Quality Manager"
-                                                    HeaderStyle-HorizontalAlign="Center"
-                                                    ItemStyle-HorizontalAlign="Center"
-                                                    Visible="false">
-                                                    <ItemTemplate>
-                                                        <asp:DropDownList ID="ddlQualityManager" runat="server" Width="100%" Height="25px">
-                                                        </asp:DropDownList>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>--%>
-
-
 
                                         <asp:TemplateField HeaderText="Tag No.">
                                             <ItemTemplate>
@@ -1850,11 +1821,6 @@
 
                     <label>Important Notes</label>
                     <asp:TextBox ID="txtNotesToEdit" runat="server"
-                        CssClass="form-control"
-                        TextMode="MultiLine" Rows="2" />
-
-                    <label>Transfer Remarks</label>
-                    <asp:TextBox ID="txtRemarksToEdit" runat="server"
                         CssClass="form-control"
                         TextMode="MultiLine" Rows="2" />
 
@@ -1954,7 +1920,7 @@
             </fieldset>
             <div class="full-width button-group">
                 <asp:Button ID="btnSave" runat="server" Width="100%"
-                    Text="Transfer" CssClass="button"
+                    Text="Save" CssClass="button"
                     OnClick="btnSave_Click" OnClientClick="return ValidateAll();" />
             </div>
 
@@ -2627,7 +2593,7 @@
     <ajax:ModalPopupExtender ID="mpeShowImageFile" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2648,7 +2614,7 @@
     <ajax:ModalPopupExtender ID="mpeShowPDFFile" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2657,11 +2623,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- SHOW PDF FILE END--%>
 
@@ -2672,7 +2637,7 @@
         PopupControlID="pnlbtnViewInPDFPopup" CancelControlID="imgBtnViewInPDFPopup"
         BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server" 
+    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2682,11 +2647,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewTravelStatementInPDF"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- VIEW DETAIL IN PDF END--%>
 
