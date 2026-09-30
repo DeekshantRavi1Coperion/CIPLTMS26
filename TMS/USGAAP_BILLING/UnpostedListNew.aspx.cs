@@ -500,9 +500,24 @@ public partial class USGAAP_BILLING_UnpostedListNew : System.Web.UI.Page
                 else if (Convert.ToString(lblRevenueAccountType.Text) == "P")
                     revenueAccountType = 1;
 
-                quantity = Convert.ToDouble(lblQuantity.Text);
-                productRate = Convert.ToDouble(lblProductRate.Text);
-                invoiceAmount = Convert.ToDouble(lblInvoiceAmount.Text);
+
+                if (!string.IsNullOrEmpty(lblQuantity.Text))
+                {
+                    quantity = Convert.ToDouble(lblQuantity.Text);
+                }
+                if (!string.IsNullOrEmpty(lblProductRate.Text))
+                {
+                    productRate = Convert.ToDouble(lblProductRate.Text);
+                }
+                if (!string.IsNullOrEmpty(lblInvoiceAmount.Text))
+                {
+                    invoiceAmount = Convert.ToDouble(lblInvoiceAmount.Text);
+                }
+
+                //quantity = Convert.ToDouble(lblQuantity.Text);
+                //productRate = Convert.ToDouble(lblProductRate.Text);
+                //invoiceAmount = Convert.ToDouble(lblInvoiceAmount.Text);
+
                 location = Convert.ToString(lblLocation.Text);
 
                 endMarketID = Convert.ToInt32(ddlEndMarket.SelectedValue);

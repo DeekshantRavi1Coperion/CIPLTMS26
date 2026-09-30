@@ -170,10 +170,6 @@ public partial class PROJECT_LOT_LOTTransmittalFactoryRevision : System.Web.UI.P
                 BindStatus();
                 BindLOTMainItems();
 
-
-
-
-
                 Session["dsApprovers"] = null;
                 Session["dtProdMngr"] = null;
                 Session["dtProdMngrcc"] = null;
