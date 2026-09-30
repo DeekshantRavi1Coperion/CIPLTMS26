@@ -420,6 +420,7 @@ public class MailService
                 from = Convert.ToString(dr0["REGISTERED_BY_EMAIL"]);
                 toName = Convert.ToString(dr0["CREATED_BY"]);
                 to = Convert.ToString(dr0["CREATED_BY_EMAIL"]);
+                amendmentRemarks = "";
 
                 cc = Convert.ToString(dr0["CHECKED_BY_EMAIL"]) + ";" +
                      Convert.ToString(dr0["PROC_HOD_APPROVED_BY_EMAIL"]) + ";" +
