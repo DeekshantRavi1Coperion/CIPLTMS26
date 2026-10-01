@@ -804,7 +804,11 @@ public partial class PROJECT_LOT_LOTTransmittalFactoryReportForProduction : Syst
             if (!string.IsNullOrEmpty(txtDrawingNumber.Text))
                 drawingNumber = txtDrawingNumber.Text;
 
-            productionManagerID = Convert.ToInt32(ddlProductionManager.SelectedValue);
+            if (!string.IsNullOrEmpty(ddlProductionManager.SelectedValue))
+                productionManagerID = Convert.ToInt32(ddlProductionManager.SelectedValue);
+
+
+            //productionManagerID = Convert.ToInt32(ddlProductionManager.SelectedValue);
 
 
             if (!string.IsNullOrEmpty(txtProductionOrderNo.Text))
