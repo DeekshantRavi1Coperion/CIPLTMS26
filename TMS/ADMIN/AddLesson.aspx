@@ -6,8 +6,14 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 
    <link rel="icon" href="../../Images/Icon04.png" />
-    <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
-    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
+   <%-- <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
+
+    <link href="../Styles/form.css" rel="stylesheet" />
+    <link href="../Styles/filter.css" rel="stylesheet" />
+    <link href="../Styles/grid.css" rel="stylesheet" />
+    <link href="../Styles/popup.css" rel="stylesheet" />
+
     <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
 
     <script src="../../Scripts/NumericValidation.js" type="text/javascript"></script>

@@ -55,13 +55,24 @@
                             CssClass="form-control">
                         </asp:DropDownList>
 
-                        <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click"
+                       <%-- <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click"
                             Style="padding: 4px 20px; cursor: pointer;" />
-                         <asp:Button ID="btnExport" runat="server" Text="Export to Excel" OnClick="btnExport_Click" style="padding: 4px 20px; cursor: pointer; margin-left: 10px;" />
+                         <asp:Button ID="btnExport" runat="server" Text="Export to Excel" 
+                             OnClick="btnExport_Click" style="padding: 4px 20px; cursor: pointer; margin-left: 10px;" />--%>
 
                     </div>
         </div>
         </fieldset>
+             <div class="full-width button-group">
+                <asp:Button ID="Button1" runat="server" Text="Search"
+                    OnClick="btnSearch_Click"
+                    CssClass="button"
+                    Width="100%"/>
+
+                <asp:Button ID="Button2" runat="server" Text="Export" OnClick="btnExport_Click"
+                    CssClass="button"
+                    Width="100%"/>
+            </div>
     </div>
     <div class="employee-grid-container">
 
