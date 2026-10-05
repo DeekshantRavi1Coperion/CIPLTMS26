@@ -617,8 +617,6 @@
     </script>
 
 
-
-
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <asp:ToolkitScriptManager ID="ScriptManager2" runat="server">
@@ -626,8 +624,6 @@
     <asp:HiddenField ID="hdConfirmValue" runat="server" />
     <%--<asp:UpdatePanel runat="server" ID="uppanel">
         <ContentTemplate>--%>
-
-
 
     <div class="form-entry-container">
         <fieldset class="form-card">

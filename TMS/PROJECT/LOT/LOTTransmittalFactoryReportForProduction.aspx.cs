@@ -784,6 +784,9 @@ public partial class PROJECT_LOT_LOTTransmittalFactoryReportForProduction : Syst
             if (ddlStatus.SelectedIndex > 0)
                 statusID = Convert.ToInt32(ddlStatus.SelectedValue);
 
+            if (ddlCompany.SelectedIndex > 0)
+                unitID = Convert.ToInt32(ddlCompany.SelectedValue);
+
             unitID = Convert.ToInt32(ddlCompany.SelectedValue);
 
             if (!string.IsNullOrEmpty(txtJOBNo.Text))
@@ -808,7 +811,7 @@ public partial class PROJECT_LOT_LOTTransmittalFactoryReportForProduction : Syst
                 productionManagerID = Convert.ToInt32(ddlProductionManager.SelectedValue);
 
 
-            //productionManagerID = Convert.ToInt32(ddlProductionManager.SelectedValue);
+           // productionManagerID = Convert.ToInt32(ddlProductionManager.SelectedValue);
 
 
             if (!string.IsNullOrEmpty(txtProductionOrderNo.Text))
