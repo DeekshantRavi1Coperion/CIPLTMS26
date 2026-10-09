@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - HR Ticket List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="TicketList.aspx.cs" Inherits="HR_TICKET_TicketList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -493,11 +493,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Ticket List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
 
                     <label>Date Type:</label>
                     <asp:DropDownList ID="ddlDateType" runat="server"
@@ -511,7 +511,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -531,7 +531,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:80%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -602,291 +602,300 @@
                     <asp:TextBox ID="txtInsuranceNo" runat="server"
                         CssClass="form-control"></asp:TextBox>
 
-                    <asp:Button ID="btnSearch" CssClass="button" runat="server" Width="100%" Text="Search"
-                        OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
 
-                    <asp:Button ID="btnCreateNew" CssClass="button" runat="server" Width="100%" Text="New Ticket"
-                        OnClick="btnCreateNew_Click" />
 
 
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" runat="server" Width="100%" Text="Search"
+                    OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
+
+                <asp:Button ID="btnCreateNew" CssClass="button" runat="server" Width="100%" Text="New Ticket"
+                    OnClick="btnCreateNew_Click" />
+            </div>
         </div>
 
-        <div class="employee-grid-container">
+        <fieldset class="employee-grid-fieldset">
+            <legend>Ticket List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView ID="gvTicketList"
+                    CssClass="employee-grid"
+                    runat="server"
+                    AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvTicketList_RowCommand"
+                    OnRowDataBound="gvTicketList_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="View"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" CommandArgument="VIEW_DETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon1.png" Height="30PX" Width="30PX" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Attachment"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFileOneName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME1") %>' />
+                                <asp:ImageButton ID="btnFileOneName" Height="20px" Width="20px"
+                                    CommandArgument="ViewATTACHMENT1"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Attachment2"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFileTwoName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME2") %>' />
+                                <asp:ImageButton ID="btnFileTwoName" Height="20px" Width="20px"
+                                    CommandArgument="ViewATTACHMENT2"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Attachment3"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFileThreeName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME3") %>' />
+                                <asp:ImageButton ID="btnFileThreeName" Height="20px" Width="20px"
+                                    CommandArgument="ViewATTACHMENT3"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="ClosingAttachment1"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblClosingFileOneName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME1") %>' />
+                                <asp:ImageButton ID="btnClosingFileOneName" Height="20px" Width="20px"
+                                    CommandArgument="ViewCLOSINGATTACHMENT1"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="ClosingAttachment2"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblClosingFileTwoName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME2") %>' />
+                                <asp:ImageButton ID="btnClosingFileTwoName" Height="20px" Width="20px"
+                                    CommandArgument="ViewCLOSINGATTACHMENT2"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="ClosingAttachment3"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblClosingFileThreeName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME3") %>' />
+                                <asp:ImageButton ID="btnClosingFileThreeName" Height="20px" Width="20px"
+                                    CommandArgument="ViewCLOSINGATTACHMENT3"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+
+                        <asp:TemplateField HeaderText="Status"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTicketID" runat="server" Visible="false" Text='<%# Eval("PID") %>'></asp:Label>
+                                <asp:Label ID="lblTicketNO" runat="server" Visible="false" Text='<%# Eval("TICKET_NUMBER") %>'></asp:Label>
+                                <asp:Label ID="lblTicketStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>'></asp:Label>
+
+                                <asp:Label ID="lblTicketTypeID" runat="server" Visible="false" Text='<%# Eval("TICKET_TYPE_FID") %>'></asp:Label>
+                                <asp:Label ID="lblTicketType" runat="server" Visible="false" Text='<%# Eval("TICKET_TYPE") %>'></asp:Label>
+
+                                <asp:Label ID="lblTicketSubtypeID" runat="server" Visible="false" Text='<%# Eval("TICKET_SUBTYPE_FID") %>'></asp:Label>
+                                <asp:Label ID="lblTicketSubtype" runat="server" Visible="false" Text='<%# Eval("TICKET_SUBTYPE") %>'></asp:Label>
+
+                                <asp:Label ID="lblInsuranceNumber" runat="server" Visible="false" Text='<%# Eval("INSURANCE_NO") %>'></asp:Label>
+                                <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
+
+                                <asp:Label ID="lblHodID" runat="server" Visible="false" Text='<%# Eval("HOD_ID") %>'></asp:Label>
+                                <asp:Label ID="lblAllocateAuthority2" runat="server" Visible="false" Text='<%# Eval("ALLOCATE_AUTHORITY_2_ID") %>'></asp:Label>
+                                <asp:Label ID="lblAllocatedToID" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_TO_ID") %>'></asp:Label>
+
+
+                                <asp:Label ID="lblCreatedByID" runat="server" Visible="false" Text='<%# Eval("CREATED_BY_ID") %>'></asp:Label>
+                                <asp:Label ID="lblCreatedOn" runat="server" Visible="false" Text='<%# Eval("CREATED_ON") %>'></asp:Label>
+                                <asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("CREATED_REMARKS") %>'></asp:Label>
+
+                                <asp:Label ID="lblAllocatedByID" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_BY_ID") %>'></asp:Label>
+                                <asp:Label ID="lblAllocatedPriority" runat="server" Visible="false" Text='<%# Eval("ALLOCATE_PRIORITY") %>'></asp:Label>
+                                <asp:Label ID="lblAllocatedOn" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_ON") %>'></asp:Label>
+                                <asp:Label ID="lblAllocatedRemarks" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_REMARKS") %>'></asp:Label>
+                                <asp:Label ID="lblAllocatedTo" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_TO_ID") %>'></asp:Label>
+
+                                <asp:Label ID="lblClosedByID" runat="server" Visible="false" Text='<%# Eval("CLOSED_BY_ID") %>'></asp:Label>
+                                <asp:Label ID="lblClosedOn" runat="server" Visible="false" Text='<%# Eval("CLOSED_ON") %>'></asp:Label>
+                                <asp:Label ID="lblClosedRemarks" runat="server" Visible="false" Text='<%# Eval("CLOSED_REMARKS") %>'></asp:Label>
+
+                                <asp:Label ID="lblCancelledByID" runat="server" Visible="false" Text='<%# Eval("CANCELLED_BY_ID") %>'></asp:Label>
+                                <asp:Label ID="lblCancelledOn" runat="server" Visible="false" Text='<%# Eval("CANCELLED_ON") %>'></asp:Label>
+                                <asp:Label ID="lblCancelledRemarks" runat="server" Visible="false" Text='<%# Eval("CANCELLED_REMARKS") %>'></asp:Label>
+
+
+                                <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" Enabled="false" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Edit"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgProperties" ToolTip="Update ticket" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Allocate"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnAllocate"
+                                    runat="server"
+                                    CommandArgument="ALLOCATE"
+                                    ToolTip="Allocate Ticket"
+                                    Text="Allocate"
+                                    CssClass="cancelbutton"
+                                    Width="100%"
+                                    BorderColor="Yellow"
+                                    BackColor="Blue"
+                                    BorderStyle="Solid"
+                                    BorderWidth="3px" />
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Re-Allocate"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnReAllocate"
+                                    runat="server"
+                                    CommandArgument="REALLOCATE"
+                                    ToolTip="Re-Allocate Ticket"
+                                    Text="Re-Allocate"
+                                    CssClass="cancelbutton"
+                                    Width="100%"
+                                    BorderColor="Yellow"
+                                    BackColor="Blue"
+                                    BorderStyle="Solid"
+                                    BorderWidth="3px" />
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Close"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnClose"
+                                    runat="server"
+                                    CommandArgument="CLOSE"
+                                    ToolTip="Save Status & Close Ticket"
+                                    Text="Save Status & Close"
+                                    CssClass="cancelbutton"
+                                    Width="100%"
+                                    BorderColor="Yellow"
+                                    BackColor="LightGreen"
+                                    BorderStyle="Solid"
+                                    BorderWidth="3px" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Cancel"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:ImageButton
+                                    runat="server"
+                                    ID="imgBtnCancel"
+                                    ToolTip="Cancel ticket"
+                                    CommandArgument="CANCEL"
+                                    ImageUrl="~/Images/Icons/no2.png" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="TICKET_NUMBER" HeaderText="Ticket Number"></asp:BoundField>
+                        <asp:BoundField DataField="TICKET_TYPE" HeaderText="Ticket Type"></asp:BoundField>
+                        <asp:BoundField DataField="TICKET_SUBTYPE" HeaderText="Ticket Subtype"></asp:BoundField>
+                        <asp:BoundField DataField="INSURANCE_NO" HeaderText="Insurance Number"></asp:BoundField>
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description"></asp:BoundField>
+
+                        <asp:BoundField DataField="CREATED_BY" HeaderText="Created By"></asp:BoundField>
+                        <asp:BoundField DataField="CREATED_ON" HeaderText="Created On"></asp:BoundField>
+                        <asp:BoundField DataField="CREATED_REMARKS" HeaderText="Created Remarks"></asp:BoundField>
+
+                        <asp:BoundField DataField="ALLOCATED_BY" HeaderText="Allocated By"></asp:BoundField>
+                        <asp:BoundField DataField="ALLOCATE_PRIORITY" HeaderText="Allocated Priority"></asp:BoundField>
+                        <asp:BoundField DataField="ALLOCATED_ON" HeaderText="Allocated On"></asp:BoundField>
+                        <asp:BoundField DataField="ALLOCATED_REMARKS" HeaderText="Allocated Remarks"></asp:BoundField>
+
+
+                        <asp:BoundField DataField="ALLOCATED_TO" HeaderText="Allocated To"></asp:BoundField>
+
+                        <asp:BoundField DataField="CLOSED_BY" HeaderText="Closed By"></asp:BoundField>
+                        <asp:BoundField DataField="CLOSED_ON" HeaderText="Closed On"></asp:BoundField>
+                        <asp:BoundField DataField="CLOSED_REMARKS" HeaderText="Closed Remarks"></asp:BoundField>
+
+                        <asp:BoundField DataField="CANCELLED_BY" HeaderText="Cancelled By"></asp:BoundField>
+                        <asp:BoundField DataField="CANCELLED_ON" HeaderText="Cancelled On"></asp:BoundField>
+                        <asp:BoundField DataField="CANCELLED_REMARKS" HeaderText="Cancelled Remarks"></asp:BoundField>
+
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView ID="gvTicketList"
-                CssClass="employee-grid"
-                runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvTicketList_RowCommand"
-                OnRowDataBound="gvTicketList_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="View"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" CommandArgument="VIEW_DETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon1.png" Height="30PX" Width="30PX" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Attachment"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFileOneName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME1") %>' />
-                            <asp:ImageButton ID="btnFileOneName" Height="20px" Width="20px"
-                                CommandArgument="ViewATTACHMENT1"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Attachment2"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFileTwoName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME2") %>' />
-                            <asp:ImageButton ID="btnFileTwoName" Height="20px" Width="20px"
-                                CommandArgument="ViewATTACHMENT2"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Attachment3"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFileThreeName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME3") %>' />
-                            <asp:ImageButton ID="btnFileThreeName" Height="20px" Width="20px"
-                                CommandArgument="ViewATTACHMENT3"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="ClosingAttachment1"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblClosingFileOneName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME1") %>' />
-                            <asp:ImageButton ID="btnClosingFileOneName" Height="20px" Width="20px"
-                                CommandArgument="ViewCLOSINGATTACHMENT1"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="ClosingAttachment2"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblClosingFileTwoName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME2") %>' />
-                            <asp:ImageButton ID="btnClosingFileTwoName" Height="20px" Width="20px"
-                                CommandArgument="ViewCLOSINGATTACHMENT2"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="ClosingAttachment3"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblClosingFileThreeName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME3") %>' />
-                            <asp:ImageButton ID="btnClosingFileThreeName" Height="20px" Width="20px"
-                                CommandArgument="ViewCLOSINGATTACHMENT3"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-
-                    <asp:TemplateField HeaderText="Status"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblTicketID" runat="server" Visible="false" Text='<%# Eval("PID") %>'></asp:Label>
-                            <asp:Label ID="lblTicketNO" runat="server" Visible="false" Text='<%# Eval("TICKET_NUMBER") %>'></asp:Label>
-                            <asp:Label ID="lblTicketStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>'></asp:Label>
-
-                            <asp:Label ID="lblTicketTypeID" runat="server" Visible="false" Text='<%# Eval("TICKET_TYPE_FID") %>'></asp:Label>
-                            <asp:Label ID="lblTicketType" runat="server" Visible="false" Text='<%# Eval("TICKET_TYPE") %>'></asp:Label>
-
-                            <asp:Label ID="lblTicketSubtypeID" runat="server" Visible="false" Text='<%# Eval("TICKET_SUBTYPE_FID") %>'></asp:Label>
-                            <asp:Label ID="lblTicketSubtype" runat="server" Visible="false" Text='<%# Eval("TICKET_SUBTYPE") %>'></asp:Label>
-
-                            <asp:Label ID="lblInsuranceNumber" runat="server" Visible="false" Text='<%# Eval("INSURANCE_NO") %>'></asp:Label>
-                            <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
-
-                            <asp:Label ID="lblHodID" runat="server" Visible="false" Text='<%# Eval("HOD_ID") %>'></asp:Label>
-                            <asp:Label ID="lblAllocateAuthority2" runat="server" Visible="false" Text='<%# Eval("ALLOCATE_AUTHORITY_2_ID") %>'></asp:Label>
-                            <asp:Label ID="lblAllocatedToID" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_TO_ID") %>'></asp:Label>
-
-
-                            <asp:Label ID="lblCreatedByID" runat="server" Visible="false" Text='<%# Eval("CREATED_BY_ID") %>'></asp:Label>
-                            <asp:Label ID="lblCreatedOn" runat="server" Visible="false" Text='<%# Eval("CREATED_ON") %>'></asp:Label>
-                            <asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("CREATED_REMARKS") %>'></asp:Label>
-
-                            <asp:Label ID="lblAllocatedByID" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_BY_ID") %>'></asp:Label>
-                            <asp:Label ID="lblAllocatedPriority" runat="server" Visible="false" Text='<%# Eval("ALLOCATE_PRIORITY") %>'></asp:Label>
-                            <asp:Label ID="lblAllocatedOn" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_ON") %>'></asp:Label>
-                            <asp:Label ID="lblAllocatedRemarks" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_REMARKS") %>'></asp:Label>
-                            <asp:Label ID="lblAllocatedTo" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_TO_ID") %>'></asp:Label>
-
-                            <asp:Label ID="lblClosedByID" runat="server" Visible="false" Text='<%# Eval("CLOSED_BY_ID") %>'></asp:Label>
-                            <asp:Label ID="lblClosedOn" runat="server" Visible="false" Text='<%# Eval("CLOSED_ON") %>'></asp:Label>
-                            <asp:Label ID="lblClosedRemarks" runat="server" Visible="false" Text='<%# Eval("CLOSED_REMARKS") %>'></asp:Label>
-
-                            <asp:Label ID="lblCancelledByID" runat="server" Visible="false" Text='<%# Eval("CANCELLED_BY_ID") %>'></asp:Label>
-                            <asp:Label ID="lblCancelledOn" runat="server" Visible="false" Text='<%# Eval("CANCELLED_ON") %>'></asp:Label>
-                            <asp:Label ID="lblCancelledRemarks" runat="server" Visible="false" Text='<%# Eval("CANCELLED_REMARKS") %>'></asp:Label>
-
-
-                            <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" Enabled="false" />
-
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Edit"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgProperties" ToolTip="Update ticket" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Allocate"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnAllocate"
-                                runat="server"
-                                CommandArgument="ALLOCATE"
-                                ToolTip="Allocate Ticket"
-                                Text="Allocate"
-                                CssClass="cancelbutton"
-                                Width="100%"
-                                BorderColor="Yellow"
-                                BackColor="Blue"
-                                BorderStyle="Solid"
-                                BorderWidth="3px" />
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Re-Allocate"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnReAllocate"
-                                runat="server"
-                                CommandArgument="REALLOCATE"
-                                ToolTip="Re-Allocate Ticket"
-                                Text="Re-Allocate"
-                                CssClass="cancelbutton"
-                                Width="100%"
-                                BorderColor="Yellow"
-                                BackColor="Blue"
-                                BorderStyle="Solid"
-                                BorderWidth="3px" />
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Close"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnClose"
-                                runat="server"
-                                CommandArgument="CLOSE"
-                                ToolTip="Save Status & Close Ticket"
-                                Text="Save Status & Close"
-                                CssClass="cancelbutton"
-                                Width="100%"
-                                BorderColor="Yellow"
-                                BackColor="LightGreen"
-                                BorderStyle="Solid"
-                                BorderWidth="3px" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Cancel"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:ImageButton
-                                runat="server"
-                                ID="imgBtnCancel"
-                                ToolTip="Cancel ticket"
-                                CommandArgument="CANCEL"
-                                ImageUrl="~/Images/Icons/no2.png" />
-
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="TICKET_NUMBER" HeaderText="Ticket Number"></asp:BoundField>
-                    <asp:BoundField DataField="TICKET_TYPE" HeaderText="Ticket Type"></asp:BoundField>
-                    <asp:BoundField DataField="TICKET_SUBTYPE" HeaderText="Ticket Subtype"></asp:BoundField>
-                    <asp:BoundField DataField="INSURANCE_NO" HeaderText="Insurance Number"></asp:BoundField>
-                    <asp:BoundField DataField="DESCRIPTION" HeaderText="Description"></asp:BoundField>
-
-                    <asp:BoundField DataField="CREATED_BY" HeaderText="Created By"></asp:BoundField>
-                    <asp:BoundField DataField="CREATED_ON" HeaderText="Created On"></asp:BoundField>
-                    <asp:BoundField DataField="CREATED_REMARKS" HeaderText="Created Remarks"></asp:BoundField>
-
-                    <asp:BoundField DataField="ALLOCATED_BY" HeaderText="Allocated By"></asp:BoundField>
-                    <asp:BoundField DataField="ALLOCATE_PRIORITY" HeaderText="Allocated Priority"></asp:BoundField>
-                    <asp:BoundField DataField="ALLOCATED_ON" HeaderText="Allocated On"></asp:BoundField>
-                    <asp:BoundField DataField="ALLOCATED_REMARKS" HeaderText="Allocated Remarks"></asp:BoundField>
-
-
-                    <asp:BoundField DataField="ALLOCATED_TO" HeaderText="Allocated To"></asp:BoundField>
-
-                    <asp:BoundField DataField="CLOSED_BY" HeaderText="Closed By"></asp:BoundField>
-                    <asp:BoundField DataField="CLOSED_ON" HeaderText="Closed On"></asp:BoundField>
-                    <asp:BoundField DataField="CLOSED_REMARKS" HeaderText="Closed Remarks"></asp:BoundField>
-
-                    <asp:BoundField DataField="CANCELLED_BY" HeaderText="Cancelled By"></asp:BoundField>
-                    <asp:BoundField DataField="CANCELLED_ON" HeaderText="Cancelled On"></asp:BoundField>
-                    <asp:BoundField DataField="CANCELLED_REMARKS" HeaderText="Cancelled Remarks"></asp:BoundField>
-
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -933,7 +942,7 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <asp:FileUpload ID="fileUploadAttachment1" runat="server" 
+                                        <asp:FileUpload ID="fileUploadAttachment1" runat="server"
                                             CssClass="form-control"
                                             BorderStyle="Groove" onblur="return ValidatefileUploadAttachment1();" /></td>
                                 </tr>
@@ -951,7 +960,7 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <asp:FileUpload ID="fileUploadAttachment2" runat="server" 
+                                        <asp:FileUpload ID="fileUploadAttachment2" runat="server"
                                             CssClass="form-control"
                                             BorderStyle="Groove" onblur="return ValidatefileUploadAttachment2();" /></td>
                                 </tr>
@@ -969,7 +978,7 @@
                             <table>
                                 <tr>
                                     <td>
-                                        <asp:FileUpload ID="fileUploadAttachment3" runat="server" 
+                                        <asp:FileUpload ID="fileUploadAttachment3" runat="server"
                                             CssClass="form-control"
                                             BorderStyle="Groove" onblur="return ValidatefileUploadAttachment3();" /></td>
                                 </tr>
@@ -1093,7 +1102,7 @@
                         <asp:TextBox ID="txtTicketDescriptionToU"
                             runat="server"
                             TextMode="MultiLine"
-                            CssClass="form-control"/>
+                            CssClass="form-control" />
                     </div>
 
                     <asp:Panel ID="pnlCreatedRemarks" runat="server">
@@ -1149,7 +1158,7 @@
                         <table>
                             <tr>
                                 <td>
-                                    <asp:FileUpload ID="closingfileUpload1" runat="server" 
+                                    <asp:FileUpload ID="closingfileUpload1" runat="server"
                                         CssClass="form-control"
                                         BorderStyle="Groove" onblur="return ValidateClosingfileUploadAttachment1();" /></td>
                             </tr>
@@ -1166,7 +1175,7 @@
                         <table>
                             <tr>
                                 <td>
-                                    <asp:FileUpload ID="closingfileUpload2" runat="server" 
+                                    <asp:FileUpload ID="closingfileUpload2" runat="server"
                                         CssClass="form-control"
                                         BorderStyle="Groove" onblur="return ValidateClosingfileUploadAttachment2();" /></td>
                             </tr>

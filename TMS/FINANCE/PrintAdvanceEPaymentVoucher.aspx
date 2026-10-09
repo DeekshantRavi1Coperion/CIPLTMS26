@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="PrintAdvanceEPaymentVoucher.aspx.cs"
-    Inherits="FINANCE_PrintAdvanceEPaymentVoucher" Title="CIPLTMS- Print Advance E Payment Voucher" %>
+    Inherits="FINANCE_PrintAdvanceEPaymentVoucher" 
+    Title="CIPLTMS - Print Advance E Payment Voucher" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -415,13 +416,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Print Advance E-Payment Voucher:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Date Filter:</label>
                     <table style="width: 100%;">
@@ -452,7 +451,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -470,7 +469,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -558,148 +557,155 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Print Advance E-Payment Voucher:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPaymentVoucherList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvPaymentVoucherList_RowDataBound"
-                OnRowCommand="gvPaymentVoucherList_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                    <asp:TemplateField HeaderText="Select" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:CheckBox ID="chkSelect" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPaymentVoucherList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvPaymentVoucherList_RowDataBound"
+                    OnRowCommand="gvPaymentVoucherList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
 
-                    <asp:TemplateField HeaderText="View" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View LOT Detail in PDF" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Select" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkSelect" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Details" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewVoucherDetail" Height="30px" Width="30px" CommandArgument="ViewVoucherDETAIL"
-                                runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Voucher Details" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="View" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View LOT Detail in PDF" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Payment Run Number">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPaymentRunNumber" runat="server" Text='<%# Eval("PaymentRunNumber") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Details" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewVoucherDetail" Height="30px" Width="30px" CommandArgument="ViewVoucherDETAIL"
+                                    runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Voucher Details" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <%--<asp:TemplateField HeaderText="Unit">
+                        <asp:TemplateField HeaderText="Payment Run Number">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPaymentRunNumber" runat="server" Text='<%# Eval("PaymentRunNumber") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--<asp:TemplateField HeaderText="Unit">
                             <ItemTemplate>
                                 <asp:Label ID="lblUnit" runat="server" Text='<%# Eval("Unit") %>' Visible="true" />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:TemplateField HeaderText="Vendor Name">
-                        <ItemTemplate>
-                            <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VendorName") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Vendor Name">
+                            <ItemTemplate>
+                                <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VendorName") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Bank Name">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBankName" runat="server" Text='<%# Eval("BankName") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Bank Name">
+                            <ItemTemplate>
+                                <asp:Label ID="lblBankName" runat="server" Text='<%# Eval("BankName") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Branch">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBranch" runat="server" Text='<%# Eval("Branch") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Branch">
+                            <ItemTemplate>
+                                <asp:Label ID="lblBranch" runat="server" Text='<%# Eval("Branch") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="RTGS/IFSC Code">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRTGS_IFSCcode" runat="server" Text='<%# Eval("RTGS/IFSCcode") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="RTGS/IFSC Code">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRTGS_IFSCcode" runat="server" Text='<%# Eval("RTGS/IFSCcode") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Bank Account Number">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBankAccountNumber" runat="server" Text='<%# Eval("BankAccountNumber") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Bank Account Number">
+                            <ItemTemplate>
+                                <asp:Label ID="lblBankAccountNumber" runat="server" Text='<%# Eval("BankAccountNumber") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Generated By">
-                        <ItemTemplate>
-                            <asp:Label ID="lblGeneratedBy" runat="server" Text='<%# Eval("GeneratedBy") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Generated By">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGeneratedBy" runat="server" Text='<%# Eval("GeneratedBy") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Generated On">
-                        <ItemTemplate>
-                            <asp:Label ID="lblGeneratedOn" runat="server" Text='<%# Eval("GeneratedOn") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Generated On">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGeneratedOn" runat="server" Text='<%# Eval("GeneratedOn") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="HOD Approved By">
-                        <ItemTemplate>
-                            <asp:Label ID="lblHODApprovedBy" runat="server" Text='<%# Eval("HODApprovedBy") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="HOD Approved By">
+                            <ItemTemplate>
+                                <asp:Label ID="lblHODApprovedBy" runat="server" Text='<%# Eval("HODApprovedBy") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="HOD Approved On">
-                        <ItemTemplate>
-                            <asp:Label ID="lblHODApprovedOn" runat="server" Text='<%# Eval("HODApprovedOn") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="HOD Approved On">
+                            <ItemTemplate>
+                                <asp:Label ID="lblHODApprovedOn" runat="server" Text='<%# Eval("HODApprovedOn") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Accounts Approved By">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAccountsApprovedBy" runat="server" Text='<%# Eval("AccountsApprovedBy") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Accounts Approved By">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAccountsApprovedBy" runat="server" Text='<%# Eval("AccountsApprovedBy") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Accounts Approved On">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAccountsApprovedOn" runat="server" Text='<%# Eval("AccountsApprovedOn") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Accounts Approved On">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAccountsApprovedOn" runat="server" Text='<%# Eval("AccountsApprovedOn") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="BA Generated By">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBAGeneratedBy" runat="server" Text='<%# Eval("BAGeneratedBy") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="BA Generated By">
+                            <ItemTemplate>
+                                <asp:Label ID="lblBAGeneratedBy" runat="server" Text='<%# Eval("BAGeneratedBy") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="BA Generated On">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBAGeneratedOn" runat="server" Text='<%# Eval("BAGeneratedOn") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="BA Generated On">
+                            <ItemTemplate>
+                                <asp:Label ID="lblBAGeneratedOn" runat="server" Text='<%# Eval("BAGeneratedOn") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="FACT Voucher Status">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFACT_VoucherStatus" runat="server" Text='<%# Eval("FACT_VoucherStatus") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                        <asp:TemplateField HeaderText="FACT Voucher Status">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFACT_VoucherStatus" runat="server" Text='<%# Eval("FACT_VoucherStatus") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
 
-        </div>
+            </div>
+
+        </fieldset>
 
     </div>
 

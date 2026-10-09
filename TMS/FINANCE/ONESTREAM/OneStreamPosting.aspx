@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="OneStreamPosting.aspx.cs"
-    Inherits="FINANCE_ONESTREAM_OneStreamPosting" Title="One Stream- Posting" %>
+    Inherits="FINANCE_ONESTREAM_OneStreamPosting" Title="CIPLTMS - One Stream- Posting" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -227,13 +227,10 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>One Stream Posting:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <div class="full-width button-group">
 
@@ -271,204 +268,211 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>One Stream Posting:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView
+                            CssClass="employee-grid"
+                            ID="gvOneStream" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                            HorizontalAlign="Center" OnRowDataBound="gvOneStream_RowDataBound">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+                                <asp:TemplateField HeaderText="Sr_No">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
+                                        <asp:Label ID="lblSRNo" runat="server" Visible="true" Text='<%# Eval("SR_NO" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="F_Year">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblFYear" runat="server" Visible="true" Text='<%# Eval("F_YEAR" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="F_Period">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblFPeriod" runat="server" Visible="true" Text='<%# Eval("F_PERIOD" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="F_Quarter">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblFQuarter" runat="server" Visible="true" Text='<%# Eval("F_QUARTER" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Profile_Name">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblProfileName" runat="server" Visible="true" Text='<%# Eval("PROFILE_NAME" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Tm">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblTm" runat="server" Visible="true" Text='<%# Eval("TM" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Tmt">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblTmt" runat="server" Visible="true" Text='<%# Eval("TMT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Et">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblEt" runat="server" Visible="true" Text='<%# Eval("ET" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Ett">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblEtt" runat="server" Visible="true" Text='<%# Eval("ETT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Ac">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblAc" runat="server" Visible="true" Text='<%# Eval("AC" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Act">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblAct" runat="server" Visible="true" Text='<%# Eval("ACT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Fw">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblFw" runat="server" Visible="true" Text='<%# Eval("FW" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Fwt">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblFwt" runat="server" Visible="true" Text='<%# Eval("FWT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Ic">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblIc" runat="server" Visible="true" Text='<%# Eval("IC" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Ict">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblIct" runat="server" Visible="true" Text='<%# Eval("ICT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U1">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU1" runat="server" Visible="true" Text='<%# Eval("U1" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U1T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU1T" runat="server" Visible="true" Text='<%# Eval("U1T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U2">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU2" runat="server" Visible="true" Text='<%# Eval("U2" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U2T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU2T" runat="server" Visible="true" Text='<%# Eval("U2T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U3">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU3" runat="server" Visible="true" Text='<%# Eval("U3" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U3T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU3T" runat="server" Visible="true" Text='<%# Eval("U3T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U4">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU4" runat="server" Visible="true" Text='<%# Eval("U4" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U4T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU4T" runat="server" Visible="true" Text='<%# Eval("U4T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U5">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU5" runat="server" Visible="true" Text='<%# Eval("U5" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U5T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU5T" runat="server" Visible="true" Text='<%# Eval("U5T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U6">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU6" runat="server" Visible="true" Text='<%# Eval("U6" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U6T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU6T" runat="server" Visible="true" Text='<%# Eval("U6T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U7">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU7" runat="server" Visible="true" Text='<%# Eval("U7" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U7T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU7T" runat="server" Visible="true" Text='<%# Eval("U7T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U8">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU8" runat="server" Visible="true" Text='<%# Eval("U8" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="U8T">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblU8T" runat="server" Visible="true" Text='<%# Eval("U8T" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Raw_Amount">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblRawAmount" runat="server" Visible="true" Text='<%# Eval("RAW_AMOUNT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Converted_Amount">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblConvertedAmount" runat="server" Visible="true" Text='<%# Eval("CONVERTED_AMOUNT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+
+
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+
             </div>
 
-            <asp:UpdatePanel runat="server" ID="uppanel">
-                <ContentTemplate>
-                    <asp:GridView
-                        CssClass="employee-grid"
-                        ID="gvOneStream" runat="server" AutoGenerateColumns="False"
-                        CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                        HorizontalAlign="Center" OnRowDataBound="gvOneStream_RowDataBound">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-                            <asp:TemplateField HeaderText="Sr_No">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
-                                    <asp:Label ID="lblSRNo" runat="server" Visible="true" Text='<%# Eval("SR_NO" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="F_Year">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblFYear" runat="server" Visible="true" Text='<%# Eval("F_YEAR" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="F_Period">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblFPeriod" runat="server" Visible="true" Text='<%# Eval("F_PERIOD" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="F_Quarter">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblFQuarter" runat="server" Visible="true" Text='<%# Eval("F_QUARTER" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Profile_Name">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblProfileName" runat="server" Visible="true" Text='<%# Eval("PROFILE_NAME" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Tm">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblTm" runat="server" Visible="true" Text='<%# Eval("TM" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Tmt">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblTmt" runat="server" Visible="true" Text='<%# Eval("TMT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Et">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblEt" runat="server" Visible="true" Text='<%# Eval("ET" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Ett">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblEtt" runat="server" Visible="true" Text='<%# Eval("ETT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Ac">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblAc" runat="server" Visible="true" Text='<%# Eval("AC" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Act">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblAct" runat="server" Visible="true" Text='<%# Eval("ACT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Fw">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblFw" runat="server" Visible="true" Text='<%# Eval("FW" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Fwt">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblFwt" runat="server" Visible="true" Text='<%# Eval("FWT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Ic">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblIc" runat="server" Visible="true" Text='<%# Eval("IC" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Ict">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblIct" runat="server" Visible="true" Text='<%# Eval("ICT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U1">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU1" runat="server" Visible="true" Text='<%# Eval("U1" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U1T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU1T" runat="server" Visible="true" Text='<%# Eval("U1T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U2">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU2" runat="server" Visible="true" Text='<%# Eval("U2" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U2T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU2T" runat="server" Visible="true" Text='<%# Eval("U2T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U3">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU3" runat="server" Visible="true" Text='<%# Eval("U3" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U3T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU3T" runat="server" Visible="true" Text='<%# Eval("U3T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U4">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU4" runat="server" Visible="true" Text='<%# Eval("U4" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U4T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU4T" runat="server" Visible="true" Text='<%# Eval("U4T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U5">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU5" runat="server" Visible="true" Text='<%# Eval("U5" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U5T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU5T" runat="server" Visible="true" Text='<%# Eval("U5T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U6">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU6" runat="server" Visible="true" Text='<%# Eval("U6" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U6T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU6T" runat="server" Visible="true" Text='<%# Eval("U6T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U7">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU7" runat="server" Visible="true" Text='<%# Eval("U7" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U7T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU7T" runat="server" Visible="true" Text='<%# Eval("U7T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U8">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU8" runat="server" Visible="true" Text='<%# Eval("U8" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="U8T">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblU8T" runat="server" Visible="true" Text='<%# Eval("U8T" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Raw_Amount">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblRawAmount" runat="server" Visible="true" Text='<%# Eval("RAW_AMOUNT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Converted_Amount">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblConvertedAmount" runat="server" Visible="true" Text='<%# Eval("CONVERTED_AMOUNT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-
-
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-
-        </div>
+        </fieldset>
 
     </div>
 

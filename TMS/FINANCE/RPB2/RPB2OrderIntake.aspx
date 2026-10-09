@@ -1,4 +1,4 @@
-﻿<%@ Page Title="RPB2 Order Intake" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - RPB2 Order Intake" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="RPB2OrderIntake.aspx.cs" Inherits="FINANCE_RPB2_RPB2OrderIntake" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -494,18 +494,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>RPB2 Order Intake:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Search By Month:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtYearMonthSearch" runat="server" CssClass="form-control"
                                     onkeydown="javascript:preventInput(event);"></asp:TextBox>
                                 <asp:HiddenField ID="hdYearMonthSearch" runat="server" />
@@ -560,7 +558,7 @@
                     <label>Compare By Month:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtYearMonthCompare" runat="server" CssClass="form-control"
                                     onkeydown="javascript:preventInput(event);"></asp:TextBox>
                                 <asp:HiddenField ID="hdYearMonthCompare" runat="server" />
@@ -591,9 +589,7 @@
 
                 <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
                     OnClick="btnExport_Click" />
-            </div>
 
-            <div class="full-width button-group">
                 <label>Year Month (Search):</label>
                 <asp:TextBox ID="txtYearMonthSearchToShow" runat="server"
                     CssClass="form-control"
@@ -611,8 +607,7 @@
                     CssClass="form-control"
                     Enabled="false"
                     Font-Bold="true"></asp:TextBox>
-            </div>
-            <div class="full-width button-group">
+
                 <label>Total OI Margin (Compared):</label>
                 <asp:TextBox ID="txtTotalOIMarginComparedToShow" runat="server"
                     CssClass="form-control"
@@ -624,83 +619,92 @@
                     CssClass="form-control"
                     Enabled="false"
                     Font-Bold="true"></asp:TextBox>
+
             </div>
+
 
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>RPB2 Order Intake:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvRPB2Report" runat="server"
+                    AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvRPB2Report_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="Year">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUnitFid" runat="server" Visible="false" Text='<%# Eval("Unit_Fid") %>' />
+                                <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("Location") %>' />
+                                <asp:Label ID="lblYear" runat="server" Visible="true" Text='<%# Eval("Year") %>' />
+                                <asp:Label ID="lblMonth" runat="server" Visible="false" Text='<%# Eval("Month") %>' />
+                                <asp:Label ID="lblYearMonth" runat="server" Visible="false" Text='<%# Eval("Year_Month") %>' />
+                                <asp:Label ID="lblRevenueTypeFid" runat="server" Visible="false" Text='<%# Eval("Revenue_Type_Fid") %>' />
+                                <asp:Label ID="lblRevenueType" runat="server" Visible="false" Text='<%# Eval("Revenue_Type") %>' />
+                                <asp:Label ID="lblBu" runat="server" Visible="false" Text='<%# Eval("Bu") %>' />
+                                <asp:Label ID="lblCompanyTypeFid" runat="server" Visible="false" Text='<%# Eval("Company_Type_Fid") %>' />
+                                <asp:Label ID="lblCompanyType" runat="server" Visible="false" Text='<%# Eval("Company_Type") %>' />
+                                <asp:Label ID="lblIcCode" runat="server" Visible="false" Text='<%# Eval("Ic_Code") %>' />
+                                <asp:Label ID="lblEntryTypeFid" runat="server" Visible="false" Text='<%# Eval("Entry_Type_Fid") %>' />
+                                <asp:Label ID="lblEntryType" runat="server" Visible="false" Text='<%# Eval("Entry_Type") %>' />
+                                <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("Order_No") %>' />
+                                <asp:Label ID="lblCurrencyFid" runat="server" Visible="false" Text='<%# Eval("Currency_Fid") %>' />
+                                <asp:Label ID="lblCurrency" runat="server" Visible="false" Text='<%# Eval("Currency") %>' />
+                                <asp:Label ID="lblRate" runat="server" Visible="false" Text='<%# Eval("Rate") %>' />
+                                <asp:Label ID="lblFcOrderValue" runat="server" Visible="false" Text='<%# Eval("Fc_Order_Value") %>' />
+                                <asp:Label ID="lblInrOrderValue" runat="server" Visible="false" Text='<%# Eval("Inr_Order_Value") %>' />
+                                <asp:Label ID="lblOiMargin" runat="server" Visible="false" Text='<%# Eval("Oi_Margin") %>' />
+                                <asp:Label ID="lblComparedYearMonth" runat="server" Visible="false" Text='<%# Eval("Compared_Year_Month") %>' />
+                                <asp:Label ID="lblComparedOiMargin" runat="server" Visible="false" Text='<%# Eval("Compared_Oi_Margin") %>' />
+                                <asp:Label ID="lblDeltaValue" runat="server" Visible="false" Text='<%# Eval("Delta_Value") %>' />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:BoundField HeaderText="Month" DataField="Month" />
+                        <asp:BoundField HeaderText="Revenue Type" DataField="Revenue_Type" />
+                        <asp:BoundField HeaderText="Bu" DataField="Bu" />
+                        <asp:BoundField HeaderText="Company Type" DataField="Company_Type" />
+                        <asp:BoundField HeaderText="Ic Code" DataField="Ic_Code" />
+                        <asp:BoundField HeaderText="Entry Type" DataField="Entry_Type" />
+                        <asp:BoundField HeaderText="Order No" DataField="Order_No" />
+                        <asp:BoundField HeaderText="Currency" DataField="Currency" />
+                        <asp:BoundField HeaderText="Rate" DataField="Rate" />
+                        <asp:BoundField HeaderText="Fc Order Value" DataField="Fc_Order_Value" />
+                        <asp:BoundField HeaderText="Inr Order Value" DataField="Inr_Order_Value" />
+                        <asp:BoundField HeaderText="Oi Margin" DataField="Oi_Margin" />
+                        <asp:BoundField HeaderText="Compared Year Month" DataField="Compared_Year_Month" />
+                        <asp:BoundField HeaderText="Compared Oi Margin" DataField="Compared_Oi_Margin" />
+                        <asp:BoundField HeaderText="Delta Value" DataField="Delta_Value" />
+                        <asp:BoundField HeaderText="Location" DataField="Location" />
+
+                    </Columns>
+                </asp:GridView>
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvRPB2Report" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvRPB2Report_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
 
-                    <asp:TemplateField HeaderText="Year">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUnitFid" runat="server" Visible="false" Text='<%# Eval("Unit_Fid") %>' />
-                            <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("Location") %>' />
-                            <asp:Label ID="lblYear" runat="server" Visible="true" Text='<%# Eval("Year") %>' />
-                            <asp:Label ID="lblMonth" runat="server" Visible="false" Text='<%# Eval("Month") %>' />
-                            <asp:Label ID="lblYearMonth" runat="server" Visible="false" Text='<%# Eval("Year_Month") %>' />
-                            <asp:Label ID="lblRevenueTypeFid" runat="server" Visible="false" Text='<%# Eval("Revenue_Type_Fid") %>' />
-                            <asp:Label ID="lblRevenueType" runat="server" Visible="false" Text='<%# Eval("Revenue_Type") %>' />
-                            <asp:Label ID="lblBu" runat="server" Visible="false" Text='<%# Eval("Bu") %>' />
-                            <asp:Label ID="lblCompanyTypeFid" runat="server" Visible="false" Text='<%# Eval("Company_Type_Fid") %>' />
-                            <asp:Label ID="lblCompanyType" runat="server" Visible="false" Text='<%# Eval("Company_Type") %>' />
-                            <asp:Label ID="lblIcCode" runat="server" Visible="false" Text='<%# Eval("Ic_Code") %>' />
-                            <asp:Label ID="lblEntryTypeFid" runat="server" Visible="false" Text='<%# Eval("Entry_Type_Fid") %>' />
-                            <asp:Label ID="lblEntryType" runat="server" Visible="false" Text='<%# Eval("Entry_Type") %>' />
-                            <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("Order_No") %>' />
-                            <asp:Label ID="lblCurrencyFid" runat="server" Visible="false" Text='<%# Eval("Currency_Fid") %>' />
-                            <asp:Label ID="lblCurrency" runat="server" Visible="false" Text='<%# Eval("Currency") %>' />
-                            <asp:Label ID="lblRate" runat="server" Visible="false" Text='<%# Eval("Rate") %>' />
-                            <asp:Label ID="lblFcOrderValue" runat="server" Visible="false" Text='<%# Eval("Fc_Order_Value") %>' />
-                            <asp:Label ID="lblInrOrderValue" runat="server" Visible="false" Text='<%# Eval("Inr_Order_Value") %>' />
-                            <asp:Label ID="lblOiMargin" runat="server" Visible="false" Text='<%# Eval("Oi_Margin") %>' />
-                            <asp:Label ID="lblComparedYearMonth" runat="server" Visible="false" Text='<%# Eval("Compared_Year_Month") %>' />
-                            <asp:Label ID="lblComparedOiMargin" runat="server" Visible="false" Text='<%# Eval("Compared_Oi_Margin") %>' />
-                            <asp:Label ID="lblDeltaValue" runat="server" Visible="false" Text='<%# Eval("Delta_Value") %>' />
-
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:BoundField HeaderText="Month" DataField="Month" />
-                    <asp:BoundField HeaderText="Revenue Type" DataField="Revenue_Type" />
-                    <asp:BoundField HeaderText="Bu" DataField="Bu" />
-                    <asp:BoundField HeaderText="Company Type" DataField="Company_Type" />
-                    <asp:BoundField HeaderText="Ic Code" DataField="Ic_Code" />
-                    <asp:BoundField HeaderText="Entry Type" DataField="Entry_Type" />
-                    <asp:BoundField HeaderText="Order No" DataField="Order_No" />
-                    <asp:BoundField HeaderText="Currency" DataField="Currency" />
-                    <asp:BoundField HeaderText="Rate" DataField="Rate" />
-                    <asp:BoundField HeaderText="Fc Order Value" DataField="Fc_Order_Value" />
-                    <asp:BoundField HeaderText="Inr Order Value" DataField="Inr_Order_Value" />
-                    <asp:BoundField HeaderText="Oi Margin" DataField="Oi_Margin" />
-                    <asp:BoundField HeaderText="Compared Year Month" DataField="Compared_Year_Month" />
-                    <asp:BoundField HeaderText="Compared Oi Margin" DataField="Compared_Oi_Margin" />
-                    <asp:BoundField HeaderText="Delta Value" DataField="Delta_Value" />
-                    <asp:BoundField HeaderText="Location" DataField="Location" />
-
-                </Columns>
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 

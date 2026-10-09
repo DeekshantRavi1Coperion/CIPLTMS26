@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="OneStreamPostedReport.aspx.cs"
-    Inherits="FINANCE_ONESTREAM_OneStreamPostedReport" Title="One Stream- Posted Report" %>
+    Inherits="FINANCE_ONESTREAM_OneStreamPostedReport" Title="CIPLTMS - One Stream- Posted Report" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -134,18 +134,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>One Stream Posted Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Year-Period: </label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdPostingMonth" runat="server" />
@@ -178,73 +176,81 @@
                     <asp:TextBox ID="txtGLAccount" runat="server"
                         CssClass="form-control"></asp:TextBox>
 
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClick="btnSearch_Click" />
 
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
 
                 </div>
             </fieldset>
             <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>One Stream Posted Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvOneStreamList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvOneStreamList_RowDataBound" OnRowCommand="gvOneStreamList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
+                                <asp:Label ID="lblYear" runat="server" Visible="false" Text='<%# Eval("F_YEAR" ) %>' />
+                                <asp:Label ID="lblPeriod" runat="server" Visible="false" Text='<%# Eval("F_PERIOD" ) %>' />
+                                <asp:Label ID="lblQuarter" runat="server" Visible="false" Text='<%# Eval("F_QUARTER" ) %>' />
+                                <asp:Label ID="lblGLAccount" runat="server" Visible="false" Text='<%# Eval("FW" ) %>' />
+
+                                <asp:Label ID="lblTMT" runat="server" Visible="false" Text='<%# Eval("TMT" ) %>' />
+                                <asp:Label ID="lblAC" runat="server" Visible="false" Text='<%# Eval("AC" ) %>' />
+                                <asp:Label ID="lblACT" runat="server" Visible="false" Text='<%# Eval("ACT" ) %>' />
+                                <asp:Label ID="lblICT" runat="server" Visible="false" Text='<%# Eval("ICT" ) %>' />
+                                <asp:Label ID="lblU3T" runat="server" Visible="false" Text='<%# Eval("U3T" ) %>' />
+                                <asp:Label ID="lblU4T" runat="server" Visible="false" Text='<%# Eval("U4T" ) %>' />
+                                <asp:Label ID="lblU7T" runat="server" Visible="false" Text='<%# Eval("U7T" ) %>' />
+                                <asp:Label ID="lblRawAmount" runat="server" Visible="false" Text='<%# Eval("RAW_AMOUNT" ) %>' />
+                                <asp:Label ID="lblConvertedAmount" runat="server" Visible="false" Text='<%# Eval("CONVERTED_AMOUNT" ) %>' />
+
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
+                                    ToolTip="Edit Posted Sales Gross Margin" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="TMT" HeaderText="TMT" />
+                        <asp:BoundField DataField="AC" HeaderText="AC" />
+                        <asp:BoundField DataField="ACT" HeaderText="ACT" />
+                        <asp:BoundField DataField="ICT" HeaderText="ICT" />
+                        <asp:BoundField DataField="U3T" HeaderText="U3T" />
+                        <asp:BoundField DataField="U4T" HeaderText="U4T" />
+                        <asp:BoundField DataField="U7T" HeaderText="U7T" />
+                        <asp:BoundField DataField="FW" HeaderText="FW" />
+                        <asp:BoundField DataField="RAW_AMOUNT" HeaderText="RAW_AMOUNT" />
+                        <asp:BoundField DataField="CONVERTED_AMOUNT" HeaderText="CONVERTED_AMOUNT" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvOneStreamList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvOneStreamList_RowDataBound" OnRowCommand="gvOneStreamList_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
-                            <asp:Label ID="lblYear" runat="server" Visible="false" Text='<%# Eval("F_YEAR" ) %>' />
-                            <asp:Label ID="lblPeriod" runat="server" Visible="false" Text='<%# Eval("F_PERIOD" ) %>' />
-                            <asp:Label ID="lblQuarter" runat="server" Visible="false" Text='<%# Eval("F_QUARTER" ) %>' />
-                            <asp:Label ID="lblGLAccount" runat="server" Visible="false" Text='<%# Eval("FW" ) %>' />
 
-                            <asp:Label ID="lblTMT" runat="server" Visible="false" Text='<%# Eval("TMT" ) %>' />
-                            <asp:Label ID="lblAC" runat="server" Visible="false" Text='<%# Eval("AC" ) %>' />
-                            <asp:Label ID="lblACT" runat="server" Visible="false" Text='<%# Eval("ACT" ) %>' />
-                            <asp:Label ID="lblICT" runat="server" Visible="false" Text='<%# Eval("ICT" ) %>' />
-                            <asp:Label ID="lblU3T" runat="server" Visible="false" Text='<%# Eval("U3T" ) %>' />
-                            <asp:Label ID="lblU4T" runat="server" Visible="false" Text='<%# Eval("U4T" ) %>' />
-                            <asp:Label ID="lblU7T" runat="server" Visible="false" Text='<%# Eval("U7T" ) %>' />
-                            <asp:Label ID="lblRawAmount" runat="server" Visible="false" Text='<%# Eval("RAW_AMOUNT" ) %>' />
-                            <asp:Label ID="lblConvertedAmount" runat="server" Visible="false" Text='<%# Eval("CONVERTED_AMOUNT" ) %>' />
-
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
-                                ToolTip="Edit Posted Sales Gross Margin" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="TMT" HeaderText="TMT" />
-                    <asp:BoundField DataField="AC" HeaderText="AC" />
-                    <asp:BoundField DataField="ACT" HeaderText="ACT" />
-                    <asp:BoundField DataField="ICT" HeaderText="ICT" />
-                    <asp:BoundField DataField="U3T" HeaderText="U3T" />
-                    <asp:BoundField DataField="U4T" HeaderText="U4T" />
-                    <asp:BoundField DataField="U7T" HeaderText="U7T" />
-                    <asp:BoundField DataField="FW" HeaderText="FW" />
-                    <asp:BoundField DataField="RAW_AMOUNT" HeaderText="RAW_AMOUNT" />
-                    <asp:BoundField DataField="CONVERTED_AMOUNT" HeaderText="CONVERTED_AMOUNT" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -274,12 +280,12 @@
                 <div class="form-grid form-grid-2">
 
                     <label>Year:</label>
-                    <asp:TextBox ID="txtYearNew" runat="server" 
+                    <asp:TextBox ID="txtYearNew" runat="server"
                         onkeyDown="javascript:preventInput(event);"
                         CssClass="form-control" Enabled="false" />
 
                     <label>Period</label>
-                    <asp:TextBox ID="txtPeriodNew" runat="server" 
+                    <asp:TextBox ID="txtPeriodNew" runat="server"
                         onkeyDown="javascript:preventInput(event);"
                         CssClass="form-control" Enabled="false" />
 
@@ -297,39 +303,39 @@
                         onkeyDown="javascript:preventInput(event);" Enabled="false" />
 
                     <label>ACT:</label>
-                    <asp:TextBox ID="txtACTNew" runat="server" 
+                    <asp:TextBox ID="txtACTNew" runat="server"
                         onkeyDown="javascript:preventInput(event);" CssClass="form-control" Enabled="false" />
 
 
                     <label>ICT:</label>
-                    <asp:TextBox ID="txtICTNew" runat="server" 
+                    <asp:TextBox ID="txtICTNew" runat="server"
                         onkeyDown="javascript:preventInput(event);" CssClass="form-control" Enabled="false" />
 
 
                     <label>U3T:</label>
-                    <asp:TextBox ID="txtU3TNew" runat="server" 
+                    <asp:TextBox ID="txtU3TNew" runat="server"
                         onkeyDown="javascript:preventInput(event);" CssClass="form-control" Enabled="false" />
 
 
                     <label>U4T:</label>
-                    <asp:TextBox ID="txtU4TNew" runat="server" 
+                    <asp:TextBox ID="txtU4TNew" runat="server"
                         onkeyDown="javascript:preventInput(event);" CssClass="form-control" Enabled="false" />
 
                     <label>U7T:</label>
-                    <asp:TextBox ID="txtU7TNew" runat="server" 
+                    <asp:TextBox ID="txtU7TNew" runat="server"
                         onkeyDown="javascript:preventInput(event);" CssClass="form-control" Enabled="false" />
 
                     <label>FW:</label>
-                    <asp:TextBox ID="txtFWNew" runat="server" 
+                    <asp:TextBox ID="txtFWNew" runat="server"
                         onkeyDown="javascript:preventInput(event);" CssClass="form-control" Enabled="false" />
 
 
                     <label>Raw Amount:</label>
-                    <asp:TextBox ID="txtRawAmountNew" runat="server" 
+                    <asp:TextBox ID="txtRawAmountNew" runat="server"
                         onkeypress="return negNumberKeyWithDecimal(this, event);" CssClass="form-control" />
 
                     <label>Converted Amount:</label>
-                    <asp:TextBox ID="txtConvertedAmountNew" runat="server" 
+                    <asp:TextBox ID="txtConvertedAmountNew" runat="server"
                         onkeypress="return negNumberKeyWithDecimal(this, event);" CssClass="form-control" />
 
 

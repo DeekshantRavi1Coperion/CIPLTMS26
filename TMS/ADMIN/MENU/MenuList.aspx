@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Menu List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="MenuList.aspx.cs" Inherits="ADMIN_MENU_MenuList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -20,57 +20,64 @@
     <asp:UpdatePanel runat="server" ID="uppanel">
         <ContentTemplate>
 
-
             <div class="page-layout">
-                <div class="form-grid-container">
-                    <fieldset class="filter-card">
-                        <legend>Filters:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
-                        <div class="form-grid form-grid-3">
+                <div class="filter-grid-container">
+                    <fieldset class="filter-card">
+                        <legend>Filters</legend>
+                        <div class="form-filter-grid">
+
                             <label>Menu Name</label>
                             <asp:TextBox ID="txtMenuName"
                                 runat="server"
                                 CssClass="form-control" />
-
 
                             <label>Parent Menu</label>
                             <asp:DropDownList ID="ddlParentMenu"
                                 runat="server"
                                 CssClass="form-control" />
 
-                            &nbsp;
-                            &nbsp;
-                         <asp:Button ID="btnSearch"
-                             OnClick="btnSearch_Click"
-                             runat="server"
-                             Text="Search"
-                             CssClass="button" />
-
-                            &nbsp;
-                         <asp:Button ID="btnAddNew"
-                             OnClick="btnAddNew_Click"
-                             runat="server"
-                             Text="Add New"
-                             CssClass="button" />
                         </div>
-
                     </fieldset>
-                </div>
 
-                <div class="employee-grid-container">
-                    <div align="center">
-                        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                        </asp:Panel>
+                    <div class="full-width button-group">
+                        <asp:Button ID="btnSearch"
+                            OnClick="btnSearch_Click"
+                            runat="server"
+                            Text="Search"
+                            CssClass="button" />
+
+                        <asp:Button ID="btnAddNew"
+                            OnClick="btnAddNew_Click"
+                            runat="server"
+                            Text="Add New"
+                            CssClass="button" />
                     </div>
 
-                    <asp:GridView ID="gvMenuList"
-                        CssClass="employee-grid"
-                        runat="server" AutoGenerateColumns="False" CellPadding="4"
-                            ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                </div>
+
+
+                <fieldset class="employee-grid-fieldset">
+                    <legend>Menus:
+                        <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                    </legend>
+
+                    <div class="employee-grid-container">
+
+                        <div align="center">
+                            <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                                <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                            </asp:Panel>
+                        </div>
+
+                        <asp:GridView ID="gvMenuList"
+                            CssClass="employee-grid"
+                            runat="server" AutoGenerateColumns="False" CellPadding="4"
+                            ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
                             OnRowCommand="gvMenuList_RowCommand"
                             OnRowDataBound="gvMenuList_RowDataBound">
+
+
                             <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                             <Columns>
                                 <asp:TemplateField HeaderText="PROPERTIES">
@@ -100,9 +107,13 @@
                             <AlternatingRowStyle BackColor="White" />
                         </asp:GridView>
 
-                </div>
+
+                    </div>
+                </fieldset>
 
             </div>
+
+
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>

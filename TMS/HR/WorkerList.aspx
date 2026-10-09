@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="WorkerList.aspx.cs"
-    Inherits="HR_WorkerList" Title="Untitled Page" %>
+    Inherits="HR_WorkerList"
+    Title="CIPLTMS - Worker Convenience List" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -46,13 +47,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Worker Convenience List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Worker Name:</label>
                     <asp:DropDownList ID="ddlWorker" runat="server"
@@ -70,50 +69,57 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Worker Convenience List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvWorkerList" runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="False" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvWorkerList_RowDataBound" OnRowCommand="gvWorkerList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="EDIT">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                <asp:Label ID="lblEssWorkerRecordID" runat="server" Visible="false" Text='<%# Eval("ESS_WORKER_RECORD_ID") %>' />
+                                <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
+                                <asp:Label ID="lblWorkerName" runat="server" Visible="false" Text='<%# Eval("WORKER_NAME") %>' />
+                                <asp:Label ID="lblWorkerCode" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_ID") %>' />
+                                <asp:Label ID="lblUnit" runat="server" Visible="false" Text='<%# Eval("UNIT") %>' />
+                                <asp:Label ID="lblConvenienceAmt" runat="server" Visible="false" Text='<%# Eval("CONVENIENCE_AMT") %>' />
+
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
+                                    ToolTip="Edit Worker Convenience" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="WORKER_NAME" HeaderText="WORKER_NAME" />
+                        <asp:BoundField DataField="EMPLOYEE_ID" HeaderText="WORKER_CODE" />
+                        <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
+                        <asp:BoundField DataField="CONVENIENCE_AMT" HeaderText="CONVENIENCE_AMT" />
+                    </Columns>
+                </asp:GridView>
+
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvWorkerList" runat="server" CellPadding="4" ForeColor="#333333"
-                AutoGenerateColumns="False" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvWorkerList_RowDataBound" OnRowCommand="gvWorkerList_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
 
-                    <asp:TemplateField HeaderText="EDIT">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                            <asp:Label ID="lblEssWorkerRecordID" runat="server" Visible="false" Text='<%# Eval("ESS_WORKER_RECORD_ID") %>' />
-                            <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
-                            <asp:Label ID="lblWorkerName" runat="server" Visible="false" Text='<%# Eval("WORKER_NAME") %>' />
-                            <asp:Label ID="lblWorkerCode" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_ID") %>' />
-                            <asp:Label ID="lblUnit" runat="server" Visible="false" Text='<%# Eval("UNIT") %>' />
-                            <asp:Label ID="lblConvenienceAmt" runat="server" Visible="false" Text='<%# Eval("CONVENIENCE_AMT") %>' />
-
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
-                                ToolTip="Edit Worker Convenience" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="WORKER_NAME" HeaderText="WORKER_NAME" />
-                    <asp:BoundField DataField="EMPLOYEE_ID" HeaderText="WORKER_CODE" />
-                    <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
-                    <asp:BoundField DataField="CONVENIENCE_AMT" HeaderText="CONVENIENCE_AMT" />
-                </Columns>
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -122,7 +128,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
         PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlpopup" runat="server" 
+    <asp:Panel ID="pnlpopup" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>

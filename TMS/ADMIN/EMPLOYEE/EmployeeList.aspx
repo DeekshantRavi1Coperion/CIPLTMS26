@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Employee List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="EmployeeList.aspx.cs" Inherits="ADMIN_EMPLOYEE_EmployeeList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -400,11 +400,10 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Filters:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+                <div class="form-filter-grid">
 
                     <label>Unit</label>
                     <asp:DropDownList ID="ddlUnitSearch"
@@ -425,49 +424,54 @@
                     <asp:DropDownList ID="ddlDepartmentSearch"
                         runat="server"
                         CssClass="form-control" />
-
-                    &nbsp;
-                    &nbsp;
-                 <asp:Button ID="btnSearch"
-                     OnClick="btnSearch_Click"
-                     runat="server"
-                     Text="Search"
-                     CssClass="button" />
-
                 </div>
             </fieldset>
-        </div>
 
-        <div class="employee-grid-container">
-
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
             </div>
 
+        </div>
 
-            <asp:GridView ID="gvEmployeeList"
-                CssClass="employee-grid"
-                runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvEmployeeList_RowCommand"
-                OnRowDataBound="gvEmployeeList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="PASSPORT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPassportCopyName" runat="server" Visible="false" Text='<%# Eval("PASSPORT_COPY_NAME") %>' />
-                            <asp:ImageButton ID="btnPassportCopy" Height="20px" Width="20px" CommandArgument="VIEWPASSPORT"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
-                            <asp:Label ID="lblIsActive" runat="server" Visible="false" Text='<%# Eval("IS_ACTIVE") %>' />
 
-                            <%--<asp:Label ID="lblDepartmentID" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_ID") %>' />
+        <fieldset class="employee-grid-fieldset">
+            <legend>Employees:
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView ID="gvEmployeeList"
+                    CssClass="employee-grid"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvEmployeeList_RowCommand"
+                    OnRowDataBound="gvEmployeeList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="PASSPORT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPassportCopyName" runat="server" Visible="false" Text='<%# Eval("PASSPORT_COPY_NAME") %>' />
+                                <asp:ImageButton ID="btnPassportCopy" Height="20px" Width="20px" CommandArgument="VIEWPASSPORT"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
+                                <asp:Label ID="lblIsActive" runat="server" Visible="false" Text='<%# Eval("IS_ACTIVE") %>' />
+
+                                <%--<asp:Label ID="lblDepartmentID" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_ID") %>' />
                                 <asp:Label ID="lblTimesheetDeptID" runat="server" Visible="false" Text='<%# Eval("TIMESHEET_DEPT_ID") %>' />
                                 <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
                                 
@@ -477,43 +481,46 @@
                                 <asp:Label ID="lblIFSC" runat="server" Visible="false" Text='<%# Eval("IFSC") %>' />
                                 <asp:Label ID="lblAccountNo" runat="server" Visible="false" Text='<%# Eval("ACCOUNT_NO") %>' />--%>
 
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="IS_ACTIVE" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsActive" CommandArgument="IS_ACTIVE"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="EMPLOYEE_ID" HeaderText="EMPLOYEE_ID" />
-                    <asp:BoundField DataField="EMAIL_ID" HeaderText="EMAIL_ID" />
-                    <asp:BoundField DataField="USER_NAME" HeaderText="USER_NAME" />
-                    <asp:BoundField DataField="PASSWORD" HeaderText="PASSWORD" />
-                    <asp:BoundField DataField="DESIGNATION" HeaderText="DESIGNATION" />
-                    <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
-                    <asp:BoundField DataField="TIMESHEET_DEPARTMENT" HeaderText="TIMESHEET_DEPARTMENT" />
-                    <asp:BoundField DataField="TEAM_LEADER" HeaderText="TEAM_LEADER" />
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="UNIT_NAME" />
-                    <asp:BoundField DataField="USER_TYPE" HeaderText="USER_TYPE" />
-                    <asp:BoundField DataField="TIMESHEET_EMP_TYPE" HeaderText="TIMESHEET_EMP_TYPE" />
-                    <asp:BoundField DataField="BANK_NAME" HeaderText="BANK_NAME" />
-                    <asp:BoundField DataField="IFSC" HeaderText="IFSC" />
-                    <asp:BoundField DataField="ACCOUNT_NO" HeaderText="ACCOUNT_NO" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="IS_ACTIVE" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsActive" CommandArgument="IS_ACTIVE"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="EMPLOYEE_ID" HeaderText="EMPLOYEE_ID" />
+                        <asp:BoundField DataField="EMAIL_ID" HeaderText="EMAIL_ID" />
+                        <asp:BoundField DataField="USER_NAME" HeaderText="USER_NAME" />
+                        <asp:BoundField DataField="PASSWORD" HeaderText="PASSWORD" />
+                        <asp:BoundField DataField="DESIGNATION" HeaderText="DESIGNATION" />
+                        <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
+                        <asp:BoundField DataField="TIMESHEET_DEPARTMENT" HeaderText="TIMESHEET_DEPARTMENT" />
+                        <asp:BoundField DataField="TEAM_LEADER" HeaderText="TEAM_LEADER" />
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="UNIT_NAME" />
+                        <asp:BoundField DataField="USER_TYPE" HeaderText="USER_TYPE" />
+                        <asp:BoundField DataField="TIMESHEET_EMP_TYPE" HeaderText="TIMESHEET_EMP_TYPE" />
+                        <asp:BoundField DataField="BANK_NAME" HeaderText="BANK_NAME" />
+                        <asp:BoundField DataField="IFSC" HeaderText="IFSC" />
+                        <asp:BoundField DataField="ACCOUNT_NO" HeaderText="ACCOUNT_NO" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
+
+            </div>
+        </fieldset>
 
     </div>
+
 
     <asp:Button ID="btnShowPopup" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
@@ -664,7 +671,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender2" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -683,7 +690,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender3" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -692,18 +699,17 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
 
     <asp:Button ID="btnShowTeamMembers" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="ModalPopupExtender4" runat="server" TargetControlID="btnShowTeamMembers"
         PopupControlID="pnlShowTeamMembers" CancelControlID="imgBtnCancelShowTeamMembers" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlShowTeamMembers" runat="server" 
+    <asp:Panel ID="pnlShowTeamMembers" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>

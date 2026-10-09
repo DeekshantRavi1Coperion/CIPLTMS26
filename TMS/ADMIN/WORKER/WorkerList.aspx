@@ -123,12 +123,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Filters:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Unit</label>
                     <asp:DropDownList ID="ddlUnitSearch"
@@ -150,71 +149,74 @@
                         runat="server"
                         CssClass="form-control" />
 
-                    &nbsp;
-                    <asp:Button ID="btnSearch"
-                        OnClick="btnSearch_Click"
-                        runat="server"
-                        Text="Search"
-                        CssClass="button" />
+                </div>
+            </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
 
-                    &nbsp;
                 <asp:Button ID="btnAddNe"
                     OnClick="btnAddNew_Click"
                     runat="server"
                     Text="Add New"
                     CssClass="button" />
-
-                </div>
-            </fieldset>
+            </div>
         </div>
 
+        <fieldset class="employee-grid-fieldset">
+            <legend>Workers:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:GridView ID="gvEmployeeList"
+                    CssClass="employee-grid"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvEmployeeList_RowCommand"
+                    OnRowDataBound="gvEmployeeList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EIDT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
+                                <asp:Label ID="lblIsActive" runat="server" Visible="false" Text='<%# Eval("IS_ACTIVE") %>' />
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="IS_ACTIVE" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsActive" CommandArgument="IS_ACTIVE"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="WORKER_NAME" />
+                        <asp:BoundField DataField="EMPLOYEE_ID" HeaderText="EMPLOYEE_ID" />
+                        <asp:BoundField DataField="DESIGNATION" HeaderText="DESIGNATION" />
+                        <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
+                        <asp:BoundField DataField="TEAM_LEADER" HeaderText="TEAM_LEADER" />
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="UNIT_NAME" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView ID="gvEmployeeList"
-                CssClass="employee-grid"
-                runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvEmployeeList_RowCommand"
-                OnRowDataBound="gvEmployeeList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EIDT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
-                            <asp:Label ID="lblIsActive" runat="server" Visible="false" Text='<%# Eval("IS_ACTIVE") %>' />
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="IS_ACTIVE" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsActive" CommandArgument="IS_ACTIVE"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="WORKER_NAME" />
-                    <asp:BoundField DataField="EMPLOYEE_ID" HeaderText="EMPLOYEE_ID" />
-                    <asp:BoundField DataField="DESIGNATION" HeaderText="DESIGNATION" />
-                    <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
-                    <asp:BoundField DataField="TEAM_LEADER" HeaderText="TEAM_LEADER" />
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="UNIT_NAME" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
 
     </div>
@@ -244,39 +246,39 @@
                     </asp:Panel>
                 </div>
 
-               <div class="form-grid form-grid-2">
+                <div class="form-grid form-grid-2">
 
-                <label>Worker Name</label>
-                <asp:TextBox ID="txtEmployeeName"
-                    runat="server"
-                    CssClass="form-control" />
+                    <label>Worker Name</label>
+                    <asp:TextBox ID="txtEmployeeName"
+                        runat="server"
+                        CssClass="form-control" />
 
-                <label>Worker ID</label>
-                <asp:TextBox ID="txtEmployeeID"
-                    runat="server"
-                    CssClass="form-control" />
+                    <label>Worker ID</label>
+                    <asp:TextBox ID="txtEmployeeID"
+                        runat="server"
+                        CssClass="form-control" />
 
-                <label>Designation</label>
-                <asp:TextBox ID="txtDesignation"
-                    runat="server"
-                    CssClass="form-control" />
+                    <label>Designation</label>
+                    <asp:TextBox ID="txtDesignation"
+                        runat="server"
+                        CssClass="form-control" />
 
-                <label>Department</label>
-                <asp:DropDownList ID="ddlDepartment"
-                    runat="server"
-                    CssClass="form-control" />
+                    <label>Department</label>
+                    <asp:DropDownList ID="ddlDepartment"
+                        runat="server"
+                        CssClass="form-control" />
 
-                <label>Unit</label>
-                <asp:DropDownList ID="ddlUnit"
-                    runat="server"
-                    CssClass="form-control" />
+                    <label>Unit</label>
+                    <asp:DropDownList ID="ddlUnit"
+                        runat="server"
+                        CssClass="form-control" />
 
-                <label>Leader</label>
-                <asp:DropDownList ID="ddlTeamLeader"
-                    runat="server"
-                    CssClass="form-control" />
+                    <label>Leader</label>
+                    <asp:DropDownList ID="ddlTeamLeader"
+                        runat="server"
+                        CssClass="form-control" />
 
-            </div>
+                </div>
 
             </fieldset>
             <div class="full-width button-group">

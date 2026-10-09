@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Staff OT Report In Detail" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="StaffOTReportInDetail.aspx.cs" Inherits="HR_StaffOTReportInDetail" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -331,19 +331,17 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Staff OT Hours In Detail:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtStartDate" runat="server" ReadOnly="true" 
+                            <td style="width:90%;">
+                                <asp:TextBox ID="txtStartDate" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDate" runat="server" />
                                 <asp:CalendarExtender ID="calendarStartDate" PopupButtonID="imgbtnStartDate" runat="server"
@@ -360,8 +358,8 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtEndDate" runat="server" ReadOnly="true" 
+                            <td style="width:90%;">
+                                <asp:TextBox ID="txtEndDate" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDate" runat="server" />
                                 <asp:CalendarExtender ID="calendarEndDate" PopupButtonID="imgbtnEndDate" runat="server"
@@ -376,7 +374,7 @@
                     </table>
 
                     <label>Department:</label>
-                    <asp:DropDownList ID="ddlDepartment" runat="server" 
+                    <asp:DropDownList ID="ddlDepartment" runat="server"
                         CssClass="form-control"
                         OnSelectedIndexChanged="ddlDepartment_SelectedIndexChanged" AutoPostBack="true">
                     </asp:DropDownList>
@@ -400,49 +398,55 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Staff OT Hours In Detail:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvOTReport" runat="server" AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvOTReport_RowDataBound">
+                    <Columns>
+                        <asp:TemplateField HeaderText="EMPLOYEE_CODE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEmployeeCode" runat="server" Visible="true" Text='<%# Eval("EMPLOYEE_CODE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="ATTENDANCE_DATE" HeaderText="ATTENDANCE_DATE" />
+                        <asp:BoundField DataField="WEEK_DAY" HeaderText="WEEK_DAY" />
+                        <asp:BoundField DataField="ATTENDANCE_TYPE" HeaderText="ATTENDANCE_TYPE" />
+                        <asp:BoundField DataField="SHIFT" HeaderText="SHIFT" />
+                        <asp:BoundField DataField="SHIFT_IN_TIME" HeaderText="SHIFT_IN_TIME" />
+                        <asp:BoundField DataField="SHIFT_OUT_TIME" HeaderText="SHIFT_OUT_TIME" />
+                        <asp:BoundField DataField="PUNCH_IN_TIME" HeaderText="PUNCH_IN_TIME" />
+                        <asp:BoundField DataField="PUNCH_OUT_TIME" HeaderText="PUNCH_OUT_TIME" />
+                        <asp:BoundField DataField="EXTRA_TIME_SPENT" HeaderText="EXTRA_TIME_SPENT" />
+                        <asp:BoundField DataField="ROUNDED_OT_HRS" HeaderText="ROUNDED_OT_HRS" />
+                        <asp:BoundField DataField="NET_OT_PAYBLE" HeaderText="NET_OT_PAYBLE" />
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvOTReport" runat="server" AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvOTReport_RowDataBound">
-                <Columns>
-                    <asp:TemplateField HeaderText="EMPLOYEE_CODE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmployeeCode" runat="server" Visible="true" Text='<%# Eval("EMPLOYEE_CODE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="ATTENDANCE_DATE" HeaderText="ATTENDANCE_DATE" />
-                    <asp:BoundField DataField="WEEK_DAY" HeaderText="WEEK_DAY" />
-                    <asp:BoundField DataField="ATTENDANCE_TYPE" HeaderText="ATTENDANCE_TYPE" />
-                    <asp:BoundField DataField="SHIFT" HeaderText="SHIFT" />
-                    <asp:BoundField DataField="SHIFT_IN_TIME" HeaderText="SHIFT_IN_TIME" />
-                    <asp:BoundField DataField="SHIFT_OUT_TIME" HeaderText="SHIFT_OUT_TIME" />
-                    <asp:BoundField DataField="PUNCH_IN_TIME" HeaderText="PUNCH_IN_TIME" />
-                    <asp:BoundField DataField="PUNCH_OUT_TIME" HeaderText="PUNCH_OUT_TIME" />
-                    <asp:BoundField DataField="EXTRA_TIME_SPENT" HeaderText="EXTRA_TIME_SPENT" />
-                    <asp:BoundField DataField="ROUNDED_OT_HRS" HeaderText="ROUNDED_OT_HRS" />
-                    <asp:BoundField DataField="NET_OT_PAYBLE" HeaderText="NET_OT_PAYBLE" />
-                </Columns>
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
-
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>

@@ -334,13 +334,10 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Import Budget:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
-
-                <div class="form-grid form-grid-3">
+                
+                <div class="form-filter-grid">
 
                     <div class="full-width button-group">
 
@@ -350,7 +347,7 @@
                         <label>Month:</label>
                         <table width="100%">
                             <tr>
-                                <td>
+                                <td style="width:90%;">
                                     <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);"
                                         CssClass="form-control"></asp:TextBox>
                                     <asp:HiddenField ID="hdPostingMonth" runat="server" />
@@ -398,136 +395,145 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-                <asp:Panel ID="pnlMsg1" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg1" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Import Budget:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                    <asp:Panel ID="pnlMsg1" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg1" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView
+                            CssClass="employee-grid"
+                            ID="gvBudget" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                            HorizontalAlign="Center" OnRowDataBound="gvBudget_RowDataBound">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+
+                                <asp:TemplateField HeaderText="Sr_No" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxcenter"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Year" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtYear" runat="server" Text='<%# Eval("YEAR" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxright"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Period" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtPeriod" runat="server" Text='<%# Eval("PERIOD" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxright"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Quarter" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtQuarter" runat="server" Text='<%# Eval("QUARTER" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxright"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="OS_TMT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtOSTMT" runat="server" Text='<%# Eval("OS_TMT" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxleft"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="GL Code" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                        <asp:Label ID="lblGLPID" runat="server" Visible="false" Text='<%# Eval("GL_FID") %>' />
+                                        <asp:Label ID="lblGLTypeID" runat="server" Visible="false" Text='<%# Eval("GL_TYPE_FID") %>' />
+                                        <asp:Label ID="lblGLSubTypeID" runat="server" Visible="false" Text='<%# Eval("GL_SUBTYPE_FID") %>' />
+
+                                        <asp:DropDownList ID="ddlGLCode" Width="250px" Height="26px" runat="server"
+                                            OnSelectedIndexChanged="ddlGLCode_SelectedIndexChanged" AutoPostBack="true" Enabled="false" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="GL Description" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtGLDescription" runat="server" Text='<%# Eval("GL_DESCRIPTION" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxleft"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="GL Type" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtGLType" runat="server" Text='<%# Eval("GL_TYPE" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxleft"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="GL Sub-Type" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtGLSubType" runat="server" Text='<%# Eval("GL_SUBTYPE" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxleft"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="U7T" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtU7T" runat="server" Text='<%# Eval("U7T" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textboxleft"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Scenario" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblScenarioID" runat="server" Visible="false" Text='<%# Eval("SCENARIO_FID") %>' />
+                                        <asp:DropDownList ID="ddlScenario" Width="250px" Height="26px" runat="server" Enabled="false" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Amount" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("AMOUNT" ) %>' Width="100%"
+                                            onkeypress="return inNumberKeyWithDecimal(this, event);"
+                                            CssClass="textboxrightenabled"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+
             </div>
 
-            <asp:UpdatePanel runat="server" ID="uppanel">
-                <ContentTemplate>
-                    <asp:GridView
-                        CssClass="employee-grid"
-                        ID="gvBudget" runat="server" AutoGenerateColumns="False"
-                        CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                        HorizontalAlign="Center" OnRowDataBound="gvBudget_RowDataBound">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-
-                            <asp:TemplateField HeaderText="Sr_No" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxcenter"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="Year" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtYear" runat="server" Text='<%# Eval("YEAR" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxright"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="Period" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtPeriod" runat="server" Text='<%# Eval("PERIOD" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxright"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="Quarter" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtQuarter" runat="server" Text='<%# Eval("QUARTER" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxright"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="OS_TMT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtOSTMT" runat="server" Text='<%# Eval("OS_TMT" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxleft"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="GL Code" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                                    <asp:Label ID="lblGLPID" runat="server" Visible="false" Text='<%# Eval("GL_FID") %>' />
-                                    <asp:Label ID="lblGLTypeID" runat="server" Visible="false" Text='<%# Eval("GL_TYPE_FID") %>' />
-                                    <asp:Label ID="lblGLSubTypeID" runat="server" Visible="false" Text='<%# Eval("GL_SUBTYPE_FID") %>' />
-
-                                    <asp:DropDownList ID="ddlGLCode" Width="250px" Height="26px" runat="server"
-                                        OnSelectedIndexChanged="ddlGLCode_SelectedIndexChanged" AutoPostBack="true" Enabled="false" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="GL Description" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtGLDescription" runat="server" Text='<%# Eval("GL_DESCRIPTION" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxleft"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="GL Type" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtGLType" runat="server" Text='<%# Eval("GL_TYPE" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxleft"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="GL Sub-Type" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtGLSubType" runat="server" Text='<%# Eval("GL_SUBTYPE" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxleft"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="U7T" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtU7T" runat="server" Text='<%# Eval("U7T" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textboxleft"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="Scenario" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblScenarioID" runat="server" Visible="false" Text='<%# Eval("SCENARIO_FID") %>' />
-                                    <asp:DropDownList ID="ddlScenario" Width="250px" Height="26px" runat="server" Enabled="false" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="Amount" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("AMOUNT" ) %>' Width="100%"
-                                        onkeypress="return inNumberKeyWithDecimal(this, event);"
-                                        CssClass="textboxrightenabled"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-
-        </div>
+        </fieldset>
 
     </div>
 

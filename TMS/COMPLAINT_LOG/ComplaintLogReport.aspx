@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Complaint Log Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ComplaintLogReport.aspx.cs" Inherits="COMPLAINT_LOG_ComplaintLogReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -259,18 +259,17 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Complaint Log Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox
                                     CssClass="form-control"
-                                    ID="txtStartDate" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
+                                    ID="txtStartDate" runat="server" ReadOnly="true"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDate" runat="server" />
                                 <ajax:CalendarExtender ID="calendarStartDate" PopupButtonID="imgbtnStartDate" runat="server"
                                     TargetControlID="txtStartDate" Format="dd-MMM-yyyy"
@@ -289,10 +288,10 @@
                     <label>End Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox
                                     CssClass="form-control"
-                                    ID="txtEndDate" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
+                                    ID="txtEndDate" runat="server" ReadOnly="true"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDate" runat="server" />
                                 <ajax:CalendarExtender ID="calendarEndDate" PopupButtonID="imgbtnEndDate" runat="server"
                                     TargetControlID="txtEndDate" Format="dd-MMM-yyyy"
@@ -325,97 +324,102 @@
                     </asp:DropDownList>
 
 
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnSearch"
-                     OnClick="btnSearch_Click"
-                     runat="server"
-                     Text="Search"
-                     CssClass="button" />
 
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnExport"
-                     OnClick="btnExport_Click"
-                     runat="server"
-                     Text="Export"
-                     CssClass="button" />
 
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
+
+                <asp:Button ID="btnExport"
+                    OnClick="btnExport_Click"
+                    runat="server"
+                    Text="Export"
+                    CssClass="button" />
+            </div>
         </div>
 
-        <div class="employee-grid-container">
+        <fieldset class="employee-grid-fieldset">
+            <legend>Complaint Log Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvComplaintLogList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Vertical" PageSize="15" Width="100%"
+                    HorizontalAlign="Center" OnRowDataBound="gvComplaintLogList_RowDataBound" AllowPaging="True"
+                    OnPageIndexChanging="gvComplaintLogList_PageIndexChanging">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="COMPLAINT_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblStatusName" runat="server" Visible="false" Text='<%# Eval("STATUS_NAME") %>' />
+                                <asp:Label ID="lblComplaintLogNo" runat="server" Text='<%# Eval("COMPLAINT_LOG_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="COMPLAINT_RECEIVED_ON" HeaderText="COMPLAINT_RECEIVED_ON" />
+                        <asp:BoundField DataField="STATUS_NAME" HeaderText="STATUS_NAME" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="ADDRESS" HeaderText="ADDRESS" />
+                        <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
+                        <asp:BoundField DataField="PLANT" HeaderText="PLANT" />
+                        <asp:BoundField DataField="COMPLAINT_DESCRIPTION" HeaderText="COMPLAINT_DESCRIPTION" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
+                        <asp:BoundField DataField="ITEM_NAME" HeaderText="ITEM_NAME" />
+                        <asp:BoundField DataField="MODEL_NO" HeaderText="MODEL_NO" />
+                        <asp:BoundField DataField="SERVICE_TYPE" HeaderText="SERVICE_TYPE" />
+                        <asp:BoundField DataField="BUSINESS_UNIT" HeaderText="BUSINESS_UNIT" />
+                        <asp:BoundField DataField="MANUFACTURER_NAME" HeaderText="MANUFACTURER_NAME" />
+                        <asp:BoundField DataField="PROPOSED_ACTIONS" HeaderText="PROPOSED_ACTIONS" />
+                        <asp:BoundField DataField="ROOT_CAUSE" HeaderText="ROOT_CAUSE" />
+                        <asp:BoundField DataField="TARGET_COMPLETION_DATE" HeaderText="TARGET_COMPLETION_DATE" />
+                        <asp:BoundField DataField="ACTUAL_COMPLETION_DATE" HeaderText="ACTUAL_COMPLETION_DATE" />
+
+                        <asp:BoundField DataField="RESP_PERSON_LESSON_LEARNT" HeaderText="RESP_PERSON_LESSON_LEARNT" />
+                        <asp:BoundField DataField="RESP_DEPT_HOD_LESSON_LEARNT" HeaderText="RESP_DEPT_HOD_LESSON_LEARNT" />
+                        <asp:BoundField DataField="SERVICE_DEPT_HOD_LESSON_LEARNT" HeaderText="SERVICE_DEPT_HOD_LESSON_LEARNT" />
+
+                        <asp:BoundField DataField="CORRECTIVE_ACTION" HeaderText="CORRECTIVE_ACTION" />
+                        <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_BY" HeaderText="DEPT_ASSIGNED_BY" />
+                        <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_ON" HeaderText="DEPT_ASSIGNED_ON" />
+                        <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
+                        <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_BY" HeaderText="PERSON_ASSIGNED_BY" />
+                        <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_ON" HeaderText="PERSON_ASSIGNED_ON" />
+                        <asp:BoundField DataField="RESPONSIBLE_PERSON" HeaderText="RESPONSIBLE_PERSON" />
+                        <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY" />
+                        <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
+                        <asp:BoundField DataField="RESOLVED_ON" HeaderText="RESOLVED_ON" />
+                        <asp:BoundField DataField="APPROVED_BY" HeaderText="APPROVED_BY" />
+                        <asp:BoundField DataField="APPROVED_ON" HeaderText="APPROVED_ON" />
+                        <asp:BoundField DataField="CLOSED_BY" HeaderText="CLOSED_BY" />
+                        <asp:BoundField DataField="CLOSED_ON" HeaderText="CLOSED_ON" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvComplaintLogList" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Vertical" PageSize="15" Width="100%"
-                HorizontalAlign="Center" OnRowDataBound="gvComplaintLogList_RowDataBound" AllowPaging="True"
-                OnPageIndexChanging="gvComplaintLogList_PageIndexChanging">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="COMPLAINT_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblStatusName" runat="server" Visible="false" Text='<%# Eval("STATUS_NAME") %>' />
-                            <asp:Label ID="lblComplaintLogNo" runat="server" Text='<%# Eval("COMPLAINT_LOG_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="COMPLAINT_RECEIVED_ON" HeaderText="COMPLAINT_RECEIVED_ON" />
-                    <asp:BoundField DataField="STATUS_NAME" HeaderText="STATUS_NAME" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="ADDRESS" HeaderText="ADDRESS" />
-                    <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
-                    <asp:BoundField DataField="PLANT" HeaderText="PLANT" />
-                    <asp:BoundField DataField="COMPLAINT_DESCRIPTION" HeaderText="COMPLAINT_DESCRIPTION" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
-                    <asp:BoundField DataField="ITEM_NAME" HeaderText="ITEM_NAME" />
-                    <asp:BoundField DataField="MODEL_NO" HeaderText="MODEL_NO" />
-                    <asp:BoundField DataField="SERVICE_TYPE" HeaderText="SERVICE_TYPE" />
-                    <asp:BoundField DataField="BUSINESS_UNIT" HeaderText="BUSINESS_UNIT" />
-                    <asp:BoundField DataField="MANUFACTURER_NAME" HeaderText="MANUFACTURER_NAME" />
-                    <asp:BoundField DataField="PROPOSED_ACTIONS" HeaderText="PROPOSED_ACTIONS" />
-                    <asp:BoundField DataField="ROOT_CAUSE" HeaderText="ROOT_CAUSE" />
-                    <asp:BoundField DataField="TARGET_COMPLETION_DATE" HeaderText="TARGET_COMPLETION_DATE" />
-                    <asp:BoundField DataField="ACTUAL_COMPLETION_DATE" HeaderText="ACTUAL_COMPLETION_DATE" />
 
-                    <asp:BoundField DataField="RESP_PERSON_LESSON_LEARNT" HeaderText="RESP_PERSON_LESSON_LEARNT" />
-                    <asp:BoundField DataField="RESP_DEPT_HOD_LESSON_LEARNT" HeaderText="RESP_DEPT_HOD_LESSON_LEARNT" />
-                    <asp:BoundField DataField="SERVICE_DEPT_HOD_LESSON_LEARNT" HeaderText="SERVICE_DEPT_HOD_LESSON_LEARNT" />
-
-                    <asp:BoundField DataField="CORRECTIVE_ACTION" HeaderText="CORRECTIVE_ACTION" />
-                    <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_BY" HeaderText="DEPT_ASSIGNED_BY" />
-                    <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_ON" HeaderText="DEPT_ASSIGNED_ON" />
-                    <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
-                    <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_BY" HeaderText="PERSON_ASSIGNED_BY" />
-                    <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_ON" HeaderText="PERSON_ASSIGNED_ON" />
-                    <asp:BoundField DataField="RESPONSIBLE_PERSON" HeaderText="RESPONSIBLE_PERSON" />
-                    <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY" />
-                    <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
-                    <asp:BoundField DataField="RESOLVED_ON" HeaderText="RESOLVED_ON" />
-                    <asp:BoundField DataField="APPROVED_BY" HeaderText="APPROVED_BY" />
-                    <asp:BoundField DataField="APPROVED_ON" HeaderText="APPROVED_ON" />
-                    <asp:BoundField DataField="CLOSED_BY" HeaderText="CLOSED_BY" />
-                    <asp:BoundField DataField="CLOSED_ON" HeaderText="CLOSED_ON" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
 
     <%-- </ContentTemplate>

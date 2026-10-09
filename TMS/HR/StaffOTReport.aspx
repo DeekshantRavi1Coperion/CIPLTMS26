@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Staff OT Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="StaffOTReport.aspx.cs" Inherits="HR_StaffOTReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -273,18 +273,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Staff OT Hours Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDate" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDate" runat="server" />
@@ -303,7 +301,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDate" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDate" runat="server" />
@@ -325,7 +323,7 @@
                     </asp:DropDownList>
 
                     <label>Name:</label>
-                    <div style='overflow: auto; width: 100%; height: 400px; border: 1px solid lightgray;'>
+                    <div style='overflow: auto; width: 100%; height: 350px; border: 1px solid lightgray;'>
                         <asp:CheckBoxList ID="chklbEmployee" runat="server" Width="100%" />
                     </div>
 
@@ -340,51 +338,57 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Staff OT Hours Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvOTReport" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvOTReport_RowDataBound"
+                    OnRowCommand="gvOTReport_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="VIEW">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEmployeeID" runat="server" Visible="false" Text='<%# Eval("employee_pid") %>' />
+                                <asp:Label ID="lblEmployeeName" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_NAME") %>' />
+                                <asp:Label ID="lblEmployeeCode" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_CODE") %>' />
+                                <asp:Label ID="lblNetOTPayble" runat="server" Visible="false" Text='<%# Eval("NET_OT_PAYBLE") %>' />
+                                <asp:ImageButton ID="imgViewDetails" CommandArgument="VIEW" ImageUrl="~/Images/search1.png" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
+                        <asp:BoundField DataField="TOTAL_OT_HRS" HeaderText="TOTAL_OT_HRS" />
+                        <asp:BoundField DataField="NET_OT_PAYBLE" HeaderText="NET_OT_PAYBLE" />
+                        <asp:TemplateField HeaderText="DISPUTED">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkIsDisputed" Enabled="false" runat="server" />
+                                <asp:Label ID="lblIsDisputed" runat="server" Visible="false" Text='<%# Eval("IS_DISPUTED") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvOTReport" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvOTReport_RowDataBound"
-                OnRowCommand="gvOTReport_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="VIEW">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmployeeID" runat="server" Visible="false" Text='<%# Eval("employee_pid") %>' />
-                            <asp:Label ID="lblEmployeeName" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_NAME") %>' />
-                            <asp:Label ID="lblEmployeeCode" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_CODE") %>' />
-                            <asp:Label ID="lblNetOTPayble" runat="server" Visible="false" Text='<%# Eval("NET_OT_PAYBLE") %>' />
-                            <asp:ImageButton ID="imgViewDetails" CommandArgument="VIEW" ImageUrl="~/Images/search1.png" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
-                    <asp:BoundField DataField="TOTAL_OT_HRS" HeaderText="TOTAL_OT_HRS" />
-                    <asp:BoundField DataField="NET_OT_PAYBLE" HeaderText="NET_OT_PAYBLE" />
-                    <asp:TemplateField HeaderText="DISPUTED">
-                        <ItemTemplate>
-                            <asp:CheckBox ID="chkIsDisputed" Enabled="false" runat="server" />
-                            <asp:Label ID="lblIsDisputed" runat="server" Visible="false" Text='<%# Eval("IS_DISPUTED") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -421,12 +425,12 @@
                     <div class="form-grid form-grid-3">
 
                         <label>From Date:</label>
-                        <asp:TextBox ID="txtFromDateDetails" runat="server" 
+                        <asp:TextBox ID="txtFromDateDetails" runat="server"
                             CssClass="form-control"
                             Enabled="false"></asp:TextBox>
 
                         <label>To Date:</label>
-                        <asp:TextBox ID="txtToDateDetails" runat="server" 
+                        <asp:TextBox ID="txtToDateDetails" runat="server"
                             CssClass="form-control"
                             Enabled="false"></asp:TextBox>
 
@@ -434,42 +438,42 @@
                             OnClick="btnExportDetails_Click" />
 
                     </div>
-                </fieldset>                
+                </fieldset>
             </div>
 
             <div class="popup-grid-container">
 
-                <asp:GridView 
+                <asp:GridView
                     CssClass="popup-grid"
                     ID="gvOTDetails" runat="server" AutoGenerateColumns="false" CellPadding="4"
-                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                        OnRowDataBound="gvOTDetails_RowDataBound">
-                        <Columns>
-                            <asp:BoundField DataField="ATTENDANCE_DATE" HeaderText="ATTENDANCE_DATE" />
-                            <asp:BoundField DataField="WEEK_DAY" HeaderText="WEEK_DAY" />
-                            <asp:BoundField DataField="ATTENDANCE_TYPE" HeaderText="ATTENDANCE_TYPE" />
-                            <asp:BoundField DataField="SHIFT" HeaderText="SHIFT" />
-                            <asp:BoundField DataField="SHIFT_IN_TIME" HeaderText="SHIFT_IN_TIME" />
-                            <asp:BoundField DataField="SHIFT_OUT_TIME" HeaderText="SHIFT_OUT_TIME" />
-                            <asp:BoundField DataField="PUNCH_IN_TIME" HeaderText="PUNCH_IN_TIME" />
-                            <asp:BoundField DataField="PUNCH_OUT_TIME" HeaderText="PUNCH_OUT_TIME" />
-                            <asp:BoundField DataField="EXTRA_TIME_SPENT" HeaderText="EXTRA_TIME_SPENT" />
-                            <asp:BoundField DataField="ROUNDED_OT_HRS" HeaderText="ROUNDED_OT_HRS" />
-                            <asp:BoundField DataField="NET_OT_PAYBLE" HeaderText="NET_OT_PAYBLE" />
-                            <asp:TemplateField HeaderText="DISPUTED">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblIsDisputed" runat="server" Visible="true" Text='<%# Eval("DISPUTED") %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvOTDetails_RowDataBound">
+                    <Columns>
+                        <asp:BoundField DataField="ATTENDANCE_DATE" HeaderText="ATTENDANCE_DATE" />
+                        <asp:BoundField DataField="WEEK_DAY" HeaderText="WEEK_DAY" />
+                        <asp:BoundField DataField="ATTENDANCE_TYPE" HeaderText="ATTENDANCE_TYPE" />
+                        <asp:BoundField DataField="SHIFT" HeaderText="SHIFT" />
+                        <asp:BoundField DataField="SHIFT_IN_TIME" HeaderText="SHIFT_IN_TIME" />
+                        <asp:BoundField DataField="SHIFT_OUT_TIME" HeaderText="SHIFT_OUT_TIME" />
+                        <asp:BoundField DataField="PUNCH_IN_TIME" HeaderText="PUNCH_IN_TIME" />
+                        <asp:BoundField DataField="PUNCH_OUT_TIME" HeaderText="PUNCH_OUT_TIME" />
+                        <asp:BoundField DataField="EXTRA_TIME_SPENT" HeaderText="EXTRA_TIME_SPENT" />
+                        <asp:BoundField DataField="ROUNDED_OT_HRS" HeaderText="ROUNDED_OT_HRS" />
+                        <asp:BoundField DataField="NET_OT_PAYBLE" HeaderText="NET_OT_PAYBLE" />
+                        <asp:TemplateField HeaderText="DISPUTED">
+                            <ItemTemplate>
+                                <asp:Label ID="lblIsDisputed" runat="server" Visible="true" Text='<%# Eval("DISPUTED") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
             </div>
 

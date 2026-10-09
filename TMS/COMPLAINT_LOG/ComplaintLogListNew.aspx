@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Complaint Log List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ComplaintLogListNew.aspx.cs" Inherits="COMPLAINT_LOG_ComplaintLogListNew" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -1040,15 +1040,14 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Complaint Log List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters:</legend>
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width:90%">
                                 <asp:TextBox ID="txtStartDate" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDate" runat="server" />
@@ -1068,7 +1067,7 @@
                     <label>End Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width:90%">
                                 <asp:TextBox ID="txtEndDate" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDate" runat="server" />
@@ -1104,181 +1103,188 @@
                         CssClass="form-control">
                     </asp:DropDownList>
 
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnSearch"
-                     OnClick="btnSearch_Click"
-                     runat="server"
-                     Text="Search"
-                     CssClass="button" />
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Complaint Logs:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvComplaintLogList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                    HorizontalAlign="Center" OnRowCommand="gvComplaintLogList_RowCommand" OnRowDataBound="gvComplaintLogList_RowDataBound"
+                    AllowPaging="True" OnPageIndexChanging="gvComplaintLogList_PageIndexChanging">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="VIEW">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon1.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="FILE_1">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_ONE") %>' />
+                                <asp:ImageButton ID="btnAttachment1" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT1"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="FILE_2">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment2" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_TWO") %>' />
+                                <asp:ImageButton ID="btnAttachment2" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT2"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="FILE_3">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment3" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_THREE") %>' />
+                                <asp:ImageButton ID="btnAttachment3" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT3"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="FILE_4">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment4" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_FOUR") %>' />
+                                <asp:ImageButton ID="btnAttachment4" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT4"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="SEND_MAIL" HeaderStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgbtnSendMail" CommandArgument="SEND_MAIL" runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
+                                    Visible="false" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="EDIT">
+                            <ItemTemplate>
+                                <asp:Label ID="lblComplaintLogID" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_LOG_ID") %>' />
+                                <asp:Label ID="lblComplaintLogNo" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_LOG_NO") %>' />
+                                <asp:Label ID="lblComplaintRcvdOn" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_RECEIVED_ON") %>' />
+                                <asp:Label ID="lblStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_ID") %>' />
+                                <asp:Label ID="lblStatusName" runat="server" Visible="false" Text='<%# Eval("STATUS_NAME") %>' />
+                                <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblAddress" runat="server" Visible="false" Text='<%# Eval("ADDRESS") %>' />
+                                <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("LOCATION") %>' />
+                                <asp:Label ID="lblPlant" runat="server" Visible="false" Text='<%# Eval("PLANT") %>' />
+                                <asp:Label ID="lblComplaintDescription" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_DESCRIPTION") %>' />
+                                <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblPoNo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
+                                <asp:Label ID="lblItemName" runat="server" Visible="false" Text='<%# Eval("ITEM_NAME") %>' />
+                                <asp:Label ID="lblModelNo" runat="server" Visible="false" Text='<%# Eval("MODEL_NO") %>' />
+                                <asp:Label ID="lblServiceTypeID" runat="server" Visible="false" Text='<%# Eval("SERVICE_TYPE_ID") %>' />
+                                <asp:Label ID="lblServiceType" runat="server" Visible="false" Text='<%# Eval("SERVICE_TYPE") %>' />
+                                <asp:Label ID="lblBusinessUnitID" runat="server" Visible="false" Text='<%# Eval("BUSINESS_UNIT_ID") %>' />
+                                <asp:Label ID="lblBusinessUnit" runat="server" Visible="false" Text='<%# Eval("BUSINESS_UNIT") %>' />
+                                <asp:Label ID="lblManufacturerName" runat="server" Visible="false" Text='<%# Eval("MANUFACTURER_NAME") %>' />
+                                <asp:Label ID="lblProposedActions" runat="server" Visible="false" Text='<%# Eval("PROPOSED_ACTIONS") %>' />
+                                <asp:Label ID="lblRootCause" runat="server" Visible="false" Text='<%# Eval("ROOT_CAUSE") %>' />
+                                <asp:Label ID="lblTargetCompletionDate" runat="server" Visible="false" Text='<%# Eval("TARGET_COMPLETION_DATE") %>' />
+                                <asp:Label ID="lblActualCompletionDate" runat="server" Visible="false" Text='<%# Eval("ACTUAL_COMPLETION_DATE") %>' />
+                                <asp:Label ID="lblRespPersonLessonLearnt" runat="server" Visible="false" Text='<%# Eval("RESP_PERSON_LESSON_LEARNT") %>' />
+                                <asp:Label ID="lblRespHODLessonLearnt" runat="server" Visible="false" Text='<%# Eval("RESP_DEPT_HOD_LESSON_LEARNT") %>' />
+                                <asp:Label ID="lblServiceHODLessonLearnt" runat="server" Visible="false" Text='<%# Eval("SERVICE_DEPT_HOD_LESSON_LEARNT") %>' />
+                                <asp:Label ID="lblCorrectiveAction" runat="server" Visible="false" Text='<%# Eval("CORRECTIVE_ACTION") %>' />
+                                <asp:Label ID="lblCreatedBy" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
+                                <asp:Label ID="lblCreatedOn" runat="server" Visible="false" Text='<%# Eval("CREATED_ON") %>' />
+                                <asp:Label ID="lblRespDeptAssignedByID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ASSIGNED_BY_ID") %>' />
+                                <asp:Label ID="lblRespDeptAssignedBy" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ASSIGNED_BY") %>' />
+                                <asp:Label ID="lblRespDeptAssignedOn" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ASSIGNED_ON") %>' />
+                                <asp:Label ID="lblRespDeptID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ID") %>' />
+                                <asp:Label ID="lblRespDeptName" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_NAME") %>' />
+                                <asp:Label ID="lblRespPersonAssignedByID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ASSIGNED_BY_ID") %>' />
+                                <asp:Label ID="lblRespPersonAssignedBy" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ASSIGNED_BY") %>' />
+                                <asp:Label ID="lblRespPersonAssignedByOn" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ASSIGNED_ON") %>' />
+                                <asp:Label ID="lblRespPersonID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ID") %>' />
+                                <asp:Label ID="lblRespPersonName" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON") %>' />
+                                <asp:Label ID="lblResolvedBy" runat="server" Visible="false" Text='<%# Eval("RESOLVED_BY") %>' />
+                                <asp:Label ID="lblResolvedOn" runat="server" Visible="false" Text='<%# Eval("RESOLVED_ON") %>' />
+                                <asp:Label ID="lblApprovedBy" runat="server" Visible="false" Text='<%# Eval("APPROVED_BY") %>' />
+                                <asp:Label ID="lblApprovedOn" runat="server" Visible="false" Text='<%# Eval("APPROVED_ON") %>' />
+                                <asp:Label ID="lblClosedBy" runat="server" Visible="false" Text='<%# Eval("CLOSED_BY") %>' />
+                                <asp:Label ID="lblClosedOn" runat="server" Visible="false" Text='<%# Eval("CLOSED_ON") %>' />
+                                <asp:Label ID="lblIsNewMailSent" runat="server" Visible="false" Text='<%# Eval("IS_NEW_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsDeptAssignedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_DEPT_ASSIGNED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsPersonAssignedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PERSON_ASSIGNED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsResolvedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_RESOLVED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsClosedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CLOSED_MAIL_SENT") %>' />
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ACTION" HeaderStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnAction" CommandArgument="ACTION" runat="server" Text="Close" CssClass="cancelbutton" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="COMPLAINT_LOG_NO" HeaderText="COMPLAINT_NO " />
+                        <asp:TemplateField HeaderText="STATUS">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="COMPLAINT_RECEIVED_ON" HeaderText="COMPLAINT_RECEIVED_ON" />
+                        <asp:BoundField DataField="STATUS_NAME" HeaderText="STATUS_NAME" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="ADDRESS" HeaderText="ADDRESS" />
+                        <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
+                        <asp:BoundField DataField="PLANT" HeaderText="PLANT" />
+                        <asp:BoundField DataField="COMPLAINT_DESCRIPTION" HeaderText="COMPLAINT_DESCRIPTION" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
+                        <asp:BoundField DataField="ITEM_NAME" HeaderText="ITEM_NAME" />
+                        <asp:BoundField DataField="MODEL_NO" HeaderText="MODEL_NO" />
+                        <asp:BoundField DataField="SERVICE_TYPE" HeaderText="SERVICE_TYPE" />
+                        <asp:BoundField DataField="BUSINESS_UNIT" HeaderText="BUSINESS_UNIT" />
+                        <asp:BoundField DataField="MANUFACTURER_NAME" HeaderText="MANUFACTURER_NAME" />
+                        <asp:BoundField DataField="PROPOSED_ACTIONS" HeaderText="PROPOSED_ACTIONS" />
+                        <asp:BoundField DataField="ROOT_CAUSE" HeaderText="ROOT_CAUSE" />
+                        <asp:BoundField DataField="TARGET_COMPLETION_DATE" HeaderText="TARGET_COMPLETION_DATE" />
+                        <asp:BoundField DataField="ACTUAL_COMPLETION_DATE" HeaderText="ACTUAL_COMPLETION_DATE" />
+                        <asp:BoundField DataField="RESP_PERSON_LESSON_LEARNT" HeaderText="RESP_PERSON_LESSON_LEARNT" />
+                        <asp:BoundField DataField="RESP_DEPT_HOD_LESSON_LEARNT" HeaderText="RESP_DEPT_HOD_LESSON_LEARNT" />
+                        <asp:BoundField DataField="SERVICE_DEPT_HOD_LESSON_LEARNT" HeaderText="SERVICE_DEPT_HOD_LESSON_LEARNT" />
+                        <asp:BoundField DataField="CORRECTIVE_ACTION" HeaderText="CORRECTIVE_ACTION" />
+                        <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_BY" HeaderText="RESP_DEPT_ASSIGNED_BY" />
+                        <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_ON" HeaderText="RESP_DEPT_ASSIGNED_ON" />
+                        <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
+                        <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_BY" HeaderText="RESP_PERSON_ASSIGNED_BY" />
+                        <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_ON" HeaderText="RESP_PERSON_ASSIGNED_ON" />
+                        <asp:BoundField DataField="RESPONSIBLE_PERSON" HeaderText="RESPONSIBLE_PERSON" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView 
-                 CssClass="employee-grid"
-                ID="gvComplaintLogList" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                HorizontalAlign="Center" OnRowCommand="gvComplaintLogList_RowCommand" OnRowDataBound="gvComplaintLogList_RowDataBound"
-                AllowPaging="True" OnPageIndexChanging="gvComplaintLogList_PageIndexChanging">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="VIEW">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon1.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="FILE_1">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_ONE") %>' />
-                            <asp:ImageButton ID="btnAttachment1" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT1"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="FILE_2">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment2" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_TWO") %>' />
-                            <asp:ImageButton ID="btnAttachment2" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT2"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="FILE_3">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment3" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_THREE") %>' />
-                            <asp:ImageButton ID="btnAttachment3" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT3"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="FILE_4">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment4" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT_FOUR") %>' />
-                            <asp:ImageButton ID="btnAttachment4" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT4"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="SEND_MAIL" HeaderStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgbtnSendMail" CommandArgument="SEND_MAIL" runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
-                                Visible="false" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="EDIT">
-                        <ItemTemplate>
-                            <asp:Label ID="lblComplaintLogID" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_LOG_ID") %>' />
-                            <asp:Label ID="lblComplaintLogNo" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_LOG_NO") %>' />
-                            <asp:Label ID="lblComplaintRcvdOn" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_RECEIVED_ON") %>' />
-                            <asp:Label ID="lblStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_ID") %>' />
-                            <asp:Label ID="lblStatusName" runat="server" Visible="false" Text='<%# Eval("STATUS_NAME") %>' />
-                            <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
-                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                            <asp:Label ID="lblAddress" runat="server" Visible="false" Text='<%# Eval("ADDRESS") %>' />
-                            <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("LOCATION") %>' />
-                            <asp:Label ID="lblPlant" runat="server" Visible="false" Text='<%# Eval("PLANT") %>' />
-                            <asp:Label ID="lblComplaintDescription" runat="server" Visible="false" Text='<%# Eval("COMPLAINT_DESCRIPTION") %>' />
-                            <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                            <asp:Label ID="lblPoNo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
-                            <asp:Label ID="lblItemName" runat="server" Visible="false" Text='<%# Eval("ITEM_NAME") %>' />
-                            <asp:Label ID="lblModelNo" runat="server" Visible="false" Text='<%# Eval("MODEL_NO") %>' />
-                            <asp:Label ID="lblServiceTypeID" runat="server" Visible="false" Text='<%# Eval("SERVICE_TYPE_ID") %>' />
-                            <asp:Label ID="lblServiceType" runat="server" Visible="false" Text='<%# Eval("SERVICE_TYPE") %>' />
-                            <asp:Label ID="lblBusinessUnitID" runat="server" Visible="false" Text='<%# Eval("BUSINESS_UNIT_ID") %>' />
-                            <asp:Label ID="lblBusinessUnit" runat="server" Visible="false" Text='<%# Eval("BUSINESS_UNIT") %>' />
-                            <asp:Label ID="lblManufacturerName" runat="server" Visible="false" Text='<%# Eval("MANUFACTURER_NAME") %>' />
-                            <asp:Label ID="lblProposedActions" runat="server" Visible="false" Text='<%# Eval("PROPOSED_ACTIONS") %>' />
-                            <asp:Label ID="lblRootCause" runat="server" Visible="false" Text='<%# Eval("ROOT_CAUSE") %>' />
-                            <asp:Label ID="lblTargetCompletionDate" runat="server" Visible="false" Text='<%# Eval("TARGET_COMPLETION_DATE") %>' />
-                            <asp:Label ID="lblActualCompletionDate" runat="server" Visible="false" Text='<%# Eval("ACTUAL_COMPLETION_DATE") %>' />
-                            <asp:Label ID="lblRespPersonLessonLearnt" runat="server" Visible="false" Text='<%# Eval("RESP_PERSON_LESSON_LEARNT") %>' />
-                            <asp:Label ID="lblRespHODLessonLearnt" runat="server" Visible="false" Text='<%# Eval("RESP_DEPT_HOD_LESSON_LEARNT") %>' />
-                            <asp:Label ID="lblServiceHODLessonLearnt" runat="server" Visible="false" Text='<%# Eval("SERVICE_DEPT_HOD_LESSON_LEARNT") %>' />
-                            <asp:Label ID="lblCorrectiveAction" runat="server" Visible="false" Text='<%# Eval("CORRECTIVE_ACTION") %>' />
-                            <asp:Label ID="lblCreatedBy" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
-                            <asp:Label ID="lblCreatedOn" runat="server" Visible="false" Text='<%# Eval("CREATED_ON") %>' />
-                            <asp:Label ID="lblRespDeptAssignedByID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ASSIGNED_BY_ID") %>' />
-                            <asp:Label ID="lblRespDeptAssignedBy" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ASSIGNED_BY") %>' />
-                            <asp:Label ID="lblRespDeptAssignedOn" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ASSIGNED_ON") %>' />
-                            <asp:Label ID="lblRespDeptID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_DEPT_ID") %>' />
-                            <asp:Label ID="lblRespDeptName" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_NAME") %>' />
-                            <asp:Label ID="lblRespPersonAssignedByID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ASSIGNED_BY_ID") %>' />
-                            <asp:Label ID="lblRespPersonAssignedBy" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ASSIGNED_BY") %>' />
-                            <asp:Label ID="lblRespPersonAssignedByOn" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ASSIGNED_ON") %>' />
-                            <asp:Label ID="lblRespPersonID" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON_ID") %>' />
-                            <asp:Label ID="lblRespPersonName" runat="server" Visible="false" Text='<%# Eval("RESPONSIBLE_PERSON") %>' />
-                            <asp:Label ID="lblResolvedBy" runat="server" Visible="false" Text='<%# Eval("RESOLVED_BY") %>' />
-                            <asp:Label ID="lblResolvedOn" runat="server" Visible="false" Text='<%# Eval("RESOLVED_ON") %>' />
-                            <asp:Label ID="lblApprovedBy" runat="server" Visible="false" Text='<%# Eval("APPROVED_BY") %>' />
-                            <asp:Label ID="lblApprovedOn" runat="server" Visible="false" Text='<%# Eval("APPROVED_ON") %>' />
-                            <asp:Label ID="lblClosedBy" runat="server" Visible="false" Text='<%# Eval("CLOSED_BY") %>' />
-                            <asp:Label ID="lblClosedOn" runat="server" Visible="false" Text='<%# Eval("CLOSED_ON") %>' />
-                            <asp:Label ID="lblIsNewMailSent" runat="server" Visible="false" Text='<%# Eval("IS_NEW_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsDeptAssignedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_DEPT_ASSIGNED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsPersonAssignedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PERSON_ASSIGNED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsResolvedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_RESOLVED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsClosedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CLOSED_MAIL_SENT") %>' />
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="ACTION" HeaderStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnAction" CommandArgument="ACTION" runat="server" Text="Close" CssClass="cancelbutton" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="COMPLAINT_LOG_NO" HeaderText="COMPLAINT_NO " />
-                    <asp:TemplateField HeaderText="STATUS">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="COMPLAINT_RECEIVED_ON" HeaderText="COMPLAINT_RECEIVED_ON" />
-                    <asp:BoundField DataField="STATUS_NAME" HeaderText="STATUS_NAME" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="ADDRESS" HeaderText="ADDRESS" />
-                    <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
-                    <asp:BoundField DataField="PLANT" HeaderText="PLANT" />
-                    <asp:BoundField DataField="COMPLAINT_DESCRIPTION" HeaderText="COMPLAINT_DESCRIPTION" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
-                    <asp:BoundField DataField="ITEM_NAME" HeaderText="ITEM_NAME" />
-                    <asp:BoundField DataField="MODEL_NO" HeaderText="MODEL_NO" />
-                    <asp:BoundField DataField="SERVICE_TYPE" HeaderText="SERVICE_TYPE" />
-                    <asp:BoundField DataField="BUSINESS_UNIT" HeaderText="BUSINESS_UNIT" />
-                    <asp:BoundField DataField="MANUFACTURER_NAME" HeaderText="MANUFACTURER_NAME" />
-                    <asp:BoundField DataField="PROPOSED_ACTIONS" HeaderText="PROPOSED_ACTIONS" />
-                    <asp:BoundField DataField="ROOT_CAUSE" HeaderText="ROOT_CAUSE" />
-                    <asp:BoundField DataField="TARGET_COMPLETION_DATE" HeaderText="TARGET_COMPLETION_DATE" />
-                    <asp:BoundField DataField="ACTUAL_COMPLETION_DATE" HeaderText="ACTUAL_COMPLETION_DATE" />
-                    <asp:BoundField DataField="RESP_PERSON_LESSON_LEARNT" HeaderText="RESP_PERSON_LESSON_LEARNT" />
-                    <asp:BoundField DataField="RESP_DEPT_HOD_LESSON_LEARNT" HeaderText="RESP_DEPT_HOD_LESSON_LEARNT" />
-                    <asp:BoundField DataField="SERVICE_DEPT_HOD_LESSON_LEARNT" HeaderText="SERVICE_DEPT_HOD_LESSON_LEARNT" />
-                    <asp:BoundField DataField="CORRECTIVE_ACTION" HeaderText="CORRECTIVE_ACTION" />
-                    <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_BY" HeaderText="RESP_DEPT_ASSIGNED_BY" />
-                    <asp:BoundField DataField="RESPONSIBLE_DEPT_ASSIGNED_ON" HeaderText="RESP_DEPT_ASSIGNED_ON" />
-                    <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="DEPARTMENT_NAME" />
-                    <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_BY" HeaderText="RESP_PERSON_ASSIGNED_BY" />
-                    <asp:BoundField DataField="RESPONSIBLE_PERSON_ASSIGNED_ON" HeaderText="RESP_PERSON_ASSIGNED_ON" />
-                    <asp:BoundField DataField="RESPONSIBLE_PERSON" HeaderText="RESPONSIBLE_PERSON" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -1728,7 +1734,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender2" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -1746,7 +1752,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender3" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -1755,11 +1761,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
 
     <asp:Button ID="btnViewInPDF" runat="server" Style="display: none" />
@@ -1767,7 +1772,7 @@
         PopupControlID="pnlbtnViewInPDFPopup" CancelControlID="imgBtnViewInPDFPopup"
         BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server" 
+    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -1777,11 +1782,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewComplaintLogInPDF"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
 
     <%--</ContentTemplate>

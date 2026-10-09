@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="FDMEEPosting.aspx.cs"
-    Inherits="FINANCE_FDMEEPosting" Title="FDME Posting" %>
+    Inherits="FINANCE_FDMEEPosting" Title="CIPLTMS - FDMEE Posting" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -227,13 +227,10 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>FDMEE Posting:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <asp:Button ID="btnGetFormat" CssClass="button" Width="100%" runat="server"
                         Text="Download Format" OnClick="btnGetFormat_Click" />
@@ -254,126 +251,135 @@
                         </tr>
                     </table>
 
-                    <asp:Button ID="btnGetFDMEEFile" CssClass="button" Width="100%" runat="server"
-                        Text="Get Detail" OnClientClick="return ValidateAll();" OnClick="btnGetFDMEEFile_Click" />
 
-                    <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server"
-                        Text="Save" OnClick="btnSave_Click" OnClientClick="Confirm();" />
 
                 </div>
             </fieldset>
-            
-        </div>
+            <div class="full-width button-group">
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnGetFDMEEFile" CssClass="button" Width="100%" runat="server"
+                    Text="Get Detail" OnClientClick="return ValidateAll();" OnClick="btnGetFDMEEFile_Click" />
+
+                <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server"
+                    Text="Save" OnClick="btnSave_Click" OnClientClick="Confirm();" />
             </div>
 
-            <asp:UpdatePanel runat="server" ID="uppanel">
-                <ContentTemplate>
-                    <asp:GridView
-                        CssClass="employee-grid"
-                        ID="gvFDMEE" runat="server" AutoGenerateColumns="False"
-                        CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                        HorizontalAlign="Center" OnRowDataBound="gvFDMEE_RowDataBound">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-                            <asp:TemplateField HeaderText="Year">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
-                                    <asp:Label ID="lblYear" runat="server" Visible="true" Text='<%# Eval("YEAR" ) %>' />
-                                    <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Period">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblPeriod" runat="server" Visible="true" Text='<%# Eval("PERIOD" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Quarter">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblQuarter" runat="server" Visible="true" Text='<%# Eval("QUARTER" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="GL_Account">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblGLAccount" runat="server" Visible="true" Text='<%# Eval("GL_ACCOUNT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Description">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblDescription" runat="server" Visible="true" Text='<%# Eval("DESCRIPTION" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="BSPL_Type">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblBSPLType" runat="server" Visible="true" Text='<%# Eval("BSPL_TYPE" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="HFM_Account">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblHFMAccount" runat="server" Visible="true" Text='<%# Eval("HFM_ACCOUNT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="HFM_Account_Desc">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblHFMAccountDesc" runat="server" Visible="true" Text='<%# Eval("HFM_ACCOUNT_DESC" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Type">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblType" runat="server" Visible="true" Text='<%# Eval("TYPE" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Category">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblCategory" runat="server" Visible="true" Text='<%# Eval("CATEGORY" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="ICP">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblICP" runat="server" Visible="true" Text='<%# Eval("ICP" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="HFM_Custom1">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblHFMCustom1" runat="server" Visible="true" Text='<%# Eval("HFM_CUSTOM1" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="HFMNew_Custom4">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblHFMNewCustom4" runat="server" Visible="true" Text='<%# Eval("HFMNEW_CUSTOM4" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Amount">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("AMOUNT" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);" CssClass="textbox"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Source_Amount">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtSourceAmount" runat="server" Text='<%# Eval("SOURCE_AMOUNT" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);" CssClass="textbox"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-
-
         </div>
 
+        <fieldset class="employee-grid-fieldset">
+            <legend>FDMEE Posting:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView
+                            CssClass="employee-grid"
+                            ID="gvFDMEE" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                            HorizontalAlign="Center" OnRowDataBound="gvFDMEE_RowDataBound">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+                                <asp:TemplateField HeaderText="Year">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
+                                        <asp:Label ID="lblYear" runat="server" Visible="true" Text='<%# Eval("YEAR" ) %>' />
+                                        <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Period">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblPeriod" runat="server" Visible="true" Text='<%# Eval("PERIOD" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Quarter">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblQuarter" runat="server" Visible="true" Text='<%# Eval("QUARTER" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="GL_Account">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblGLAccount" runat="server" Visible="true" Text='<%# Eval("GL_ACCOUNT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Description">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblDescription" runat="server" Visible="true" Text='<%# Eval("DESCRIPTION" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="BSPL_Type">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblBSPLType" runat="server" Visible="true" Text='<%# Eval("BSPL_TYPE" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="HFM_Account">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblHFMAccount" runat="server" Visible="true" Text='<%# Eval("HFM_ACCOUNT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="HFM_Account_Desc">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblHFMAccountDesc" runat="server" Visible="true" Text='<%# Eval("HFM_ACCOUNT_DESC" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Type">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblType" runat="server" Visible="true" Text='<%# Eval("TYPE" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Category">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCategory" runat="server" Visible="true" Text='<%# Eval("CATEGORY" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="ICP">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblICP" runat="server" Visible="true" Text='<%# Eval("ICP" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="HFM_Custom1">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblHFMCustom1" runat="server" Visible="true" Text='<%# Eval("HFM_CUSTOM1" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="HFMNew_Custom4">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblHFMNewCustom4" runat="server" Visible="true" Text='<%# Eval("HFMNEW_CUSTOM4" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Amount">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("AMOUNT" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);" CssClass="textbox"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Source_Amount">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtSourceAmount" runat="server" Text='<%# Eval("SOURCE_AMOUNT" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);" CssClass="textbox"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+
+
+            </div>
+        </fieldset>
     </div>
 
 

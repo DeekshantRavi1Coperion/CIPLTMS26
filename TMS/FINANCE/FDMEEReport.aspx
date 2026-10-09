@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="FDMEEReport.aspx.cs"
-    Inherits="FINANCE_FDMEEReport" Title="Untitled Page" %>
+    Inherits="FINANCE_FDMEEReport" Title="CIPLTMS - FDMEE Report" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -106,18 +106,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>LOTFDMEE Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Year-Period: </label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdPostingMonth" runat="server" />
@@ -183,69 +181,77 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>FDMEE Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvFDMEEList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvFDMEEList_RowDataBound" OnRowCommand="gvFDMEEList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
+                                <asp:Label ID="lblYear" runat="server" Visible="false" Text='<%# Eval("YEAR" ) %>' />
+                                <asp:Label ID="lblPeriod" runat="server" Visible="false" Text='<%# Eval("PERIOD" ) %>' />
+                                <asp:Label ID="lblQuarter" runat="server" Visible="false" Text='<%# Eval("QUARTER" ) %>' />
+                                <asp:Label ID="lblGLAccount" runat="server" Visible="false" Text='<%# Eval("GL_ACCOUNT" ) %>' />
+                                <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION" ) %>' />
+                                <asp:Label ID="lblBSPLType" runat="server" Visible="false" Text='<%# Eval("BSPL_TYPE" ) %>' />
+                                <asp:Label ID="lblHFMAccount" runat="server" Visible="false" Text='<%# Eval("HFM_ACCOUNT" ) %>' />
+                                <asp:Label ID="lblHFMAccountDesc" runat="server" Visible="false" Text='<%# Eval("HFM_ACCOUNT_DESC" ) %>' />
+                                <asp:Label ID="lblType" runat="server" Visible="false" Text='<%# Eval("TYPE" ) %>' />
+                                <asp:Label ID="lblCategory" runat="server" Visible="false" Text='<%# Eval("CATEGORY" ) %>' />
+                                <asp:Label ID="lblICP" runat="server" Visible="false" Text='<%# Eval("ICP" ) %>' />
+                                <asp:Label ID="lblHFMCustom1" runat="server" Visible="false" Text='<%# Eval("HFM_CUSTOM1" ) %>' />
+                                <asp:Label ID="lblHFMNewCustom4" runat="server" Visible="false" Text='<%# Eval("HFMNEW_CUSTOM4" ) %>' />
+                                <asp:Label ID="lblAmount" runat="server" Visible="false" Text='<%# Eval("AMOUNT" ) %>' />
+                                <asp:Label ID="lblSourceAmount" runat="server" Visible="false" Text='<%# Eval("SOURCE_AMOUNT" ) %>' />
+
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
+                                    ToolTip="Edit Posted Sales Gross Margin" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="YEAR" HeaderText="Year" />
+                        <asp:BoundField DataField="PERIOD" HeaderText="Period" />
+                        <asp:BoundField DataField="QUARTER" HeaderText="Quarter" />
+                        <asp:BoundField DataField="GL_ACCOUNT" HeaderText="GL_Account" />
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                        <asp:BoundField DataField="BSPL_TYPE" HeaderText="BSPL_Type" />
+                        <asp:BoundField DataField="HFM_ACCOUNT" HeaderText="HFM_Account" />
+                        <asp:BoundField DataField="HFM_ACCOUNT_DESC" HeaderText="HFM_Account_Desc" />
+                        <asp:BoundField DataField="TYPE" HeaderText="Type" />
+                        <asp:BoundField DataField="CATEGORY" HeaderText="Category" />
+                        <asp:BoundField DataField="ICP" HeaderText="ICP" />
+                        <asp:BoundField DataField="HFM_CUSTOM1" HeaderText="HFM_Custom1" />
+                        <asp:BoundField DataField="HFMNEW_CUSTOM4" HeaderText="HFMNew_Custom4" />
+                        <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
+                        <asp:BoundField DataField="SOURCE_AMOUNT" HeaderText="Source_Amount" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvFDMEEList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvFDMEEList_RowDataBound" OnRowCommand="gvFDMEEList_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID" ) %>' />
-                            <asp:Label ID="lblYear" runat="server" Visible="false" Text='<%# Eval("YEAR" ) %>' />
-                            <asp:Label ID="lblPeriod" runat="server" Visible="false" Text='<%# Eval("PERIOD" ) %>' />
-                            <asp:Label ID="lblQuarter" runat="server" Visible="false" Text='<%# Eval("QUARTER" ) %>' />
-                            <asp:Label ID="lblGLAccount" runat="server" Visible="false" Text='<%# Eval("GL_ACCOUNT" ) %>' />
-                            <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION" ) %>' />
-                            <asp:Label ID="lblBSPLType" runat="server" Visible="false" Text='<%# Eval("BSPL_TYPE" ) %>' />
-                            <asp:Label ID="lblHFMAccount" runat="server" Visible="false" Text='<%# Eval("HFM_ACCOUNT" ) %>' />
-                            <asp:Label ID="lblHFMAccountDesc" runat="server" Visible="false" Text='<%# Eval("HFM_ACCOUNT_DESC" ) %>' />
-                            <asp:Label ID="lblType" runat="server" Visible="false" Text='<%# Eval("TYPE" ) %>' />
-                            <asp:Label ID="lblCategory" runat="server" Visible="false" Text='<%# Eval("CATEGORY" ) %>' />
-                            <asp:Label ID="lblICP" runat="server" Visible="false" Text='<%# Eval("ICP" ) %>' />
-                            <asp:Label ID="lblHFMCustom1" runat="server" Visible="false" Text='<%# Eval("HFM_CUSTOM1" ) %>' />
-                            <asp:Label ID="lblHFMNewCustom4" runat="server" Visible="false" Text='<%# Eval("HFMNEW_CUSTOM4" ) %>' />
-                            <asp:Label ID="lblAmount" runat="server" Visible="false" Text='<%# Eval("AMOUNT" ) %>' />
-                            <asp:Label ID="lblSourceAmount" runat="server" Visible="false" Text='<%# Eval("SOURCE_AMOUNT" ) %>' />
-
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
-                                ToolTip="Edit Posted Sales Gross Margin" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="YEAR" HeaderText="Year" />
-                    <asp:BoundField DataField="PERIOD" HeaderText="Period" />
-                    <asp:BoundField DataField="QUARTER" HeaderText="Quarter" />
-                    <asp:BoundField DataField="GL_ACCOUNT" HeaderText="GL_Account" />
-                    <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                    <asp:BoundField DataField="BSPL_TYPE" HeaderText="BSPL_Type" />
-                    <asp:BoundField DataField="HFM_ACCOUNT" HeaderText="HFM_Account" />
-                    <asp:BoundField DataField="HFM_ACCOUNT_DESC" HeaderText="HFM_Account_Desc" />
-                    <asp:BoundField DataField="TYPE" HeaderText="Type" />
-                    <asp:BoundField DataField="CATEGORY" HeaderText="Category" />
-                    <asp:BoundField DataField="ICP" HeaderText="ICP" />
-                    <asp:BoundField DataField="HFM_CUSTOM1" HeaderText="HFM_Custom1" />
-                    <asp:BoundField DataField="HFMNEW_CUSTOM4" HeaderText="HFMNew_Custom4" />
-                    <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
-                    <asp:BoundField DataField="SOURCE_AMOUNT" HeaderText="Source_Amount" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 

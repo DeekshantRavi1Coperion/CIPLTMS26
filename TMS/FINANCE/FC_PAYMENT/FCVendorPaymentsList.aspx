@@ -303,18 +303,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Vendor Payments List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -332,7 +330,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -379,227 +377,233 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Vendor Payments:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvVendorPaymentList"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvVendorPaymentList_RowCommand"
+                    OnRowDataBound="gvVendorPaymentList_RowDataBound">
+
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="VIEW" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail"
+                                    Height="20px"
+                                    Width="20px"
+                                    CommandArgument="ViewDETAIL"
+                                    runat="server"
+                                    ImageUrl="~/Images/pdficon1.png" />
+
+                                <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
+
+
+                                <asp:Label ID="lblPaymentRequesNo" runat="server" Visible="false" Text='<%# Eval("PAYMENT_REQUEST_NO") %>' />
+                                <asp:Label ID="lblDateOfRequest" runat="server" Visible="false" Text='<%# Eval("DATE_OF_REQUEST") %>' />
+                                <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
+                                <asp:Label ID="lblVendorName" runat="server" Visible="false" Text='<%# Eval("VENDOR_NAME") %>' />
+                                <asp:Label ID="lblVendorAddress" runat="server" Visible="false" Text='<%# Eval("VENDOR_ADDRESS") %>' />
+                                <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
+                                <asp:Label ID="lblAmountToBeReleased" runat="server" Visible="false" Text='<%# Eval("AMOUNT_TO_BE_RELEASED") %>' />
+                                <asp:Label ID="lblPaymentTypeID" runat="server" Visible="false" Text='<%# Eval("PAYMENT_TYPE_FID") %>' />
+                                <asp:Label ID="lblPaymentType" runat="server" Visible="false" Text='<%# Eval("PAYMENT_TYPE") %>' />
+                                <asp:Label ID="lblPOAmount" runat="server" Visible="false" Text='<%# Eval("PO_AMOUNT") %>' />
+                                <asp:Label ID="lblCurrency" runat="server" Visible="false" Text='<%# Eval("PO_CURRENCY") %>' />
+
+                                <asp:Label ID="lblInvoiceNo" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO") %>' />
+                                <asp:Label ID="lblInvoiceDate" runat="server" Visible="false" Text='<%# Eval("INVOICE_DATE") %>' />
+                                <asp:Label ID="lblCutOffDate" runat="server" Visible="false" Text='<%# Eval("CUT_OFF_DATE") %>' />
+
+                                <asp:Label ID="lblBankName" runat="server" Visible="false" Text='<%# Eval("BANK_NAME") %>' />
+                                <asp:Label ID="lblBankBranch" runat="server" Visible="false" Text='<%# Eval("BANK_BRANCH") %>' />
+                                <asp:Label ID="lblSwftCode" runat="server" Visible="false" Text='<%# Eval("SWIFT_CODE") %>' />
+                                <asp:Label ID="lblBankAccountNo" runat="server" Visible="false" Text='<%# Eval("BANK_ACCOUNT_NO") %>' />
+
+
+                                <asp:Label ID="lblStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>' />
+                                <asp:Label ID="lblAmendmentCount" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_COUNT") %>' />
+
+                                <asp:Label ID="lblCreatedBy" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
+                                <asp:Label ID="lblApprovedBy" runat="server" Visible="false" Text='<%# Eval("APPROVED_BY") %>' />
+                                <asp:Label ID="lblSentToAmendmentBy" runat="server" Visible="false" Text='<%# Eval("SENT_TO_AMENDMENT_BY") %>' />
+                                <asp:Label ID="lblAmendedBy" runat="server" Visible="false" Text='<%# Eval("AMENDED_BY") %>' />
+                                <asp:Label ID="lblApprovedAmendedBy" runat="server" Visible="false" Text='<%# Eval("APPROVED_AMENDED_BY") %>' />
+                                <asp:Label ID="lblPaymentReleasedBy" runat="server" Visible="false" Text='<%# Eval("PAYMENT_RELEASED_BY") %>' />
+
+                                <asp:Label ID="lblCreatedRemarks" runat="server" Visible="false" Text='<%# Eval("CREATED_REMARKS") %>' />
+                                <asp:Label ID="lblAmendedRemarks" runat="server" Visible="false" Text='<%# Eval("AMENDED_REMARKS") %>' />
+                                <asp:Label ID="lblApprovedRemarks" runat="server" Visible="false" Text='<%# Eval("APPROVED_REMARKS") %>' />
+                                <asp:Label ID="lblApprovedAmendedRemarks" runat="server" Visible="false" Text='<%# Eval("APPROVED_AMENDED_REMARKS") %>' />
+                                <asp:Label ID="lblSentToAmendmentRemarks" runat="server" Visible="false" Text='<%# Eval("SENT_TO_AMENDMENT_REMARKS") %>' />
+                                <asp:Label ID="lblPaymentReleasedRemarks" runat="server" Visible="false" Text='<%# Eval("PAYMENT_RELEASED_REMARKS") %>' />
+
+                                <asp:Label ID="lblIsCreatedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CREATED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsAmendedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsAmendedApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_AMENDED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsSentToAmendmentMailSent" runat="server" Visible="false" Text='<%# Eval("IS_SENT_TO_AMENDMENT_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsPaymentReleasedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PAYMENT_RELEASED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsCancelledMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CANCELLED_MAIL_SENT") %>' />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Invoice File" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblInvoiceFileName" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO_FILE_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnInvoiceFileName"
+                                    Height="30px"
+                                    Width="30px"
+                                    CommandArgument="VIEW_INVOICE_FILE"
+                                    runat="server"
+                                    ImageUrl="~/Images/pdficon4.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Payment File" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPaymentFileName" runat="server" Visible="false" Text='<%# Eval("PAYMENT_FILE_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnPaymentFileName"
+                                    Height="30px"
+                                    Width="30px"
+                                    CommandArgument="VIEW_PAYMENT_FILE"
+                                    ImageUrl="~/Images/pdficon4.png"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnEdit" CommandArgument="EDIT" runat="server" ImageUrl="~/Images/LOT/edit5.png"
+                                    Height="35px" Width="35px" ToolTip="Edit Request" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Cancel" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnCancel" CommandArgument="CANCEL" runat="server" ImageUrl="~/Images/cancelled_img.png"
+                                    Height="35px" Width="35px" ToolTip="Cancel Request" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <asp:Button ID="btnApproveRequest" CommandArgument="APPROVE_REQUEST" ToolTip="Approve" runat="server"
+                                                Text="Approve" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" Width="100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:Button ID="btnAmend" CommandArgument="AMEND_REQUEST" ToolTip="Amend" runat="server"
+                                                Text="Amend" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid"
+                                                BackColor="LightPink"
+                                                BorderWidth="2px" Width="100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:Button ID="btnReleaseAmount" CommandArgument="RELEASE_AMOUNT" ToolTip="Release Amount" runat="server"
+                                                Text="Release Amount" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid"
+                                                BorderWidth="2px"
+                                                BackColor="Blue"
+                                                Width="100%" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <asp:Button ID="btnSendToAmendment" CommandArgument="SEND_TO_AMENDMENT" ToolTip="Send To Amendment" runat="server"
+                                                Text="Send To Amendment" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px"
+                                                BackColor="Orange"
+                                                Width="100%" />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Send Mail" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnSendCreatedMail" CommandArgument="SEND_CREATED_MAIL" ToolTip="Send Created Mail" runat="server"
+                                    Text="Send Created Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnSendAmendedMail" CommandArgument="SEND_AMENDED_MAIL" ToolTip="Send Amended Mail" runat="server"
+                                    Text="Send Amended Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnSendApprovedMail" CommandArgument="SEND_APPROVED_MAIL" ToolTip="Send Amended Mail" runat="server"
+                                    Text="Send Amended Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnSendPaymentRelesedMail" CommandArgument="SEND_AMOUNT_RELEASED_MAIL" ToolTip="Send Payment Relesed Mail" runat="server"
+                                    Text="Send Payment Relesed Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnSendAmendmentMail" CommandArgument="SEND_AMENDMENT_MAIL" ToolTip="Send Amendment Mail" runat="server"
+                                    Text="Send Amendment Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnSendCancelledMail" CommandArgument="SEND_CANCELLED_MAIL" ToolTip="Send Cancelled Mail" runat="server"
+                                    Text="Send Cancelled Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+                        <asp:BoundField HeaderText="Request No." DataField="PAYMENT_REQUEST_NO" />
+                        <asp:BoundField HeaderText="Date of Request" DataField="DATE_OF_REQUEST" />
+
+                        <asp:TemplateField HeaderText="Status"
+                            HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnStatus" runat="server" Height="40px" Width="40px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField HeaderText="JOB No." DataField="JOB_NO" />
+                        <asp:BoundField HeaderText="Vendor Code" DataField="VENDOR_CODE" />
+                        <asp:BoundField HeaderText="Vendor Name" DataField="VENDOR_NAME" />
+                        <asp:BoundField HeaderText="Vendor Address" DataField="VENDOR_ADDRESS" />
+
+                        <asp:BoundField HeaderText="PO No." DataField="PO_NO" />
+
+                        <asp:BoundField HeaderText="PO Amount" DataField="PO_AMOUNT" />
+                        <asp:BoundField HeaderText="Currency" DataField="PO_CURRENCY" />
+
+                        <asp:BoundField HeaderText="Total Amount To Be Released" DataField="AMOUNT_TO_BE_RELEASED" />
+
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvVendorPaymentList"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvVendorPaymentList_RowCommand"
-                OnRowDataBound="gvVendorPaymentList_RowDataBound">
-
-                <Columns>
-
-                    <asp:TemplateField HeaderText="VIEW" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail"
-                                Height="20px"
-                                Width="20px"
-                                CommandArgument="ViewDETAIL"
-                                runat="server"
-                                ImageUrl="~/Images/pdficon1.png" />
-
-                            <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
-
-
-                            <asp:Label ID="lblPaymentRequesNo" runat="server" Visible="false" Text='<%# Eval("PAYMENT_REQUEST_NO") %>' />
-                            <asp:Label ID="lblDateOfRequest" runat="server" Visible="false" Text='<%# Eval("DATE_OF_REQUEST") %>' />
-                            <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                            <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
-                            <asp:Label ID="lblVendorName" runat="server" Visible="false" Text='<%# Eval("VENDOR_NAME") %>' />
-                            <asp:Label ID="lblVendorAddress" runat="server" Visible="false" Text='<%# Eval("VENDOR_ADDRESS") %>' />
-                            <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
-                            <asp:Label ID="lblAmountToBeReleased" runat="server" Visible="false" Text='<%# Eval("AMOUNT_TO_BE_RELEASED") %>' />
-                            <asp:Label ID="lblPaymentTypeID" runat="server" Visible="false" Text='<%# Eval("PAYMENT_TYPE_FID") %>' />
-                            <asp:Label ID="lblPaymentType" runat="server" Visible="false" Text='<%# Eval("PAYMENT_TYPE") %>' />
-                            <asp:Label ID="lblPOAmount" runat="server" Visible="false" Text='<%# Eval("PO_AMOUNT") %>' />
-                            <asp:Label ID="lblCurrency" runat="server" Visible="false" Text='<%# Eval("PO_CURRENCY") %>' />
-
-                            <asp:Label ID="lblInvoiceNo" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO") %>' />
-                            <asp:Label ID="lblInvoiceDate" runat="server" Visible="false" Text='<%# Eval("INVOICE_DATE") %>' />
-                            <asp:Label ID="lblCutOffDate" runat="server" Visible="false" Text='<%# Eval("CUT_OFF_DATE") %>' />
-
-                            <asp:Label ID="lblBankName" runat="server" Visible="false" Text='<%# Eval("BANK_NAME") %>' />
-                            <asp:Label ID="lblBankBranch" runat="server" Visible="false" Text='<%# Eval("BANK_BRANCH") %>' />
-                            <asp:Label ID="lblSwftCode" runat="server" Visible="false" Text='<%# Eval("SWIFT_CODE") %>' />
-                            <asp:Label ID="lblBankAccountNo" runat="server" Visible="false" Text='<%# Eval("BANK_ACCOUNT_NO") %>' />
-
-
-                            <asp:Label ID="lblStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>' />
-                            <asp:Label ID="lblAmendmentCount" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_COUNT") %>' />
-
-                            <asp:Label ID="lblCreatedBy" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
-                            <asp:Label ID="lblApprovedBy" runat="server" Visible="false" Text='<%# Eval("APPROVED_BY") %>' />
-                            <asp:Label ID="lblSentToAmendmentBy" runat="server" Visible="false" Text='<%# Eval("SENT_TO_AMENDMENT_BY") %>' />
-                            <asp:Label ID="lblAmendedBy" runat="server" Visible="false" Text='<%# Eval("AMENDED_BY") %>' />
-                            <asp:Label ID="lblApprovedAmendedBy" runat="server" Visible="false" Text='<%# Eval("APPROVED_AMENDED_BY") %>' />
-                            <asp:Label ID="lblPaymentReleasedBy" runat="server" Visible="false" Text='<%# Eval("PAYMENT_RELEASED_BY") %>' />
-
-                            <asp:Label ID="lblCreatedRemarks" runat="server" Visible="false" Text='<%# Eval("CREATED_REMARKS") %>' />
-                            <asp:Label ID="lblAmendedRemarks" runat="server" Visible="false" Text='<%# Eval("AMENDED_REMARKS") %>' />
-                            <asp:Label ID="lblApprovedRemarks" runat="server" Visible="false" Text='<%# Eval("APPROVED_REMARKS") %>' />
-                            <asp:Label ID="lblApprovedAmendedRemarks" runat="server" Visible="false" Text='<%# Eval("APPROVED_AMENDED_REMARKS") %>' />
-                            <asp:Label ID="lblSentToAmendmentRemarks" runat="server" Visible="false" Text='<%# Eval("SENT_TO_AMENDMENT_REMARKS") %>' />
-                            <asp:Label ID="lblPaymentReleasedRemarks" runat="server" Visible="false" Text='<%# Eval("PAYMENT_RELEASED_REMARKS") %>' />
-
-                            <asp:Label ID="lblIsCreatedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CREATED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsAmendedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsAmendedApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_AMENDED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsSentToAmendmentMailSent" runat="server" Visible="false" Text='<%# Eval("IS_SENT_TO_AMENDMENT_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsPaymentReleasedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PAYMENT_RELEASED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsCancelledMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CANCELLED_MAIL_SENT") %>' />
-
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Invoice File" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblInvoiceFileName" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO_FILE_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnInvoiceFileName"
-                                Height="30px"
-                                Width="30px"
-                                CommandArgument="VIEW_INVOICE_FILE"
-                                runat="server"
-                                ImageUrl="~/Images/pdficon4.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Payment File" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPaymentFileName" runat="server" Visible="false" Text='<%# Eval("PAYMENT_FILE_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnPaymentFileName"
-                                Height="30px"
-                                Width="30px"
-                                CommandArgument="VIEW_PAYMENT_FILE"
-                                ImageUrl="~/Images/pdficon4.png"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnEdit" CommandArgument="EDIT" runat="server" ImageUrl="~/Images/LOT/edit5.png"
-                                Height="35px" Width="35px" ToolTip="Edit Request" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Cancel" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnCancel" CommandArgument="CANCEL" runat="server" ImageUrl="~/Images/cancelled_img.png"
-                                Height="35px" Width="35px" ToolTip="Cancel Request" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <asp:Button ID="btnApproveRequest" CommandArgument="APPROVE_REQUEST" ToolTip="Approve" runat="server"
-                                            Text="Approve" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" Width="100%" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <asp:Button ID="btnAmend" CommandArgument="AMEND_REQUEST" ToolTip="Amend" runat="server"
-                                            Text="Amend" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid"
-                                            BackColor="LightPink"
-                                            BorderWidth="2px" Width="100%" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <asp:Button ID="btnReleaseAmount" CommandArgument="RELEASE_AMOUNT" ToolTip="Release Amount" runat="server"
-                                            Text="Release Amount" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid"
-                                            BorderWidth="2px"
-                                            BackColor="Blue"
-                                            Width="100%" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <asp:Button ID="btnSendToAmendment" CommandArgument="SEND_TO_AMENDMENT" ToolTip="Send To Amendment" runat="server"
-                                            Text="Send To Amendment" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px"
-                                            BackColor="Orange"
-                                            Width="100%" />
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Send Mail" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnSendCreatedMail" CommandArgument="SEND_CREATED_MAIL" ToolTip="Send Created Mail" runat="server"
-                                Text="Send Created Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnSendAmendedMail" CommandArgument="SEND_AMENDED_MAIL" ToolTip="Send Amended Mail" runat="server"
-                                Text="Send Amended Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnSendApprovedMail" CommandArgument="SEND_APPROVED_MAIL" ToolTip="Send Amended Mail" runat="server"
-                                Text="Send Amended Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnSendPaymentRelesedMail" CommandArgument="SEND_AMOUNT_RELEASED_MAIL" ToolTip="Send Payment Relesed Mail" runat="server"
-                                Text="Send Payment Relesed Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnSendAmendmentMail" CommandArgument="SEND_AMENDMENT_MAIL" ToolTip="Send Amendment Mail" runat="server"
-                                Text="Send Amendment Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnSendCancelledMail" CommandArgument="SEND_CANCELLED_MAIL" ToolTip="Send Cancelled Mail" runat="server"
-                                Text="Send Cancelled Mail" CssClass="cancelbutton" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-                    <asp:BoundField HeaderText="Request No." DataField="PAYMENT_REQUEST_NO" />
-                    <asp:BoundField HeaderText="Date of Request" DataField="DATE_OF_REQUEST" />
-
-                    <asp:TemplateField HeaderText="Status"
-                        HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnStatus" runat="server" Height="40px" Width="40px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField HeaderText="JOB No." DataField="JOB_NO" />
-                    <asp:BoundField HeaderText="Vendor Code" DataField="VENDOR_CODE" />
-                    <asp:BoundField HeaderText="Vendor Name" DataField="VENDOR_NAME" />
-                    <asp:BoundField HeaderText="Vendor Address" DataField="VENDOR_ADDRESS" />
-
-                    <asp:BoundField HeaderText="PO No." DataField="PO_NO" />
-
-                    <asp:BoundField HeaderText="PO Amount" DataField="PO_AMOUNT" />
-                    <asp:BoundField HeaderText="Currency" DataField="PO_CURRENCY" />
-
-                    <asp:BoundField HeaderText="Total Amount To Be Released" DataField="AMOUNT_TO_BE_RELEASED" />
-
-                </Columns>
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
 
 
@@ -736,7 +740,7 @@
 
                     <label>Type of Payment:</label>
                     <asp:DropDownList ID="ddlPaymentTypeTOU"
-                        runat="server" 
+                        runat="server"
                         CssClass="form-control" />
 
                     <asp:Label ID="lblAmountToBeReleasedMsgTOU" runat="server" ForeColor="Red" />
