@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="DesignListProjectView.aspx.cs"
+﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" 
+    CodeFile="DesignListProjectView.aspx.cs"
     Inherits="PROJECT_DMS_DesignListProjectView" Title="CIPLTMS- Design List Project View" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -461,13 +462,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Design Status- Project View:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <div class="full-width">
                         <label>Date Filter</label>
@@ -501,7 +500,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -563,116 +562,122 @@
                     <asp:DropDownList ID="ddlRespDesignEnggMainSearch" runat="server"
                         CssClass="form-control" />
 
-
-                    <div class="full-width button-group">
-                        <label>Created By</label>
+                    <label>Created By</label>
                         <asp:DropDownList ID="ddlCreatedByMainSearch" runat="server"
                             CssClass="form-control" />
 
-                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                            OnClientClick="return ValidateAllSearch();" OnClick="btnSearch_Click" />
-
-                        <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export" OnClick="btnExport_Click" />
-                    </div>
-
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClientClick="return ValidateAllSearch();" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export" OnClick="btnExport_Click" />
+
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvDesignDetails" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvDesignDetails_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="Sr.No.">
-                        <ItemTemplate>
-                            <%--<asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("Sr_No") %>'
+        <fieldset class="employee-grid-fieldset">
+            <legend>Design Status- Project View:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvDesignDetails" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvDesignDetails_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Sr.No.">
+                            <ItemTemplate>
+                                <%--<asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("Sr_No") %>'
                                     onkeyDown="javascript:preventInput(event);" CssClass="textboxcenter"></asp:TextBox>--%>
 
-                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("Sr_No") %>' Visible="true" />
-                            <asp:Label ID="lblJOBNo" runat="server" Text='<%# Eval("JOB_No") %>' Visible="false" />
-                            <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("Category") %>' Visible="false" />
-                            <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("Description") %>' Visible="false" />
-                            <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>' Visible="false" />
-                            <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' Visible="false" />
-                            <asp:Label ID="lblReqdDateByProjectTeam" runat="server" Text='<%# Eval("Reqd_Date_By_Project_Team") %>' Visible="false" />
-                            <asp:Label ID="lblPlannedStartDateByDesignTeam" runat="server" Text='<%# Eval("Planned_Start_Date_By_Design_Team") %>' Visible="false" />
-                            <asp:Label ID="lblPlannedCompletionDateByDesignTeam" runat="server" Text='<%# Eval("Planned_Completion_Date_By_Design_Team") %>' Visible="false" />
-                            <asp:Label ID="lblDrawingNo" runat="server" Text='<%# Eval("Drawing_No") %>' Visible="false" />
+                                <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("Sr_No") %>' Visible="true" />
+                                <asp:Label ID="lblJOBNo" runat="server" Text='<%# Eval("JOB_No") %>' Visible="false" />
+                                <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("Category") %>' Visible="false" />
+                                <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("Description") %>' Visible="false" />
+                                <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>' Visible="false" />
+                                <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' Visible="false" />
+                                <asp:Label ID="lblReqdDateByProjectTeam" runat="server" Text='<%# Eval("Reqd_Date_By_Project_Team") %>' Visible="false" />
+                                <asp:Label ID="lblPlannedStartDateByDesignTeam" runat="server" Text='<%# Eval("Planned_Start_Date_By_Design_Team") %>' Visible="false" />
+                                <asp:Label ID="lblPlannedCompletionDateByDesignTeam" runat="server" Text='<%# Eval("Planned_Completion_Date_By_Design_Team") %>' Visible="false" />
+                                <asp:Label ID="lblDrawingNo" runat="server" Text='<%# Eval("Drawing_No") %>' Visible="false" />
 
-                            <asp:Label ID="lblClientDrawingNo" runat="server" Text='<%# Eval("Client_Drawing_No") %>' Visible="false" />
-                            <asp:Label ID="lblContractorDrawingNo" runat="server" Text='<%# Eval("Contractor_Drawing_No") %>' Visible="false" />
+                                <asp:Label ID="lblClientDrawingNo" runat="server" Text='<%# Eval("Client_Drawing_No") %>' Visible="false" />
+                                <asp:Label ID="lblContractorDrawingNo" runat="server" Text='<%# Eval("Contractor_Drawing_No") %>' Visible="false" />
 
-                            <asp:Label ID="lblRevisionNo" runat="server" Text='<%# Eval("Revision_No") %>' Visible="false" />
-                            <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' Visible="false" />
-                            <asp:Label ID="lblExpectedCompletionDate" runat="server" Text='<%# Eval("Expected_Completion_Date") %>' Visible="false" />
+                                <asp:Label ID="lblRevisionNo" runat="server" Text='<%# Eval("Revision_No") %>' Visible="false" />
+                                <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' Visible="false" />
+                                <asp:Label ID="lblExpectedCompletionDate" runat="server" Text='<%# Eval("Expected_Completion_Date") %>' Visible="false" />
 
-                            <asp:Label ID="lblDrawingSentToDesign" runat="server" Text='<%# Eval("Drawing_Sent_To_Design") %>' Visible="false" />
+                                <asp:Label ID="lblDrawingSentToDesign" runat="server" Text='<%# Eval("Drawing_Sent_To_Design") %>' Visible="false" />
 
-                            <asp:Label ID="lblDesignEngineer" runat="server" Text='<%# Eval("Responsible_Design_Engineer") %>' Visible="false" />
-                            <asp:Label ID="lblDrawingStatus" runat="server" Text='<%# Eval("Drawing_Status") %>' Visible="false" />
-                            <asp:Label ID="lblHoursSpent" runat="server" Text='<%# Eval("Hours_Spent") %>' Visible="false" />
+                                <asp:Label ID="lblDesignEngineer" runat="server" Text='<%# Eval("Responsible_Design_Engineer") %>' Visible="false" />
+                                <asp:Label ID="lblDrawingStatus" runat="server" Text='<%# Eval("Drawing_Status") %>' Visible="false" />
+                                <asp:Label ID="lblHoursSpent" runat="server" Text='<%# Eval("Hours_Spent") %>' Visible="false" />
 
-                            <asp:Label ID="lblCompletedByDesignEnggDate" runat="server" Text='<%# Eval("Completed_By_Design_Engg_Date") %>' Visible="false" />
-                            <asp:Label ID="lblCheckedDate" runat="server" Text='<%# Eval("Checked_Date") %>' Visible="false" />
+                                <asp:Label ID="lblCompletedByDesignEnggDate" runat="server" Text='<%# Eval("Completed_By_Design_Engg_Date") %>' Visible="false" />
+                                <asp:Label ID="lblCheckedDate" runat="server" Text='<%# Eval("Checked_Date") %>' Visible="false" />
 
-                            <asp:Label ID="lblDesigner" runat="server" Text='<%# Eval("Designer") %>' Visible="false" />
-                            <asp:Label ID="lblDesignerTimesheetHours" runat="server" Text='<%# Eval("Designer_Timesheet_Hours") %>' Visible="false" />
-                            <asp:Label ID="lblChecker" runat="server" Text='<%# Eval("Checker") %>' Visible="false" />
-                            <asp:Label ID="lblCheckerTimesheetHours" runat="server" Text='<%# Eval("Checker_Timesheet_Hours") %>' Visible="false" />
-                            <asp:Label ID="lblTotalTimehseetHours" runat="server" Text='<%# Eval("Total_Timehseet_Hours") %>' Visible="false" />
+                                <asp:Label ID="lblDesigner" runat="server" Text='<%# Eval("Designer") %>' Visible="false" />
+                                <asp:Label ID="lblDesignerTimesheetHours" runat="server" Text='<%# Eval("Designer_Timesheet_Hours") %>' Visible="false" />
+                                <asp:Label ID="lblChecker" runat="server" Text='<%# Eval("Checker") %>' Visible="false" />
+                                <asp:Label ID="lblCheckerTimesheetHours" runat="server" Text='<%# Eval("Checker_Timesheet_Hours") %>' Visible="false" />
+                                <asp:Label ID="lblTotalTimehseetHours" runat="server" Text='<%# Eval("Total_Timehseet_Hours") %>' Visible="false" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:BoundField HeaderText="JOB No." DataField="JOB_No" />
-                    <asp:BoundField HeaderText="Category" DataField="Category" />
-                    <asp:BoundField HeaderText="Description" DataField="Description" />
-                    <asp:BoundField HeaderText="UOM" DataField="UOM" />
-                    <asp:BoundField HeaderText="Quantity" DataField="Quantity" />
-                    <asp:BoundField HeaderText="Reqd Date By Project Team" DataField="Reqd_Date_By_Project_Team" />
-                    <asp:BoundField HeaderText="Planned Start Date By Design Team" DataField="Planned_Start_Date_By_Design_Team" />
-                    <asp:BoundField HeaderText="Planned Completion Date By Design Team" DataField="Planned_Completion_Date_By_Design_Team" />
-                    <asp:BoundField HeaderText="Drawing No." DataField="Drawing_No" />
-                    <asp:BoundField HeaderText="Client Drawing No." DataField="Client_Drawing_No" />
-                    <asp:BoundField HeaderText="Contractor Drawing No." DataField="Contractor_Drawing_No" />
-                    <asp:BoundField HeaderText="Revision No." DataField="Revision_No" />
-                    <asp:BoundField HeaderText="Remarks" DataField="Remarks" />
-                    <asp:BoundField HeaderText="Expected Completion Date" DataField="Expected_Completion_Date" />
+                        <asp:BoundField HeaderText="JOB No." DataField="JOB_No" />
+                        <asp:BoundField HeaderText="Category" DataField="Category" />
+                        <asp:BoundField HeaderText="Description" DataField="Description" />
+                        <asp:BoundField HeaderText="UOM" DataField="UOM" />
+                        <asp:BoundField HeaderText="Quantity" DataField="Quantity" />
+                        <asp:BoundField HeaderText="Reqd Date By Project Team" DataField="Reqd_Date_By_Project_Team" />
+                        <asp:BoundField HeaderText="Planned Start Date By Design Team" DataField="Planned_Start_Date_By_Design_Team" />
+                        <asp:BoundField HeaderText="Planned Completion Date By Design Team" DataField="Planned_Completion_Date_By_Design_Team" />
+                        <asp:BoundField HeaderText="Drawing No." DataField="Drawing_No" />
+                        <asp:BoundField HeaderText="Client Drawing No." DataField="Client_Drawing_No" />
+                        <asp:BoundField HeaderText="Contractor Drawing No." DataField="Contractor_Drawing_No" />
+                        <asp:BoundField HeaderText="Revision No." DataField="Revision_No" />
+                        <asp:BoundField HeaderText="Remarks" DataField="Remarks" />
+                        <asp:BoundField HeaderText="Expected Completion Date" DataField="Expected_Completion_Date" />
 
-                    <asp:BoundField HeaderText="Drawing Sent To Design" DataField="Drawing_Sent_To_Design" />
-                    <asp:BoundField HeaderText="Design Engineer" DataField="Responsible_Design_Engineer" />
-                    <asp:BoundField HeaderText="Completed By Design Engg Date" DataField="Completed_By_Design_Engg_Date" />
-                    <asp:BoundField HeaderText="Drawing Status" DataField="Drawing_Status" />
-                    <asp:BoundField HeaderText="Checked Date" DataField="Checked_Date" />
-                    <asp:BoundField HeaderText="Hours Spent" DataField="Hours_Spent" />
+                        <asp:BoundField HeaderText="Drawing Sent To Design" DataField="Drawing_Sent_To_Design" />
+                        <asp:BoundField HeaderText="Design Engineer" DataField="Responsible_Design_Engineer" />
+                        <asp:BoundField HeaderText="Completed By Design Engg Date" DataField="Completed_By_Design_Engg_Date" />
+                        <asp:BoundField HeaderText="Drawing Status" DataField="Drawing_Status" />
+                        <asp:BoundField HeaderText="Checked Date" DataField="Checked_Date" />
+                        <asp:BoundField HeaderText="Hours Spent" DataField="Hours_Spent" />
 
-                    <asp:BoundField HeaderText="Designer" DataField="Designer" />
-                    <asp:BoundField HeaderText="Designer Timesheet Hours" DataField="Designer_Timesheet_Hours" />
-                    <asp:BoundField HeaderText="Checker" DataField="Checker" />
-                    <asp:BoundField HeaderText="Checker Timesheet Hours" DataField="Checker_Timesheet_Hours" />
-                    <asp:BoundField HeaderText="Total Timesheet Hours" DataField="Total_Timehseet_Hours" />
-                    <%--<asp:BoundField HeaderText="Design Checker" DataField="DESIGN_CHECKER" />--%>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                        <asp:BoundField HeaderText="Designer" DataField="Designer" />
+                        <asp:BoundField HeaderText="Designer Timesheet Hours" DataField="Designer_Timesheet_Hours" />
+                        <asp:BoundField HeaderText="Checker" DataField="Checker" />
+                        <asp:BoundField HeaderText="Checker Timesheet Hours" DataField="Checker_Timesheet_Hours" />
+                        <asp:BoundField HeaderText="Total Timesheet Hours" DataField="Total_Timehseet_Hours" />
+                        <%--<asp:BoundField HeaderText="Design Checker" DataField="DESIGN_CHECKER" />--%>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
 
-        </div>
+            </div>
+        </fieldset>
 
 
     </div>
@@ -683,7 +688,7 @@
         PopupControlID="pnlbtnViewInPDFPopup" CancelControlID="imgBtnViewInPDFPopup"
         BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server" 
+    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -693,11 +698,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewDrawingDetailsInPDF"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- VIEW DETAIL IN PDF END--%>
 

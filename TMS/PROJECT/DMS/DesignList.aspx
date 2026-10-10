@@ -1517,12 +1517,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Design Detailed List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters:</legend>
 
+                <div class="form-filter-grid">
 
                     <label>Date Filter:</label>
                     <table style="width: 100%;">
@@ -1553,7 +1552,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -1618,361 +1617,370 @@
                     <asp:DropDownList ID="ddlCreatedByMainSearch" runat="server"
                         CssClass="form-control" />
 
-                    &nbsp;
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClientClick="return ValidateAllSearch();" OnClick="btnSearch_Click" />
 
-                    &nbsp;
-                    <asp:Button ID="btnAddNew" CssClass="button" Width="100%" runat="server" Text="Add New Design"
-                        OnClick="btnAddNew_Click" />
-
-
-                    <label>Update Status:</label>
-                    <asp:DropDownList ID="ddlUpdateStatus" runat="server"
-                        CssClass="form-control">
-                    </asp:DropDownList>
-
-                    &nbsp;
-                    <asp:Button ID="btnUpdateStatus" CssClass="button" runat="server" Text="Update"
-                        OnClick="btnUpdateStatus_Click" OnClientClick="return ValidateAllUpdateStatus();" />
 
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
 
-        <div class="employee-grid-container">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClientClick="return ValidateAllSearch();" OnClick="btnSearch_Click" />
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnAddNew" CssClass="button" Width="100%" runat="server" Text="Add New Design"
+                    OnClick="btnAddNew_Click" />
+
+
+                <label>Update Status:</label>
+                <asp:DropDownList ID="ddlUpdateStatus" runat="server"
+                    CssClass="form-control">
+                </asp:DropDownList>
+
+                <asp:Button ID="btnUpdateStatus" CssClass="button" runat="server" Text="Update"
+                    OnClick="btnUpdateStatus_Click" OnClientClick="return ValidateAllUpdateStatus();" />
+
             </div>
-            <asp:GridView ID="gvDesignDetails"
-                CssClass="employee-grid"
-                runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvDesignDetails_RowCommand"
-                OnRowDataBound="gvDesignDetails_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="Sr.No.">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Width="50px"
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxcenter"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Select" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:CheckBox ID="chkSelect" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Att.(Rev.)" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewAddAtt" CommandArgument="VIEW_ADD_ATT"
-                                runat="server" ImageUrl="~/Images/pdficon1.png" Height="30PX" Width="30PX" ToolTip="View Additional Attachment" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" CommandArgument="VIEW_DETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon1.png" Height="30PX" Width="30PX" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField>
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnSendMail" CommandArgument="SEND_MAIL" ToolTip="Send Mail"
-                                runat="server" ImageUrl="~/Images/NEWICONS/email05.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Status" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblStatusID" runat="server" Text='<%# Eval("STATUS_ID") %>' Visible="false" />
-                            <asp:Label ID="lblStatusName" runat="server" Text='<%# Eval("STATUS") %>' Visible="false" />
-                            <asp:Label ID="lblRecordID" runat="server" Text='<%# Eval("RECORD_ID") %>' Visible="false" />
-                            <asp:Label ID="lblDrawingID" runat="server" Text='<%# Eval("DRAWING_ID") %>' Visible="false" />
-                            <asp:Label ID="lblPMID" runat="server" Text='<%# Eval("PM_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblIsRevised" runat="server" Text='<%# Eval("IS_REVISED") %>' Visible="false" />
-
-                            <asp:Label ID="lblCategoryID" runat="server" Text='<%# Eval("CATEGORY_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblCreatedByID" runat="server" Text='<%# Eval("CREATED_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblOpenByID" runat="server" Text='<%# Eval("OPEN_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblSendToCheckingByID" runat="server" Text='<%# Eval("SENT_TO_CHECKING_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblCheckedByID" runat="server" Text='<%# Eval("CHECKED_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblClosedByID" runat="server" Text='<%# Eval("CLOSED_BY_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblSentToAmendmentByID" runat="server" Text='<%# Eval("SENT_TO_AMENDMENT_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendmentCount" runat="server" Text='<%# Eval("AMENDMENT_COUNT") %>' Visible="false" />
-                            <asp:Label ID="lblAmendmentFlag" runat="server" Text='<%# Eval("AMENDMENT_FLAG") %>' Visible="false" />
-                            <asp:Label ID="lblEditedFlag" runat="server" Text='<%# Eval("EDITED_FLAG") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedByID" runat="server" Text='<%# Eval("AMENDED_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedOpenByID" runat="server" Text='<%# Eval("AMENDED_OPEN_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedSendToCheckingByID" runat="server" Text='<%# Eval("AMENDED_SENT_TO_CHECKING_BY_ID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedCheckedByID" runat="server" Text='<%# Eval("AMENDED_CHECKED_BY_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblDesignResponsibleEnggID" runat="server" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG_ID") %>' Visible="false" />
-                            <asp:Label ID="lblDesignResponsibleEngg" runat="server" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG") %>' Visible="false" />
-
-
-                            <asp:Label ID="lblDesignResponsibleEnggEmpRecordID" runat="server" Text='<%# Eval("DESIGN_RESP_ENGG_EMP_RECORD_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblDesignCheckerID" runat="server" Text='<%# Eval("DESIGN_CHECKER_ID") %>' Visible="false" />
-                            <asp:Label ID="lblDesignChecker" runat="server" Text='<%# Eval("DESIGN_CHECKER") %>' Visible="false" />
-
-                            <asp:Label ID="lblDesignCheckerEmpRecordID" runat="server" Text='<%# Eval("DESIGN_CHECKER_EMP_RECORD_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblIsGeneratedMailSent" runat="server" Text='<%# Eval("IS_GENERATED_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsOpenMailSent" runat="server" Text='<%# Eval("IS_OPEN_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsSendToCheckingMailSent" runat="server" Text='<%# Eval("IS_SENT_TO_CHECKING_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsCheckedMailSent" runat="server" Text='<%# Eval("IS_CHECKED_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsClosedMailSent" runat="server" Text='<%# Eval("IS_CLOSED_MAIL_SENT") %>' Visible="false" />
-
-                            <asp:Label ID="lblIsSendToAmendmentMailSent" runat="server" Text='<%# Eval("IS_SENT_TO_AMENDMENT_MAIL_SENT") %>' Visible="false" />
-
-                            <asp:Label ID="lblIsAmendedMailSent" runat="server" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsAmendedOpenMailSent" runat="server" Text='<%# Eval("IS_AMENDED_OPEN_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsAmendedSendToCheckingMailSent" runat="server" Text='<%# Eval("IS_AMENDED_SENT_TO_CHECKING_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsAmendedCheckedMailSent" runat="server" Text='<%# Eval("IS_AMENDED_CHECKED_MAIL_SENT") %>' Visible="false" />
-
-                            <asp:Label ID="lblJOBUnit" runat="server" Text='<%# Eval("JOB_UNIT") %>' Visible="false" />
-                            <asp:Label ID="lblJOBUnitID" runat="server" Text='<%# Eval("JOB_UNIT_ID") %>' Visible="false" />
-                            <asp:Label ID="lblShortJOBNo" runat="server" Text='<%# Eval("SHORT_JOB_NO") %>' Visible="false" />
-
-                            <asp:Label ID="lblAdditionalAttachmentName" runat="server" Text='<%# Eval("ADDITIONAL_ATTACHMENT_NAME") %>' Visible="false" />
-
-                            <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" Height="40PX" Width="40PX" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="100px" ItemStyle-Width="100px">
-                        <ItemTemplate>
-                            <asp:Button ID="btnEdit" CommandArgument="EDIT" ToolTip="Edit design" runat="server"
-                                Text="Edit" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="JOB No.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblJOBNo" runat="server" Text='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Description">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("DESCRIPTION") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="UOM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Quantity">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtQuantity" runat="server" Text='<%# Eval("QUANTITY") %>' Width="50px"
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Reqd. Date By Project Team">
-                        <ItemTemplate>
-                            <asp:Label ID="lblReqdDateByProjectTeam" runat="server" Text='<%# Eval("REQD_DATE_BY_PROJECT_TEAM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Category">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("CATEGORY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Planned Start Date By Design Team">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPlannedStartDateByDesignTeam" runat="server" Visible="false" Text='<%# Eval("PLANNED_START_DATE_BY_DESIGN_TEAM") %>' />
-                            <asp:TextBox ID="txtPlannedStartDateByDesignTeam" runat="server" Width="80%" Text='<%# Eval("PLANNED_START_DATE_BY_DESIGN_TEAM") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxleft" Height="26px" />
-                            <ajax:CalendarExtender ID="calendarPlannedStartDateByDesignTeam" PopupButtonID="imgbtnPlannedStartDateByDesignTeam"
-                                runat="server" TargetControlID="txtPlannedStartDateByDesignTeam" Format="dd-MMM-yyyy">
-                            </ajax:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnPlannedStartDateByDesignTeam" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Planned Start Date By Design Team Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Planned Completion Date By Design Team">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPlannedCompletionDateByDesignTeam" runat="server" Visible="false" Text='<%# Eval("PLANNED_COMPLETION_DATE_BY_DESIGN_TEAM") %>' />
-                            <asp:TextBox ID="txtPlannedCompletionDateByDesignTeam" runat="server" Width="80%" Text='<%# Eval("PLANNED_COMPLETION_DATE_BY_DESIGN_TEAM") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxleft" Height="26px" />
-                            <ajax:CalendarExtender ID="calendarPlannedCompletionDateByDesignTeam" PopupButtonID="imgbtnPlannedCompletionDateByDesignTeam"
-                                runat="server" TargetControlID="txtPlannedCompletionDateByDesignTeam" Format="dd-MMM-yyyy">
-                            </ajax:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnPlannedCompletionDateByDesignTeam" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Planned Completion Date By Design Team Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Drawing No.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDrawingNo" runat="server" Text='<%# Eval("DRAWING_NO") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Client Drawing No.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblClientDrawingNo" runat="server" Text='<%# Eval("CLIENT_DRAWING_NO") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Contractor Drawing No.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblContractorDrawingNo" runat="server" Text='<%# Eval("CONTRACTOR_DRAWING_NO") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Document Link">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDocumentLink" runat="server" Text='<%# Eval("DOCUMENT_LINK") %>' Visible="true" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Drawing Revisioin Number">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtDrawingRevNo" runat="server" Text='<%# Eval("DRAWING_REV_NO") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Working Status">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtWorkingStatus" runat="server" Text='<%# Eval("WORKING_STATUS") %>' Width="300PX" TextMode="MultiLine"
-                                Rows="2" CssClass="textboxleft" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Expected Completion Date">
-                        <ItemTemplate>
-                            <asp:Label ID="lblExpectedCompletionDate" runat="server" Visible="false" Text='<%# Eval("EXPECTED_COMPLETION_DATE") %>' />
-                            <asp:TextBox ID="txtExpectedCompletionDate" runat="server" Width="80%" Text='<%# Eval("EXPECTED_COMPLETION_DATE") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxleft" Height="26px" />
-                            <ajax:CalendarExtender ID="calendarExpectedCompletionDate" PopupButtonID="imgbtnExpectedCompletionDate"
-                                runat="server" TargetControlID="txtExpectedCompletionDate" Format="dd-MMM-yyyy">
-                            </ajax:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnExpectedCompletionDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Expected Completion Date Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Total Hours Spent">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtTimeSpent" runat="server" Text='<%# Eval("TOTAL_HOURS_SPENT") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Responsible Design Engineer">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlResponsibleDesignEngineer" runat="server" Width="100%" Height="26px"
-                                CssClass="textboxleft" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Drawing Link">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtDrawingLink" runat="server" Text='<%# Eval("DRAWING_LINK") %>' Width="300PX" CssClass="textboxleft" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Design Checker">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlDesignChecker" runat="server" Width="200px" Height="26px"
-                                CssClass="textboxleft" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Remarks">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtRemarks" runat="server" Width="300PX" TextMode="MultiLine"
-                                CssClass="textboxleft"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <%--Text='<%# Eval("REMARKS") %>' onkeyDown="javascript:preventInput(event);" --%>
-
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
-                        <ItemTemplate>
-                            <asp:Button ID="btnAddTimesheet" CommandArgument="ADD_TIMESHEET" ToolTip="Add Timesheet" runat="server"
-                                Text="Add Timesheet" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnAssign" CommandArgument="ASSIGN" ToolTip="Assign to responsible design engineer" runat="server"
-                                Text="Assign" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnSendToChecking" CommandArgument="SEND_TO_CHECKING" ToolTip="Design send to design checker" runat="server"
-                                Text="Send to checking" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <asp:Button ID="btnCheck" CommandArgument="CHECK" ToolTip="Check design" runat="server"
-                                Text="Check" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                            <%--<asp:Button ID="btnClose" CommandArgument="CLOSE" ToolTip="Close design" runat="server"
-                                    Text="Close" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" Visible="false" />--%>
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnSendToAmendment" CommandArgument="SEND_TO_AMENDMENT" ToolTip="Send design to amendment" runat="server"
-                                Text="Send to amendment" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnSendToCorrection" CommandArgument="SEND_TO_CORRECTION" ToolTip="Send design to amendment" runat="server"
-                                Text="Send to correction" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
 
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Design Detailed List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView ID="gvDesignDetails"
+                    CssClass="employee-grid"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvDesignDetails_RowCommand"
+                    OnRowDataBound="gvDesignDetails_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="Sr.No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Width="50px"
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxcenter"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Select" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkSelect" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Att.(Rev.)" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewAddAtt" CommandArgument="VIEW_ADD_ATT"
+                                    runat="server" ImageUrl="~/Images/pdficon1.png" Height="30PX" Width="30PX" ToolTip="View Additional Attachment" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" CommandArgument="VIEW_DETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon1.png" Height="30PX" Width="30PX" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField>
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnSendMail" CommandArgument="SEND_MAIL" ToolTip="Send Mail"
+                                    runat="server" ImageUrl="~/Images/NEWICONS/email05.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Status" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblStatusID" runat="server" Text='<%# Eval("STATUS_ID") %>' Visible="false" />
+                                <asp:Label ID="lblStatusName" runat="server" Text='<%# Eval("STATUS") %>' Visible="false" />
+                                <asp:Label ID="lblRecordID" runat="server" Text='<%# Eval("RECORD_ID") %>' Visible="false" />
+                                <asp:Label ID="lblDrawingID" runat="server" Text='<%# Eval("DRAWING_ID") %>' Visible="false" />
+                                <asp:Label ID="lblPMID" runat="server" Text='<%# Eval("PM_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblIsRevised" runat="server" Text='<%# Eval("IS_REVISED") %>' Visible="false" />
+
+                                <asp:Label ID="lblCategoryID" runat="server" Text='<%# Eval("CATEGORY_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblCreatedByID" runat="server" Text='<%# Eval("CREATED_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblOpenByID" runat="server" Text='<%# Eval("OPEN_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblSendToCheckingByID" runat="server" Text='<%# Eval("SENT_TO_CHECKING_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblCheckedByID" runat="server" Text='<%# Eval("CHECKED_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblClosedByID" runat="server" Text='<%# Eval("CLOSED_BY_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblSentToAmendmentByID" runat="server" Text='<%# Eval("SENT_TO_AMENDMENT_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendmentCount" runat="server" Text='<%# Eval("AMENDMENT_COUNT") %>' Visible="false" />
+                                <asp:Label ID="lblAmendmentFlag" runat="server" Text='<%# Eval("AMENDMENT_FLAG") %>' Visible="false" />
+                                <asp:Label ID="lblEditedFlag" runat="server" Text='<%# Eval("EDITED_FLAG") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedByID" runat="server" Text='<%# Eval("AMENDED_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedOpenByID" runat="server" Text='<%# Eval("AMENDED_OPEN_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedSendToCheckingByID" runat="server" Text='<%# Eval("AMENDED_SENT_TO_CHECKING_BY_ID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedCheckedByID" runat="server" Text='<%# Eval("AMENDED_CHECKED_BY_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblDesignResponsibleEnggID" runat="server" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG_ID") %>' Visible="false" />
+                                <asp:Label ID="lblDesignResponsibleEngg" runat="server" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG") %>' Visible="false" />
+
+
+                                <asp:Label ID="lblDesignResponsibleEnggEmpRecordID" runat="server" Text='<%# Eval("DESIGN_RESP_ENGG_EMP_RECORD_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblDesignCheckerID" runat="server" Text='<%# Eval("DESIGN_CHECKER_ID") %>' Visible="false" />
+                                <asp:Label ID="lblDesignChecker" runat="server" Text='<%# Eval("DESIGN_CHECKER") %>' Visible="false" />
+
+                                <asp:Label ID="lblDesignCheckerEmpRecordID" runat="server" Text='<%# Eval("DESIGN_CHECKER_EMP_RECORD_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblIsGeneratedMailSent" runat="server" Text='<%# Eval("IS_GENERATED_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsOpenMailSent" runat="server" Text='<%# Eval("IS_OPEN_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsSendToCheckingMailSent" runat="server" Text='<%# Eval("IS_SENT_TO_CHECKING_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsCheckedMailSent" runat="server" Text='<%# Eval("IS_CHECKED_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsClosedMailSent" runat="server" Text='<%# Eval("IS_CLOSED_MAIL_SENT") %>' Visible="false" />
+
+                                <asp:Label ID="lblIsSendToAmendmentMailSent" runat="server" Text='<%# Eval("IS_SENT_TO_AMENDMENT_MAIL_SENT") %>' Visible="false" />
+
+                                <asp:Label ID="lblIsAmendedMailSent" runat="server" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsAmendedOpenMailSent" runat="server" Text='<%# Eval("IS_AMENDED_OPEN_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsAmendedSendToCheckingMailSent" runat="server" Text='<%# Eval("IS_AMENDED_SENT_TO_CHECKING_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsAmendedCheckedMailSent" runat="server" Text='<%# Eval("IS_AMENDED_CHECKED_MAIL_SENT") %>' Visible="false" />
+
+                                <asp:Label ID="lblJOBUnit" runat="server" Text='<%# Eval("JOB_UNIT") %>' Visible="false" />
+                                <asp:Label ID="lblJOBUnitID" runat="server" Text='<%# Eval("JOB_UNIT_ID") %>' Visible="false" />
+                                <asp:Label ID="lblShortJOBNo" runat="server" Text='<%# Eval("SHORT_JOB_NO") %>' Visible="false" />
+
+                                <asp:Label ID="lblAdditionalAttachmentName" runat="server" Text='<%# Eval("ADDITIONAL_ATTACHMENT_NAME") %>' Visible="false" />
+
+                                <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" Height="40PX" Width="40PX" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="100px" ItemStyle-Width="100px">
+                            <ItemTemplate>
+                                <asp:Button ID="btnEdit" CommandArgument="EDIT" ToolTip="Edit design" runat="server"
+                                    Text="Edit" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="JOB No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Description">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("DESCRIPTION") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="UOM">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Quantity">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" runat="server" Text='<%# Eval("QUANTITY") %>' Width="50px"
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Reqd. Date By Project Team">
+                            <ItemTemplate>
+                                <asp:Label ID="lblReqdDateByProjectTeam" runat="server" Text='<%# Eval("REQD_DATE_BY_PROJECT_TEAM") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Category">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("CATEGORY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Planned Start Date By Design Team">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPlannedStartDateByDesignTeam" runat="server" Visible="false" Text='<%# Eval("PLANNED_START_DATE_BY_DESIGN_TEAM") %>' />
+                                <asp:TextBox ID="txtPlannedStartDateByDesignTeam" runat="server" Width="80%" Text='<%# Eval("PLANNED_START_DATE_BY_DESIGN_TEAM") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxleft" Height="26px" />
+                                <ajax:CalendarExtender ID="calendarPlannedStartDateByDesignTeam" PopupButtonID="imgbtnPlannedStartDateByDesignTeam"
+                                    runat="server" TargetControlID="txtPlannedStartDateByDesignTeam" Format="dd-MMM-yyyy">
+                                </ajax:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnPlannedStartDateByDesignTeam" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Planned Start Date By Design Team Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Planned Completion Date By Design Team">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPlannedCompletionDateByDesignTeam" runat="server" Visible="false" Text='<%# Eval("PLANNED_COMPLETION_DATE_BY_DESIGN_TEAM") %>' />
+                                <asp:TextBox ID="txtPlannedCompletionDateByDesignTeam" runat="server" Width="80%" Text='<%# Eval("PLANNED_COMPLETION_DATE_BY_DESIGN_TEAM") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxleft" Height="26px" />
+                                <ajax:CalendarExtender ID="calendarPlannedCompletionDateByDesignTeam" PopupButtonID="imgbtnPlannedCompletionDateByDesignTeam"
+                                    runat="server" TargetControlID="txtPlannedCompletionDateByDesignTeam" Format="dd-MMM-yyyy">
+                                </ajax:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnPlannedCompletionDateByDesignTeam" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Planned Completion Date By Design Team Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Drawing No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDrawingNo" runat="server" Text='<%# Eval("DRAWING_NO") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Client Drawing No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblClientDrawingNo" runat="server" Text='<%# Eval("CLIENT_DRAWING_NO") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Contractor Drawing No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblContractorDrawingNo" runat="server" Text='<%# Eval("CONTRACTOR_DRAWING_NO") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Document Link">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDocumentLink" runat="server" Text='<%# Eval("DOCUMENT_LINK") %>' Visible="true" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Drawing Revisioin Number">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtDrawingRevNo" runat="server" Text='<%# Eval("DRAWING_REV_NO") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Working Status">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtWorkingStatus" runat="server" Text='<%# Eval("WORKING_STATUS") %>' Width="300PX" TextMode="MultiLine"
+                                    Rows="2" CssClass="textboxleft" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Expected Completion Date">
+                            <ItemTemplate>
+                                <asp:Label ID="lblExpectedCompletionDate" runat="server" Visible="false" Text='<%# Eval("EXPECTED_COMPLETION_DATE") %>' />
+                                <asp:TextBox ID="txtExpectedCompletionDate" runat="server" Width="80%" Text='<%# Eval("EXPECTED_COMPLETION_DATE") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxleft" Height="26px" />
+                                <ajax:CalendarExtender ID="calendarExpectedCompletionDate" PopupButtonID="imgbtnExpectedCompletionDate"
+                                    runat="server" TargetControlID="txtExpectedCompletionDate" Format="dd-MMM-yyyy">
+                                </ajax:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnExpectedCompletionDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Expected Completion Date Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Total Hours Spent">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtTimeSpent" runat="server" Text='<%# Eval("TOTAL_HOURS_SPENT") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Responsible Design Engineer">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlResponsibleDesignEngineer" runat="server" Width="100%" Height="26px"
+                                    CssClass="textboxleft" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Drawing Link">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtDrawingLink" runat="server" Text='<%# Eval("DRAWING_LINK") %>' Width="300PX" CssClass="textboxleft" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Design Checker">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlDesignChecker" runat="server" Width="200px" Height="26px"
+                                    CssClass="textboxleft" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Remarks">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtRemarks" runat="server" Width="300PX" TextMode="MultiLine"
+                                    CssClass="textboxleft"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <%--Text='<%# Eval("REMARKS") %>' onkeyDown="javascript:preventInput(event);" --%>
+
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
+                            <ItemTemplate>
+                                <asp:Button ID="btnAddTimesheet" CommandArgument="ADD_TIMESHEET" ToolTip="Add Timesheet" runat="server"
+                                    Text="Add Timesheet" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnAssign" CommandArgument="ASSIGN" ToolTip="Assign to responsible design engineer" runat="server"
+                                    Text="Assign" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnSendToChecking" CommandArgument="SEND_TO_CHECKING" ToolTip="Design send to design checker" runat="server"
+                                    Text="Send to checking" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <asp:Button ID="btnCheck" CommandArgument="CHECK" ToolTip="Check design" runat="server"
+                                    Text="Check" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                                <%--<asp:Button ID="btnClose" CommandArgument="CLOSE" ToolTip="Close design" runat="server"
+                                    Text="Close" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" Visible="false" />--%>
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnSendToAmendment" CommandArgument="SEND_TO_AMENDMENT" ToolTip="Send design to amendment" runat="server"
+                                    Text="Send to amendment" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="200px" ItemStyle-Width="200px">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnSendToCorrection" CommandArgument="SEND_TO_CORRECTION" ToolTip="Send design to amendment" runat="server"
+                                    Text="Send to correction" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+
+            </div>
+
+        </fieldset>
 
     </div>
 
@@ -1980,7 +1988,7 @@
 
 
 
-   <%-- DESIGN DETAIL START--%>
+    <%-- DESIGN DETAIL START--%>
     <asp:Button ID="btnDesignDetails" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="mpeDesignDetails" runat="server" TargetControlID="btnDesignDetails"
         PopupControlID="pnlbtnDesignDetailsPopup" CancelControlID="imgBtnDesignDetailsPopup"
@@ -2235,7 +2243,7 @@
 
 
 
-   <%--JOB DETAIL START--%>
+    <%--JOB DETAIL START--%>
     <asp:Button ID="btnShowPopupJOBDetail" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
         PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
@@ -2315,7 +2323,7 @@
     <ajax:ModalPopupExtender ID="mpeDrawingDetail" runat="server" TargetControlID="btnShowPopupDrawingDetail"
         PopupControlID="pnlPopupDrawingDetail" CancelControlID="imgBtnCancelDrawingDetail" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupDrawingDetail" runat="server" 
+    <asp:Panel ID="pnlPopupDrawingDetail" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -2375,12 +2383,12 @@
     <%--DRAWING DETAIL END--%>
 
 
-     <%--ADD TIMESHEET START--%>
+    <%--ADD TIMESHEET START--%>
     <asp:Button ID="btnShowPopupAddTimesheet" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="mpeAddTimesheet" runat="server" TargetControlID="btnShowPopupAddTimesheet"
         PopupControlID="pnlPopupAddTimesheet" CancelControlID="imgBtnCancelAddTimesheet" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupAddTimesheet" runat="server" 
+    <asp:Panel ID="pnlPopupAddTimesheet" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Design Engg. List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="DesignEnggList.aspx.cs" Inherits="PROJECT_DMS_DesignEnggList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -38,13 +38,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Design Engineer List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Engg. Name</label>
                     <asp:TextBox ID="txtEnggName" runat="server"
@@ -54,66 +52,73 @@
                     <asp:DropDownList ID="ddlDepartment" runat="server"
                         CssClass="form-control" />
 
-                    <div class="full-width button-group">
-                        <asp:Button ID="btnSearch" CssClass="button" runat="server" Text="Search" Width="100%" OnClick="btnSearch_Click" />
-                        <asp:Button ID="btnAddNew" CssClass="button" runat="server" Text="Add New" Width="100%" OnClick="btnAddNew_Click" />
-                    </div>
                 </div>
             </fieldset>
-        </div>
-
-
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" runat="server" Text="Search" Width="100%" OnClick="btnSearch_Click" />
+                <asp:Button ID="btnAddNew" CssClass="button" runat="server" Text="Add New" Width="100%" OnClick="btnAddNew_Click" />
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvEnggList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvEnggList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="PROPERTIES" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDesignResponsibleEnggID" runat="server" Visible="false" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG_ID") %>' />
-                            <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
-                            <asp:Label ID="lblDeptartmentID" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_ID") %>' />
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Department">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDeptartment" runat="server" Visible="true" Text='<%# Eval("DEPARTMENT_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Name">
-                        <ItemTemplate>
-                            <asp:Label ID="lblName" runat="server" Visible="true" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Email">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmail" runat="server" Visible="true" Text='<%# Eval("EMAIL_ID") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
+
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Design Engineer List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvEnggList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvEnggList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="PROPERTIES" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDesignResponsibleEnggID" runat="server" Visible="false" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG_ID") %>' />
+                                <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
+                                <asp:Label ID="lblDeptartmentID" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_ID") %>' />
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Department">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDeptartment" runat="server" Visible="true" Text='<%# Eval("DEPARTMENT_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Name">
+                            <ItemTemplate>
+                                <asp:Label ID="lblName" runat="server" Visible="true" Text='<%# Eval("DESIGN_RESPONSIBLE_ENGG") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Email">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEmail" runat="server" Visible="true" Text='<%# Eval("EMAIL_ID") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>
