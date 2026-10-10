@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Export Posted BOM List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ExportPostedBOMList.aspx.cs" Inherits="MR_WORKFLOW_ExportPostedBOMList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -448,17 +448,13 @@
     </asp:ToolkitScriptManager>
 
 
-    <%--<div class="page-layout">--%>
+    <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Material Requisition:
-                    <%--<asp:Label ID="lblRecords" runat="server" Text="Records[0]" />--%>
-                </legend>
+                <legend>Post BOM List Filters:</legend>
 
-
-                <div class="form-grid form-grid-3">
-
+                <div class="form-filter-grid">
 
                     <div class="full-width">
                         <label>Select/Unselect Dates</label>
@@ -485,7 +481,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -507,7 +503,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -582,23 +578,10 @@
                         <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
                         <asp:ListItem Text="No" Value="2"></asp:ListItem>
                     </asp:DropDownList>
-
-
-                    <div class="full-width button-group">
-
-                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server"
-                            Text="Search"
-                            OnClientClick="return ValidateAllSearch();"
-                            OnClick="btnSearch_Click" />
-
-                        <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server"
-                            Text="Export"
-                            OnClick="btnExport_Click" />
-
-                    </div>
                 </div>
 
             </fieldset>
+
             <div class="full-width">
                 <div align="center">
                     <asp:Panel ID="pnlMsg" Visible="false" runat="server">
@@ -606,334 +589,353 @@
                     </asp:Panel>
                 </div>
             </div>
-        </div>
 
-        <div class="employee-grid-container">
+            <div class="full-width button-group">
 
-            <fieldset class="filter-card">
-                <legend>
-                    <asp:Label ID="lblPurchaseIndentHeaderRecords" runat="server" Text="Records[0]" />
-                </legend>
-            </fieldset>
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server"
+                    Text="Search"
+                    OnClientClick="return ValidateAllSearch();"
+                    OnClick="btnSearch_Click" />
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPurchaseIndentHeader" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvPurchaseIndentHeader_RowDataBound">
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server"
+                    Text="Export"
+                    OnClick="btnExport_Click" />
 
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="Purchase Indent/Req Number">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPurchaseIndentReqNumber" runat="server" Text='<%# Eval("Purchase Indent/Req Number") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Purchase Indent/Req Date">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPurchaseIndentReqDate" runat="server" Text='<%# Eval("Purchase Indent/Req Date") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Vendor Code">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("Vendor Code") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Document Class Code">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblDocumentClassCode" runat="server" Text='<%# Eval("Document Class Code") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Remarks">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Expected PO Date">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblExpectedPODate" runat="server" Text='<%# Eval("Expected PO Date") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+            </div>
 
         </div>
 
-        <div class="employee-grid-container">
-
-            <fieldset class="filter-card">
-                <legend>
-                    <asp:Label ID="lblPurchaseIndentUdfRecords" runat="server" Text="Records[0]" />
-                </legend>
-            </fieldset>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPurchaseIndentUdf" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvPurchaseIndentUdf_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="Purchase Indent/Req Number">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPurchaseIndentReqNumberUdf" runat="server" Text='<%# Eval("Purchase Indent/Req Number") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Purchase Indent/Req Date">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPurchaseIndentReqDateUdf" runat="server" Text='<%# Eval("Purchase Indent/Req Date") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Acceptable Vendor 1">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor1" runat="server" Text='<%# Eval("Acceptable Vendor 1") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+        <fieldset class="employee-grid-fieldset">
 
-                    <asp:TemplateField HeaderText="Acceptable Vendor 2">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor2" runat="server" Text='<%# Eval("Acceptable Vendor 2") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+            <div class="employee-grid-container">
 
-                    <asp:TemplateField HeaderText="Acceptable Vendor 3">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor3" runat="server" Text='<%# Eval("Acceptable Vendor 3") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor 4">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor4" runat="server" Text='<%# Eval("Acceptable Vendor 4") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor 5">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor5" runat="server" Text='<%# Eval("Acceptable Vendor 5") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Revision Number">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRevisionNumber" runat="server" Text='<%# Eval("Revision Number") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Budgeted Cost">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBudgetedCost" runat="server" Text='<%# Eval("Budgeted Cost") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Estimated Cost">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEstimatedCost" runat="server" Text='<%# Eval("Estimated Cost") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Cost Related Remarks">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCostRelatedRemarks" runat="server" Text='<%# Eval("Cost Related Remarks") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Pivot Group">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPivotGroup" runat="server" Text='<%# Eval("Pivot Group") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Responsible for PO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblResponsibleForPO" runat="server" Text='<%# Eval("Responsible for PO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Is TC Required?">
-                        <ItemTemplate>
-                            <asp:Label ID="lblIsTCRequired" runat="server" Text='<%# Eval("Is TC Required?") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
-        <div class="employee-grid-container">
-
-            <fieldset class="filter-card">
-                <legend>
-                    <asp:Label ID="lblPurchaseIndentDetailRecords" runat="server" Text="Records[0]" />
-                </legend>
-            </fieldset>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPurchaseIndentDetail" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvPurchaseIndentDetail_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="Purchase Indent/Req Number">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPurchaseIndentReqNumberD" runat="server" Text='<%# Eval("Purchase Indent/Req Number") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Purchase Indent/Req Date">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPurchaseIndentReqDateD" runat="server" Text='<%# Eval("Purchase Indent/Req Date") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                <fieldset class="employee-grid-fieldset">
+                    <legend>
+                        <asp:Label ID="lblPurchaseIndentHeaderRecords" runat="server" Text="Records[0]" />
+                    </legend>
 
 
-                    <asp:TemplateField HeaderText="Product Code">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProductCode" runat="server" Text='<%# Eval("Product Code") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                    <asp:GridView
+                        CssClass="employee-grid"
+                        ID="gvPurchaseIndentHeader" runat="server"
+                        AutoGenerateColumns="false" CellPadding="4"
+                        ForeColor="#333333" GridLines="Both" Width="100%"
+                        HorizontalAlign="Center"
+                        OnRowDataBound="gvPurchaseIndentHeader_RowDataBound">
 
-                    <asp:TemplateField HeaderText="Quantity">
-                        <ItemTemplate>
-                            <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                        <Columns>
 
-                    <asp:TemplateField HeaderText="Converted Quantity">
-                        <ItemTemplate>
-                            <asp:Label ID="lblConvertedQuantity" runat="server" Text='<%# Eval("Converted Quantity") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Purchase Indent/Req Number">
+                                <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="Double Quantity – Quantity">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDoubleQuantity" runat="server" Text='<%# Eval("Double Quantity - Quantity") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                    <asp:Label ID="lblPurchaseIndentReqNumber" runat="server" Text='<%# Eval("Purchase Indent/Req Number") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Product UOM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProductUOM" runat="server" Text='<%# Eval("Product UOM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Purchase Indent/Req Date">
+                                <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="Double Quantity – UOM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDoubleQuantityUOM" runat="server" Text='<%# Eval("Double Quantity - UOM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                    <asp:Label ID="lblPurchaseIndentReqDate" runat="server" Text='<%# Eval("Purchase Indent/Req Date") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Item Serial Number">
-                        <ItemTemplate>
-                            <asp:Label ID="lblItemSerialNumber" runat="server" Text='<%# Eval("Item Serial Number") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Vendor Code">
+                                <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="Additional Product Description">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAdditionalProductDescription" runat="server" Text='<%# Eval("Additional Product Description") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                    <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("Vendor Code") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Document Class Code">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDocumentClassCodeD" runat="server" Text='<%# Eval("Document Class Code") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Document Class Code">
+                                <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="Manufacturer Code">
-                        <ItemTemplate>
-                            <asp:Label ID="lblManufacturerCode" runat="server" Text='<%# Eval("Manufacturer Code") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                    <asp:Label ID="lblDocumentClassCode" runat="server" Text='<%# Eval("Document Class Code") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Bar Code Number">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBarCodeNumber" runat="server" Text='<%# Eval("Bar Code Number") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Remarks">
+                                <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="Scheme Code">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSchemeCode" runat="server" Text='<%# Eval("Scheme Code") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                    <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("Remarks") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                            <asp:TemplateField HeaderText="Expected PO Date">
+                                <ItemTemplate>
 
-        </div>
-    
-    <%--</div>--%>
+                                    <asp:Label ID="lblExpectedPODate" runat="server" Text='<%# Eval("Expected PO Date") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
+                        </Columns>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
+
+                </fieldset>
+                <br />
+
+                <fieldset class="employee-grid-fieldset">
+                    <legend>
+                        <asp:Label ID="lblPurchaseIndentUdfRecords" runat="server" Text="Records[0]" />
+                    </legend>
+
+
+                    <asp:GridView
+                        CssClass="employee-grid"
+                        ID="gvPurchaseIndentUdf" runat="server"
+                        AutoGenerateColumns="false" CellPadding="4"
+                        ForeColor="#333333" GridLines="Both" Width="100%"
+                        HorizontalAlign="Center"
+                        OnRowDataBound="gvPurchaseIndentUdf_RowDataBound">
+
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                        <Columns>
+
+                            <asp:TemplateField HeaderText="Purchase Indent/Req Number">
+                                <ItemTemplate>
+
+                                    <asp:Label ID="lblPurchaseIndentReqNumberUdf" runat="server" Text='<%# Eval("Purchase Indent/Req Number") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Purchase Indent/Req Date">
+                                <ItemTemplate>
+
+                                    <asp:Label ID="lblPurchaseIndentReqDateUdf" runat="server" Text='<%# Eval("Purchase Indent/Req Date") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+
+                            <asp:TemplateField HeaderText="Acceptable Vendor 1">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAcceptableVendor1" runat="server" Text='<%# Eval("Acceptable Vendor 1") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Acceptable Vendor 2">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAcceptableVendor2" runat="server" Text='<%# Eval("Acceptable Vendor 2") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Acceptable Vendor 3">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAcceptableVendor3" runat="server" Text='<%# Eval("Acceptable Vendor 3") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Acceptable Vendor 4">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAcceptableVendor4" runat="server" Text='<%# Eval("Acceptable Vendor 4") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Acceptable Vendor 5">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAcceptableVendor5" runat="server" Text='<%# Eval("Acceptable Vendor 5") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Revision Number">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblRevisionNumber" runat="server" Text='<%# Eval("Revision Number") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Budgeted Cost">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblBudgetedCost" runat="server" Text='<%# Eval("Budgeted Cost") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Estimated Cost">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblEstimatedCost" runat="server" Text='<%# Eval("Estimated Cost") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Cost Related Remarks">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCostRelatedRemarks" runat="server" Text='<%# Eval("Cost Related Remarks") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Pivot Group">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblPivotGroup" runat="server" Text='<%# Eval("Pivot Group") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Responsible for PO">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblResponsibleForPO" runat="server" Text='<%# Eval("Responsible for PO") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Is TC Required?">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIsTCRequired" runat="server" Text='<%# Eval("Is TC Required?") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                        </Columns>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
+
+                </fieldset>
+                <br />
+
+                <fieldset class="employee-grid-fieldset">
+                    <legend>
+                        <asp:Label ID="lblPurchaseIndentDetailRecords" runat="server" Text="Records[0]" />
+                    </legend>
+
+
+                    <asp:GridView
+                        CssClass="employee-grid"
+                        ID="gvPurchaseIndentDetail" runat="server"
+                        AutoGenerateColumns="false" CellPadding="4"
+                        ForeColor="#333333" GridLines="Both" Width="100%"
+                        HorizontalAlign="Center"
+                        OnRowDataBound="gvPurchaseIndentDetail_RowDataBound">
+
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                        <Columns>
+
+                            <asp:TemplateField HeaderText="Purchase Indent/Req Number">
+                                <ItemTemplate>
+
+                                    <asp:Label ID="lblPurchaseIndentReqNumberD" runat="server" Text='<%# Eval("Purchase Indent/Req Number") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Purchase Indent/Req Date">
+                                <ItemTemplate>
+
+                                    <asp:Label ID="lblPurchaseIndentReqDateD" runat="server" Text='<%# Eval("Purchase Indent/Req Date") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+
+                            <asp:TemplateField HeaderText="Product Code">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblProductCode" runat="server" Text='<%# Eval("Product Code") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Quantity">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Converted Quantity">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblConvertedQuantity" runat="server" Text='<%# Eval("Converted Quantity") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Double Quantity – Quantity">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblDoubleQuantity" runat="server" Text='<%# Eval("Double Quantity - Quantity") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Product UOM">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblProductUOM" runat="server" Text='<%# Eval("Product UOM") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Double Quantity – UOM">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblDoubleQuantityUOM" runat="server" Text='<%# Eval("Double Quantity - UOM") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Item Serial Number">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblItemSerialNumber" runat="server" Text='<%# Eval("Item Serial Number") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Additional Product Description">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblAdditionalProductDescription" runat="server" Text='<%# Eval("Additional Product Description") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Document Class Code">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblDocumentClassCodeD" runat="server" Text='<%# Eval("Document Class Code") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Manufacturer Code">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblManufacturerCode" runat="server" Text='<%# Eval("Manufacturer Code") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Bar Code Number">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblBarCodeNumber" runat="server" Text='<%# Eval("Bar Code Number") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Scheme Code">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblSchemeCode" runat="server" Text='<%# Eval("Scheme Code") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                        </Columns>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
+
+                </fieldset>
+            </div>
+
+        </fieldset>
+
+
+    </div>
 </asp:Content>
 
 

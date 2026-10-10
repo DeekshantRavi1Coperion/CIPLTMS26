@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Posted BOM List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="PostedBOMList.aspx.cs" Inherits="MR_WORKFLOW_PostedBOMList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -106,14 +106,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Material Requisition List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
-
+                <div class="form-filter-grid">
 
                     <div class="full-width">
                         <label>Select/Unselect Dates</label>
@@ -134,8 +131,6 @@
                             OnClick="imgBtnAddNew_Click" />
                     </div>
 
-
-
                     <label>Date Type</label>
                     <asp:DropDownList ID="ddlDateType" runat="server"
                         CssClass="form-control">
@@ -147,7 +142,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -169,7 +164,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -245,367 +240,373 @@
                         <asp:ListItem Text="No" Value="2"></asp:ListItem>
                     </asp:DropDownList>
 
-
-                    <div class="full-width button-group">
-
-                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server"
-                            Text="Search"
-                            OnClientClick="return ValidateAllSearch();"
-                            OnClick="btnSearch_Click" />
-
-                    </div>
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server"
+                    Text="Search"
+                    OnClientClick="return ValidateAllSearch();"
+                    OnClick="btnSearch_Click" />
+
             </div>
 
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPostedBomList" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvPostedBomList_RowCommand"
-                OnRowDataBound="gvPostedBomList_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="Sr No."
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPid_InPostedList" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
-                            <asp:Label ID="lblUnitFid_InPostedList" runat="server" Text='<%# Eval("UNIT_FID") %>' Visible="false" />
-                            <asp:Label ID="lblTypeFid_InPostedList" runat="server" Text='<%# Eval("TYPE_FID") %>' Visible="false" />
-                            <asp:Label ID="lblMrNo_InPostedList" runat="server" Text='<%# Eval("MR_NO") %>' Visible="false" />
-                            <asp:Label ID="lblMrDate_InPostedList" runat="server" Text='<%# Eval("MR_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblStatusFid_InPostedList" runat="server" Text='<%# Eval("STATUS_FID") %>' Visible="false" />
-                            <asp:Label ID="lblStatus_InPostedList" runat="server" Text='<%# Eval("STATUS") %>' Visible="false" />
-                            <asp:Label ID="lblBomNo_InPostedList" runat="server" Text='<%# Eval("BOM_NO") %>' Visible="false" />
-                            <asp:Label ID="lblBomDate_InPostedList" runat="server" Text='<%# Eval("BOM_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblJobNo_InPostedList" runat="server" Text='<%# Eval("JOB_NO") %>' Visible="false" />
-                            <asp:Label ID="lblDeliveryRequiredBy_InPostedList" runat="server" Text='<%# Eval("DELIVERY_REQUIRED_BY") %>' Visible="false" />
-                            <asp:Label ID="lblAcceptableVendor1_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR1") %>' Visible="false" />
-                            <asp:Label ID="lblAcceptableVendor2_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR2") %>' Visible="false" />
-                            <asp:Label ID="lblAcceptableVendor3_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR3") %>' Visible="false" />
-                            <asp:Label ID="lblAcceptableVendor4_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR4") %>' Visible="false" />
-                            <asp:Label ID="lblAcceptableVendor5_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR5") %>' Visible="false" />
-                            <asp:Label ID="lblRevisionNumber_InPostedList" runat="server" Text='<%# Eval("REVISION_NUMBER") %>' Visible="false" />
-                            <asp:Label ID="lblBudgetedCost_InPostedList" runat="server" Text='<%# Eval("BUDGETED_COST") %>' Visible="false" />
-                            <asp:Label ID="lblEstimatedCost_InPostedList" runat="server" Text='<%# Eval("ESTIMATED_COST") %>' Visible="false" />
-                            <asp:Label ID="lblCostRelatedRemarks_InPostedList" runat="server" Text='<%# Eval("COST_RELATED_REMARKS") %>' Visible="false" />
-                            <asp:Label ID="lblPivotGroupFid_InPostedList" runat="server" Text='<%# Eval("PIVOT_GROUP_FID") %>' Visible="false" />
-                            <asp:Label ID="lblResponsibleForBomFid_InPostedList" runat="server" Text='<%# Eval("RESPONSIBLE_FOR_BOM_FID") %>' Visible="false" />
-                            <asp:Label ID="lblIsTcRequired_InPostedList" runat="server" Text='<%# Eval("IS_TC_REQUIRED") %>' Visible="false" />
-                            <asp:Label ID="lblCreatedByFid_InPostedList" runat="server" Text='<%# Eval("CREATED_BY_FID") %>' Visible="false" />
-                            <asp:Label ID="lblCreatedRemarks_InPostedList" runat="server" Text='<%# Eval("CREATED_REMARKS") %>' Visible="false" />
-                            <asp:Label ID="lblApprovedByFid_InPostedList" runat="server" Text='<%# Eval("APPROVED_BY_FID") %>' Visible="false" />
-                            <asp:Label ID="lblApprovedRemarks_InPostedList" runat="server" Text='<%# Eval("APPROVED_REMARKS") %>' Visible="false" />
-                            <asp:Label ID="lblAmendmentCount_InPostedList" runat="server" Text='<%# Eval("AMENDMENT_COUNT") %>' Visible="false" />
-                            <asp:Label ID="lblAmendmentByFid_InPostedList" runat="server" Text='<%# Eval("AMENDMENT_BY_FID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendmentRemarks_InPostedList" runat="server" Text='<%# Eval("AMENDMENT_REMARKS") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedByFid_InPostedList" runat="server" Text='<%# Eval("AMENDED_BY_FID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedRemarks_InPostedList" runat="server" Text='<%# Eval("AMENDED_REMARKS") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedApprovedByFid_InPostedList" runat="server" Text='<%# Eval("AMENDED_APPROVED_BY_FID") %>' Visible="false" />
-                            <asp:Label ID="lblAmendedApprovedRemrks_InPostedList" runat="server" Text='<%# Eval("AMENDED_APPROVED_REMRKS") %>' Visible="false" />
-                            <asp:Label ID="lblIsSentForApproval_InPostedList" runat="server" Text='<%# Eval("IS_SENT_FOR_APPROVAL") %>' Visible="false" />
-                            <asp:Label ID="lblIsApprovalMailSent_InPostedList" runat="server" Text='<%# Eval("IS_APPROVAL_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsApprovedMailSent_InPostedList" runat="server" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsAmendmentMailSent_InPostedList" runat="server" Text='<%# Eval("IS_AMENDMENT_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsAmendedMailSent_InPostedList" runat="server" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblIsAmendedApprovedMailSent_InPostedList" runat="server" Text='<%# Eval("IS_AMENDED_APPROVED_MAIL_SENT") %>' Visible="false" />
-                            <asp:Label ID="lblPeID_InPostedList" runat="server" Text='<%# Eval("PE_ID") %>' Visible="false" />
-                            <asp:Label ID="lblPmID_InPostedList" runat="server" Text='<%# Eval("PM_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblSlNo" runat="server" Text='<%# Eval("SR_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Products"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <table width="10%">
-                                <tr>
-                                    <td>
-                                        <asp:ImageButton ID="btnViewSubitemDetail"
-                                            Height="50px" Width="50px"
-                                            CommandArgument="VIEW_PRODUCT_LIST"
-                                            runat="server"
-                                            ImageUrl="~/Images/viewdetails.png"
-                                            ToolTip="View Product Details" />
-                                    </td>
-                                    <td><b>[<asp:Label ID="lblProductsCountV" runat="server"
-                                        Text='<%# Eval("PRODUCT_COUNTS") %>' />]</b></td>
-                                </tr>
-                            </table>
-
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="View"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" CommandArgument="VIEW_DETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon1.png"
-                                Height="50px" Width="50px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Edit"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnEditLOT"
-                                CommandArgument="EDIT"
-                                runat="server"
-                                ImageUrl="~/Images/LOT/edit5.png"
-                                Height="50px" Width="50px"
-                                ToolTip="Edit BOM" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-
-                    <asp:TemplateField HeaderText="Status"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton
-                                ID="imgStatus"
-                                CommandArgument="STATUS"
-                                runat="server"
-                                Enabled="false"
-                                Height="50px" Width="50px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Send Mail"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:ImageButton ID="imgBtnSendMail"
-                                CommandArgument="SEND_MAIL"
-                                runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
-                                Height="50px" Width="50px"
-                                ToolTip="Send Email" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Button ID="btnApproveBOM" CommandArgument="APPROVE"
-                                ToolTip="Approve BOM" runat="server"
-                                Text="Approve"
-                                CssClass="cancelbutton"
-                                Width="100%"
-                                BorderColor="Yellow"
-                                BorderStyle="Solid"
-                                BorderWidth="2px" />
-
-
-                            <asp:Button ID="btnAmendBOM" CommandArgument="AMEND"
-                                ToolTip="Amend BOM" runat="server"
-                                Text="Amend"
-                                CssClass="cancelbutton"
-                                Width="100%"
-                                BorderColor="Yellow"
-                                BorderStyle="Solid"
-                                BorderWidth="2px" />
-
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Cancel"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:ImageButton ID="imgBtnCancel"
-                                CommandArgument="CANCEL"
-                                runat="server" ImageUrl="~/Images/Icons/REMOVE03.png"
-                                Height="50px" Width="50px"
-                                ToolTip="Cancel MR" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Type">
-                        <ItemTemplate>
-                            <asp:Label ID="lblType" runat="server"
-                                Text='<%# Eval("TYPE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Unit">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblUnit" runat="server" Text='<%# Eval("UNIT_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Mr No">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblMrNo" runat="server" Text='<%# Eval("MR_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Mr Date">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblMrDate" runat="server" Text='<%# Eval("MR_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Bom No">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblBomNo" runat="server" Text='<%# Eval("BOM_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Bom Date">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblBomDate" runat="server" Text='<%# Eval("BOM_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Job No">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblJobNo" runat="server" Text='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Delivery Required By"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblDeliveryRequiredBy" runat="server" Text='<%# Eval("DELIVERY_REQUIRED_BY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor1">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor1" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR1") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor2">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor2" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR2") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor3">
-                        <ItemTemplate>
-                            <asp:Label ID="LlblAcceptableVendor3" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR3") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor4">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor4" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR4") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Acceptable Vendor5">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAcceptableVendor5" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR5") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Revision Number">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRevisionNumber" runat="server" Text='<%# Eval("REVISION_NUMBER") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Budgeted Cost">
-                        <ItemTemplate>
-                            <asp:Label ID="lblBudgetedCost" runat="server" Text='<%# Eval("BUDGETED_COST") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Estimated Cost">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEstimatedCost" runat="server" Text='<%# Eval("ESTIMATED_COST") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Cost Related Remarks">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCostRelatedRemarks" runat="server" Text='<%# Eval("COST_RELATED_REMARKS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Pivot Group">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPivotGroup" runat="server" Text='<%# Eval("PIVOT_GROUP") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Responsible For">
-                        <ItemTemplate>
-                            <asp:Label ID="lblResponsibleForBom" runat="server" Text='<%# Eval("RESPONSIBLE_FOR_BOM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Is TC Required"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:CheckBox runat="server" ID="chkIsTCRequired" Enabled="false"></asp:CheckBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Amendment Count">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAmendmentCount" runat="server" Text='<%# Eval("AMENDMENT_COUNT") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
         </div>
 
+        <fieldset class="employee-grid-fieldset">
+            <legend>Posted BOM List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPostedBomList" runat="server"
+                    AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvPostedBomList_RowCommand"
+                    OnRowDataBound="gvPostedBomList_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="Sr No."
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblPid_InPostedList" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
+                                <asp:Label ID="lblUnitFid_InPostedList" runat="server" Text='<%# Eval("UNIT_FID") %>' Visible="false" />
+                                <asp:Label ID="lblTypeFid_InPostedList" runat="server" Text='<%# Eval("TYPE_FID") %>' Visible="false" />
+                                <asp:Label ID="lblMrNo_InPostedList" runat="server" Text='<%# Eval("MR_NO") %>' Visible="false" />
+                                <asp:Label ID="lblMrDate_InPostedList" runat="server" Text='<%# Eval("MR_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblStatusFid_InPostedList" runat="server" Text='<%# Eval("STATUS_FID") %>' Visible="false" />
+                                <asp:Label ID="lblStatus_InPostedList" runat="server" Text='<%# Eval("STATUS") %>' Visible="false" />
+                                <asp:Label ID="lblBomNo_InPostedList" runat="server" Text='<%# Eval("BOM_NO") %>' Visible="false" />
+                                <asp:Label ID="lblBomDate_InPostedList" runat="server" Text='<%# Eval("BOM_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblJobNo_InPostedList" runat="server" Text='<%# Eval("JOB_NO") %>' Visible="false" />
+                                <asp:Label ID="lblDeliveryRequiredBy_InPostedList" runat="server" Text='<%# Eval("DELIVERY_REQUIRED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblAcceptableVendor1_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR1") %>' Visible="false" />
+                                <asp:Label ID="lblAcceptableVendor2_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR2") %>' Visible="false" />
+                                <asp:Label ID="lblAcceptableVendor3_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR3") %>' Visible="false" />
+                                <asp:Label ID="lblAcceptableVendor4_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR4") %>' Visible="false" />
+                                <asp:Label ID="lblAcceptableVendor5_InPostedList" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR5") %>' Visible="false" />
+                                <asp:Label ID="lblRevisionNumber_InPostedList" runat="server" Text='<%# Eval("REVISION_NUMBER") %>' Visible="false" />
+                                <asp:Label ID="lblBudgetedCost_InPostedList" runat="server" Text='<%# Eval("BUDGETED_COST") %>' Visible="false" />
+                                <asp:Label ID="lblEstimatedCost_InPostedList" runat="server" Text='<%# Eval("ESTIMATED_COST") %>' Visible="false" />
+                                <asp:Label ID="lblCostRelatedRemarks_InPostedList" runat="server" Text='<%# Eval("COST_RELATED_REMARKS") %>' Visible="false" />
+                                <asp:Label ID="lblPivotGroupFid_InPostedList" runat="server" Text='<%# Eval("PIVOT_GROUP_FID") %>' Visible="false" />
+                                <asp:Label ID="lblResponsibleForBomFid_InPostedList" runat="server" Text='<%# Eval("RESPONSIBLE_FOR_BOM_FID") %>' Visible="false" />
+                                <asp:Label ID="lblIsTcRequired_InPostedList" runat="server" Text='<%# Eval("IS_TC_REQUIRED") %>' Visible="false" />
+                                <asp:Label ID="lblCreatedByFid_InPostedList" runat="server" Text='<%# Eval("CREATED_BY_FID") %>' Visible="false" />
+                                <asp:Label ID="lblCreatedRemarks_InPostedList" runat="server" Text='<%# Eval("CREATED_REMARKS") %>' Visible="false" />
+                                <asp:Label ID="lblApprovedByFid_InPostedList" runat="server" Text='<%# Eval("APPROVED_BY_FID") %>' Visible="false" />
+                                <asp:Label ID="lblApprovedRemarks_InPostedList" runat="server" Text='<%# Eval("APPROVED_REMARKS") %>' Visible="false" />
+                                <asp:Label ID="lblAmendmentCount_InPostedList" runat="server" Text='<%# Eval("AMENDMENT_COUNT") %>' Visible="false" />
+                                <asp:Label ID="lblAmendmentByFid_InPostedList" runat="server" Text='<%# Eval("AMENDMENT_BY_FID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendmentRemarks_InPostedList" runat="server" Text='<%# Eval("AMENDMENT_REMARKS") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedByFid_InPostedList" runat="server" Text='<%# Eval("AMENDED_BY_FID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedRemarks_InPostedList" runat="server" Text='<%# Eval("AMENDED_REMARKS") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedApprovedByFid_InPostedList" runat="server" Text='<%# Eval("AMENDED_APPROVED_BY_FID") %>' Visible="false" />
+                                <asp:Label ID="lblAmendedApprovedRemrks_InPostedList" runat="server" Text='<%# Eval("AMENDED_APPROVED_REMRKS") %>' Visible="false" />
+                                <asp:Label ID="lblIsSentForApproval_InPostedList" runat="server" Text='<%# Eval("IS_SENT_FOR_APPROVAL") %>' Visible="false" />
+                                <asp:Label ID="lblIsApprovalMailSent_InPostedList" runat="server" Text='<%# Eval("IS_APPROVAL_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsApprovedMailSent_InPostedList" runat="server" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsAmendmentMailSent_InPostedList" runat="server" Text='<%# Eval("IS_AMENDMENT_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsAmendedMailSent_InPostedList" runat="server" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblIsAmendedApprovedMailSent_InPostedList" runat="server" Text='<%# Eval("IS_AMENDED_APPROVED_MAIL_SENT") %>' Visible="false" />
+                                <asp:Label ID="lblPeID_InPostedList" runat="server" Text='<%# Eval("PE_ID") %>' Visible="false" />
+                                <asp:Label ID="lblPmID_InPostedList" runat="server" Text='<%# Eval("PM_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblSlNo" runat="server" Text='<%# Eval("SR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Products"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <table width="10%">
+                                    <tr>
+                                        <td>
+                                            <asp:ImageButton ID="btnViewSubitemDetail"
+                                                Height="50px" Width="50px"
+                                                CommandArgument="VIEW_PRODUCT_LIST"
+                                                runat="server"
+                                                ImageUrl="~/Images/viewdetails.png"
+                                                ToolTip="View Product Details" />
+                                        </td>
+                                        <td><b>[<asp:Label ID="lblProductsCountV" runat="server"
+                                            Text='<%# Eval("PRODUCT_COUNTS") %>' />]</b></td>
+                                    </tr>
+                                </table>
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="View"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" CommandArgument="VIEW_DETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    Height="50px" Width="50px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Edit"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnEditLOT"
+                                    CommandArgument="EDIT"
+                                    runat="server"
+                                    ImageUrl="~/Images/LOT/edit5.png"
+                                    Height="50px" Width="50px"
+                                    ToolTip="Edit BOM" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+
+                        <asp:TemplateField HeaderText="Status"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton
+                                    ID="imgStatus"
+                                    CommandArgument="STATUS"
+                                    runat="server"
+                                    Enabled="false"
+                                    Height="50px" Width="50px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Send Mail"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:ImageButton ID="imgBtnSendMail"
+                                    CommandArgument="SEND_MAIL"
+                                    runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
+                                    Height="50px" Width="50px"
+                                    ToolTip="Send Email" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Button ID="btnApproveBOM" CommandArgument="APPROVE"
+                                    ToolTip="Approve BOM" runat="server"
+                                    Text="Approve"
+                                    CssClass="cancelbutton"
+                                    Width="100%"
+                                    BorderColor="Yellow"
+                                    BorderStyle="Solid"
+                                    BorderWidth="2px" />
+
+
+                                <asp:Button ID="btnAmendBOM" CommandArgument="AMEND"
+                                    ToolTip="Amend BOM" runat="server"
+                                    Text="Amend"
+                                    CssClass="cancelbutton"
+                                    Width="100%"
+                                    BorderColor="Yellow"
+                                    BorderStyle="Solid"
+                                    BorderWidth="2px" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Cancel"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:ImageButton ID="imgBtnCancel"
+                                    CommandArgument="CANCEL"
+                                    runat="server" ImageUrl="~/Images/Icons/REMOVE03.png"
+                                    Height="50px" Width="50px"
+                                    ToolTip="Cancel MR" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Type">
+                            <ItemTemplate>
+                                <asp:Label ID="lblType" runat="server"
+                                    Text='<%# Eval("TYPE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Unit">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblUnit" runat="server" Text='<%# Eval("UNIT_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Mr No">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblMrNo" runat="server" Text='<%# Eval("MR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Mr Date">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblMrDate" runat="server" Text='<%# Eval("MR_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Bom No">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblBomNo" runat="server" Text='<%# Eval("BOM_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Bom Date">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblBomDate" runat="server" Text='<%# Eval("BOM_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Job No">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblJobNo" runat="server" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Delivery Required By"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblDeliveryRequiredBy" runat="server" Text='<%# Eval("DELIVERY_REQUIRED_BY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Acceptable Vendor1">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAcceptableVendor1" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR1") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Acceptable Vendor2">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAcceptableVendor2" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR2") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Acceptable Vendor3">
+                            <ItemTemplate>
+                                <asp:Label ID="LlblAcceptableVendor3" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR3") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Acceptable Vendor4">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAcceptableVendor4" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR4") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Acceptable Vendor5">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAcceptableVendor5" runat="server" Text='<%# Eval("ACCEPTABLE_VENDOR5") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Revision Number">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRevisionNumber" runat="server" Text='<%# Eval("REVISION_NUMBER") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Budgeted Cost">
+                            <ItemTemplate>
+                                <asp:Label ID="lblBudgetedCost" runat="server" Text='<%# Eval("BUDGETED_COST") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Estimated Cost">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEstimatedCost" runat="server" Text='<%# Eval("ESTIMATED_COST") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Cost Related Remarks">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCostRelatedRemarks" runat="server" Text='<%# Eval("COST_RELATED_REMARKS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Pivot Group">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPivotGroup" runat="server" Text='<%# Eval("PIVOT_GROUP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Responsible For">
+                            <ItemTemplate>
+                                <asp:Label ID="lblResponsibleForBom" runat="server" Text='<%# Eval("RESPONSIBLE_FOR_BOM") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Is TC Required"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:CheckBox runat="server" ID="chkIsTCRequired" Enabled="false"></asp:CheckBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Amendment Count">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAmendmentCount" runat="server" Text='<%# Eval("AMENDMENT_COUNT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+            </div>
+
+        </fieldset>
     </div>
 
 
@@ -618,7 +619,7 @@
     <ajax:ModalPopupExtender ID="mpeAddUpdate" runat="server" TargetControlID="btnShowPopup"
         PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlpopup" runat="server" 
+    <asp:Panel ID="pnlpopup" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -1124,7 +1125,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">
@@ -1184,11 +1185,11 @@
                         </table>
 
                         <label>Bom No.</label>
-                        <asp:TextBox ID="txtBomNoToS" runat="server" CssClass="form-control"/>
+                        <asp:TextBox ID="txtBomNoToS" runat="server" CssClass="form-control" />
 
 
                         <label>Job No.</label>
-                        <asp:TextBox ID="txtJobNoToS" runat="server" CssClass="form-control"/>
+                        <asp:TextBox ID="txtJobNoToS" runat="server" CssClass="form-control" />
 
 
                         <div class="full-width button-group">
@@ -1203,7 +1204,7 @@
             </div>
 
             <div class="employee-grid-container">
-               
+
                 <asp:GridView
                     CssClass="employee-grid"
                     ID="gvBomList" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -1304,7 +1305,7 @@
             </tr>
         </table>
 
-        <div class="page-layout">
+        <div class="popup-layout">
 
             <div class="form-grid-container">
                 <fieldset class="filter-card">

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - View PO Documents" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ViewPoDocuments.aspx.cs" Inherits="PO_ViewPoDocuments" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -383,7 +383,7 @@
             }
     </style>
 
-    
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
@@ -398,11 +398,12 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>View/Download Signed PO:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters:</legend>
+
+
+                <div class="form-filter-grid">
 
                     <div class="full-width">
                         <label>Select/Unselect Dates:</label>
@@ -436,7 +437,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -455,7 +456,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -533,87 +534,94 @@
                     OnClick="btnSearch_Click" />
             </div>
         </div>
-        <div class="employee-grid-container">
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
 
-            <asp:GridView ID="gvPOList"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvPOList_RowCommand"
-                OnRowDataBound="gvPOList_RowDataBound">
 
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
+        <fieldset class="employee-grid-fieldset">
+            <legend>View/Download Signed PO:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
-                    <asp:TemplateField HeaderText="Sl No."
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSlNo" runat="server" Text='<%# Eval("SR_NO") %>' />
-                            <asp:Label ID="lblPID" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
-                            <asp:Label ID="lblPoFID" runat="server" Text='<%# Eval("PO_FID") %>' Visible="false" />
-                            <asp:Label ID="lblDocumentPID" runat="server" Text='<%# Eval("D_PID") %>' Visible="false" />
-                            <asp:Label ID="lblUnitID" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
+            <div class="employee-grid-container">
 
-                            <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
-                            <asp:Label ID="lblPoNo" runat="server" Text='<%# Eval("PO_NO") %>' Visible="false" />
-                            <asp:Label ID="lblMRNo" runat="server" Text='<%# Eval("MR_NO") %>' Visible="false" />
-                            <asp:Label ID="lblPoDate" runat="server" Text='<%# Eval("PO_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblJobNo" runat="server" Text='<%# Eval("JOB_NO") %>' Visible="false" />
-                            <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VENDOR_NAME") %>' Visible="false" />
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                            <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT1_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                <asp:GridView ID="gvPOList"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvPOList_RowCommand"
+                    OnRowDataBound="gvPOList_RowDataBound">
 
-                    <asp:TemplateField HeaderText="Zoom" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
 
-                            <table width="10%" id="tblViewDetail" runat="server">
-                                <tr>
-                                    <td>
-                                        <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px"
-                                            CommandArgument="ViewDETAIL"
-                                            runat="server" ImageUrl="~/Images/viewdetails.png"
-                                            ToolTip="View Details" />
-                                    </td>
-                                    <td><b>[<asp:Label ID="lblDocumentsCount" runat="server" Text='<%# Eval("DOCUMENTS_COUNT") %>' />]</b></td>
-                                </tr>
-                            </table>
+                        <asp:TemplateField HeaderText="Sl No."
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSlNo" runat="server" Text='<%# Eval("SR_NO") %>' />
+                                <asp:Label ID="lblPID" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
+                                <asp:Label ID="lblPoFID" runat="server" Text='<%# Eval("PO_FID") %>' Visible="false" />
+                                <asp:Label ID="lblDocumentPID" runat="server" Text='<%# Eval("D_PID") %>' Visible="false" />
+                                <asp:Label ID="lblUnitID" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblPoNo" runat="server" Text='<%# Eval("PO_NO") %>' Visible="false" />
+                                <asp:Label ID="lblMRNo" runat="server" Text='<%# Eval("MR_NO") %>' Visible="false" />
+                                <asp:Label ID="lblPoDate" runat="server" Text='<%# Eval("PO_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblJobNo" runat="server" Text='<%# Eval("JOB_NO") %>' Visible="false" />
+                                <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VENDOR_NAME") %>' Visible="false" />
 
-                    <asp:TemplateField HeaderText="Doc."
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnAttachment1"
-                                Height="30px"
-                                Width="30px"
-                                CommandArgument="ViewATTACHMENT1"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT1_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <%--<asp:TemplateField
+                        <asp:TemplateField HeaderText="Zoom" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <table width="10%" id="tblViewDetail" runat="server">
+                                    <tr>
+                                        <td>
+                                            <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px"
+                                                CommandArgument="ViewDETAIL"
+                                                runat="server" ImageUrl="~/Images/viewdetails.png"
+                                                ToolTip="View Details" />
+                                        </td>
+                                        <td><b>[<asp:Label ID="lblDocumentsCount" runat="server" Text='<%# Eval("DOCUMENTS_COUNT") %>' />]</b></td>
+                                    </tr>
+                                </table>
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Doc."
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnAttachment1"
+                                    Height="30px"
+                                    Width="30px"
+                                    CommandArgument="ViewATTACHMENT1"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--<asp:TemplateField
                                         HeaderText="Add"
                                         HeaderStyle-HorizontalAlign="Center"
                                         ItemStyle-HorizontalAlign="Center">
@@ -628,44 +636,46 @@
                                         </itemtemplate>
                                     </asp:TemplateField>--%>
 
-                    <asp:TemplateField
-                        HeaderText="Download"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnDownloadAllDocuments"
-                                CommandArgument="DOWNLOAD_ALL_DOCUMENTS"
-                                runat="server"
-                                ImageUrl="~/Images/Download/download3.png"
-                                Height="35px"
-                                Width="35px"
-                                ToolTip="Download All Documents" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField
+                            HeaderText="Download"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnDownloadAllDocuments"
+                                    CommandArgument="DOWNLOAD_ALL_DOCUMENTS"
+                                    runat="server"
+                                    ImageUrl="~/Images/Download/download3.png"
+                                    Height="35px"
+                                    Width="35px"
+                                    ToolTip="Download All Documents" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-                    <asp:BoundField DataField="PO_NO" HeaderText="Po No" />
-                    <asp:BoundField DataField="MR_NO" HeaderText="MR No" />
-                    <asp:BoundField DataField="PO_DATE" HeaderText="Po Date" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="Job No" />
-                    <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
-                    <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
-                    <%--<asp:BoundField DataField="DOCUMENTS_COUNT" HeaderText="Counts" />--%>
-                    <asp:BoundField DataField="ATTACHMENT1_NAME" HeaderText="Default Attachment Name" />
-                    <asp:BoundField DataField="ATTACHMENT1_ON" HeaderText="Attached On" />
-                    <asp:BoundField DataField="ATTACHMENT1_BY" HeaderText="Attached By" />
-                    <asp:BoundField DataField="CHECKED_BY" HeaderText="Checked By" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="Po No" />
+                        <asp:BoundField DataField="MR_NO" HeaderText="MR No" />
+                        <asp:BoundField DataField="PO_DATE" HeaderText="Po Date" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="Job No" />
+                        <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
+                        <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
+                        <%--<asp:BoundField DataField="DOCUMENTS_COUNT" HeaderText="Counts" />--%>
+                        <asp:BoundField DataField="ATTACHMENT1_NAME" HeaderText="Default Attachment Name" />
+                        <asp:BoundField DataField="ATTACHMENT1_ON" HeaderText="Attached On" />
+                        <asp:BoundField DataField="ATTACHMENT1_BY" HeaderText="Attached By" />
+                        <asp:BoundField DataField="CHECKED_BY" HeaderText="Checked By" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
+            </div>
+
+        </fieldset>
 
     </div>
 

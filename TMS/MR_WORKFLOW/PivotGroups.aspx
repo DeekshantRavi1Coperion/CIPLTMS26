@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Pivot Groups" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="PivotGroups.aspx.cs" Inherits="MR_WORKFLOW_PivotGroups" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -151,13 +151,12 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Material Requisition List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                <legend>Filters:
                 </legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Code</label>
                     <asp:TextBox
@@ -176,84 +175,91 @@
                         ID="txtDescription"
                         runat="server"
                         CssClass="form-control"></asp:TextBox>
-
-                    <div class="full-width button-group">
-
-                        <asp:Button ID="btnSearch"
-                            CssClass="button"
-                            runat="server"
-                            Width="100%"
-                            Text="Search"
-                            OnClick="btnSearch_Click" />
-
-                        <asp:Button ID="btnCreateNew"
-                            CssClass="button"
-                            runat="server"
-                            Width="100%"
-                            Text="Add New Pivot Group"
-                            OnClick="btnCreateNew_Click" />
-
-                    </div>
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+
+                <asp:Button ID="btnSearch"
+                    CssClass="button"
+                    runat="server"
+                    Width="100%"
+                    Text="Search"
+                    OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnCreateNew"
+                    CssClass="button"
+                    runat="server"
+                    Width="100%"
+                    Text="Add New Pivot Group"
+                    OnClick="btnCreateNew_Click" />
+
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Pivot Groups:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPivotGroup" runat="server"
+                    AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvPivotGroup_RowCommand"
+                    OnRowDataBound="gvPivotGroup_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="Edit"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblPid" runat="server" Visible="false" Text='<%# Eval("PID") %>'></asp:Label>
+                                <asp:Label ID="lblCode" runat="server" Visible="false" Text='<%# Eval("CODE") %>'></asp:Label>
+                                <asp:Label ID="lblName" runat="server" Visible="false" Text='<%# Eval("NAME") %>'></asp:Label>
+                                <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
+                                <asp:Label ID="lblPivotGroup" runat="server" Visible="false" Text='<%# Eval("PIVOT_GROUP") %>'></asp:Label>
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Update ticket" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="CODE" HeaderText="Code"></asp:BoundField>
+                        <asp:BoundField DataField="NAME" HeaderText="Name"></asp:BoundField>
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description"></asp:BoundField>
+                        <asp:BoundField DataField="PIVOT_GROUP" HeaderText="Pivot Group"></asp:BoundField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPivotGroup" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvPivotGroup_RowCommand"
-                OnRowDataBound="gvPivotGroup_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="Edit"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPid" runat="server" Visible="false" Text='<%# Eval("PID") %>'></asp:Label>
-                            <asp:Label ID="lblCode" runat="server" Visible="false" Text='<%# Eval("CODE") %>'></asp:Label>
-                            <asp:Label ID="lblName" runat="server" Visible="false" Text='<%# Eval("NAME") %>'></asp:Label>
-                            <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
-                            <asp:Label ID="lblPivotGroup" runat="server" Visible="false" Text='<%# Eval("PIVOT_GROUP") %>'></asp:Label>
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Update ticket" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="CODE" HeaderText="Code"></asp:BoundField>
-                    <asp:BoundField DataField="NAME" HeaderText="Name"></asp:BoundField>
-                    <asp:BoundField DataField="DESCRIPTION" HeaderText="Description"></asp:BoundField>
-                    <asp:BoundField DataField="PIVOT_GROUP" HeaderText="Pivot Group"></asp:BoundField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -280,7 +286,7 @@
                 <legend>Pivot Group</legend>
 
                 <div class="form-grid form-grid-2">
-                    
+
                     <label>Code</label>
                     <asp:TextBox ID="txtCodeToU"
                         runat="server"
@@ -316,7 +322,7 @@
                 </asp:Panel>
             </div>
         </div>
-        
+
     </asp:Panel>
 
     <%-- </ContentTemplate>
