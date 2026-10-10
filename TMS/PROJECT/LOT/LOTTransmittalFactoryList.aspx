@@ -1,5 +1,7 @@
-<%@ Page Title="CIPLTMS-Transmittal To Factory List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    EnableViewState="true" CodeFile="LOTTransmittalFactoryList.aspx.cs" Inherits="PROJECT_LOT_LOTTransmittalFactoryList" %>
+<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#" 
+    MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    EnableViewState="true" CodeFile="LOTTransmittalFactoryList.aspx.cs" 
+    Inherits="PROJECT_LOT_LOTTransmittalFactoryList" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
     Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
@@ -2113,18 +2115,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>LOT List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>LOT Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -2143,7 +2143,7 @@
                     <label>LOT End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:80%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -2202,287 +2202,293 @@
                         </tr>
                     </table>
 
-                    <div class="full-width button-group">
-
-                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                            OnClick="btnSearch_Click" OnClientClick="return ValidateAllSearch();" />
-
-                    </div>
                 </div>
             </fieldset>
+
+            <div class="full-width button-group">
+
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" OnClientClick="return ValidateAllSearch();" />
+
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+        <fieldset class="employee-grid-fieldset">
+            <legend>LOT List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvLOTTFList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" PageSize="10" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvLOTTFList_RowCommand" OnRowDataBound="gvLOTTFList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="Subitem" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                            <table width="10%">
-                                <tr>
-                                    <td>
-                                        <asp:ImageButton ID="btnViewSubitemDetail" Height="20px" Width="20px" CommandArgument="ViewSubitemDETAIL"
-                                            runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" /></td>
-                                    <td><b>[<asp:Label ID="lblSubitemsCountV" runat="server" />]</b></td>
-                                </tr>
-                            </table>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvLOTTFList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="10" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvLOTTFList_RowCommand" OnRowDataBound="gvLOTTFList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Subitem" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <table width="10%">
+                                    <tr>
+                                        <td>
+                                            <asp:ImageButton ID="btnViewSubitemDetail" Height="20px" Width="20px" CommandArgument="ViewSubitemDETAIL"
+                                                runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" /></td>
+                                        <td><b>[<asp:Label ID="lblSubitemsCountV" runat="server" />]</b></td>
+                                    </tr>
+                                </table>
 
-
-                    <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View LOT Detail in PDF" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Additional_Att." HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT1_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment1" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT1"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Standard_Drg." HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblStandardDrawing" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_NAME") %>' />
-                            <asp:Label ID="lblStandardDrawingRemarks" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_SAVED_REMARKS") %>' />
-
-                            <asp:ImageButton ID="imgBtnViewStandardDrawing" Height="20px" Width="20px" CommandArgument="ViewSTANDARDDRAWING"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View LOT Detail in PDF" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Att.2" ItemStyle-HorizontalAlign="Center" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment2" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT2_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment2" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT2"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Additional_Att." HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT1_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment1" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT1"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Standard_Drg." HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblStandardDrawing" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_NAME") %>' />
+                                <asp:Label ID="lblStandardDrawingRemarks" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_SAVED_REMARKS") %>' />
+
+                                <asp:ImageButton ID="imgBtnViewStandardDrawing" Height="20px" Width="20px" CommandArgument="ViewSTANDARDDRAWING"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Att.3" ItemStyle-HorizontalAlign="Center" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment3" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT3_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment3" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT3"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Att.2" ItemStyle-HorizontalAlign="Center" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment2" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT2_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment2" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT2"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Att.4" ItemStyle-HorizontalAlign="Center" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment4" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT4_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment4" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT4"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Att.3" ItemStyle-HorizontalAlign="Center" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment3" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT3_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment3" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT3"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <%-- <asp:TemplateField HeaderText="View_Client_App._Drg." ItemStyle-HorizontalAlign="Center">
+                        <asp:TemplateField HeaderText="Att.4" ItemStyle-HorizontalAlign="Center" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment4" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT4_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment4" Height="20px" Width="20px" CommandArgument="ViewATTACHMENT4"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <%-- <asp:TemplateField HeaderText="View_Client_App._Drg." ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
                                 
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:TemplateField HeaderText="Client_App._Drg._1" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnAddClientApprovedDrawing1"
-                                CommandArgument="ADD_CLIENT_APPROVED_DRAWING1"
-                                runat="server"
-                                ImageUrl="~/Images/Icons/add01.png"
-                                Height="35px"
-                                Width="35px"
-                                ToolTip="Add Client Approved Drawing 1" />
+                        <asp:TemplateField HeaderText="Client_App._Drg._1" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnAddClientApprovedDrawing1"
+                                    CommandArgument="ADD_CLIENT_APPROVED_DRAWING1"
+                                    runat="server"
+                                    ImageUrl="~/Images/Icons/add01.png"
+                                    Height="35px"
+                                    Width="35px"
+                                    ToolTip="Add Client Approved Drawing 1" />
 
-                            <asp:ImageButton ID="imgBtnViewClientApprovedDrg1"
-                                Height="30px"
-                                Width="30px"
-                                CommandArgument="ViewClientApprovedDrg1"
-                                ImageUrl="~/Images/pdficon3.png"
-                                ToolTip="View client approved drawing 1"
-                                runat="server"
-                                Visible="false" />
+                                <asp:ImageButton ID="imgBtnViewClientApprovedDrg1"
+                                    Height="30px"
+                                    Width="30px"
+                                    CommandArgument="ViewClientApprovedDrg1"
+                                    ImageUrl="~/Images/pdficon3.png"
+                                    ToolTip="View client approved drawing 1"
+                                    runat="server"
+                                    Visible="false" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Client_App._Drg._2" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnAddClientApprovedDrawing2"
-                                CommandArgument="ADD_CLIENT_APPROVED_DRAWING2"
-                                runat="server"
-                                ImageUrl="~/Images/Icons/add01.png"
-                                Height="35px"
-                                Width="35px"
-                                ToolTip="Add Client Approved Drawing 2" />
+                        <asp:TemplateField HeaderText="Client_App._Drg._2" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnAddClientApprovedDrawing2"
+                                    CommandArgument="ADD_CLIENT_APPROVED_DRAWING2"
+                                    runat="server"
+                                    ImageUrl="~/Images/Icons/add01.png"
+                                    Height="35px"
+                                    Width="35px"
+                                    ToolTip="Add Client Approved Drawing 2" />
 
-                            <asp:ImageButton ID="imgBtnViewClientApprovedDrg2"
-                                Height="30px"
-                                Width="30px"
-                                CommandArgument="ViewClientApprovedDrg2"
-                                ImageUrl="~/Images/pdficon3.png"
-                                ToolTip="View client approved drawing 2"
-                                runat="server"
-                                Visible="false" />
+                                <asp:ImageButton ID="imgBtnViewClientApprovedDrg2"
+                                    Height="30px"
+                                    Width="30px"
+                                    CommandArgument="ViewClientApprovedDrg2"
+                                    ImageUrl="~/Images/pdficon3.png"
+                                    ToolTip="View client approved drawing 2"
+                                    runat="server"
+                                    Visible="false" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Client_App._Drg._3" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnAddClientApprovedDrawing3"
-                                CommandArgument="ADD_CLIENT_APPROVED_DRAWING3"
-                                runat="server"
-                                ImageUrl="~/Images/Icons/add01.png"
-                                Height="35px"
-                                Width="35px"
-                                ToolTip="Add Client Approved Drawing 3" />
+                        <asp:TemplateField HeaderText="Client_App._Drg._3" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnAddClientApprovedDrawing3"
+                                    CommandArgument="ADD_CLIENT_APPROVED_DRAWING3"
+                                    runat="server"
+                                    ImageUrl="~/Images/Icons/add01.png"
+                                    Height="35px"
+                                    Width="35px"
+                                    ToolTip="Add Client Approved Drawing 3" />
 
-                            <asp:ImageButton ID="imgBtnViewClientApprovedDrg3"
-                                Height="30px"
-                                Width="30px"
-                                CommandArgument="ViewClientApprovedDrg3"
-                                ImageUrl="~/Images/pdficon3.png"
-                                ToolTip="View client approved drawing 3"
-                                runat="server"
-                                Visible="false" />
+                                <asp:ImageButton ID="imgBtnViewClientApprovedDrg3"
+                                    Height="30px"
+                                    Width="30px"
+                                    CommandArgument="ViewClientApprovedDrg3"
+                                    ImageUrl="~/Images/pdficon3.png"
+                                    ToolTip="View client approved drawing 3"
+                                    runat="server"
+                                    Visible="false" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnEditLOT" CommandArgument="EDIT" runat="server" ImageUrl="~/Images/LOT/edit5.png"
-                                Height="35px" Width="35px" ToolTip="Edit LOT" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnEditLOT" CommandArgument="EDIT" runat="server" ImageUrl="~/Images/LOT/edit5.png"
+                                    Height="35px" Width="35px" ToolTip="Edit LOT" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Send_Mail" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <%--<asp:ImageButton ID="imgbtnSendMail" CommandArgument="SEND_MAIL" runat="server" ImageUrl="~/Images/NEWICONS/email05.png" 
+                        <asp:TemplateField HeaderText="Send_Mail" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <%--<asp:ImageButton ID="imgbtnSendMail" CommandArgument="SEND_MAIL" runat="server" ImageUrl="~/Images/NEWICONS/email05.png" 
                                     Height="35px" Width="35px" ToolTip="Send mail"/>--%>
 
-                            <asp:ImageButton ID="imgBtnSendClientApprovedDrawingMail1"
-                                CommandArgument="SEND_CLIENT_APPROVED_DRAWING_MAIL1"
-                                runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
-                                Height="35px" Width="35px" ToolTip="Edit" Visible="false" />
+                                <asp:ImageButton ID="imgBtnSendClientApprovedDrawingMail1"
+                                    CommandArgument="SEND_CLIENT_APPROVED_DRAWING_MAIL1"
+                                    runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
+                                    Height="35px" Width="35px" ToolTip="Edit" Visible="false" />
 
 
-                            <asp:ImageButton ID="imgBtnSendClientApprovedDrawingMail2"
-                                CommandArgument="SEND_CLIENT_APPROVED_DRAWING_MAIL2"
-                                runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
-                                Height="35px" Width="35px" ToolTip="Edit" Visible="false" />
+                                <asp:ImageButton ID="imgBtnSendClientApprovedDrawingMail2"
+                                    CommandArgument="SEND_CLIENT_APPROVED_DRAWING_MAIL2"
+                                    runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
+                                    Height="35px" Width="35px" ToolTip="Edit" Visible="false" />
 
-                            <asp:ImageButton ID="imgBtnSendClientApprovedDrawingMail3"
-                                CommandArgument="SEND_CLIENT_APPROVED_DRAWING_MAIL3"
-                                runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
-                                Height="35px" Width="35px" ToolTip="Edit" Visible="false" />
+                                <asp:ImageButton ID="imgBtnSendClientApprovedDrawingMail3"
+                                    CommandArgument="SEND_CLIENT_APPROVED_DRAWING_MAIL3"
+                                    runat="server" ImageUrl="~/Images/NEWICONS/email05.png"
+                                    Height="35px" Width="35px" ToolTip="Edit" Visible="false" />
 
-                            <asp:Button ID="btnSendApprovalMail" CommandArgument="SEND_APPROVAL_MAIL" ToolTip="Send Approval Mail" runat="server"
-                                Text="Send Approval Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnSendApprovalMail" CommandArgument="SEND_APPROVAL_MAIL" ToolTip="Send Approval Mail" runat="server"
+                                    Text="Send Approval Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnSendToIntlInspSendMail" CommandArgument="SEND_FITUP_INSP_MAIL" ToolTip="Send Fitup Insp. Mail" runat="server"
-                                Text="Send Fitup Insp. Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnSendToIntlInspSendMail" CommandArgument="SEND_FITUP_INSP_MAIL" ToolTip="Send Fitup Insp. Mail" runat="server"
+                                    Text="Send Fitup Insp. Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnSendToFinalInspSendMail" CommandArgument="SEND_TO_FINAL_INSP_MAIL" ToolTip="Send Final Insp. Mail" runat="server"
-                                Text="Send Final Insp. Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnSendToFinalInspSendMail" CommandArgument="SEND_TO_FINAL_INSP_MAIL" ToolTip="Send Final Insp. Mail" runat="server"
+                                    Text="Send Final Insp. Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnSendToReworkSendMail" CommandArgument="SEND_REWORK_MAIL" ToolTip="Send Rework Mail" runat="server"
-                                Text="Send Rework Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnSendToReworkSendMail" CommandArgument="SEND_REWORK_MAIL" ToolTip="Send Rework Mail" runat="server"
+                                    Text="Send Rework Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnAcceptItemsSendMail" CommandArgument="SEND_ACCEPT_ITEMS_MAIL" ToolTip="Send Accept Item(s) Mail" runat="server"
-                                Text="Send Accept Item(s) Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnAcceptItemsSendMail" CommandArgument="SEND_ACCEPT_ITEMS_MAIL" ToolTip="Send Accept Item(s) Mail" runat="server"
+                                    Text="Send Accept Item(s) Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnNotAcceptItemsSendMail" CommandArgument="SEND_NOT_ACCEPT_ITEMS_MAIL" ToolTip="Send Not Accept Item(s) Mail" runat="server"
-                                Text="Send Not Accept Item(s) Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnNotAcceptItemsSendMail" CommandArgument="SEND_NOT_ACCEPT_ITEMS_MAIL" ToolTip="Send Not Accept Item(s) Mail" runat="server"
+                                    Text="Send Not Accept Item(s) Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnFinalIsnpItemsSendMail" CommandArgument="SEND_FINAL_INSP_ITEMS_MAIL" ToolTip="Send Final Insp. Item(s) Mail" runat="server"
-                                Text="Send Final Insp. Item(s) Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnFinalIsnpItemsSendMail" CommandArgument="SEND_FINAL_INSP_ITEMS_MAIL" ToolTip="Send Final Insp. Item(s) Mail" runat="server"
+                                    Text="Send Final Insp. Item(s) Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Status" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Width="400px" ItemStyle-Width="200px">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtStatus" runat="server" Width="120px" Enabled="false" CssClass="textboxtstatustext"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Width="400px" ItemStyle-Width="200px">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtStatus" runat="server" Width="120px" Enabled="false" CssClass="textboxtstatustext"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="500px" ItemStyle-Width="500px">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="500px" ItemStyle-Width="500px">
+                            <ItemTemplate>
 
-                            <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
-                            <asp:Label ID="lblTFNo" runat="server" Visible="false" Text='<%# Eval("TF_NO") %>' />
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblUnitName" runat="server" Visible="false" Text='<%# Eval("UNIT_NAME") %>' />
-                            <asp:Label ID="lblLOTDate" runat="server" Visible="false" Text='<%# Eval("DATE") %>' />
-                            <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
-                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                            <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                            <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
-                            <asp:Label ID="lblItemName" runat="server" Visible="false" Text='<%# Eval("ITEM_NAME") %>' />
-                            <asp:Label ID="lblImpNotes" runat="server" Visible="false" Text='<%# Eval("IMP_NOTES") %>' />
+                                <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
+                                <asp:Label ID="lblTFNo" runat="server" Visible="false" Text='<%# Eval("TF_NO") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblUnitName" runat="server" Visible="false" Text='<%# Eval("UNIT_NAME") %>' />
+                                <asp:Label ID="lblLOTDate" runat="server" Visible="false" Text='<%# Eval("DATE") %>' />
+                                <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
+                                <asp:Label ID="lblItemName" runat="server" Visible="false" Text='<%# Eval("ITEM_NAME") %>' />
+                                <asp:Label ID="lblImpNotes" runat="server" Visible="false" Text='<%# Eval("IMP_NOTES") %>' />
 
-                            <asp:Label ID="lblSubitemCounts" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID_COUNTS") %>' />
-                            <asp:Label ID="lblAmendmentCounts" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_COUNT") %>' />
-                            <asp:Label ID="lblAmendedRemarks" runat="server" Visible="false" Text='<%# Eval("AMENDED_REMARKS") %>' />
+                                <asp:Label ID="lblSubitemCounts" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID_COUNTS") %>' />
+                                <asp:Label ID="lblAmendmentCounts" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_COUNT") %>' />
+                                <asp:Label ID="lblAmendedRemarks" runat="server" Visible="false" Text='<%# Eval("AMENDED_REMARKS") %>' />
 
-                            <asp:Label ID="lblJobPEID" runat="server" Visible="false" Text='<%# Eval("PE_ID") %>' />
-                            <asp:Label ID="lblJobPMID" runat="server" Visible="false" Text='<%# Eval("PM_ID") %>' />
-                            <asp:Label ID="lblcreatedByID" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
-
-
-                            <asp:Label ID="lblFirstQualityPersonID" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON_ID") %>' />
-                            <asp:Label ID="lblSecondQualityPersonID" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON_ID") %>' />
-
-                            <asp:Label ID="lblFirstQualityPerson" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON") %>' />
-                            <asp:Label ID="lblSecondQualityPerson" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON") %>' />
-
-                            <asp:Label ID="lblIsSentForApproval" runat="server" Visible="false" Text='<%# Eval("IS_SENT_FOR_APPROVAL") %>' />
-                            <asp:Label ID="lblIsAmendedSentForApproval" runat="server" Visible="false" Text='<%# Eval("IS_AMENDED_SENT_FOR_APPROVAL") %>' />
-
-                            <asp:Label ID="lblClientApprovedDrawingRemarks" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING_REMARKS") %>' />
-
-                            <asp:Label ID="lblClientApprovedDrawingName1" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING_NAME") %>' />
-                            <asp:Label ID="lblClientApprovedDrawingName2" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING2_NAME") %>' />
-                            <asp:Label ID="lblClientApprovedDrawingName3" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING3_NAME") %>' />
-
-                            <asp:Label ID="lblClientApprovedDrawingSavedBy1" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING_SAVED_BY") %>' />
-                            <asp:Label ID="lblClientApprovedDrawingSavedBy2" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING2_SAVED_BY") %>' />
-                            <asp:Label ID="lblClientApprovedDrawingSavedBy3" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING3_SAVED_BY") %>' />
+                                <asp:Label ID="lblJobPEID" runat="server" Visible="false" Text='<%# Eval("PE_ID") %>' />
+                                <asp:Label ID="lblJobPMID" runat="server" Visible="false" Text='<%# Eval("PM_ID") %>' />
+                                <asp:Label ID="lblcreatedByID" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
 
 
-                            <asp:Label ID="lblIsClientApprovedDrawingMailSent1" runat="server" Visible="false" Text='<%# Eval("IS_CLIENT_APPROVED_DRAWING_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsClientApprovedDrawingMailSent2" runat="server" Visible="false" Text='<%# Eval("IS_CLIENT_APPROVED_DRAWING2_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsClientApprovedDrawingMailSent3" runat="server" Visible="false" Text='<%# Eval("IS_CLIENT_APPROVED_DRAWING3_MAIL_SENT") %>' />
+                                <asp:Label ID="lblFirstQualityPersonID" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON_ID") %>' />
+                                <asp:Label ID="lblSecondQualityPersonID" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON_ID") %>' />
+
+                                <asp:Label ID="lblFirstQualityPerson" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON") %>' />
+                                <asp:Label ID="lblSecondQualityPerson" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON") %>' />
+
+                                <asp:Label ID="lblIsSentForApproval" runat="server" Visible="false" Text='<%# Eval("IS_SENT_FOR_APPROVAL") %>' />
+                                <asp:Label ID="lblIsAmendedSentForApproval" runat="server" Visible="false" Text='<%# Eval("IS_AMENDED_SENT_FOR_APPROVAL") %>' />
+
+                                <asp:Label ID="lblClientApprovedDrawingRemarks" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING_REMARKS") %>' />
+
+                                <asp:Label ID="lblClientApprovedDrawingName1" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING_NAME") %>' />
+                                <asp:Label ID="lblClientApprovedDrawingName2" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING2_NAME") %>' />
+                                <asp:Label ID="lblClientApprovedDrawingName3" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING3_NAME") %>' />
+
+                                <asp:Label ID="lblClientApprovedDrawingSavedBy1" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING_SAVED_BY") %>' />
+                                <asp:Label ID="lblClientApprovedDrawingSavedBy2" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING2_SAVED_BY") %>' />
+                                <asp:Label ID="lblClientApprovedDrawingSavedBy3" runat="server" Visible="false" Text='<%# Eval("CLIENT_APPROVED_DRAWING3_SAVED_BY") %>' />
 
 
-                            <asp:Label ID="lblIsTransferred" runat="server" Visible="false" Text='<%# Eval("IS_TRANSFERRED") %>' />
-                            <asp:Label ID="lblOldTransferredLOTTFId" runat="server" Visible="false" Text='<%# Eval("TRANSFERRED_LOT_TF_ID") %>' />
-                            <asp:Label ID="lblOldTransferredLOTTFCreatedBy" runat="server" Visible="false" Text='<%# Eval("OLD_TRANSFERRED_LOT_CREATED_BY") %>' />
+                                <asp:Label ID="lblIsClientApprovedDrawingMailSent1" runat="server" Visible="false" Text='<%# Eval("IS_CLIENT_APPROVED_DRAWING_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsClientApprovedDrawingMailSent2" runat="server" Visible="false" Text='<%# Eval("IS_CLIENT_APPROVED_DRAWING2_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsClientApprovedDrawingMailSent3" runat="server" Visible="false" Text='<%# Eval("IS_CLIENT_APPROVED_DRAWING3_MAIL_SENT") %>' />
 
 
-                            <%--<asp:Label ID="lblIsApprovalMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVAL_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsTransferred" runat="server" Visible="false" Text='<%# Eval("IS_TRANSFERRED") %>' />
+                                <asp:Label ID="lblOldTransferredLOTTFId" runat="server" Visible="false" Text='<%# Eval("TRANSFERRED_LOT_TF_ID") %>' />
+                                <asp:Label ID="lblOldTransferredLOTTFCreatedBy" runat="server" Visible="false" Text='<%# Eval("OLD_TRANSFERRED_LOT_CREATED_BY") %>' />
+
+
+                                <%--<asp:Label ID="lblIsApprovalMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVAL_MAIL_SENT") %>' />
                                 <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
                                 <asp:Label ID="lblIsPlanningAcceptedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PLANNING_ACCEPTED_MAIL_SENT") %>' />
                                 <asp:Label ID="lblIsForwardedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_FORWARDED_MAIL_SENT") %>' />
@@ -2508,65 +2514,67 @@
                                 <asp:Label ID="lblIsPartialCompletedMailSent" runat="server" Visible="false" Text='<%# Eval("PARTIAL_IS_COMPLETED_MAIL_SENT") %>' />  --%>
 
 
-                            <%--<asp:Button ID="btnApprove" CommandArgument="APPROVE" ToolTip="Approve LOT Transmittal to Factory" runat="server"
+                                <%--<asp:Button ID="btnApprove" CommandArgument="APPROVE" ToolTip="Approve LOT Transmittal to Factory" runat="server"
                                     Text="Approve" CssClass="cancelbutton" Width="32%" Font-Size="Small" />--%>
 
-                            <asp:Button ID="btnApproveLOT" CommandArgument="APPROVE" ToolTip="Approve/Accept LOT transmittal to factory" runat="server"
-                                Text="Approve" CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnApproveLOT" CommandArgument="APPROVE" ToolTip="Approve/Accept LOT transmittal to factory" runat="server"
+                                    Text="Approve" CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnAmendLOT" CommandArgument="AMEND" ToolTip="Amend LOT transmittal to factory" runat="server"
-                                Text="Amend" CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnAmendLOT" CommandArgument="AMEND" ToolTip="Amend LOT transmittal to factory" runat="server"
+                                    Text="Amend" CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnSendToIntlInsp" CommandArgument="SEND_TO_FITUP_INSP" ToolTip="Send Item(s) for fitup inspection" runat="server"
-                                Text="Send Item(s) for Fitup Insp." CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnSendToIntlInsp" CommandArgument="SEND_TO_FITUP_INSP" ToolTip="Send Item(s) for fitup inspection" runat="server"
+                                    Text="Send Item(s) for Fitup Insp." CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnSendToFinalInsp" CommandArgument="SEND_TO_FINAL_INSP" ToolTip="Send Item(s) for final inspection" runat="server"
-                                Text="Send Item(s) for Final Insp." CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BackColor="Blue" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnSendToFinalInsp" CommandArgument="SEND_TO_FINAL_INSP" ToolTip="Send Item(s) for final inspection" runat="server"
+                                    Text="Send Item(s) for Final Insp." CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BackColor="Blue" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnAcceptItems" CommandArgument="ACCEPT_ITEMS" ToolTip="Accept/Not Accept Item(s) for fitup inspcetion" runat="server"
-                                Text="Accept Item(s) for Fitup Insp." CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnAcceptItems" CommandArgument="ACCEPT_ITEMS" ToolTip="Accept/Not Accept Item(s) for fitup inspcetion" runat="server"
+                                    Text="Accept Item(s) for Fitup Insp." CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
 
-                            <%-- <asp:Button ID="btnAcceptItemsForFinalInsp" CommandArgument="ACCEPT_ITEMS_FOR_FINAL_INSP" ToolTip="Accept/Not Accept Item(s) For Final Inspcetion" runat="server"
+                                <%-- <asp:Button ID="btnAcceptItemsForFinalInsp" CommandArgument="ACCEPT_ITEMS_FOR_FINAL_INSP" ToolTip="Accept/Not Accept Item(s) For Final Inspcetion" runat="server"
                                     Text="Accept Item(s) for Final Insp" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />--%>
 
-                            <asp:Button ID="btnFinalIsnpItems" CommandArgument="COMPLETE_ITEMS" ToolTip="Complete/Send to Rework Item(s)" runat="server"
-                                Text="Complete/Send to Rework Item(s)" CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BackColor="Teal" BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnFinalIsnpItems" CommandArgument="COMPLETE_ITEMS" ToolTip="Complete/Send to Rework Item(s)" runat="server"
+                                    Text="Complete/Send to Rework Item(s)" CssClass="cancelbutton" Width="100%" BorderColor="Yellow" BackColor="Teal" BorderStyle="Solid" BorderWidth="2px" />
 
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
 
-                    <%--<asp:TemplateField HeaderText="Status">
+                        <%--<asp:TemplateField HeaderText="Status">
                             <ItemTemplate>
                                 
                                 <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:BoundField DataField="TF_NO" HeaderText="TF_No" />
-                    <%--<asp:BoundField DataField="STATUS_NAME" HeaderText="Status_Name" />--%>
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-                    <asp:BoundField DataField="DATE" HeaderText="Date" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="Customer_Code" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="Customer_Name" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_No" />
-                    <asp:BoundField DataField="PO_NO" HeaderText="PO_No" />
-                    <asp:BoundField DataField="ITEM_NAME" HeaderText="Item_Name" />
-                    <asp:BoundField DataField="IMP_NOTES" HeaderText="Imp_Notes" />
+                        <asp:BoundField DataField="TF_NO" HeaderText="TF_No" />
+                        <%--<asp:BoundField DataField="STATUS_NAME" HeaderText="Status_Name" />--%>
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+                        <asp:BoundField DataField="DATE" HeaderText="Date" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="Customer_Code" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="Customer_Name" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_No" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="PO_No" />
+                        <asp:BoundField DataField="ITEM_NAME" HeaderText="Item_Name" />
+                        <asp:BoundField DataField="IMP_NOTES" HeaderText="Imp_Notes" />
 
-                    <asp:BoundField DataField="FIRST_QUALITY_PERSON" HeaderText="1st_Quality_Person" />
-                    <asp:BoundField DataField="SECOND_QUALITY_PERSON" HeaderText="2nd_Quality_Person" />
+                        <asp:BoundField DataField="FIRST_QUALITY_PERSON" HeaderText="1st_Quality_Person" />
+                        <asp:BoundField DataField="SECOND_QUALITY_PERSON" HeaderText="2nd_Quality_Person" />
 
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
+            </div>
+
+        </fieldset>
 
     </div>
 
@@ -4294,10 +4302,10 @@
                 </asp:Panel>
             </div>
         </div>
-        
+
     </asp:Panel>
     <%-- ADD CLIENT APPROVED DRAWING END --%>
-    
+
 
 
     <%-- </ContentTemplate>

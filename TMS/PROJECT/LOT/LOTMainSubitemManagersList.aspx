@@ -1,5 +1,7 @@
-<%@ Page Title="CIPLTMS- LOT Approver List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    EnableViewState="true" CodeFile="LOTMainSubitemManagersList.aspx.cs" Inherits="PROJECT_LOT_LOTMainSubitemManagersList" %>
+<%@ Page Title="CIPLTMS - LOT Main Subitem Managers List" Language="C#" 
+    MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    EnableViewState="true" CodeFile="LOTMainSubitemManagersList.aspx.cs" 
+    Inherits="PROJECT_LOT_LOTMainSubitemManagersList" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
     Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
@@ -140,40 +142,38 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>LOT Report For Factory:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Company</label>
                     <asp:DropDownList ID="ddlCompany" runat="server" CssClass="form-control"
                         AutoPostBack="true" OnSelectedIndexChanged="ddlCompany_SelectedIndexChanged" />
 
                     <label>Department</label>
-                    <asp:DropDownList ID="ddlDepartment" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:DropDownList ID="ddlDepartment" runat="server"
+                        CssClass="form-control" />
 
                     <label>LOT For</label>
                     <table width="100%">
                         <tr>
                             <td style="width: 50%">
-                                <asp:DropDownList ID="ddlLOTMainItems" runat="server" 
+                                <asp:DropDownList ID="ddlLOTMainItems" runat="server"
                                     CssClass="form-control"
                                     OnSelectedIndexChanged="ddlLOTMainItems_SelectedIndexChanged" AutoPostBack="true" />
                             </td>
                             <td style="width: 50%">
-                                <asp:DropDownList ID="ddlLOTMainSubitems" runat="server" 
-                                    CssClass="form-control"/>
+                                <asp:DropDownList ID="ddlLOTMainSubitems" runat="server"
+                                    CssClass="form-control" />
                             </td>
                         </tr>
                     </table>
 
                     <label>Manager</label>
-                    <asp:DropDownList ID="ddlManager" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:DropDownList ID="ddlManager" runat="server"
+                        CssClass="form-control" />
 
                 </div>
             </fieldset>
@@ -188,46 +188,52 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>LOT Report For Factory:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvLOTMainSubitemManagers" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    AllowPaging="false" OnRowCommand="gvLOTMainSubitemManagers_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Edit">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server"
+                                    ImageUrl="~/Images/LOT/edit5.png" Width="35px" Height="35px" ToolTip="Edit" />
+                                <asp:Label ID="lblManagerRecordID" runat="server" Visible="false" Text='<%# Eval("MANAGER_RECORD_ID") %>' />
+                                <asp:Label ID="lblCompanyID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblLOTMainItemID" runat="server" Visible="false" Text='<%# Eval("LOT_MAIN_ITEM_ID") %>' />
+                                <asp:Label ID="lblLOTMainSubitemID" runat="server" Visible="false" Text='<%# Eval("LOT_MAIN_SUBITEM_ID") %>' />
+                                <asp:Label ID="lblDepartmentID" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_ID") %>' />
+                                <asp:Label ID="lblManagerID" runat="server" Visible="false" Text='<%# Eval("MANAGER_ID") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Company" />
+                        <asp:BoundField DataField="LOT_MAIN_ITEM" HeaderText="LOT For" />
+                        <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="Department" />
+                        <asp:BoundField DataField="MANAGER_NAME" HeaderText="Manager" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvLOTMainSubitemManagers" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                AllowPaging="false" OnRowCommand="gvLOTMainSubitemManagers_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="Edit">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server"
-                                ImageUrl="~/Images/LOT/edit5.png" Width="35px" Height="35px" ToolTip="Edit" />
-                            <asp:Label ID="lblManagerRecordID" runat="server" Visible="false" Text='<%# Eval("MANAGER_RECORD_ID") %>' />
-                            <asp:Label ID="lblCompanyID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblLOTMainItemID" runat="server" Visible="false" Text='<%# Eval("LOT_MAIN_ITEM_ID") %>' />
-                            <asp:Label ID="lblLOTMainSubitemID" runat="server" Visible="false" Text='<%# Eval("LOT_MAIN_SUBITEM_ID") %>' />
-                            <asp:Label ID="lblDepartmentID" runat="server" Visible="false" Text='<%# Eval("DEPARTMENT_ID") %>' />
-                            <asp:Label ID="lblManagerID" runat="server" Visible="false" Text='<%# Eval("MANAGER_ID") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Company" />
-                    <asp:BoundField DataField="LOT_MAIN_ITEM" HeaderText="LOT For" />
-                    <asp:BoundField DataField="DEPARTMENT_NAME" HeaderText="Department" />
-                    <asp:BoundField DataField="MANAGER_NAME" HeaderText="Manager" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 

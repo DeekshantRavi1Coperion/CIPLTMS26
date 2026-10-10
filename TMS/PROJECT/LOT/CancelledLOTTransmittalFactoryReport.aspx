@@ -1,5 +1,7 @@
-<%@ Page Title="CIPLTMS-Transmittal To Factory List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    EnableViewState="true" CodeFile="CancelledLOTTransmittalFactoryReport.aspx.cs" Inherits="PROJECT_LOT_CancelledLOTTransmittalFactoryReport" %>
+<%@ Page Title="CIPLTMS - Cancelled LOT Report" Language="C#" 
+    MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    EnableViewState="true" CodeFile="CancelledLOTTransmittalFactoryReport.aspx.cs"
+    Inherits="PROJECT_LOT_CancelledLOTTransmittalFactoryReport" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
     Namespace="CrystalDecisions.Web" TagPrefix="CR" %>
@@ -364,24 +366,21 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Cancelled LOT Report:
-                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
-
+                <div class="form-filter-grid">
 
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
                                 <ajax:CalendarExtender ID="calendarStartDateSearch" PopupButtonID="imgbtnStartDateSearch"
-                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </ajax:CalendarExtender>
                             </td>
@@ -395,12 +394,12 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
                                 <ajax:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
-                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </ajax:CalendarExtender>
                             </td>
@@ -411,39 +410,39 @@
                     </table>
 
                     <label>TF No.</label>
-                    <asp:TextBox ID="txtTFNo" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtTFNo" runat="server"
+                        CssClass="form-control" />
 
                     <label>Status</label>
-                    <asp:DropDownList ID="ddlStatus" runat="server" 
+                    <asp:DropDownList ID="ddlStatus" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Company</label>
-                    <asp:DropDownList ID="ddlCompany" runat="server" 
+                    <asp:DropDownList ID="ddlCompany" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
 
                     <label>JOB No.</label>
-                    <asp:TextBox ID="txtJOBNo" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtJOBNo" runat="server"
+                        CssClass="form-control" />
 
                     <label>Customer Name</label>
-                    <asp:TextBox ID="txtCustomerName" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtCustomerName" runat="server"
+                        CssClass="form-control" />
 
                     <label>LOT For</label>
                     <table style="width: 100%;">
                         <tr>
                             <td style="width: 50%;">
-                                <asp:DropDownList ID="ddlLOTMainItems" runat="server" 
+                                <asp:DropDownList ID="ddlLOTMainItems" runat="server"
                                     CssClass="form-control"
                                     OnSelectedIndexChanged="ddlLOTMainItems_SelectedIndexChanged" AutoPostBack="true" />
                             </td>
                             <td style="width: 50%;">
-                                <asp:DropDownList ID="ddlLOTMainSubitems" runat="server" 
-                                    CssClass="form-control"/>
+                                <asp:DropDownList ID="ddlLOTMainSubitems" runat="server"
+                                    CssClass="form-control" />
                             </td>
                         </tr>
                     </table>
@@ -464,141 +463,148 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
+        <fieldset class="employee-grid-fieldset">
+            <legend>Cancelled LOT Report:
+                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <div align="center">
+            <div class="employee-grid-container">
 
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <div align="center">
+
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvLOTTFList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="10" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvLOTTFList_RowCommand"
+                    OnRowDataBound="gvLOTTFList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Subitem" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
+                                <asp:Label ID="lblTFNo" runat="server" Visible="false" Text='<%# Eval("TF_NO") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblLOTDate" runat="server" Visible="false" Text='<%# Eval("DATE") %>' />
+                                <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
+                                <asp:Label ID="lblItemName" runat="server" Visible="false" Text='<%# Eval("ITEM_NAME") %>' />
+                                <asp:Label ID="lblImpNotes" runat="server" Visible="false" Text='<%# Eval("IMP_NOTES") %>' />
+                                <asp:Label ID="lblJobPEID" runat="server" Visible="false" Text='<%# Eval("PE_ID") %>' />
+                                <asp:Label ID="lblJobPMID" runat="server" Visible="false" Text='<%# Eval("PM_ID") %>' />
+                                <asp:Label ID="lblcreatedByID" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
+                                <asp:Label ID="lblStandardDrawing" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_NAME") %>' />
+                                <asp:Label ID="lblStandardDrawingRemarks" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_SAVED_REMARKS") %>' />
+
+                                <asp:Label ID="lblFirstQualityPersonID" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON_ID") %>' />
+                                <asp:Label ID="lblSecondQualityPersonID" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON_ID") %>' />
+
+                                <asp:Label ID="lblFirstQualityPerson" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON") %>' />
+                                <asp:Label ID="lblSecondQualityPerson" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON") %>' />
+
+                                <asp:Label ID="lblCancelledRemarks" runat="server" Visible="false" Text='<%# Eval("CANCELLED_REMARKS") %>' />
+
+                                <asp:ImageButton ID="btnViewSubitemDetail" Height="30px" Width="30px" CommandArgument="ViewSubitemDETAIL"
+                                    runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View LOT Detail in PDF" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Additional Att." HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT1_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment1" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT1"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Att.2" ItemStyle-HorizontalAlign="Center" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment2" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT2_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment2" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT2"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Att.3" ItemStyle-HorizontalAlign="Center" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment3" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT3_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment3" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT3"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Att.4" ItemStyle-HorizontalAlign="Center" Visible="false">
+                            <ItemTemplate>
+                                <asp:Label ID="lblAttachment4" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT4_NAME") %>' />
+                                <asp:ImageButton ID="imgBtnAttachment4" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT4"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+
+
+                        <asp:TemplateField HeaderText="Send_Mail" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnSendCancellationMail" CommandArgument="SEND_CANCELLATION_MAIL" ToolTip="Send Cancellation Mail" runat="server"
+                                    Text="Send Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+
+
+
+                        <asp:TemplateField HeaderText="Status" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Width="100px" ItemStyle-Width="100px">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtStatus" runat="server" Width="100px" Enabled="false" CssClass="textboxtstatustext"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="TF_NO" HeaderText="TF_No" />
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+                        <asp:BoundField DataField="DATE" HeaderText="Date" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="Customer_Code" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="Customer_Name" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_No" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="PO_No" />
+                        <asp:BoundField DataField="ITEM_NAME" HeaderText="Item_Name" />
+                        <asp:BoundField DataField="IMP_NOTES" HeaderText="Imp_Notes" />
+
+                        <asp:BoundField DataField="FIRST_QUALITY_PERSON" HeaderText="1st_Quality_Person" />
+                        <asp:BoundField DataField="SECOND_QUALITY_PERSON" HeaderText="2nd_Quality_Person" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvLOTTFList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" PageSize="10" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvLOTTFList_RowCommand"
-                OnRowDataBound="gvLOTTFList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="Subitem" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
-                            <asp:Label ID="lblTFNo" runat="server" Visible="false" Text='<%# Eval("TF_NO") %>' />
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblLOTDate" runat="server" Visible="false" Text='<%# Eval("DATE") %>' />
-                            <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
-                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                            <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                            <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
-                            <asp:Label ID="lblItemName" runat="server" Visible="false" Text='<%# Eval("ITEM_NAME") %>' />
-                            <asp:Label ID="lblImpNotes" runat="server" Visible="false" Text='<%# Eval("IMP_NOTES") %>' />
-                            <asp:Label ID="lblJobPEID" runat="server" Visible="false" Text='<%# Eval("PE_ID") %>' />
-                            <asp:Label ID="lblJobPMID" runat="server" Visible="false" Text='<%# Eval("PM_ID") %>' />
-                            <asp:Label ID="lblcreatedByID" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
-                            <asp:Label ID="lblStandardDrawing" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_NAME") %>' />
-                            <asp:Label ID="lblStandardDrawingRemarks" runat="server" Visible="false" Text='<%# Eval("STANDARD_DRAWING_SAVED_REMARKS") %>' />
-
-                            <asp:Label ID="lblFirstQualityPersonID" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON_ID") %>' />
-                            <asp:Label ID="lblSecondQualityPersonID" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON_ID") %>' />
-
-                            <asp:Label ID="lblFirstQualityPerson" runat="server" Visible="false" Text='<%# Eval("FIRST_QUALITY_PERSON") %>' />
-                            <asp:Label ID="lblSecondQualityPerson" runat="server" Visible="false" Text='<%# Eval("SECOND_QUALITY_PERSON") %>' />
-
-                            <asp:Label ID="lblCancelledRemarks" runat="server" Visible="false" Text='<%# Eval("CANCELLED_REMARKS") %>' />
-
-                            <asp:ImageButton ID="btnViewSubitemDetail" Height="30px" Width="30px" CommandArgument="ViewSubitemDETAIL"
-                                runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="View" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View LOT Detail in PDF" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Additional Att." HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment1" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT1_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment1" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT1"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Att.2" ItemStyle-HorizontalAlign="Center" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment2" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT2_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment2" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT2"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Att.3" ItemStyle-HorizontalAlign="Center" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment3" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT3_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment3" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT3"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Att.4" ItemStyle-HorizontalAlign="Center" Visible="false">
-                        <ItemTemplate>
-                            <asp:Label ID="lblAttachment4" runat="server" Visible="false" Text='<%# Eval("ATTACHMENT4_NAME") %>' />
-                            <asp:ImageButton ID="imgBtnAttachment4" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT4"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-
-
-                    <asp:TemplateField HeaderText="Send_Mail" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnSendCancellationMail" CommandArgument="SEND_CANCELLATION_MAIL" ToolTip="Send Cancellation Mail" runat="server"
-                                Text="Send Mail" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-
-
-                    <asp:TemplateField HeaderText="Status" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Width="100px" ItemStyle-Width="100px">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtStatus" runat="server" Width="100px" Enabled="false" CssClass="textboxtstatustext"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="TF_NO" HeaderText="TF_No" />
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-                    <asp:BoundField DataField="DATE" HeaderText="Date" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="Customer_Code" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="Customer_Name" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_No" />
-                    <asp:BoundField DataField="PO_NO" HeaderText="PO_No" />
-                    <asp:BoundField DataField="ITEM_NAME" HeaderText="Item_Name" />
-                    <asp:BoundField DataField="IMP_NOTES" HeaderText="Imp_Notes" />
-
-                    <asp:BoundField DataField="FIRST_QUALITY_PERSON" HeaderText="1st_Quality_Person" />
-                    <asp:BoundField DataField="SECOND_QUALITY_PERSON" HeaderText="2nd_Quality_Person" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -679,12 +685,12 @@
                     <div class="form-grid form-grid-3">
 
                         <label>TF No.:</label>
-                        <asp:TextBox ID="txtTFNoSI" runat="server" 
+                        <asp:TextBox ID="txtTFNoSI" runat="server"
                             CssClass="form-control"
                             Enabled="false" />
 
                         <label>JOB No.:</label>
-                        <asp:TextBox ID="txtJOBNoSI" runat="server" 
+                        <asp:TextBox ID="txtJOBNoSI" runat="server"
                             CssClass="form-control"
                             Enabled="false" />
 

@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ProductionStatusProjectViewReport.aspx.cs"
-    Inherits="PROJECT_LOT_ProductionStatusProjectViewReport" Title="Production Status Project View Report" %>
+    Inherits="PROJECT_LOT_ProductionStatusProjectViewReport" 
+    Title="CIPLTMS - Production Status Project View Report" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -399,20 +400,18 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Production Status- Project View:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters:</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <div class="full-width">
 
                         <label>Date Filter</label>
                         <table style="width: 100%;">
                             <tr>
-                                <td>
+                                <td style="width: 65%;">
                                     <asp:DropDownList ID="ddlOnWhichDate" runat="server"
                                         CssClass="form-control">
                                         <asp:ListItem Text="Production Order Date" Value="1"></asp:ListItem>
@@ -437,7 +436,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -457,7 +456,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -513,199 +512,208 @@
                         OnCheckedChanged="chkOutstandingEDDate_CheckedChanged" />
 
 
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
 
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvFabricationList" runat="server" CellPadding="4" ForeColor="#333333"
-                AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center" OnRowDataBound="gvFabricationList_RowDataBound">
-                <Columns>
-                    <asp:TemplateField HeaderText="SR_NO" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                            <asp:TextBox ID="txtSRNo" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("SR_NO") %>' CssClass="textboxcenter"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="UNIT">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUnit" runat="server" Visible="true" Text='<%# Eval("UNIT") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Production Status- Project View:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-                    <asp:TemplateField HeaderText="LOT_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLOTNo" runat="server" Visible="true" Text='<%# Eval("LOT_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvFabricationList" runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center" OnRowDataBound="gvFabricationList_RowDataBound">
+                    <Columns>
+                        <asp:TemplateField HeaderText="SR_NO" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                <asp:TextBox ID="txtSRNo" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("SR_NO") %>' CssClass="textboxcenter"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblStatus" runat="server" Visible="true" Text='<%# Eval("STATUS_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UNIT">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUnit" runat="server" Visible="true" Text='<%# Eval("UNIT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="JOB_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LOT_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLOTNo" runat="server" Visible="true" Text='<%# Eval("LOT_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRODUCTION_MANAGER">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProdManager" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_MANAGER") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblStatus" runat="server" Visible="true" Text='<%# Eval("STATUS_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PROJECT_MANAGER">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProjManager" runat="server" Visible="true" Text='<%# Eval("PROJECT_MANAGER") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="JOB_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="LOT_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLOTDate" runat="server" Visible="true" Text='<%# Eval("LOT_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRODUCTION_MANAGER">
+                            <ItemTemplate>
+                                <asp:Label ID="lblProdManager" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_MANAGER") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRODUCTION_ORDER_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProductionOrderNo" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_ORDER_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PROJECT_MANAGER">
+                            <ItemTemplate>
+                                <asp:Label ID="lblProjManager" runat="server" Visible="true" Text='<%# Eval("PROJECT_MANAGER") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRODUCTION_ORDER_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProductionOrderDate" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_ORDER_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LOT_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLOTDate" runat="server" Visible="true" Text='<%# Eval("LOT_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRODUCTION_ORDER_DELIVERY_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProductionOrderDeliveryDate" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_ORDER_DELIVERY_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRODUCTION_ORDER_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblProductionOrderNo" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_ORDER_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRODUCT_CODE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblProductCode" runat="server" Visible="true" Text='<%# Eval("PRODUCT_CODE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRODUCTION_ORDER_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblProductionOrderDate" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_ORDER_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="EQUIPMENT/ITEM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEquipment" runat="server" Visible="true" Text='<%# Eval("EQUIPMENT/ITEM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRODUCTION_ORDER_DELIVERY_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblProductionOrderDeliveryDate" runat="server" Visible="true" Text='<%# Eval("PRODUCTION_ORDER_DELIVERY_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="UOM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUOM" runat="server" Visible="true" Text='<%# Eval("UOM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRODUCT_CODE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblProductCode" runat="server" Visible="true" Text='<%# Eval("PRODUCT_CODE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="QUANTITY">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("QUANTITY") %>' CssClass="textboxright"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="EQUIPMENT/ITEM">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEquipment" runat="server" Visible="true" Text='<%# Eval("EQUIPMENT/ITEM") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="IN FITUP INSP QUANTITY">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtInFitupInspQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("IN_FITUP_INSP_QUANTITY") %>' CssClass="textboxright"
-                                onpaste="return false"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UOM">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUOM" runat="server" Visible="true" Text='<%# Eval("UOM") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="DRAWING_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDrawingNo" runat="server" Visible="true" Text='<%# Eval("DRAWING_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="QUANTITY">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("QUANTITY") %>' CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <%--  <asp:TemplateField HeaderText="REMARKS_FOR_PROCUREMENT">
+                        <asp:TemplateField HeaderText="IN FITUP INSP QUANTITY">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtInFitupInspQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("IN_FITUP_INSP_QUANTITY") %>' CssClass="textboxright"
+                                    onpaste="return false"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="DRAWING_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDrawingNo" runat="server" Visible="true" Text='<%# Eval("DRAWING_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--  <asp:TemplateField HeaderText="REMARKS_FOR_PROCUREMENT">
                             <ItemTemplate>
                                 <asp:Label ID="lblRemarksForProcurement" runat="server" Visible="true" Text='<%# Eval("REMARKS_FOR_PROCUREMENT") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:TemplateField HeaderText="PRESENT_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPresentStatus" runat="server" Visible="true" Text='<%# Eval("PRESENT_STATUS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRESENT_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPresentStatus" runat="server" Visible="true" Text='<%# Eval("PRESENT_STATUS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRESENT (%) OF_WORK_DONE">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtPresentPercentageOfWorkDone" runat="server" Width="100%" Text='<%# Eval("PRESENT_PERC_OF_WORK_DONE") %>'
-                                CssClass="textboxright" onkeyDown="javascript:preventInput(event);"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PRESENT (%) OF_WORK_DONE">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtPresentPercentageOfWorkDone" runat="server" Width="100%" Text='<%# Eval("PRESENT_PERC_OF_WORK_DONE") %>'
+                                    CssClass="textboxright" onkeyDown="javascript:preventInput(event);"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="ED_OF_INSP/COMP">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEdOfInspection" runat="server" Visible="true" Text='<%# Eval("ED_OF_INSP_COMP") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <%---------------------------------------------------%>
-                    <asp:TemplateField HeaderText="PLANNING_REMARKS">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtLastPlanningRemarks" runat="server" Width="300px" Text='<%# Eval("PLANNING_REMARKS") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxleft"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <%--------------------------------------------------%>
-                    <asp:TemplateField HeaderText="LAST_STATUS">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtLastStatus" runat="server" Width="300px" Text='<%# Eval("LAST_STATUS") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxleft"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ED_OF_INSP/COMP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEdOfInspection" runat="server" Visible="true" Text='<%# Eval("ED_OF_INSP_COMP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <%---------------------------------------------------%>
+                        <asp:TemplateField HeaderText="PLANNING_REMARKS">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtLastPlanningRemarks" runat="server" Width="300px" Text='<%# Eval("PLANNING_REMARKS") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxleft"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <%--------------------------------------------------%>
+                        <asp:TemplateField HeaderText="LAST_STATUS">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtLastStatus" runat="server" Width="300px" Text='<%# Eval("LAST_STATUS") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxleft"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="LAST (%) OF_WORK_DONE">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtLastPercentageOfWorkDone" runat="server" Width="100%" Text='<%# Eval("LAST_PERC_OF_WORK_DONE") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LAST (%) OF_WORK_DONE">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtLastPercentageOfWorkDone" runat="server" Width="100%" Text='<%# Eval("LAST_PERC_OF_WORK_DONE") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="LAST_ED_OF_INSP/COMP">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLastEdOfInspection" runat="server" Visible="true" Text='<%# Eval("LAST_ED_OF_INSP_COMP") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LAST_ED_OF_INSP/COMP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLastEdOfInspection" runat="server" Visible="true" Text='<%# Eval("LAST_ED_OF_INSP_COMP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="NOT_ACCEPTED_REASON">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNotAcceptedReason" runat="server" Visible="true" Text='<%# Eval("NOT_ACCEPTED_REASON") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="NOT_ACCEPTED_REASON">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNotAcceptedReason" runat="server" Visible="true" Text='<%# Eval("NOT_ACCEPTED_REASON") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="AMOUNT_INR">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtAmountINR" runat="server" Width="150px" Text='<%# Eval("AMOUNT_INR") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="AMOUNT_INR">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtAmountINR" runat="server" Width="150px" Text='<%# Eval("AMOUNT_INR") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textboxright"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <%--<asp:TemplateField HeaderText="COMPLETED_BY">
+                        <%--<asp:TemplateField HeaderText="COMPLETED_BY">
                             <ItemTemplate>
                                 <asp:Label ID="lblCompletedBy" runat="server" Visible="true" Text='<%# Eval("COMPLETED_BY") %>' />
                             </ItemTemplate>
@@ -716,18 +724,19 @@
                                 <asp:Label ID="lblCompletedOn" runat="server" Visible="true" Text='<%# Eval("COMPLETED_ON") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
-                </Columns>
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
+            </div>
 
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>
