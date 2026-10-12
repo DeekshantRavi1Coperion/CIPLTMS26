@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="AddTCToPO.aspx.cs"
-    Inherits="TC_AddTCToPO" Title="CIPLTMS- Upload TC To PO" %>
+    Inherits="TC_AddTCToPO" Title="CIPLTMS - TC - Upload TC To PO" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -924,16 +924,15 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Procurement Status- Upload TC:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
 
+                <div class="form-filter-grid">
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -950,7 +949,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -1004,166 +1003,174 @@
                     OnClick="btnExport_Click" />
             </div>
         </div>
-        <div class="employee-grid-container">
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Procurement Status- Upload TC:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+
+                <asp:GridView ID="gvPOList" CssClass="employee-grid"
+                    runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvPOList_RowDataBound"
+                    OnRowCommand="gvPOList_RowCommand">
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="View PO" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewPO" Height="30px" Width="30px" CommandArgument="ViewPO"
+                                    runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View PO in PDF" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Upload TC" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnUploadTC" CommandArgument="UPLOAD_TC" ToolTip="Upload TC" runat="server"
+                                    Text="Upload TC" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Status" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtStatus" runat="server" Enabled="false" CssClass="textboxtstatustext" Width="150px"
+                                    Text='<%# Eval("STATUS_NAME") %>'></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="TC1" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnTCAttachment1" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT1"
+                                    ImageUrl="~/Images/pdficon3.png"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="TC2" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnTCAttachment2" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT2"
+                                    ImageUrl="~/Images/pdficon3.png"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="TC3" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnTCAttachment3" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT3"
+                                    ImageUrl="~/Images/pdficon3.png"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPORecordID" runat="server" Visible="false" Text='<%# Eval("PO_RECORD_ID") %>' />
+
+                                <asp:Label ID="lblTCRecordID1" runat="server" Visible="false" Text='<%# Eval("TC_RECORD_ID1") %>' />
+                                <asp:Label ID="lblTCRecordID2" runat="server" Visible="false" Text='<%# Eval("TC_RECORD_ID2") %>' />
+                                <asp:Label ID="lblTCRecordID3" runat="server" Visible="false" Text='<%# Eval("TC_RECORD_ID3") %>' />
+
+                                <asp:Label ID="lblTCStatusID1" runat="server" Visible="false" Text='<%# Eval("STATUS_ID1") %>' />
+                                <asp:Label ID="lblTCStatusID2" runat="server" Visible="false" Text='<%# Eval("STATUS_ID2") %>' />
+                                <asp:Label ID="lblTCStatusID3" runat="server" Visible="false" Text='<%# Eval("STATUS_ID3") %>' />
+
+                                <asp:Label ID="lblTCAttachment1" runat="server" Visible="false" Text='<%# Eval("TC_ATTACHMENT_NAME1") %>' />
+                                <asp:Label ID="lblTCAttachment2" runat="server" Visible="false" Text='<%# Eval("TC_ATTACHMENT_NAME2") %>' />
+                                <asp:Label ID="lblTCAttachment3" runat="server" Visible="false" Text='<%# Eval("TC_ATTACHMENT_NAME3") %>' />
+
+                                <asp:Label ID="lblAssignedToID1" runat="server" Visible="false" Text='<%# Eval("ASSIGNED_TO_ID1") %>' />
+                                <asp:Label ID="lblAssignedToID2" runat="server" Visible="false" Text='<%# Eval("ASSIGNED_TO_ID2") %>' />
+                                <asp:Label ID="lblAssignedToID3" runat="server" Visible="false" Text='<%# Eval("ASSIGNED_TO_ID3") %>' />
+
+                                <asp:Label ID="lblTCSeqNo1" runat="server" Visible="false" Text='<%# Eval("TC_SEQ_NO1") %>' />
+                                <asp:Label ID="lblTCSeqNo2" runat="server" Visible="false" Text='<%# Eval("TC_SEQ_NO2") %>' />
+                                <asp:Label ID="lblTCSeqNo3" runat="server" Visible="false" Text='<%# Eval("TC_SEQ_NO3") %>' />
+
+                                <asp:Label ID="lblTC1IdentificationReferenceNo" runat="server" Visible="false" Text='<%# Eval("IDENTIFICATION_REFERENCE_NO1") %>' />
+                                <asp:Label ID="lblTC2IdentificationReferenceNo" runat="server" Visible="false" Text='<%# Eval("IDENTIFICATION_REFERENCE_NO2") %>' />
+                                <asp:Label ID="lblTC3IdentificationReferenceNo" runat="server" Visible="false" Text='<%# Eval("IDENTIFICATION_REFERENCE_NO3") %>' />
+
+                                <asp:Label ID="lblUploadedRemarks1" runat="server" Visible="false" Text='<%# Eval("UPLOADED_REMARKS1") %>' />
+                                <asp:Label ID="lblUploadedRemarks2" runat="server" Visible="false" Text='<%# Eval("UPLOADED_REMARKS2") %>' />
+                                <asp:Label ID="lblUploadedRemarks3" runat="server" Visible="false" Text='<%# Eval("UPLOADED_REMARKS3") %>' />
+
+                                <asp:Label ID="lblAcceptedRemarks1" runat="server" Visible="false" Text='<%# Eval("ACCEPTED_REMARKS1") %>' />
+                                <asp:Label ID="lblAcceptedRemarks2" runat="server" Visible="false" Text='<%# Eval("ACCEPTED_REMARKS2") %>' />
+                                <asp:Label ID="lblAcceptedRemarks3" runat="server" Visible="false" Text='<%# Eval("ACCEPTED_REMARKS3") %>' />
+
+                                <asp:Label ID="lblRejectedRemarks1" runat="server" Visible="false" Text='<%# Eval("REJECTED_REMARKS1") %>' />
+                                <asp:Label ID="lblRejectedRemarks2" runat="server" Visible="false" Text='<%# Eval("REJECTED_REMARKS2") %>' />
+                                <asp:Label ID="lblRejectedRemarks3" runat="server" Visible="false" Text='<%# Eval("REJECTED_REMARKS3") %>' />
+
+
+
+                                <asp:Label ID="lblPONo" runat="server" Visible="true" Text='<%# Eval("PO_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO Date">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPODate" runat="server" Visible="true" Text='<%# Eval("PO_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Vendor Name">
+                            <ItemTemplate>
+                                <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
+                                <asp:Label ID="lblVendorName" runat="server" Visible="true" Text='<%# Eval("VENDOR_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="JOB No.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Item Name">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPOFirstItemName" runat="server" Visible="true" Text='<%# Eval("PO_FIRST_ITEM") %>' />
+                                <asp:Label ID="lblPOFirstItemCode" runat="server" Visible="false" Text='<%# Eval("PO_FIRST_PRODCODE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Unit">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblUnit" runat="server" Visible="true" Text='<%# Eval("UNIT_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Checked By">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCheckedBy" runat="server" Visible="true" Text='<%# Eval("CHECKED_BY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+
             </div>
-
-
-            <asp:GridView ID="gvPOList" CssClass="employee-grid"
-                runat="server" CellPadding="4" ForeColor="#333333"
-                AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvPOList_RowDataBound"
-                OnRowCommand="gvPOList_RowCommand">
-                <Columns>
-
-                    <asp:TemplateField HeaderText="View PO" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewPO" Height="30px" Width="30px" CommandArgument="ViewPO"
-                                runat="server" ImageUrl="~/Images/pdficon3.png" ToolTip="View PO in PDF" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Upload TC" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnUploadTC" CommandArgument="UPLOAD_TC" ToolTip="Upload TC" runat="server"
-                                Text="Upload TC" CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Status" ItemStyle-HorizontalAlign="Center" HeaderStyle-Width="150px">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtStatus" runat="server" Enabled="false" CssClass="textboxtstatustext" Width="150px"
-                                Text='<%# Eval("STATUS_NAME") %>'></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="TC1" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnTCAttachment1" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT1"
-                                ImageUrl="~/Images/pdficon3.png"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="TC2" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnTCAttachment2" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT2"
-                                ImageUrl="~/Images/pdficon3.png"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="TC3" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnTCAttachment3" Height="30px" Width="30px" CommandArgument="ViewATTACHMENT3"
-                                ImageUrl="~/Images/pdficon3.png"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PO No.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPORecordID" runat="server" Visible="false" Text='<%# Eval("PO_RECORD_ID") %>' />
-
-                            <asp:Label ID="lblTCRecordID1" runat="server" Visible="false" Text='<%# Eval("TC_RECORD_ID1") %>' />
-                            <asp:Label ID="lblTCRecordID2" runat="server" Visible="false" Text='<%# Eval("TC_RECORD_ID2") %>' />
-                            <asp:Label ID="lblTCRecordID3" runat="server" Visible="false" Text='<%# Eval("TC_RECORD_ID3") %>' />
-
-                            <asp:Label ID="lblTCStatusID1" runat="server" Visible="false" Text='<%# Eval("STATUS_ID1") %>' />
-                            <asp:Label ID="lblTCStatusID2" runat="server" Visible="false" Text='<%# Eval("STATUS_ID2") %>' />
-                            <asp:Label ID="lblTCStatusID3" runat="server" Visible="false" Text='<%# Eval("STATUS_ID3") %>' />
-
-                            <asp:Label ID="lblTCAttachment1" runat="server" Visible="false" Text='<%# Eval("TC_ATTACHMENT_NAME1") %>' />
-                            <asp:Label ID="lblTCAttachment2" runat="server" Visible="false" Text='<%# Eval("TC_ATTACHMENT_NAME2") %>' />
-                            <asp:Label ID="lblTCAttachment3" runat="server" Visible="false" Text='<%# Eval("TC_ATTACHMENT_NAME3") %>' />
-
-                            <asp:Label ID="lblAssignedToID1" runat="server" Visible="false" Text='<%# Eval("ASSIGNED_TO_ID1") %>' />
-                            <asp:Label ID="lblAssignedToID2" runat="server" Visible="false" Text='<%# Eval("ASSIGNED_TO_ID2") %>' />
-                            <asp:Label ID="lblAssignedToID3" runat="server" Visible="false" Text='<%# Eval("ASSIGNED_TO_ID3") %>' />
-
-                            <asp:Label ID="lblTCSeqNo1" runat="server" Visible="false" Text='<%# Eval("TC_SEQ_NO1") %>' />
-                            <asp:Label ID="lblTCSeqNo2" runat="server" Visible="false" Text='<%# Eval("TC_SEQ_NO2") %>' />
-                            <asp:Label ID="lblTCSeqNo3" runat="server" Visible="false" Text='<%# Eval("TC_SEQ_NO3") %>' />
-
-                            <asp:Label ID="lblTC1IdentificationReferenceNo" runat="server" Visible="false" Text='<%# Eval("IDENTIFICATION_REFERENCE_NO1") %>' />
-                            <asp:Label ID="lblTC2IdentificationReferenceNo" runat="server" Visible="false" Text='<%# Eval("IDENTIFICATION_REFERENCE_NO2") %>' />
-                            <asp:Label ID="lblTC3IdentificationReferenceNo" runat="server" Visible="false" Text='<%# Eval("IDENTIFICATION_REFERENCE_NO3") %>' />
-
-                            <asp:Label ID="lblUploadedRemarks1" runat="server" Visible="false" Text='<%# Eval("UPLOADED_REMARKS1") %>' />
-                            <asp:Label ID="lblUploadedRemarks2" runat="server" Visible="false" Text='<%# Eval("UPLOADED_REMARKS2") %>' />
-                            <asp:Label ID="lblUploadedRemarks3" runat="server" Visible="false" Text='<%# Eval("UPLOADED_REMARKS3") %>' />
-
-                            <asp:Label ID="lblAcceptedRemarks1" runat="server" Visible="false" Text='<%# Eval("ACCEPTED_REMARKS1") %>' />
-                            <asp:Label ID="lblAcceptedRemarks2" runat="server" Visible="false" Text='<%# Eval("ACCEPTED_REMARKS2") %>' />
-                            <asp:Label ID="lblAcceptedRemarks3" runat="server" Visible="false" Text='<%# Eval("ACCEPTED_REMARKS3") %>' />
-
-                            <asp:Label ID="lblRejectedRemarks1" runat="server" Visible="false" Text='<%# Eval("REJECTED_REMARKS1") %>' />
-                            <asp:Label ID="lblRejectedRemarks2" runat="server" Visible="false" Text='<%# Eval("REJECTED_REMARKS2") %>' />
-                            <asp:Label ID="lblRejectedRemarks3" runat="server" Visible="false" Text='<%# Eval("REJECTED_REMARKS3") %>' />
-
-
-
-                            <asp:Label ID="lblPONo" runat="server" Visible="true" Text='<%# Eval("PO_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PO Date">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPODate" runat="server" Visible="true" Text='<%# Eval("PO_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Vendor Name">
-                        <ItemTemplate>
-                            <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
-                            <asp:Label ID="lblVendorName" runat="server" Visible="true" Text='<%# Eval("VENDOR_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="JOB No.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Item Name">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPOFirstItemName" runat="server" Visible="true" Text='<%# Eval("PO_FIRST_ITEM") %>' />
-                            <asp:Label ID="lblPOFirstItemCode" runat="server" Visible="false" Text='<%# Eval("PO_FIRST_PRODCODE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Unit">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblUnit" runat="server" Visible="true" Text='<%# Eval("UNIT_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Checked By">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCheckedBy" runat="server" Visible="true" Text='<%# Eval("CHECKED_BY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-
-        </div>
+        </fieldset>
 
     </div>
 
