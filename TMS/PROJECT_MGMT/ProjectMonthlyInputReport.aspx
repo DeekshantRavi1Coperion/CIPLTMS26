@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Project Monthly Input Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ProjectMonthlyInputReport.aspx.cs" Inherits="PROJECT_MGMT_ProjectMonthlyInputReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -82,13 +82,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Project Monthly Input Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>JOB No</label>
                     <asp:DropDownList ID="ddlJOBNo" runat="server"
@@ -98,7 +96,7 @@
                     <label>Month</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtMonth" runat="server"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdMonth" runat="server" />
@@ -115,55 +113,63 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="full-width button-group">
 
-                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                            OnClick="btnSearch_Click" />
-
-
-                        <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                            OnClick="btnExport_Click" />
-                    </div>
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" />
+
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvProjectMonthlyInputReport" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvProjectMonthlyInputReport_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
-                    <asp:BoundField DataField="VPOC" HeaderText="VPOC" />
-                    <asp:BoundField DataField="ICPOC" HeaderText="ICPOC" />
-                    <asp:BoundField DataField="MATERIAL" HeaderText="MATERIAL" />
-                    <asp:BoundField DataField="ENGINEERING" HeaderText="ENGINEERING" />
-                    <asp:BoundField DataField="TRAVELLING" HeaderText="TRAVELLING" />
-                    <asp:BoundField DataField="OTHER_COST" HeaderText="OTHER_COST" />
-                    <asp:BoundField DataField="WARRANTY" HeaderText="WARRANTY" />
-                    <asp:BoundField DataField="COMMISSION" HeaderText="COMMISSION" />
-                    <asp:BoundField DataField="ROYALTY" HeaderText="ROYALTY" />
-                    <asp:BoundField DataField="LATE_DELIVERY" HeaderText="LATE_DELIVERY" />
-                    <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Project Monthly Input Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvProjectMonthlyInputReport" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvProjectMonthlyInputReport_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
+                        <asp:BoundField DataField="VPOC" HeaderText="VPOC" />
+                        <asp:BoundField DataField="ICPOC" HeaderText="ICPOC" />
+                        <asp:BoundField DataField="MATERIAL" HeaderText="MATERIAL" />
+                        <asp:BoundField DataField="ENGINEERING" HeaderText="ENGINEERING" />
+                        <asp:BoundField DataField="TRAVELLING" HeaderText="TRAVELLING" />
+                        <asp:BoundField DataField="OTHER_COST" HeaderText="OTHER_COST" />
+                        <asp:BoundField DataField="WARRANTY" HeaderText="WARRANTY" />
+                        <asp:BoundField DataField="COMMISSION" HeaderText="COMMISSION" />
+                        <asp:BoundField DataField="ROYALTY" HeaderText="ROYALTY" />
+                        <asp:BoundField DataField="LATE_DELIVERY" HeaderText="LATE_DELIVERY" />
+                        <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 

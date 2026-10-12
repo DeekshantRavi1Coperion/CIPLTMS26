@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Add New Product" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Add New Product" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="AddNewProductNew.aspx.cs" Inherits="PROJECT_MGMT_AddNewProductNew" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -172,13 +172,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Add Products:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Project No.</label>
                     <asp:DropDownList ID="ddlProjectNo" runat="server"
@@ -209,18 +207,24 @@
                     </asp:DropDownList>
 
 
-                    <div class="full-width button-group">
 
-                        <asp:Button ID="btnAddNewProduct" CssClass="button" Width="100%" runat="server" Text="Add New Product"
-                            OnClick="btnAddNewProduct_Click" OnClientClick="return ValidateAll();" />
-
-                        <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server" Text="Save Product"
-                            OnClick="btnSave_Click" />
-
-                    </div>
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+
+                <asp:Button ID="btnAddNewProduct" CssClass="button" Width="100%" runat="server" Text="Add New Product"
+                    OnClick="btnAddNewProduct_Click" OnClientClick="return ValidateAll();" />
+
+                <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server" Text="Save Product"
+                    OnClick="btnSave_Click" />
+
+            </div>
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Add Products:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                </legend>
 
         <div class="employee-grid-container">
             <div align="center">
@@ -403,6 +407,7 @@
             </asp:GridView>
 
         </div>
+            </fieldset>
 
     </div>
 

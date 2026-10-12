@@ -1,4 +1,5 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Project Pivot Group Report" Language="C#" MasterPageFile="~/HOME.master" 
+    AutoEventWireup="true"
     CodeFile="ProjectPivotGroupReport.aspx.cs" Inherits="PROJECT_MGMT_ProjectPivotGroupReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -290,25 +291,22 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Project Pivot Group Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
-
+                <div class="form-filter-grid">
 
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarStartDateSearch"
                                     PopupButtonID="imgbtnStartDateSearch"
-                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </asp:CalendarExtender>
                             </td>
@@ -322,12 +320,12 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server"
                                     ReadOnly="true" CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
-                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </asp:CalendarExtender>
                             </td>
@@ -339,10 +337,10 @@
                     </table>
 
                     <label>JOB No.</label>
-                    <asp:DropDownList ID="ddlJOBNo" runat="server" 
+                    <asp:DropDownList ID="ddlJOBNo" runat="server"
                         CssClass="form-control"
                         AutoPostBack="true"
-                        OnSelectedIndexChanged="ddlJOBNo_SelectedIndexChanged" >
+                        OnSelectedIndexChanged="ddlJOBNo_SelectedIndexChanged">
                     </asp:DropDownList>
 
                     <label>Revision No.</label>
@@ -353,62 +351,68 @@
 
                     <label>Company</label>
                     <asp:DropDownList ID="ddlCompany" runat="server"
-                        CssClass="form-control"/>
-
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
-
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
-
+                        CssClass="form-control" />
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Project Pivot Group Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvProjectPivotGroupList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="15" Width="100%"
+                    HorizontalAlign="Center" AllowPaging="True" OnPageIndexChanging="gvProjectPivotGroupList_PageIndexChanging"
+                    OnRowDataBound="gvProjectPivotGroupList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="REVISION_NO" HeaderText="REVISION_NO" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="PIVOT_GROUP" HeaderText="PIVOT_GROUP" />
+
+                        <asp:BoundField DataField="GROSS_MARGIN_LINE" HeaderText="GROSS_MARGIN_LINE" />
+                        <asp:BoundField DataField="BUDGTED_AMOUNT" HeaderText="BUDGTED_AMOUNT" />
+                        <asp:BoundField DataField="ACTUAL_AMOUNT" HeaderText="ACTUAL_AMOUNT" />
+                        <asp:BoundField DataField="DIFFERENCE_AMOUNT" HeaderText="DIFFERENCE" />
+                        <asp:BoundField DataField="UDF1" HeaderText="UDF1" />
+                        <asp:BoundField DataField="UDF2" HeaderText="UDF2" />
+                        <asp:BoundField DataField="UDF3" HeaderText="UDF3" />
+                        <asp:BoundField DataField="UDF4" HeaderText="UDF4" />
+                        <asp:BoundField DataField="UDF5" HeaderText="UDF5" />
+                        <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
+                        <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvProjectPivotGroupList" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="15" Width="100%"
-                HorizontalAlign="Center" AllowPaging="True" OnPageIndexChanging="gvProjectPivotGroupList_PageIndexChanging"
-                OnRowDataBound="gvProjectPivotGroupList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="REVISION_NO" HeaderText="REVISION_NO" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="PIVOT_GROUP" HeaderText="PIVOT_GROUP" />
-
-                    <asp:BoundField DataField="GROSS_MARGIN_LINE" HeaderText="GROSS_MARGIN_LINE" />
-                    <asp:BoundField DataField="BUDGTED_AMOUNT" HeaderText="BUDGTED_AMOUNT" />
-                    <asp:BoundField DataField="ACTUAL_AMOUNT" HeaderText="ACTUAL_AMOUNT" />
-                    <asp:BoundField DataField="DIFFERENCE_AMOUNT" HeaderText="DIFFERENCE" />
-                    <asp:BoundField DataField="UDF1" HeaderText="UDF1" />
-                    <asp:BoundField DataField="UDF2" HeaderText="UDF2" />
-                    <asp:BoundField DataField="UDF3" HeaderText="UDF3" />
-                    <asp:BoundField DataField="UDF4" HeaderText="UDF4" />
-                    <asp:BoundField DataField="UDF5" HeaderText="UDF5" />
-                    <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
-                    <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
-    
+
     <%-- </ContentTemplate>
     </asp:UpdatePanel>--%>
 </asp:Content>
