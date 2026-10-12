@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="PostedList.aspx.cs"
-    Inherits="USGAAP_BILLING_PostedList" Title="Untitled Page" %>
+    Inherits="USGAAP_BILLING_PostedList" Title="CIPLTMS - USGAAP Billing - Posted List" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -370,16 +370,15 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Posted List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -398,7 +397,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -439,42 +438,44 @@
                     <asp:DropDownList ID="ddlCompany" runat="server"
                         CssClass="form-control" />
 
-
-                    &nbsp;
-                    <asp:Button
-                        ID="btnSearch"
-                        CssClass="button"
-                        Width="100%"
-                        runat="server"
-                        Text="Search"
-                        OnClick="btnSearch_Click" />
-
-                    &nbsp;
-                    <asp:Button
-                        ID="btnExport"
-                        CssClass="button"
-                        Width="100%"
-                        runat="server"
-                        Text="Export"
-                        OnClick="btnExport_Click" />
-
                 </div>
             </fieldset>
-        </div>
-        
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="full-width button-group">
+                <asp:Button
+                    ID="btnSearch"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Search"
+                    OnClick="btnSearch_Click" />
+
+                <asp:Button
+                    ID="btnExport"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Export"
+                    OnClick="btnExport_Click" />
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPostedList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvPostedList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <%--<asp:TemplateField HeaderText="EDIT">
+        </div>
+
+        <fieldset class="filter-card">
+            <legend>Posted List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPostedList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvPostedList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <%--<asp:TemplateField HeaderText="EDIT">
                             <ItemTemplate>
                                 <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
                                 <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png" />
@@ -486,51 +487,51 @@
                                     Text="Post" CssClass="cancelbutton" />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
-                    <asp:TemplateField HeaderText="LOCATION">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLocation" runat="server" Text='<%# Eval("LOCATION") %>' />
-                            <asp:Label ID="lblInvoiceNo" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO") %>' />
-                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                            <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="INVOICE_NO" HeaderText="INVOICE_NO" />
-                    <asp:BoundField DataField="INVOICE_DATE" HeaderText="INVOICE_DATE" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="PRODUCT_CODE" />
-                    <asp:BoundField DataField="REVENUE_ACCOUNT" HeaderText="REVENUE_ACCOUNT" />
-                    <asp:BoundField DataField="REVENUE_ACCOUNT_DESC" HeaderText="ACCOUNT_DESC" />
-                    <asp:BoundField DataField="REVENUE_ACCOUNT_TYPE" HeaderText="ACCOUNT_TYPE" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
-                    <asp:BoundField DataField="PRODUCT_RATE" HeaderText="PRODUCT_RATE" />
-                    <asp:BoundField DataField="INVOICE_AMOUNT" HeaderText="INVOICE_AMOUNT" />
-                    <asp:BoundField DataField="POSTED_VALUE" HeaderText="POSTED_VALUE" />
-                    <asp:BoundField DataField="PENDING_UNPOSTED_VALUE" HeaderText="PENDING_UNPOSTED_VALUE" />
-                    <asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />
-                    <asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />
-                    <asp:BoundField DataField="POSTING_MONTH" HeaderText="POSTING_MONTH" />
-                    <asp:BoundField DataField="POSTING_YEAR" HeaderText="POSTING_YEAR" />
-                    <asp:BoundField DataField="POSTING_CURRENCY" HeaderText="POSTING_CURRENCY" />
-                    <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
-                    <asp:BoundField DataField="REVENUE_TYPE" HeaderText="REVENUE_TYPE" />
-                    <asp:BoundField DataField="REV_REC_REDUCTION" HeaderText="REV_REC_REDUCTION" />
-                    <asp:BoundField DataField="UDF2" HeaderText="UDF2" />
-                    <asp:BoundField DataField="UDF3" HeaderText="UDF3" />
-                    <asp:BoundField DataField="UDF4" HeaderText="UDF4" />
-                    <asp:BoundField DataField="UDF5" HeaderText="UDF5" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                        <asp:TemplateField HeaderText="LOCATION">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLocation" runat="server" Text='<%# Eval("LOCATION") %>' />
+                                <asp:Label ID="lblInvoiceNo" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="INVOICE_NO" HeaderText="INVOICE_NO" />
+                        <asp:BoundField DataField="INVOICE_DATE" HeaderText="INVOICE_DATE" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="PRODUCT_CODE" />
+                        <asp:BoundField DataField="REVENUE_ACCOUNT" HeaderText="REVENUE_ACCOUNT" />
+                        <asp:BoundField DataField="REVENUE_ACCOUNT_DESC" HeaderText="ACCOUNT_DESC" />
+                        <asp:BoundField DataField="REVENUE_ACCOUNT_TYPE" HeaderText="ACCOUNT_TYPE" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
+                        <asp:BoundField DataField="PRODUCT_RATE" HeaderText="PRODUCT_RATE" />
+                        <asp:BoundField DataField="INVOICE_AMOUNT" HeaderText="INVOICE_AMOUNT" />
+                        <asp:BoundField DataField="POSTED_VALUE" HeaderText="POSTED_VALUE" />
+                        <asp:BoundField DataField="PENDING_UNPOSTED_VALUE" HeaderText="PENDING_UNPOSTED_VALUE" />
+                        <asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />
+                        <asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />
+                        <asp:BoundField DataField="POSTING_MONTH" HeaderText="POSTING_MONTH" />
+                        <asp:BoundField DataField="POSTING_YEAR" HeaderText="POSTING_YEAR" />
+                        <asp:BoundField DataField="POSTING_CURRENCY" HeaderText="POSTING_CURRENCY" />
+                        <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
+                        <asp:BoundField DataField="REVENUE_TYPE" HeaderText="REVENUE_TYPE" />
+                        <asp:BoundField DataField="REV_REC_REDUCTION" HeaderText="REV_REC_REDUCTION" />
+                        <asp:BoundField DataField="UDF2" HeaderText="UDF2" />
+                        <asp:BoundField DataField="UDF3" HeaderText="UDF3" />
+                        <asp:BoundField DataField="UDF4" HeaderText="UDF4" />
+                        <asp:BoundField DataField="UDF5" HeaderText="UDF5" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
-
+            </div>
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>

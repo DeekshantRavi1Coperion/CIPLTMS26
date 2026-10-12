@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="GenerateHFMReportRevenueWise.aspx.cs"
-    Inherits="USGAAP_BILLING_GenerateHFMReportRevenueWise" Title="Untitled Page" %>
+    Inherits="USGAAP_BILLING_GenerateHFMReportRevenueWise" Title="CIPLTMS - USGAAP Billing - Generate HFM Report Revenue Typewise" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -332,16 +332,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Generate HFM Report Revenue Typewise:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
+
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" CssClass="form-control"
                                     onkeyDown="javascript:preventInput(event);" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -361,7 +361,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" CssClass="form-control"
                                     onkeyDown="javascript:preventInput(event);" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -398,40 +398,46 @@
                     <label>Revenue Account</label>
                     <asp:DropDownList ID="ddlRevenueAccount" runat="server"
                         CssClass="form-control" />
-
-                    &nbsp;
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Generate"
-                        OnClick="btnSearch_Click" />
-
-                    &nbsp;
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
-
                 </div>
             </fieldset>
-        </div>
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Generate"
+                    OnClick="btnSearch_Click" />
+
+                &nbsp;
+                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                        OnClick="btnExport_Click" />
             </div>
-
-            <asp:GridView 
-                CssClass="employee-grid"
-                ID="gvHFMReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvHFMReport_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
 
-        <%--</ContentTemplate>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Generate HFM Report Revenue Typewise:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvHFMReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvHFMReport_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
+    </div>
+
+    <%--</ContentTemplate>
     </asp:UpdatePanel>--%>
 </asp:Content>

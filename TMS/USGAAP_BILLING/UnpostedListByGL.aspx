@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="UnpostedListByGL.aspx.cs"
-    Inherits="USGAAP_BILLING_UnpostedListByGL" Title="Untitled Page" %>
+    Inherits="USGAAP_BILLING_UnpostedListByGL" Title="CIPLTMS - USGAAP Billing - Unposted List GL wise" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -576,16 +576,15 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Unposted List GL wise:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     CssClass="form-control"
                                     onkeyDown="javascript:preventInput(event);" />
@@ -607,7 +606,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server"
                                     CssClass="form-control"
                                     onkeyDown="javascript:preventInput(event);" />
@@ -689,203 +688,208 @@
                     <asp:CheckBox ID="chkClearUnclearAll" runat="server" Text="Clear/Unclear All"
                         OnCheckedChanged="chkClearUnclearAll_CheckedChanged"
                         AutoPostBack="true" />
-
-                    <asp:Button
-                        ID="btnPost"
-                        CssClass="button"
-                        Width="100%"
-                        runat="server"
-                        Text="Post"
-                        OnClick="btnPost_Click"
-                        OnClientClick="return ConfirmPost();" />
-
-                    <asp:Button
-                        ID="btnExport"
-                        CssClass="button"
-                        Width="100%"
-                        runat="server"
-                        Text="Export"
-                        OnClick="btnExport_Click" />
-
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
+                <asp:Button
+                    ID="btnPost"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Post"
+                    OnClick="btnPost_Click"
+                    OnClientClick="return ConfirmPost();" />
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button
+                    ID="btnExport"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Export"
+                    OnClick="btnExport_Click" />
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPostingList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" PageSize="18" HorizontalAlign="Center" OnRowDataBound="gvPostingList_RowDataBound"
-                OnRowCommand="gvPostingList_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
-                    <asp:BoundField DataField="INVOICE_NO" HeaderText="INVOICE_NO" />
-                    <asp:BoundField DataField="INVOICE_DATE" HeaderText="INVOICE_DATE" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="BUSINESS_UNIT" HeaderText="BUSINESS_UNIT" />
-                    <asp:BoundField DataField="REVENUE_ACCOUNT" HeaderText="REVENUE_ACCOUNT" />
-                    <asp:BoundField DataField="REVENUE_ACCOUNT_DESC" HeaderText="ACCOUNT_DESC" />
-                    <asp:BoundField DataField="REVENUE_ACCOUNT_TYPE" HeaderText="ACCOUNT_TYPE" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
-                    <asp:BoundField DataField="PRODUCT_RATE" HeaderText="PRODUCT_RATE" />
-                    <asp:BoundField DataField="INVOICE_AMOUNT" HeaderText="INVOICE_AMOUNT" />
-                    <asp:BoundField DataField="POSTED_VALUE" HeaderText="POSTED_VALUE" />
-                    <asp:BoundField DataField="PENDING_UNPOSTED_VALUE" HeaderText="PENDING_UNPOSTED_VALUE" />
-                    <asp:TemplateField HeaderText="POSTING_VALUE">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtPostingValue" runat="server" onKeyUp="checkDec1(this)" onkeypress="return inNumberKeyWithDecimal(this, event);" />
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                            <asp:Label ID="lblInvoiceNo" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO") %>' />
-                            <asp:Label ID="lblInvoiceDate" runat="server" Visible="false" Text='<%# Eval("INVOICE_DATE") %>' />
-                            <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
-                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                            <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                            <asp:Label ID="lblBusinessUnit" runat="server" Visible="false" Text='<%# Eval("BUSINESS_UNIT") %>' />
-                            <asp:Label ID="lblRevenueAccount" runat="server" Visible="false" Text='<%# Eval("REVENUE_ACCOUNT") %>' />
-                            <asp:Label ID="lblRevenueAccountDesc" runat="server" Visible="false" Text='<%# Eval("REVENUE_ACCOUNT_DESC") %>' />
-                            <asp:Label ID="lblRevenueAccountType" runat="server" Visible="false" Text='<%# Eval("REVENUE_ACCOUNT_TYPE") %>' />
-                            <asp:Label ID="lblQuantity" runat="server" Visible="false" Text='<%# Eval("QUANTITY") %>' />
-                            <asp:Label ID="lblProductRate" runat="server" Visible="false" Text='<%# Eval("PRODUCT_RATE") %>' />
-                            <asp:Label ID="lblInvoiceAmount" runat="server" Visible="false" Text='<%# Eval("INVOICE_AMOUNT") %>' />
-                            <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("LOCATION") %>' />
-                            <asp:Label ID="lblPostedValue" runat="server" Visible="false" Text='<%# Eval("POSTED_VALUE") %>' />
-                            <asp:Label ID="lblPendingUnpostedValue" runat="server" Visible="false" Text='<%# Eval("PENDING_UNPOSTED_VALUE") %>' />
-                            <asp:Label ID="lblEndMarket" runat="server" Visible="false" Text='<%# Eval("END_MARKET") %>' />
-                            <asp:Label ID="lblCountry" runat="server" Visible="false" Text='<%# Eval("GEOGROPHY") %>' />
-                            <asp:Label ID="lblPostingCurrencyID" runat="server" Visible="false" Text='<%# Eval("POSTED_CURRENCY_ID") %>' />
-                            <asp:Label ID="lblStatus" runat="server" Visible="false" Text='<%# Eval("STATUS") %>' />
-                            <asp:Label ID="lblTypeID" runat="server" Visible="false" Text='<%# Eval("TYPE_ID") %>' />
-                            <asp:Label ID="lblRevenueTypeID" runat="server" Visible="false" Text='<%# Eval("REVENUE_TYPE_ID") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="POSTING_CURRENCY">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlPostingCurrency" runat="server" Width="100%">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="UNPOSTED_VALUE">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtUnPostedValue" runat="server" onKeyUp="checkDec(this)" Text="0.00"
-                                onkeyDown="javascript:preventInput(event);" onpaste="return false;" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <%--<asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />--%>
-                    <asp:TemplateField HeaderText="END_MARKET">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlEndMarket" runat="server">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <%--<asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />--%>
-                    <asp:TemplateField HeaderText="GEOGROPHY">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlCountry" runat="server">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="POSTING_MONTH">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlPostingMonth" runat="server" Width="100%" Enabled="true">
-                                <asp:ListItem Value="1" Text="Jan" />
-                                <asp:ListItem Value="2" Text="Feb" />
-                                <asp:ListItem Value="3" Text="Mar" />
-                                <asp:ListItem Value="4" Text="Apr" />
-                                <asp:ListItem Value="5" Text="May" />
-                                <asp:ListItem Value="6" Text="Jun" />
-                                <asp:ListItem Value="7" Text="Jul" />
-                                <asp:ListItem Value="8" Text="Aug" />
-                                <asp:ListItem Value="9" Text="Sep" />
-                                <asp:ListItem Value="10" Text="Oct" />
-                                <asp:ListItem Value="11" Text="Nov" />
-                                <asp:ListItem Value="12" Text="Dec" />
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="POSTING_YEAR">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlPostingYear" runat="server" Width="100%" Enabled="true">
-                                <asp:ListItem Value="2015" Text="2015" />
-                                <asp:ListItem Value="2016" Text="2016" />
-                                <asp:ListItem Value="2017" Text="2017" />
-                                <asp:ListItem Value="2018" Text="2018" />
-                                <asp:ListItem Value="2019" Text="2019" />
-                                <asp:ListItem Value="2020" Text="2020" />
-                                <asp:ListItem Value="2021" Text="2021" />
-                                <asp:ListItem Value="2022" Text="2022" />
-                                <asp:ListItem Value="2023" Text="2023" />
-                                <asp:ListItem Value="2024" Text="2024" />
-                                <asp:ListItem Value="2025" Text="2025" />
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="TYPE" HeaderStyle-Width="100px" ItemStyle-Width="100px">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlType" runat="server" Width="150px" Enabled="true" onchange="EnableDesableRevenueTypes(this)">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="REVENUE_TYPE">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlRevenueType" runat="server" Width="100%" Enabled="true">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="NOT_REVENUE_TYPE">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlNotRevenueType" runat="server" Width="100%" Enabled="true">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="POST" HeaderStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnPost" CommandArgument="POST" runat="server" Text="Post" CssClass="cancelbutton" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="REV_REC_REDUCTION">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtRevRecReduction" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="UDF2">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtUDF2" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="UDF3">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtUDF3" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="UDF4">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtUDF4" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="UDF5">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtUDF5" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Unposted List GL wise:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPostingList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="18" HorizontalAlign="Center" OnRowDataBound="gvPostingList_RowDataBound"
+                    OnRowCommand="gvPostingList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
+                        <asp:BoundField DataField="INVOICE_NO" HeaderText="INVOICE_NO" />
+                        <asp:BoundField DataField="INVOICE_DATE" HeaderText="INVOICE_DATE" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="CUSTOMER_CODE" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="BUSINESS_UNIT" HeaderText="BUSINESS_UNIT" />
+                        <asp:BoundField DataField="REVENUE_ACCOUNT" HeaderText="REVENUE_ACCOUNT" />
+                        <asp:BoundField DataField="REVENUE_ACCOUNT_DESC" HeaderText="ACCOUNT_DESC" />
+                        <asp:BoundField DataField="REVENUE_ACCOUNT_TYPE" HeaderText="ACCOUNT_TYPE" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
+                        <asp:BoundField DataField="PRODUCT_RATE" HeaderText="PRODUCT_RATE" />
+                        <asp:BoundField DataField="INVOICE_AMOUNT" HeaderText="INVOICE_AMOUNT" />
+                        <asp:BoundField DataField="POSTED_VALUE" HeaderText="POSTED_VALUE" />
+                        <asp:BoundField DataField="PENDING_UNPOSTED_VALUE" HeaderText="PENDING_UNPOSTED_VALUE" />
+                        <asp:TemplateField HeaderText="POSTING_VALUE">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtPostingValue" runat="server" onKeyUp="checkDec1(this)" onkeypress="return inNumberKeyWithDecimal(this, event);" />
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                <asp:Label ID="lblInvoiceNo" runat="server" Visible="false" Text='<%# Eval("INVOICE_NO") %>' />
+                                <asp:Label ID="lblInvoiceDate" runat="server" Visible="false" Text='<%# Eval("INVOICE_DATE") %>' />
+                                <asp:Label ID="lblCustomerCode" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_CODE") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblBusinessUnit" runat="server" Visible="false" Text='<%# Eval("BUSINESS_UNIT") %>' />
+                                <asp:Label ID="lblRevenueAccount" runat="server" Visible="false" Text='<%# Eval("REVENUE_ACCOUNT") %>' />
+                                <asp:Label ID="lblRevenueAccountDesc" runat="server" Visible="false" Text='<%# Eval("REVENUE_ACCOUNT_DESC") %>' />
+                                <asp:Label ID="lblRevenueAccountType" runat="server" Visible="false" Text='<%# Eval("REVENUE_ACCOUNT_TYPE") %>' />
+                                <asp:Label ID="lblQuantity" runat="server" Visible="false" Text='<%# Eval("QUANTITY") %>' />
+                                <asp:Label ID="lblProductRate" runat="server" Visible="false" Text='<%# Eval("PRODUCT_RATE") %>' />
+                                <asp:Label ID="lblInvoiceAmount" runat="server" Visible="false" Text='<%# Eval("INVOICE_AMOUNT") %>' />
+                                <asp:Label ID="lblLocation" runat="server" Visible="false" Text='<%# Eval("LOCATION") %>' />
+                                <asp:Label ID="lblPostedValue" runat="server" Visible="false" Text='<%# Eval("POSTED_VALUE") %>' />
+                                <asp:Label ID="lblPendingUnpostedValue" runat="server" Visible="false" Text='<%# Eval("PENDING_UNPOSTED_VALUE") %>' />
+                                <asp:Label ID="lblEndMarket" runat="server" Visible="false" Text='<%# Eval("END_MARKET") %>' />
+                                <asp:Label ID="lblCountry" runat="server" Visible="false" Text='<%# Eval("GEOGROPHY") %>' />
+                                <asp:Label ID="lblPostingCurrencyID" runat="server" Visible="false" Text='<%# Eval("POSTED_CURRENCY_ID") %>' />
+                                <asp:Label ID="lblStatus" runat="server" Visible="false" Text='<%# Eval("STATUS") %>' />
+                                <asp:Label ID="lblTypeID" runat="server" Visible="false" Text='<%# Eval("TYPE_ID") %>' />
+                                <asp:Label ID="lblRevenueTypeID" runat="server" Visible="false" Text='<%# Eval("REVENUE_TYPE_ID") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="POSTING_CURRENCY">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlPostingCurrency" runat="server" Width="100%">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UNPOSTED_VALUE">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtUnPostedValue" runat="server" onKeyUp="checkDec(this)" Text="0.00"
+                                    onkeyDown="javascript:preventInput(event);" onpaste="return false;" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <%--<asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />--%>
+                        <asp:TemplateField HeaderText="END_MARKET">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlEndMarket" runat="server">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <%--<asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />--%>
+                        <asp:TemplateField HeaderText="GEOGROPHY">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlCountry" runat="server">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="POSTING_MONTH">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlPostingMonth" runat="server" Width="100%" Enabled="true">
+                                    <asp:ListItem Value="1" Text="Jan" />
+                                    <asp:ListItem Value="2" Text="Feb" />
+                                    <asp:ListItem Value="3" Text="Mar" />
+                                    <asp:ListItem Value="4" Text="Apr" />
+                                    <asp:ListItem Value="5" Text="May" />
+                                    <asp:ListItem Value="6" Text="Jun" />
+                                    <asp:ListItem Value="7" Text="Jul" />
+                                    <asp:ListItem Value="8" Text="Aug" />
+                                    <asp:ListItem Value="9" Text="Sep" />
+                                    <asp:ListItem Value="10" Text="Oct" />
+                                    <asp:ListItem Value="11" Text="Nov" />
+                                    <asp:ListItem Value="12" Text="Dec" />
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="POSTING_YEAR">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlPostingYear" runat="server" Width="100%" Enabled="true">
+                                    <asp:ListItem Value="2015" Text="2015" />
+                                    <asp:ListItem Value="2016" Text="2016" />
+                                    <asp:ListItem Value="2017" Text="2017" />
+                                    <asp:ListItem Value="2018" Text="2018" />
+                                    <asp:ListItem Value="2019" Text="2019" />
+                                    <asp:ListItem Value="2020" Text="2020" />
+                                    <asp:ListItem Value="2021" Text="2021" />
+                                    <asp:ListItem Value="2022" Text="2022" />
+                                    <asp:ListItem Value="2023" Text="2023" />
+                                    <asp:ListItem Value="2024" Text="2024" />
+                                    <asp:ListItem Value="2025" Text="2025" />
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="TYPE" HeaderStyle-Width="100px" ItemStyle-Width="100px">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlType" runat="server" Width="150px" Enabled="true" onchange="EnableDesableRevenueTypes(this)">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="REVENUE_TYPE">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlRevenueType" runat="server" Width="100%" Enabled="true">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="NOT_REVENUE_TYPE">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlNotRevenueType" runat="server" Width="100%" Enabled="true">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="POST" HeaderStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnPost" CommandArgument="POST" runat="server" Text="Post" CssClass="cancelbutton" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="REV_REC_REDUCTION">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtRevRecReduction" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UDF2">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtUDF2" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UDF3">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtUDF3" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UDF4">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtUDF4" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="UDF5">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtUDF5" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
     </div>
     <%--</ContentTemplate>
     </asp:UpdatePanel>--%>

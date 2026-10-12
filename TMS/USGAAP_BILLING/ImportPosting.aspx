@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - USGAAP Billing - Import Posting" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ImportPosting.aspx.cs" Inherits="USGAAP_BILLING_ImportPosting" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -105,33 +105,33 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Import Posting:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
-                    <div class="full-width button-group">
-                        <asp:Button ID="btnGetFormat" CssClass="button" Width="100%" runat="server"
-                            Text="Download Format" OnClick="btnGetFormat_Click" />
+                    <asp:Button ID="btnGetFormat" CssClass="button" Width="100%" runat="server"
+                        Text="Download Format" OnClick="btnGetFormat_Click" />
 
-                        <label>Browse:</label>
-                        <asp:FileUpload ID="fileUploadCostCenter" runat="server"
-                            CssClass="form-control"
-                            BorderStyle="Groove" onblur="return ValidatefileUploadCostCenter();" />
-                    </div>
-
-                    <div class="full-width button-group">
-                        <asp:Button ID="btnGetCostCenterFile" CssClass="button" Width="100%" runat="server"
-                            Text="Get Detail" OnClientClick="return ValidateAll();" OnClick="btnGetCostCenterFile_Click" />
-
-                        <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server"
-                            Text="Save" OnClick="btnSave_Click"
-                            OnClientClick="Confirm();" />
-                    </div>
+                    <label>Browse:</label>
+                    <asp:FileUpload ID="fileUploadCostCenter" runat="server"
+                        CssClass="form-control"
+                        BorderStyle="Groove" onblur="return ValidatefileUploadCostCenter();" />
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnGetCostCenterFile" CssClass="button" Width="100%" runat="server"
+                    Text="Get Detail" OnClientClick="return ValidateAll();" OnClick="btnGetCostCenterFile_Click" />
+
+                <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server"
+                    Text="Save" OnClick="btnSave_Click"
+                    OnClientClick="Confirm();" />
+            </div>
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Import Posting:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
         <div class="employee-grid-container">
 
             <div align="center">
@@ -307,6 +307,7 @@
             </asp:UpdatePanel>
 
         </div>
+            </fieldset>
 
     </div>
 
