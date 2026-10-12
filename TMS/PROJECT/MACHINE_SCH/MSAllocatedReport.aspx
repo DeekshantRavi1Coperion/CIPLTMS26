@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS- Assign Items To Machines" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Machine Scheduling - Allocated To Machine Shop- Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     MaintainScrollPositionOnPostback="true" CodeFile="MSAllocatedReport.aspx.cs"
     Inherits="PROJECT_MACHINE_SCH_MSAllocatedReport" %>
 
@@ -563,13 +563,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Allocated To Machine Shop- Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <div class="full-width">
                         <label>Date Filter:</label>
@@ -602,7 +600,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -676,153 +674,160 @@
 
         </div>
 
-        <div class="employee-grid-container">
+        <fieldset class="employee-grid-fieldset">
+            <legend>Allocated To Machine Shop- Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvAllocatedReport" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" Widt h="100%"
+                    HorizontalAlign="Center">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <%--OnRowDataBound="gvAllocatedReport_RowDataBound"--%>
+                    <Columns>
+                        <asp:TemplateField HeaderText="Sr No">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtSrNo" runat="server" Enabled="false" CssClass="textboxcenter"
+                                    Text='<%# Eval("SR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Allocated Code">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtAllocatedCode" Width="150px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ASSIGNED_DRAWING_CODE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtStatus" Width="100px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("STATUS_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Unit">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtUnit" Width="70px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("UNIT_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="JOB No">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtJOBNo" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("JOB_NO") %>' ToolTip='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Item Given In LOT">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemGivenInLOT" Width="250px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    TextMode="MultiLine"
+                                    Columns="30"
+                                    Text='<%# Eval("ITEM_NAME_GIVEN_IN_LOT") %>'
+                                    ToolTip='<%# Eval("ITEM_NAME_GIVEN_IN_LOT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Tag No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtTagNo" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("TAG_NO") %>'
+                                    ToolTip='<%# Eval("TAG_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Item Name">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemName" Width="200px" runat="server"
+                                    TextMode="MultiLine"
+                                    Columns="30"
+                                    Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ITEM_NAME") %>'
+                                    ToolTip='<%# Eval("ITEM_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Item Detail">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemDetail" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ITEM_DETAIL") %>'
+                                    ToolTip='<%# Eval("ITEM_DETAIL") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Allocated Quantity">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" Width="100%" runat="server" Enabled="false" CssClass="textboxrightsmall"
+                                    Text='<%# Eval("ALLOCATED_QUANTITY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="Allocated Date To Machine Shop">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtAllocatedDateToMachineShop" Width="200px" runat="server"
+                                    Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ALLOTTED_DATE_TO_MACHINE_SHOP") %>'
+                                    ToolTip='<%# Eval("ALLOTTED_DATE_TO_MACHINE_SHOP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Expected Date Of Completion By Planning Production">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtExpectedDateOfCompletionByPlanningProduction" Width="200px" runat="server"
+                                    Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_PLANNING_PRODUCTION") %>'
+                                    ToolTip='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_PLANNING_PRODUCTION") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Expected Date Of Completion By Shop Incharge">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtExpectedDateOfCompletionByShopIncharge" Width="200px" runat="server"
+                                    Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_SHOP_INCHARGE") %>'
+                                    ToolTip='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_SHOP_INCHARGE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Remarks">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtRemarks" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    TextMode="MultiLine"
+                                    Columns="30"
+                                    Text='<%# Eval("REMARKS") %>'
+                                    ToolTip='<%# Eval("REMARKS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvAllocatedReport" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" Widt h="100%"
-                HorizontalAlign="Center">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <%--OnRowDataBound="gvAllocatedReport_RowDataBound"--%>
-                <Columns>
-                    <asp:TemplateField HeaderText="Sr No">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtSrNo" runat="server" Enabled="false" CssClass="textboxcenter"
-                                Text='<%# Eval("SR_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Allocated Code">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtAllocatedCode" Width="150px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("ASSIGNED_DRAWING_CODE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Status">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtStatus" Width="100px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("STATUS_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Unit">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtUnit" Width="70px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("UNIT_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="JOB No">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtJOBNo" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("JOB_NO") %>' ToolTip='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Item Given In LOT">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtItemGivenInLOT" Width="250px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                TextMode="MultiLine"
-                                Columns="30"
-                                Text='<%# Eval("ITEM_NAME_GIVEN_IN_LOT") %>'
-                                ToolTip='<%# Eval("ITEM_NAME_GIVEN_IN_LOT") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Tag No.">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtTagNo" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("TAG_NO") %>'
-                                ToolTip='<%# Eval("TAG_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Item Name">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtItemName" Width="200px" runat="server"
-                                TextMode="MultiLine"
-                                Columns="30"
-                                Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("ITEM_NAME") %>'
-                                ToolTip='<%# Eval("ITEM_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Item Detail">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtItemDetail" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("ITEM_DETAIL") %>'
-                                ToolTip='<%# Eval("ITEM_DETAIL") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Allocated Quantity">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtQuantity" Width="100%" runat="server" Enabled="false" CssClass="textboxrightsmall"
-                                Text='<%# Eval("ALLOCATED_QUANTITY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="Allocated Date To Machine Shop">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtAllocatedDateToMachineShop" Width="200px" runat="server"
-                                Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("ALLOTTED_DATE_TO_MACHINE_SHOP") %>'
-                                ToolTip='<%# Eval("ALLOTTED_DATE_TO_MACHINE_SHOP") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Expected Date Of Completion By Planning Production">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtExpectedDateOfCompletionByPlanningProduction" Width="200px" runat="server"
-                                Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_PLANNING_PRODUCTION") %>'
-                                ToolTip='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_PLANNING_PRODUCTION") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Expected Date Of Completion By Shop Incharge">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtExpectedDateOfCompletionByShopIncharge" Width="200px" runat="server"
-                                Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_SHOP_INCHARGE") %>'
-                                ToolTip='<%# Eval("EXPECTED_DATE_OF_COMPLETION_BY_SHOP_INCHARGE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Remarks">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtRemarks" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                TextMode="MultiLine"
-                                Columns="30"
-                                Text='<%# Eval("REMARKS") %>'
-                                ToolTip='<%# Eval("REMARKS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 

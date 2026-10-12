@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Machine Scheduling - Machine Activity List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="MacineActivitiesList.aspx.cs" Inherits="PROJECT_MACHINE_SCH_MacineActivitiesList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -91,13 +91,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Machine Activity List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Activity:</label>
                     <asp:DropDownList ID="ddlActivity" runat="server" CssClass="form-control">
@@ -118,44 +116,50 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Machine Activity List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvMahineActivityList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvMahineActivityList_RowCommand"
+                    OnRowDataBound="gvMahineActivityList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("MACHINE_ACTIVITY_PID") %>' />
+                                <asp:Label ID="lblActivityID" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_FID") %>' />
+                                <asp:Label ID="lblMachineID" runat="server" Visible="false" Text='<%# Eval("MACHINE_FID") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="SR_NO" HeaderText="SR_NO" />
+                        <asp:BoundField DataField="ACTIVITY_NAME" HeaderText="ACTIVITY_NAME" />
+                        <asp:BoundField DataField="MACHINE_NAME" HeaderText="MACHINE_NAME" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvMahineActivityList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvMahineActivityList_RowCommand"
-                OnRowDataBound="gvMahineActivityList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("MACHINE_ACTIVITY_PID") %>' />
-                            <asp:Label ID="lblActivityID" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_FID") %>' />
-                            <asp:Label ID="lblMachineID" runat="server" Visible="false" Text='<%# Eval("MACHINE_FID") %>' />
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Employee Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="SR_NO" HeaderText="SR_NO" />
-                    <asp:BoundField DataField="ACTIVITY_NAME" HeaderText="ACTIVITY_NAME" />
-                    <asp:BoundField DataField="MACHINE_NAME" HeaderText="MACHINE_NAME" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -164,7 +168,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
         PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlpopup" runat="server" 
+    <asp:Panel ID="pnlpopup" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -199,7 +203,7 @@
 
             <div class="full-width button-group">
 
-                <asp:Button ID="btnUpdate" CssClass="button" runat="server" Text="Submit" 
+                <asp:Button ID="btnUpdate" CssClass="button" runat="server" Text="Submit"
                     OnClientClick="return ValidateAll();"
                     Width="100%" OnClick="btnUpdate_Click" />
 

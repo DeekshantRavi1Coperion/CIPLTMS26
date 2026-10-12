@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Machine Scheduling - Machine List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="MachinesList.aspx.cs" Inherits="PROJECT_MACHINE_SCH_ActivitiesList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -74,64 +74,66 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Machine List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Machine:</label>
                     <asp:TextBox ID="txtMachine" runat="server" CssClass="form-control" />
 
-                    <asp:Button ID="btnSearch" CssClass="button" runat="server" Text="Search" OnClick="btnSearch_Click" />
-
-                    <asp:Button ID="btnAddNew" CssClass="button" runat="server" Text="Add New" OnClick="btnAddNew_Click" />
-
-
                 </div>
             </fieldset>
-
-        </div>
-
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" runat="server" Text="Search" OnClick="btnSearch_Click" />
+                <asp:Button ID="btnAddNew" CssClass="button" runat="server" Text="Add New" OnClick="btnAddNew_Click" />
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvMachineList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvMachineList_RowCommand"
-                OnRowDataBound="gvMachineList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblMachineID" runat="server" Visible="false" Text='<%# Eval("MACHINE_PID") %>' />
-                            <asp:Label ID="lblMachineName" runat="server" Visible="false" Text='<%# Eval("MACHINE_NAME") %>' />
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Machine Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="SR_NO" HeaderText="SR_NO" />
-                    <asp:BoundField DataField="MACHINE_NAME" HeaderText="MACHINE_NAME" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
 
         </div>
 
+        <fieldset class="employee-grid-fieldset">
+            <legend>Machine List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvMachineList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvMachineList_RowCommand"
+                    OnRowDataBound="gvMachineList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblMachineID" runat="server" Visible="false" Text='<%# Eval("MACHINE_PID") %>' />
+                                <asp:Label ID="lblMachineName" runat="server" Visible="false" Text='<%# Eval("MACHINE_NAME") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Machine Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="SR_NO" HeaderText="SR_NO" />
+                        <asp:BoundField DataField="MACHINE_NAME" HeaderText="MACHINE_NAME" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
     </div>
 
 

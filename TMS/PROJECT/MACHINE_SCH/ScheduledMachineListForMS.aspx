@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS- Assign Items To Machines" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Machine Scheduling - Re-Scheduling of Machine" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     MaintainScrollPositionOnPostback="true" CodeFile="ScheduledMachineListForMS.aspx.cs"
     Inherits="PROJECT_MACHINE_SCH_ScheduledMachineListForMS" %>
 
@@ -389,23 +389,28 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Re-Scheduling of Machine:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Machine:</label>
-                    <asp:DropDownList ID="ddlMachine" runat="server" Width="100%" Height="26px" />
-
-                    <asp:Button ID="btnSearch" runat="server" Width="100%" Text="Search" CssClass="button"
-                        OnClick="btnSearch_Click" />
+                    <asp:DropDownList ID="ddlMachine" runat="server" 
+                        CssClass="form-control"/>
 
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" runat="server" Width="100%" Text="Search" CssClass="button"
+                    OnClick="btnSearch_Click" />
+            </div>
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Re-Scheduling of Machine:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                </legend>
 
         <div class="employee-grid-container">
             <div align="center">
@@ -478,6 +483,7 @@
             </asp:GridView>
 
         </div>
+            </fieldset>
 
     </div>
 
@@ -512,122 +518,122 @@
 
                         <div class="full-width button-group">
 
-                        
-                        <label>Machine Name:</label>
-                        <asp:Label ID="lblMachineIDSchD" runat="server" Visible="false" />
-                        <asp:TextBox ID="txtMachineNameSchD" runat="server" Enabled="false"
-                            CssClass="form-control" />
 
-                        <label>From Date:</label>
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <asp:TextBox ID="txtScheduledFromSchD" runat="server"
-                                        CssClass="form-control"
-                                        onkeyDown="javascript:preventInput(event);" Enabled="false"></asp:TextBox>
-                                    <asp:HiddenField ID="hdScheduledFromSchD" runat="server" />
-                                    <ajax:CalendarExtender ID="calendarScheduledFromSchD" runat="server"
-                                        PopupButtonID="imgbtnScheduledFromSchD"
-                                        Format="dd-MMM-yyyy"
-                                        BehaviorID="calendarScheduledFromSchD" TargetControlID="txtScheduledFromSchD"
-                                        OnClientDateSelectionChanged="clientChangedScheduleMonth">
-                                    </ajax:CalendarExtender>
-                                </td>
-                                <td align="right">
-                                    <asp:ImageButton ID="imgbtnScheduledFromSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
-                                        ToolTip="PO Month Calendar" Width="20px" Visible="false" />
-                                </td>
-                            </tr>
-                        </table>
+                            <label>Machine Name:</label>
+                            <asp:Label ID="lblMachineIDSchD" runat="server" Visible="false" />
+                            <asp:TextBox ID="txtMachineNameSchD" runat="server" Enabled="false"
+                                CssClass="form-control" />
 
-                        <asp:Button ID="btnGetScheduledHours" ToolTip="Get Scheduled Hours" runat="server"
-                            Text="Get Scheduled Hours" CssClass="button" Width="100%" BorderColor="Yellow" BorderStyle="Solid"
-                            BorderWidth="2px" BackColor="LightCoral" OnClick="btnGetScheduledHours_Click"
-                            OnClientClick="return ValidateAllMachineSchD();" />
+                            <label>From Date:</label>
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtScheduledFromSchD" runat="server"
+                                            CssClass="form-control"
+                                            onkeyDown="javascript:preventInput(event);" Enabled="false"></asp:TextBox>
+                                        <asp:HiddenField ID="hdScheduledFromSchD" runat="server" />
+                                        <ajax:CalendarExtender ID="calendarScheduledFromSchD" runat="server"
+                                            PopupButtonID="imgbtnScheduledFromSchD"
+                                            Format="dd-MMM-yyyy"
+                                            BehaviorID="calendarScheduledFromSchD" TargetControlID="txtScheduledFromSchD"
+                                            OnClientDateSelectionChanged="clientChangedScheduleMonth">
+                                        </ajax:CalendarExtender>
+                                    </td>
+                                    <td align="right">
+                                        <asp:ImageButton ID="imgbtnScheduledFromSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
+                                            ToolTip="PO Month Calendar" Width="20px" Visible="false" />
+                                    </td>
+                                </tr>
+                            </table>
 
-                            </div>
+                            <asp:Button ID="btnGetScheduledHours" ToolTip="Get Scheduled Hours" runat="server"
+                                Text="Get Scheduled Hours" CssClass="button" Width="100%" BorderColor="Yellow" BorderStyle="Solid"
+                                BorderWidth="2px" BackColor="LightCoral" OnClick="btnGetScheduledHours_Click"
+                                OnClientClick="return ValidateAllMachineSchD();" />
 
-
-                        <div class="full-width button-group">
-
-                        <label>Add Day:</label>
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <asp:TextBox ID="txtAddDateSchD" runat="server"
-                                        CssClass="form-control"
-                                        onkeyDown="javascript:preventInput(event);"></asp:TextBox>
-                                    <asp:HiddenField ID="hdAddDateSchD" runat="server" />
-                                    <ajax:CalendarExtender ID="calendarAddDateSchD" runat="server"
-                                        PopupButtonID="imgbtnAddDateSchD"
-                                        Format="dd-MMM-yyyy"
-                                        BehaviorID="calendarAddDateSchD" TargetControlID="txtAddDateSchD"
-                                        OnClientDateSelectionChanged="clientChangedAddDate">
-                                    </ajax:CalendarExtender>
-                                </td>
-                                <td align="right">
-                                    <asp:ImageButton ID="imgbtnAddDateSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
-                                        ToolTip="PO Month Calendar" Width="20px" />
-                                </td>
-                            </tr>
-                        </table>
-
-                        <asp:Button ID="btnAddDays" ToolTip="Add Days" runat="server"
-                            Text="Add Days" CssClass="button" Width="100%" BorderColor="Yellow" BorderStyle="Solid"
-                            BorderWidth="2px" BackColor="LightCoral"
-                            OnClientClick="return ValidateAllMachineSchD();"
-                            OnClick="btnAddDays_Click" />
-
-                            </div>
+                        </div>
 
 
                         <div class="full-width button-group">
 
-                        <label>Commited Date By Shop Incharge:</label>
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <asp:TextBox ID="txtCommitedDateByShopInchargeSchD" runat="server"
-                                        CssClass="form-control"
-                                        onkeyDown="javascript:preventInput(event);"></asp:TextBox>
-                                    <asp:HiddenField ID="hdCommitedDateByShopInchargeSchD" runat="server" />
-                                    <ajax:CalendarExtender ID="calendarCommitedDateByShopInchargeSchD" runat="server"
-                                        PopupButtonID="imgbtnCommitedDateByShopInchargeSchD"
-                                        Format="dd-MMM-yyyy"
-                                        BehaviorID="calendarCommitedDateByShopInchargeSchD" TargetControlID="txtCommitedDateByShopInchargeSchD"
-                                        OnClientDateSelectionChanged="clientChangedCommitedDateByShopIncharge">
-                                    </ajax:CalendarExtender>
-                                </td>
-                                <td align="right">
-                                    <asp:ImageButton ID="imgbtnCommitedDateByShopInchargeSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
-                                        ToolTip="Commited Date By Shop Incharge Calendar" Width="20px" />
-                                </td>
-                            </tr>
-                        </table>
+                            <label>Add Day:</label>
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtAddDateSchD" runat="server"
+                                            CssClass="form-control"
+                                            onkeyDown="javascript:preventInput(event);"></asp:TextBox>
+                                        <asp:HiddenField ID="hdAddDateSchD" runat="server" />
+                                        <ajax:CalendarExtender ID="calendarAddDateSchD" runat="server"
+                                            PopupButtonID="imgbtnAddDateSchD"
+                                            Format="dd-MMM-yyyy"
+                                            BehaviorID="calendarAddDateSchD" TargetControlID="txtAddDateSchD"
+                                            OnClientDateSelectionChanged="clientChangedAddDate">
+                                        </ajax:CalendarExtender>
+                                    </td>
+                                    <td align="right">
+                                        <asp:ImageButton ID="imgbtnAddDateSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
+                                            ToolTip="PO Month Calendar" Width="20px" />
+                                    </td>
+                                </tr>
+                            </table>
 
-                        <label>Date Of Receipt Of Material:</label>
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <asp:TextBox ID="txtDateOfReceiptOfMaterialSchD" runat="server"
-                                        CssClass="form-control"
-                                        onkeyDown="javascript:preventInput(event);"></asp:TextBox>
-                                    <asp:HiddenField ID="hdDateOfReceiptOfMaterialSchD" runat="server" />
-                                    <ajax:CalendarExtender ID="calendarDateOfReceiptOfMaterialSchD" runat="server"
-                                        PopupButtonID="imgbtnDateOfReceiptOfMaterialSchD"
-                                        Format="dd-MMM-yyyy"
-                                        BehaviorID="calendarDateOfReceiptOfMaterialSchD" TargetControlID="txtDateOfReceiptOfMaterialSchD"
-                                        OnClientDateSelectionChanged="clientChangedDateOfReceiptOfMaterial">
-                                    </ajax:CalendarExtender>
-                                </td>
-                                <td align="right">
-                                    <asp:ImageButton ID="imgbtnDateOfReceiptOfMaterialSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
-                                        ToolTip="Date Of Receipt Of Material Calendar" Width="20px" />
-                                </td>
-                            </tr>
-                        </table>
+                            <asp:Button ID="btnAddDays" ToolTip="Add Days" runat="server"
+                                Text="Add Days" CssClass="button" Width="100%" BorderColor="Yellow" BorderStyle="Solid"
+                                BorderWidth="2px" BackColor="LightCoral"
+                                OnClientClick="return ValidateAllMachineSchD();"
+                                OnClick="btnAddDays_Click" />
 
-                            </div>
+                        </div>
+
+
+                        <div class="full-width button-group">
+
+                            <label>Commited Date By Shop Incharge:</label>
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtCommitedDateByShopInchargeSchD" runat="server"
+                                            CssClass="form-control"
+                                            onkeyDown="javascript:preventInput(event);"></asp:TextBox>
+                                        <asp:HiddenField ID="hdCommitedDateByShopInchargeSchD" runat="server" />
+                                        <ajax:CalendarExtender ID="calendarCommitedDateByShopInchargeSchD" runat="server"
+                                            PopupButtonID="imgbtnCommitedDateByShopInchargeSchD"
+                                            Format="dd-MMM-yyyy"
+                                            BehaviorID="calendarCommitedDateByShopInchargeSchD" TargetControlID="txtCommitedDateByShopInchargeSchD"
+                                            OnClientDateSelectionChanged="clientChangedCommitedDateByShopIncharge">
+                                        </ajax:CalendarExtender>
+                                    </td>
+                                    <td align="right">
+                                        <asp:ImageButton ID="imgbtnCommitedDateByShopInchargeSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
+                                            ToolTip="Commited Date By Shop Incharge Calendar" Width="20px" />
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <label>Date Of Receipt Of Material:</label>
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <asp:TextBox ID="txtDateOfReceiptOfMaterialSchD" runat="server"
+                                            CssClass="form-control"
+                                            onkeyDown="javascript:preventInput(event);"></asp:TextBox>
+                                        <asp:HiddenField ID="hdDateOfReceiptOfMaterialSchD" runat="server" />
+                                        <ajax:CalendarExtender ID="calendarDateOfReceiptOfMaterialSchD" runat="server"
+                                            PopupButtonID="imgbtnDateOfReceiptOfMaterialSchD"
+                                            Format="dd-MMM-yyyy"
+                                            BehaviorID="calendarDateOfReceiptOfMaterialSchD" TargetControlID="txtDateOfReceiptOfMaterialSchD"
+                                            OnClientDateSelectionChanged="clientChangedDateOfReceiptOfMaterial">
+                                        </ajax:CalendarExtender>
+                                    </td>
+                                    <td align="right">
+                                        <asp:ImageButton ID="imgbtnDateOfReceiptOfMaterialSchD" runat="server" ImageUrl="~/Images/MS/cal1.png"
+                                            ToolTip="Date Of Receipt Of Material Calendar" Width="20px" />
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
 
                     </div>
                 </fieldset>
@@ -935,157 +941,151 @@
 
         <div class="popup-layout">
 
-        <div class="form-grid-container">
-            <fieldset class="filter-card">
-                <legend>
-                    <asp:Label ID="lblLegendAssignedDrawingDetails" runat="server" Text="Assigned Drawings List" />:
+            <div class="form-grid-container">
+                <fieldset class="filter-card">
+                    <legend>
+                        <asp:Label ID="lblLegendAssignedDrawingDetails" runat="server" Text="Assigned Drawings List" />:
                     <asp:Label ID="lblAssignedDrawingList" runat="server" Text="Records[0]" />
-                </legend>
+                    </legend>
 
-                <div class="form-grid form-grid-3">
+                    <div class="form-grid form-grid-3">
 
-                            <label>JOB Number:</label>
-                                <asp:TextBox ID="txtJobNoInAssignedDrg" runat="server" CssClass="form-control" />
-                            
-                      <label>Drawing Number:</label>
-                               <asp:TextBox ID="txtDrawingNoInAssignedDrg" runat="server" CssClass="form-control" />
-                          
-                            <label>Item Name:</label>
-                               <asp:TextBox ID="txtItemNameInAssignedDrg" runat="server" CssClass="form-control" />
-                           
+                        <label>JOB Number:</label>
+                        <asp:TextBox ID="txtJobNoInAssignedDrg" runat="server" CssClass="form-control" />
 
-                                <asp:Button ID="btnSearchAssignedDrawingDetails" runat="server" Width="100%"
-                                    Text="Search" CssClass="button"
-                                    OnClick="btnSearchAssignedDrawingDetails_Click"
-                                    BorderColor="Yellow" BorderStyle="Solid"
-                                    BorderWidth="2px" BackColor="LightCoral" />
-                            
+                        <label>Drawing Number:</label>
+                        <asp:TextBox ID="txtDrawingNoInAssignedDrg" runat="server" CssClass="form-control" />
+
+                        <label>Item Name:</label>
+                        <asp:TextBox ID="txtItemNameInAssignedDrg" runat="server" CssClass="form-control" />
+
+
+                        <asp:Button ID="btnSearchAssignedDrawingDetails" runat="server" Width="100%"
+                            Text="Search" CssClass="button"
+                            OnClick="btnSearchAssignedDrawingDetails_Click"
+                            BorderColor="Yellow" BorderStyle="Solid"
+                            BorderWidth="2px" BackColor="LightCoral" />
+
+                    </div>
+                </fieldset>
+                <div class="full-width button-group">
                 </div>
-            </fieldset>
-            <div class="full-width button-group">
-                
             </div>
-        </div>
 
-        <div class="popup-grid-container">
-            <div align="center">
+            <div class="popup-grid-container">
+                <div align="center">
                     <asp:Panel ID="pnlAssignedDrawingDetailsMsg" Visible="false" runat="server">
                         <asp:Label ID="lblAssignedDrawingDetailsMsg" runat="server" Font-Bold="true" Font-Size="Large" />
                     </asp:Panel>
                 </div>
 
-            <asp:GridView 
-                CssClass="popup-grid"
-                ID="gvAssignedDrawingList" runat="server" AutoGenerateColumns="false" CellPadding="5"
-                                 AlternatingRowStyle-CssClass="alt"
-                                OnRowCommand="gvAssignedDrawingList_RowCommand">
-                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                                <%--OnRowDataBound="AssignedDrawingList_RowDataBound"--%>
-                                <Columns>
-                                    <asp:TemplateField HeaderText="Sr No">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblRecordIDInDrgList" runat="server" Visible="false" Text='<%# Eval("RECORD_PID") %>' />
-                                            <asp:TextBox ID="txtSrNoInDrgList" runat="server" Enabled="false" CssClass="textboxcenter"
-                                                Text='<%# Eval("SR_NO") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                <asp:GridView
+                    CssClass="popup-grid"
+                    ID="gvAssignedDrawingList" runat="server" AutoGenerateColumns="false" CellPadding="5"
+                    AlternatingRowStyle-CssClass="alt"
+                    OnRowCommand="gvAssignedDrawingList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <%--OnRowDataBound="AssignedDrawingList_RowDataBound"--%>
+                    <Columns>
+                        <asp:TemplateField HeaderText="Sr No">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordIDInDrgList" runat="server" Visible="false" Text='<%# Eval("RECORD_PID") %>' />
+                                <asp:TextBox ID="txtSrNoInDrgList" runat="server" Enabled="false" CssClass="textboxcenter"
+                                    Text='<%# Eval("SR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                                    <asp:TemplateField HeaderText="Get">
-                                        <ItemTemplate>
-                                            <asp:Button ID="btnGetAssignedDrawingDetail" CommandArgument="GET_ASSIGNED_DRAWINGS"
-                                                ToolTip="Get Assigned Drawing Details" Width="100%"
-                                                runat="server" Text="Get" CssClass="cancelbutton"
-                                                BorderStyle="Solid" BorderColor="Yellow" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Get">
+                            <ItemTemplate>
+                                <asp:Button ID="btnGetAssignedDrawingDetail" CommandArgument="GET_ASSIGNED_DRAWINGS"
+                                    ToolTip="Get Assigned Drawing Details" Width="100%"
+                                    runat="server" Text="Get" CssClass="cancelbutton"
+                                    BorderStyle="Solid" BorderColor="Yellow" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Assigned Drawing Code" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtAssignedDrawingCodeInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="150px" Text='<%# Eval("ASSIGNED_DRAWING_CODE") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Assigned Drawing Code" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtAssignedDrawingCodeInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="150px" Text='<%# Eval("ASSIGNED_DRAWING_CODE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Job No.">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtJobNoInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="150px" Text='<%# Eval("JOB_NO") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Job No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtJobNoInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="150px" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Drawing No.">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtDrawingNoInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="250px" Text='<%# Eval("DRAWING_NO") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Drawing No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtDrawingNoInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="250px" Text='<%# Eval("DRAWING_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Equipment">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtEquipmentInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="250px" Text='<%# Eval("EQUIPMENT") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Equipment">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtEquipmentInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="250px" Text='<%# Eval("EQUIPMENT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Tag No.">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtTagNoInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="250px" Text='<%# Eval("TAG_NO") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Tag No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtTagNoInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="250px" Text='<%# Eval("TAG_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Item Name">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtItemNameInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="250px" Text='<%# Eval("ITEM_NAME") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Item Name">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemNameInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="250px" Text='<%# Eval("ITEM_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Item Detail">
-                                        <ItemTemplate>
-                                            <asp:TextBox ID="txtItemDetailInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                                Width="250px" Text='<%# Eval("ITEM_DETAIL") %>' />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Item Detail">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemDetailInDrgList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Width="250px" Text='<%# Eval("ITEM_DETAIL") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                </Columns>
+                    </Columns>
 
-                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                <EditRowStyle BackColor="#7C6F57" />
-                                <AlternatingRowStyle BackColor="White" />
-                            </asp:GridView>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
 
         </div>
-
-    </div>
 
 
         <div align="center">
 
             <fieldset style="width: 95%; margin-top: 10px;">
-                <legend style="text-align: center;">
-                    
-                </legend>
-                
+                <legend style="text-align: center;"></legend>
+
                 <div style='overflow: auto; width: 99%; height: 480px; border: 1px solid lightgray; margin-left: 5px;'>
 
                     <br />
 
-                    
+
 
                     <fieldset style="width: 100%;">
-                        <legend style="text-align: center;">
-                            /legend>
+                        <legend style="text-align: center;">/legend>
                         <%--id="dvScroll" --%>
-                        <div style='overflow: scroll; width: 100%; height: 300px; border: 1px solid lightgray;'>
-                            
-
-                        </div>
-                        <%--<input type="hidden" id="div_position" name="div_position" />--%>
+                            <div style='overflow: scroll; width: 100%; height: 300px; border: 1px solid lightgray;'>
+                            </div>
+                            <%--<input type="hidden" id="div_position" name="div_position" />--%>
                     </fieldset>
 
                 </div>

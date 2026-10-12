@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS- Assign Items To Machines" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Machine Scheduling - Assign Items To Machine Shop" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     MaintainScrollPositionOnPostback="true" CodeFile="AssignItemsForMS.aspx.cs"
     Inherits="PROJECT_MACHINE_SCH_AssignItemsForMS" %>
 
@@ -615,13 +615,11 @@
     <asp:HiddenField ID="hdIsNewRecord" Value="0" runat="server" />
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Assign Items To Machine Shop:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Unit:</label>
                     <asp:DropDownList ID="ddlCompanyToA" runat="server"
@@ -756,7 +754,7 @@
                     <label>ED of Comp. by Planning/Production:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtDateToA" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdDateToA" runat="server" />
@@ -815,60 +813,65 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Assign Items To Machine Shop:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <input type="hidden" id="div_position" name="div_position" />
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvSubitemsList" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvSubitemsList_RowCommand"
-                OnRowDataBound="gvSubitemsList_RowDataBound">
-                <%--<RowStyle BackColor="#E3EAEB" HorizontalAlign="Left"/>--%>
-                <Columns>
-                    <asp:TemplateField HeaderText="Sr No">
-                        <ItemTemplate>
+                <input type="hidden" id="div_position" name="div_position" />
 
-                            <asp:TextBox ID="txtSrNo" runat="server" Enabled="false" CssClass="textboxcenter" Text='<%# Eval("SR_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvSubitemsList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvSubitemsList_RowCommand"
+                    OnRowDataBound="gvSubitemsList_RowDataBound">
+                    <%--<RowStyle BackColor="#E3EAEB" HorizontalAlign="Left"/>--%>
+                    <Columns>
+                        <asp:TemplateField HeaderText="Sr No">
+                            <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
-                            <asp:Label ID="lblLOTTFSubitemIDInList" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' />
-                            <asp:Label ID="lblLOTSIDrawigName1" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT1_NAME") %>' />
-                            <asp:Label ID="lblLOTSIDrawigName2" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT2_NAME") %>' />
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:TextBox ID="txtSrNo" runat="server" Enabled="false" CssClass="textboxcenter" Text='<%# Eval("SR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                            <asp:ImageButton ID="imgBtnAddNewRecord" ImageUrl="~/Images/LOT/edit5.png" ToolTip="Edit Record"
-                                runat="server" CommandArgument="EDIT" Width="35px" Height="35px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnRemoveRecord" ImageUrl="~/Images/Icons/REMOVE02.png" ToolTip="Remove Record"
-                                runat="server" CommandArgument="REMOVE" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLOTTFID" runat="server" Visible="false" Text='<%# Eval("LOT_TF_ID") %>' />
+                                <asp:Label ID="lblLOTTFSubitemIDInList" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' />
+                                <asp:Label ID="lblLOTSIDrawigName1" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT1_NAME") %>' />
+                                <asp:Label ID="lblLOTSIDrawigName2" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT2_NAME") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
 
-                    <asp:TemplateField HeaderText="Add. Drawing" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
-                        ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
-                        <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnAddNewRecord" ImageUrl="~/Images/LOT/edit5.png" ToolTip="Edit Record"
+                                    runat="server" CommandArgument="EDIT" Width="35px" Height="35px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnRemoveRecord" ImageUrl="~/Images/Icons/REMOVE02.png" ToolTip="Remove Record"
+                                    runat="server" CommandArgument="REMOVE" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                            <asp:TextBox ID="txtAdditinoalDrawingFilePath" runat="server" CssClass="textfiles" Width="200px"
-                                Visible="false" Enabled="false" Text='<%# Eval("ADD_DRAWING_FILE_NAME") %>'></asp:TextBox>
+                        <asp:TemplateField HeaderText="Add. Drawing" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
+                            ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                            <ItemTemplate>
 
-                            <asp:ImageButton ID="imgBtnViewAdditionalDrawing" runat="server" ImageUrl="~/Images/pdficon1.png"
-                                CommandArgument="ViewADDDRAWING"
-                                Width="35px" Height="35px" />
-                            <%--<table width="100%">
+                                <asp:TextBox ID="txtAdditinoalDrawingFilePath" runat="server" CssClass="textfiles" Width="200px"
+                                    Visible="false" Enabled="false" Text='<%# Eval("ADD_DRAWING_FILE_NAME") %>'></asp:TextBox>
+
+                                <asp:ImageButton ID="imgBtnViewAdditionalDrawing" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewADDDRAWING"
+                                    Width="35px" Height="35px" />
+                                <%--<table width="100%">
                                     <tr>
                                         <td style="width: 80%;">
                                             <asp:TextBox ID="txtAdditinoalDrawingFilePath" runat="server" CssClass="textfiles" Width="200px"
@@ -881,134 +884,135 @@
                                         </td>
                                     </tr>
                                 </table>--%>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Drawing (.pdf)" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
-                        ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderText="Drawing (.pdf)" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
+                            ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                            <ItemTemplate>
 
-                            <asp:ImageButton ID="imgBtnViewDrawing1" runat="server" ImageUrl="~/Images/pdficon1.png"
-                                CommandArgument="ViewSIDRAWING1"
-                                Width="35px" Height="35px" />
+                                <asp:ImageButton ID="imgBtnViewDrawing1" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewSIDRAWING1"
+                                    Width="35px" Height="35px" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Drawing (.dwg/.dxf)" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
-                        ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderText="Drawing (.dwg/.dxf)" HeaderStyle-HorizontalAlign="Center" HeaderStyle-VerticalAlign="Middle"
+                            ItemStyle-HorizontalAlign="Center" ItemStyle-VerticalAlign="Middle">
+                            <ItemTemplate>
 
-                            <asp:ImageButton ID="imgBtnViewDrawing2" runat="server" ImageUrl="~/Images/pdficon1.png"
-                                CommandArgument="ViewSIDRAWING2"
-                                Width="35px" Height="35px" />
+                                <asp:ImageButton ID="imgBtnViewDrawing2" runat="server" ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewSIDRAWING2"
+                                    Width="35px" Height="35px" />
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Unit">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderText="Unit">
+                            <ItemTemplate>
 
-                            <asp:TextBox ID="txtUnit" Width="70px" runat="server" Enabled="false" CssClass="textboxleftyellow" Text='<%# Eval("UNIT_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:TextBox ID="txtUnit" Width="70px" runat="server" Enabled="false" CssClass="textboxleftyellow" Text='<%# Eval("UNIT_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Category">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtCategory" Width="150px" runat="server" Enabled="false"
-                                CssClass="textboxleftyellow" Text='<%# Eval("CATEGORY_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="JOB No">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtJOBNo" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("JOB_NO") %>'
-                                ToolTip='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Drawing No">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtDrawingNo" Width="200px" TextMode="MultiLine" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("DRAWING_NO") %>'
-                                ToolTip='<%# Eval("DRAWING_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Equipment">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtEquipment" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("EQUIPMENT") %>'
-                                ToolTip='<%# Eval("EQUIPMENT") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Tag No.">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtTagNo" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("TAG_NO") %>'
-                                ToolTip='<%# Eval("TAG_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Category">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtCategory" Width="150px" runat="server" Enabled="false"
+                                    CssClass="textboxleftyellow" Text='<%# Eval("CATEGORY_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Item Name">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtItemName" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("ITEM_NAME") %>'
-                                ToolTip='<%# Eval("ITEM_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="JOB No">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtJOBNo" Width="180px" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("JOB_NO") %>'
+                                    ToolTip='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Item Detail">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtItemDetail" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("ITEM_DETAIL") %>'
-                                ToolTip='<%# Eval("ITEM_DETAIL") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Drawing No">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtDrawingNo" Width="200px" TextMode="MultiLine" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("DRAWING_NO") %>'
+                                    ToolTip='<%# Eval("DRAWING_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Equipment">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtEquipment" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("EQUIPMENT") %>'
+                                    ToolTip='<%# Eval("EQUIPMENT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Tag No.">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtTagNo" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("TAG_NO") %>'
+                                    ToolTip='<%# Eval("TAG_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Expected Date of Completion by Planning/Production">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtExpectedDateofComp" runat="server" Width="100%"
-                                Text='<%# Eval("EXPECTED_DATE_OF_COMP_BY_PLANNING") %>'
-                                Enabled="false" CssClass="textboxleftsmall"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Item Name">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemName" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ITEM_NAME") %>'
+                                    ToolTip='<%# Eval("ITEM_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Quantity">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtQuantity" Width="70px" runat="server" Enabled="false" CssClass="textboxrightsmall"
-                                Text='<%# Eval("ALLOCATED_QUANTITY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Item Detail">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemDetail" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("ITEM_DETAIL") %>'
+                                    ToolTip='<%# Eval("ITEM_DETAIL") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Remarks">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtRemarks" Width="200px" runat="server" TextMode="MultiLine"
-                                Columns="30" Enabled="false" CssClass="textboxleftyellow"
-                                Text='<%# Eval("REMARKS") %>'
-                                ToolTip='<%# Eval("REMARKS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
 
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                        <asp:TemplateField HeaderText="Expected Date of Completion by Planning/Production">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtExpectedDateofComp" runat="server" Width="100%"
+                                    Text='<%# Eval("EXPECTED_DATE_OF_COMP_BY_PLANNING") %>'
+                                    Enabled="false" CssClass="textboxleftsmall"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-        </div>
+                        <asp:TemplateField HeaderText="Quantity">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" Width="70px" runat="server" Enabled="false" CssClass="textboxrightsmall"
+                                    Text='<%# Eval("ALLOCATED_QUANTITY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Remarks">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtRemarks" Width="200px" runat="server" TextMode="MultiLine"
+                                    Columns="30" Enabled="false" CssClass="textboxleftyellow"
+                                    Text='<%# Eval("REMARKS") %>'
+                                    ToolTip='<%# Eval("REMARKS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 
@@ -1018,7 +1022,7 @@
     <ajax:ModalPopupExtender ID="mpeJobDetailLOT" runat="server" TargetControlID="btnShowPopupJobDetailLOT"
         PopupControlID="pnlPopupJobDetailLOT" CancelControlID="imgBtnCancelJobDetailLOT" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupJobDetailLOT" runat="server" 
+    <asp:Panel ID="pnlPopupJobDetailLOT" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -1098,7 +1102,7 @@
     <ajax:ModalPopupExtender ID="mpeJobDetailFact" runat="server" TargetControlID="btnShowPopupJobDetailFact"
         PopupControlID="pnlPopupJobDetailFact" CancelControlID="imgBtnCancelJobDetailFact" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupJobDetailFact" runat="server" 
+    <asp:Panel ID="pnlPopupJobDetailFact" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -1180,7 +1184,7 @@
     <ajax:ModalPopupExtender ID="mpeDrawingDetail" runat="server" TargetControlID="btnShowPopupDrawingDetail"
         PopupControlID="pnlPopupDrawingDetail" CancelControlID="imgBtnCancelDrawingDetail" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupDrawingDetail" runat="server" 
+    <asp:Panel ID="pnlPopupDrawingDetail" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -1193,82 +1197,82 @@
 
         <div class="popup-layout">
 
-        <div class="form-grid-container">
-            <fieldset class="filter-card">
-                <legend>
-                    <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" />
-                </legend>
+            <div class="form-grid-container">
+                <fieldset class="filter-card">
+                    <legend>
+                        <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" />
+                    </legend>
 
-                <div class="form-grid form-grid-3">
+                    <div class="form-grid form-grid-3">
 
-                    <label>JOB Number:</label>
+                        <label>JOB Number:</label>
                         <asp:TextBox ID="txtJOBNoInDr" runat="server" CssClass="form-control" Enabled="false" />
-                    
-                    <label>LOT No.:</label>
+
+                        <label>LOT No.:</label>
                         <asp:TextBox ID="txtLOTNoInDr" runat="server" CssClass="form-control" Enabled="false" />
-                    
-                    <label>Drawing No.:</label>
-                        <asp:TextBox ID="txtDrawingNoInDr" runat="server" CssClass="form-control"/>
-                    
-                    <label>Equipment:</label>
+
+                        <label>Drawing No.:</label>
+                        <asp:TextBox ID="txtDrawingNoInDr" runat="server" CssClass="form-control" />
+
+                        <label>Equipment:</label>
                         <asp:TextBox ID="txtEquipmentInDr" runat="server" CssClass="form-control" />
 
+                    </div>
+                </fieldset>
+                <div class="full-width button-group">
+
+                    <asp:Button ID="btnSearchDrawingNo" CssClass="button" runat="server" Text="Search"
+                        Width="100%" OnClick="btnSearchDrawingNo_Click" />
+
                 </div>
-            </fieldset>
-            <div class="full-width button-group">
-                
-                <asp:Button ID="btnSearchDrawingNo" CssClass="button" runat="server" Text="Search"
-                            Width="100%" OnClick="btnSearchDrawingNo_Click" />
+            </div>
+
+            <div class="popup-grid-container">
+                <asp:Label ID="lblDrawingMsg" runat="server" />
+
+                <asp:GridView
+                    CssClass="popup-grid"
+                    ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvDrawingDetail_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Get">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLOTTFSubitemIDInList" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' />
+                                <asp:Label ID="lblLOTSIDrawigName1" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT1_NAME") %>' />
+                                <asp:Label ID="lblLOTSIDrawigName2" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT2_NAME") %>' />
+                                <asp:Label ID="lblDrawingNo" runat="server" Visible="false" Text='<%# Eval("DRAWING_NO") %>' />
+                                <asp:Label ID="lblEquipment" runat="server" Visible="false" Text='<%# Eval("EQUIPMENT") %>' />
+                                <asp:Label ID="lblTagNo" runat="server" Visible="false" Text='<%# Eval("TAG_NO") %>' />
+
+                                <asp:Button ID="btnGetDrawingDetail" CommandArgument="GET" ToolTip="Get Drawing Details" Width="100%"
+                                    runat="server" Text="Get" CssClass="cancelbutton" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB No." />
+                        <asp:BoundField DataField="TF_NO" HeaderText="LOT No." />
+                        <asp:BoundField DataField="PRODUCTION_ORDER_NO" HeaderText="Production Order No." />
+                        <asp:BoundField DataField="DRAWING_NO" HeaderText="Drawing No." />
+                        <asp:BoundField DataField="EQUIPMENT" HeaderText="Equipment" />
+                        <asp:BoundField DataField="TAG_NO" HeaderText="Tag No." />
+
+                        <asp:TemplateField HeaderText="Quantity">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtQuantity" Width="100%" runat="server" Enabled="false" CssClass="textboxrightsmall" Text='<%# Eval("QUANTITY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
             </div>
-        </div>
-
-        <div class="popup-grid-container">
-            <asp:Label ID="lblDrawingMsg" runat="server" />
-
-            <asp:GridView 
-                CssClass="popup-grid"
-                ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvDrawingDetail_RowCommand">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-                            <asp:TemplateField HeaderText="Get">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblLOTTFSubitemIDInList" runat="server" Visible="false" Text='<%# Eval("LOT_TF_SUBITEM_ID") %>' />
-                                    <asp:Label ID="lblLOTSIDrawigName1" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT1_NAME") %>' />
-                                    <asp:Label ID="lblLOTSIDrawigName2" runat="server" Visible="false" Text='<%# Eval("SI_ATTACHMENT2_NAME") %>' />
-                                    <asp:Label ID="lblDrawingNo" runat="server" Visible="false" Text='<%# Eval("DRAWING_NO") %>' />
-                                    <asp:Label ID="lblEquipment" runat="server" Visible="false" Text='<%# Eval("EQUIPMENT") %>' />
-                                    <asp:Label ID="lblTagNo" runat="server" Visible="false" Text='<%# Eval("TAG_NO") %>' />
-
-                                    <asp:Button ID="btnGetDrawingDetail" CommandArgument="GET" ToolTip="Get Drawing Details" Width="100%"
-                                        runat="server" Text="Get" CssClass="cancelbutton" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:BoundField DataField="JOB_NO" HeaderText="JOB No." />
-                            <asp:BoundField DataField="TF_NO" HeaderText="LOT No." />
-                            <asp:BoundField DataField="PRODUCTION_ORDER_NO" HeaderText="Production Order No." />
-                            <asp:BoundField DataField="DRAWING_NO" HeaderText="Drawing No." />
-                            <asp:BoundField DataField="EQUIPMENT" HeaderText="Equipment" />
-                            <asp:BoundField DataField="TAG_NO" HeaderText="Tag No." />
-
-                            <asp:TemplateField HeaderText="Quantity">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtQuantity" Width="100%" runat="server" Enabled="false" CssClass="textboxrightsmall" Text='<%# Eval("QUANTITY") %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
 
         </div>
-
-    </div>
 
     </asp:Panel>
     <%--DRAWING DETAIL END--%>
