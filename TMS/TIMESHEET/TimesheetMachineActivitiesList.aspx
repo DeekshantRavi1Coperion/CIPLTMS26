@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Activity List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="TimesheetMachineActivitiesList.aspx.cs" Inherits="TIMESHEET_TimesheetMachineActivitiesList" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -74,75 +74,77 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Activity List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /><</legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
                     <label>Activity</label>
                     <asp:TextBox ID="txtActivity" runat="server" CssClass="form-control" />
 
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnSearch"
-                     OnClick="btnSearch_Click"
-                     runat="server"
-                     Text="Search"
-                     CssClass="button" />
-
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button
-                     ID="btnAddNew"
-                     CssClass="button"
-                     runat="server"
-                     Text="Add New"
-                     PostBackUrl="~/TIMESHEET/AddTimesheetMachineActivities.aspx" />
-
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
+
+                <asp:Button
+                    ID="btnAddNew"
+                    CssClass="button"
+                    runat="server"
+                    Text="Add New"
+                    PostBackUrl="~/TIMESHEET/AddTimesheetMachineActivities.aspx" />
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Activity List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /><</legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvActivityList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvActivityList_RowCommand"
+                    OnRowDataBound="gvActivityList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblActivityID" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_PID") %>' />
+                                <asp:Label ID="lblActivityName" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_NAME") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Activity Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="SR_NO" HeaderText="SR_NO" />
+                        <asp:BoundField DataField="ACTIVITY_NAME" HeaderText="ACTIVITY_NAME" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvActivityList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvActivityList_RowCommand"
-                OnRowDataBound="gvActivityList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblActivityID" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_PID") %>' />
-                            <asp:Label ID="lblActivityName" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_NAME") %>' />
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Activity Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="SR_NO" HeaderText="SR_NO" />
-                    <asp:BoundField DataField="ACTIVITY_NAME" HeaderText="ACTIVITY_NAME" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-
-        </div>
-
+        </fieldset>
 
     </div>
 

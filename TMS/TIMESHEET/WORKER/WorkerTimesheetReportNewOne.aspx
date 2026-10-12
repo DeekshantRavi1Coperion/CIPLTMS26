@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Worker Timesheet List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="WorkerTimesheetReportNewOne.aspx.cs" Inherits="TIMESHEET_WORKER_WorkerTimesheetListNewOne" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -257,16 +257,15 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Worker Timesheet List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -285,7 +284,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -331,83 +330,87 @@
                         CssClass="form-control">
                     </asp:DropDownList>
 
-                    <label>Total Working Hours</label>
-                    <asp:TextBox ID="txtTotalWorkingHours" Enabled="false" runat="server" CssClass="form-control"></asp:TextBox>
-
-                    <label>Total Allocated Hours</label>
-                    <asp:TextBox ID="txtTotalAllocatedHours" Enabled="false" runat="server" CssClass="form-control"></asp:TextBox>
-
-                    <label>Total OT Hours</label>
-                    <asp:TextBox ID="txtTotalOTHours" Enabled="false" runat="server" CssClass="form-control"></asp:TextBox>
-
-                    &nbsp;&nbsp;
-                         <asp:Button ID="btnSearch"
-                             OnClick="btnSearch_Click"
-                             runat="server"
-                             Text="Search"
-                             CssClass="button" />
-
-                    &nbsp;&nbsp;
-
-                    <asp:Button
-                        ID="btnExport"
-                        CssClass="button"
-                        runat="server"
-                        Text="Export"
-                        OnClick="btnExport_Click" />
-
                 </div>
 
 
             </fieldset>
-        </div>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button
+                    ID="btnExport"
+                    CssClass="button"
+                    runat="server"
+                    Text="Export"
+                    OnClick="btnExport_Click" />
+
+                <label>Total Working Hours</label>
+                <asp:TextBox ID="txtTotalWorkingHours" Enabled="false" runat="server" CssClass="form-control"></asp:TextBox>
+
+                <label>Total Allocated Hours</label>
+                <asp:TextBox ID="txtTotalAllocatedHours" Enabled="false" runat="server" CssClass="form-control"></asp:TextBox>
+
+                <label>Total OT Hours</label>
+                <asp:TextBox ID="txtTotalOTHours" Enabled="false" runat="server" CssClass="form-control"></asp:TextBox>
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvWorkerTimesheetList" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvWorkerTimesheetList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="EMPLOYEE_NAME">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmployeeName" runat="server" Visible="true" Text='<%# Eval("EMPLOYEE_NAME") %>' />
-                            <asp:Label ID="lblWorkingHours" runat="server" Visible="false" Text='<%# Eval("WORKING_HOURS") %>' />
-                            <asp:Label ID="lblAllocationHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATION_HOURS") %>' />
-                            <asp:Label ID="lblAllocatedHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_HOURS") %>' />
-                            <asp:Label ID="lblOTHours" runat="server" Visible="false" Text='<%# Eval("OT_HOURS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
-                    <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
-                    <asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />
-                    <asp:BoundField DataField="SUBITEM_DESC" HeaderText="SUBITEM_DESC" />
-                    <asp:BoundField DataField="ACTIVITY_MATRIX" HeaderText="ACTIVITY_MATRIX" />
-                    <asp:BoundField DataField="IN_TIME" HeaderText="IN_TIME" />
-                    <asp:BoundField DataField="OUT_TIME" HeaderText="OUT_TIME" />
-                    <asp:BoundField DataField="WORKING_HOURS" HeaderText="WORKING_HOURS" />
-                    <%--<asp:BoundField DataField="ALLOCATION_HOURS" HeaderText="ALLOCATION_HOURS" />--%>
-                    <asp:BoundField DataField="ALLOCATED_HOURS" HeaderText="ALLOCATED_HOURS" />
-                    <asp:BoundField DataField="OT_HOURS" HeaderText="OT_HOURS" />
-                    <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Worker Timesheet List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvWorkerTimesheetList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvWorkerTimesheetList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="EMPLOYEE_NAME">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEmployeeName" runat="server" Visible="true" Text='<%# Eval("EMPLOYEE_NAME") %>' />
+                                <asp:Label ID="lblWorkingHours" runat="server" Visible="false" Text='<%# Eval("WORKING_HOURS") %>' />
+                                <asp:Label ID="lblAllocationHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATION_HOURS") %>' />
+                                <asp:Label ID="lblAllocatedHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_HOURS") %>' />
+                                <asp:Label ID="lblOTHours" runat="server" Visible="false" Text='<%# Eval("OT_HOURS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
+                        <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
+                        <asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />
+                        <asp:BoundField DataField="SUBITEM_DESC" HeaderText="SUBITEM_DESC" />
+                        <asp:BoundField DataField="ACTIVITY_MATRIX" HeaderText="ACTIVITY_MATRIX" />
+                        <asp:BoundField DataField="IN_TIME" HeaderText="IN_TIME" />
+                        <asp:BoundField DataField="OUT_TIME" HeaderText="OUT_TIME" />
+                        <asp:BoundField DataField="WORKING_HOURS" HeaderText="WORKING_HOURS" />
+                        <%--<asp:BoundField DataField="ALLOCATION_HOURS" HeaderText="ALLOCATION_HOURS" />--%>
+                        <asp:BoundField DataField="ALLOCATED_HOURS" HeaderText="ALLOCATED_HOURS" />
+                        <asp:BoundField DataField="OT_HOURS" HeaderText="OT_HOURS" />
+                        <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 
