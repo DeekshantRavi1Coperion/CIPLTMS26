@@ -4,7 +4,7 @@
     EnableViewState="true" CodeFile="VendorsList.aspx.cs"
     Inherits="VENDOR_CUSTOMER_MGMT_VENDOR_VendorsList" %>--%>
 
-<%@ Page Title="CIPLTMS-Vendors List"
+<%@ Page Title="CIPLTMS - VCM - Vendors List"
     Language="C#"
     MasterPageFile="~/HOME.master"
     AutoEventWireup="true"
@@ -1628,18 +1628,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Vendors List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -1658,7 +1656,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -1736,6 +1734,12 @@
                     Text="Search" Width="100%" OnClick="btnSearch_Click" />
             </div>
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Vendors List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                </legend>
+
 
         <div class="employee-grid-container">
             <div align="center">
@@ -1989,6 +1993,7 @@
             </asp:GridView>
 
         </div>
+            </fieldset>
 
     </div>
 

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - VCM - Email Templates List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="EmailTemplatesList.aspx.cs"
     Inherits="VENDOR_CUSTOMER_MGMT_MASTERS_EmailTemplatesList" %>
 
@@ -124,13 +124,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Email Templates List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Entity Type:</label>
                     <asp:DropDownList ID="ddlEntityTypeS" runat="server"
@@ -155,60 +153,66 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Email Templates List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvEmailTemplatesList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvEmailTemplatesList_RowCommand"
+                    OnRowDataBound="gvEmailTemplatesList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
+                                <asp:Label ID="lblEntityTypeId" runat="server" Visible="false" Text='<%# Eval("ENTITY_TYPE_FID") %>' />
+                                <asp:Label ID="lblStatusId" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>' />
+                                <asp:Label ID="lblSubject" runat="server" Visible="false" Text='<%# Eval("SUBJECT") %>' />
+                                <asp:Label ID="lblSalutation" runat="server" Visible="false" Text='<%# Eval("SALUTATION") %>' />
+                                <asp:Label ID="lblBodyLine" runat="server" Visible="false" Text='<%# Eval("BODY_LINE") %>' />
+                                <asp:Label ID="lblClosingLine" runat="server" Visible="false" Text='<%# Eval("CLOSING_LINE") %>' />
+                                <asp:Label ID="lblLink" runat="server" Visible="false" Text='<%# Eval("LINK") %>' />
+                                <asp:Label ID="lblCC" runat="server" Visible="false" Text='<%# Eval("CC") %>' />
+                                <asp:Label ID="lblBCC" runat="server" Visible="false" Text='<%# Eval("BCC") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Email Template...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="ENTITY_TYPE" HeaderText="Entity Type" />
+                        <asp:BoundField DataField="STATUS" HeaderText="Status" />
+                        <asp:BoundField DataField="SUBJECT" HeaderText="Subject" />
+                        <asp:BoundField DataField="SALUTATION" HeaderText="Salutation" />
+                        <asp:BoundField DataField="BODY_LINE" HeaderText="Body Line" />
+                        <asp:BoundField DataField="CLOSING_LINE" HeaderText="Closing Line" />
+                        <asp:BoundField DataField="LINK" HeaderText="Link" />
+                        <asp:BoundField DataField="CC" HeaderText="CC" />
+                        <asp:BoundField DataField="BCC" HeaderText="BCC" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvEmailTemplatesList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvEmailTemplatesList_RowCommand"
-                OnRowDataBound="gvEmailTemplatesList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
-                            <asp:Label ID="lblEntityTypeId" runat="server" Visible="false" Text='<%# Eval("ENTITY_TYPE_FID") %>' />
-                            <asp:Label ID="lblStatusId" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>' />
-                            <asp:Label ID="lblSubject" runat="server" Visible="false" Text='<%# Eval("SUBJECT") %>' />
-                            <asp:Label ID="lblSalutation" runat="server" Visible="false" Text='<%# Eval("SALUTATION") %>' />
-                            <asp:Label ID="lblBodyLine" runat="server" Visible="false" Text='<%# Eval("BODY_LINE") %>' />
-                            <asp:Label ID="lblClosingLine" runat="server" Visible="false" Text='<%# Eval("CLOSING_LINE") %>' />
-                            <asp:Label ID="lblLink" runat="server" Visible="false" Text='<%# Eval("LINK") %>' />
-                            <asp:Label ID="lblCC" runat="server" Visible="false" Text='<%# Eval("CC") %>' />
-                            <asp:Label ID="lblBCC" runat="server" Visible="false" Text='<%# Eval("BCC") %>' />
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Email Template...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="ENTITY_TYPE" HeaderText="Entity Type" />
-                    <asp:BoundField DataField="STATUS" HeaderText="Status" />
-                    <asp:BoundField DataField="SUBJECT" HeaderText="Subject" />
-                    <asp:BoundField DataField="SALUTATION" HeaderText="Salutation" />
-                    <asp:BoundField DataField="BODY_LINE" HeaderText="Body Line" />
-                    <asp:BoundField DataField="CLOSING_LINE" HeaderText="Closing Line" />
-                    <asp:BoundField DataField="LINK" HeaderText="Link" />
-                    <asp:BoundField DataField="CC" HeaderText="CC" />
-                    <asp:BoundField DataField="BCC" HeaderText="BCC" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -219,7 +223,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
         PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlpopup" runat="server" 
+    <asp:Panel ID="pnlpopup" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
