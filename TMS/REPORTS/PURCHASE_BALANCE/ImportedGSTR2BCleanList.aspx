@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ImportedGSTR2BCleanList.aspx.cs"
-    Inherits="REPORTS_PURCHASE_BALANCE_ImportedGSTR2BCleanList" Title="Imported GSTR2B List" %>
+    Inherits="REPORTS_PURCHASE_BALANCE_ImportedGSTR2BCleanList" Title="CIPLTMS - Imported GSTR2B List" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -103,7 +103,7 @@
             }
     </style>
 
-  
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
@@ -119,13 +119,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Imported GSTR2B List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <asp:DropDownList ID="ddlYear" runat="server"
                         CssClass="form-control">
@@ -162,80 +160,84 @@
                         </asp:DropDownList>
                     </asp:Panel>
 
-
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server"
-                        Text="View Imported GSTR2B" OnClick="btnSearch_Click" />
-
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server"
-                        Text="Export to Excel"
-                        OnClick="btnExport_Click" />
-
                 </div>
             </fieldset>
             <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server"
+                    Text="View Imported GSTR2B" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server"
+                    Text="Export to Excel"
+                    OnClick="btnExport_Click" />
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Imported GSTR2B List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView ID="gvDesignDetails"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvDesignDetails_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="SrNo.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' />
+                                <asp:Label ID="lblGSTINofSupplier" runat="server" Text='<%# Eval("GSTIN_OF_SUPPLIER") %>' Visible="false" />
+                                <asp:Label ID="lblTradeOrLegalName" runat="server" Text='<%# Eval("TRADE_OR_LEGAL_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceNo" runat="server" Text='<%# Eval("INVOICE_NO") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceDate" runat="server" Text='<%# Eval("INVOICE_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceValue" runat="server" Text='<%# Eval("INVOICE_VALUE") %>' Visible="false" />
+                                <asp:Label ID="lblTaxableValue" runat="server" Text='<%# Eval("TAXABLE_VALUE") %>' Visible="false" />
+                                <asp:Label ID="lblMonth" runat="server" Text='<%# Eval("MONTH") %>' Visible="false" />
+                                <asp:Label ID="lblYear" runat="server" Text='<%# Eval("YEAR") %>' Visible="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="GSTIN_OF_SUPPLIER" HeaderText="GSTIN of Supplier" />
+                        <asp:BoundField DataField="TRADE_OR_LEGAL_NAME" HeaderText="Trade/Legal Name" />
+                        <asp:BoundField DataField="INVOICE_NO" HeaderText="Invoice No." />
+                        <asp:BoundField DataField="INVOICE_DATE" HeaderText="Invoice Date" />
+                        <asp:BoundField DataField="INVOICE_VALUE" HeaderText="Invoice Value" />
+                        <asp:BoundField DataField="TAXABLE_VALUE" HeaderText="Taxable Value" />
+                        <asp:BoundField DataField="MONTH" HeaderText="Month" />
+                        <asp:BoundField DataField="YEAR" HeaderText="Year" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
-            <asp:GridView ID="gvDesignDetails"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvDesignDetails_RowDataBound">
 
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="SrNo.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' />
-                            <asp:Label ID="lblGSTINofSupplier" runat="server" Text='<%# Eval("GSTIN_OF_SUPPLIER") %>' Visible="false" />
-                            <asp:Label ID="lblTradeOrLegalName" runat="server" Text='<%# Eval("TRADE_OR_LEGAL_NAME") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceNo" runat="server" Text='<%# Eval("INVOICE_NO") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceDate" runat="server" Text='<%# Eval("INVOICE_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceValue" runat="server" Text='<%# Eval("INVOICE_VALUE") %>' Visible="false" />
-                            <asp:Label ID="lblTaxableValue" runat="server" Text='<%# Eval("TAXABLE_VALUE") %>' Visible="false" />
-                            <asp:Label ID="lblMonth" runat="server" Text='<%# Eval("MONTH") %>' Visible="false" />
-                            <asp:Label ID="lblYear" runat="server" Text='<%# Eval("YEAR") %>' Visible="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="GSTIN_OF_SUPPLIER" HeaderText="GSTIN of Supplier" />
-                    <asp:BoundField DataField="TRADE_OR_LEGAL_NAME" HeaderText="Trade/Legal Name" />
-                    <asp:BoundField DataField="INVOICE_NO" HeaderText="Invoice No." />
-                    <asp:BoundField DataField="INVOICE_DATE" HeaderText="Invoice Date" />
-                    <asp:BoundField DataField="INVOICE_VALUE" HeaderText="Invoice Value" />
-                    <asp:BoundField DataField="TAXABLE_VALUE" HeaderText="Taxable Value" />
-                    <asp:BoundField DataField="MONTH" HeaderText="Month" />
-                    <asp:BoundField DataField="YEAR" HeaderText="Year" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
-
+        </fieldset>
     </div>
 
 

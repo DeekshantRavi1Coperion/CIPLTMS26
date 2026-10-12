@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="EnggHoursReportDeptWise.aspx.cs"
-    Inherits="REPORTS_EnggHoursReportDeptWise" Title="CIPLTMS- Engg. Hours Report Department-wise" %>
+    Inherits="REPORTS_EnggHoursReportDeptWise" Title="CIPLTMS - Engg. Hours Report Dept. Wise" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -270,23 +270,21 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Engg. Hours Report Dept. Wise:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarStartDateSearch" PopupButtonID="imgbtnStartDateSearch"
-                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </asp:CalendarExtender>
                             </td>
@@ -300,12 +298,12 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);" 
-                                    CssClass="form-control"/>
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
+                                    CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
-                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </asp:CalendarExtender>
                             </td>
@@ -317,7 +315,7 @@
                     </table>
 
                     <label>Department:</label>
-                    <asp:DropDownList ID="ddlDepartment" runat="server" 
+                    <asp:DropDownList ID="ddlDepartment" runat="server"
                         CssClass="form-control"
                         AutoPostBack="true"
                         OnSelectedIndexChanged="ddlDepartment_SelectedIndexChanged">
@@ -328,7 +326,7 @@
                     </asp:DropDownList>
 
                     <label>Employee Type:</label>
-                    <asp:DropDownList ID="ddlEmployeeType" runat="server" 
+                    <asp:DropDownList ID="ddlEmployeeType" runat="server"
                         CssClass="form-control">
                         <asp:ListItem Text="All" />
                         <asp:ListItem Value="D" Text="Direct" />
@@ -348,26 +346,31 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Engg. Hours Report Dept. Wise:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView ID="gvEnggHoursReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvEnggHoursReport_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
             </div>
-
-            <asp:GridView ID="gvEnggHoursReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvEnggHoursReport_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-        </div>
-
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>

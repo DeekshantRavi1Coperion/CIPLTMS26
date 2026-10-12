@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ExcludedBooksList.aspx.cs"
-    Inherits="REPORTS_PURCHASE_BALANCE_ExcludedBooksList" Title="Excluded Books List" %>
+    Inherits="REPORTS_PURCHASE_BALANCE_ExcludedBooksList" Title="CIPLTMS - Excluded Books List" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -131,7 +131,7 @@
             }
     </style>
 
-    
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
@@ -147,13 +147,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Excluded Books List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <asp:DropDownList ID="ddlYear" runat="server"
                         CssClass="form-control">
@@ -204,73 +202,79 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Excluded Books List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView ID="gvDesignDetails"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvDesignDetails_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="SrNo.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' />
+
+                                <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VENDOR_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblDocumentType" runat="server" Text='<%# Eval("DOCUMENT_TYPE") %>' Visible="false" />
+                                <asp:Label ID="PartyInvoiceNo" runat="server" Text='<%# Eval("PARTY_INVOICE_NO") %>' Visible="false" />
+                                <asp:Label ID="lblPartyInvoiceDate" runat="server" Text='<%# Eval("PARTY_INVOICE_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblGSTIN" runat="server" Text='<%# Eval("GSTIN") %>' Visible="false" />
+                                <asp:Label ID="lblCurrencyCode" runat="server" Text='<%# Eval("CURRENCY_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblTaxableAmount" runat="server" Text='<%# Eval("TAXABLE_AMOUNT") %>' Visible="false" />
+                                <asp:Label ID="lblCountry" runat="server" Text='<%# Eval("COUNTRY") %>' Visible="false" />
+                                <asp:Label ID="lblMonth" runat="server" Text='<%# Eval("MONTH") %>' Visible="false" />
+                                <asp:Label ID="lblYear" runat="server" Text='<%# Eval("YEAR") %>' Visible="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
+                        <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
+                        <asp:BoundField DataField="DOCUMENT_TYPE" HeaderText="Document Type" />
+                        <asp:BoundField DataField="PARTY_INVOICE_NO" HeaderText="Party Invoice No." />
+                        <asp:BoundField DataField="PARTY_INVOICE_DATE" HeaderText="Party Invoice Date" />
+                        <asp:BoundField DataField="GSTIN" HeaderText="GSTIN" />
+                        <asp:BoundField DataField="CURRENCY_CODE" HeaderText="Currency Code" />
+                        <asp:BoundField DataField="TAXABLE_AMOUNT" HeaderText="Taxable Amount" />
+                        <asp:BoundField DataField="COUNTRY" HeaderText="Country" />
+                        <asp:BoundField DataField="MONTH" HeaderText="Month" />
+                        <asp:BoundField DataField="YEAR" HeaderText="Year" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
-            <asp:GridView ID="gvDesignDetails"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvDesignDetails_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-
-                <Columns>
-
-                    <asp:TemplateField HeaderText="SrNo.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' />
-
-                            <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VENDOR_NAME") %>' Visible="false" />
-                            <asp:Label ID="lblDocumentType" runat="server" Text='<%# Eval("DOCUMENT_TYPE") %>' Visible="false" />
-                            <asp:Label ID="PartyInvoiceNo" runat="server" Text='<%# Eval("PARTY_INVOICE_NO") %>' Visible="false" />
-                            <asp:Label ID="lblPartyInvoiceDate" runat="server" Text='<%# Eval("PARTY_INVOICE_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblGSTIN" runat="server" Text='<%# Eval("GSTIN") %>' Visible="false" />
-                            <asp:Label ID="lblCurrencyCode" runat="server" Text='<%# Eval("CURRENCY_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblTaxableAmount" runat="server" Text='<%# Eval("TAXABLE_AMOUNT") %>' Visible="false" />
-                            <asp:Label ID="lblCountry" runat="server" Text='<%# Eval("COUNTRY") %>' Visible="false" />
-                            <asp:Label ID="lblMonth" runat="server" Text='<%# Eval("MONTH") %>' Visible="false" />
-                            <asp:Label ID="lblYear" runat="server" Text='<%# Eval("YEAR") %>' Visible="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
-                    <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
-                    <asp:BoundField DataField="DOCUMENT_TYPE" HeaderText="Document Type" />
-                    <asp:BoundField DataField="PARTY_INVOICE_NO" HeaderText="Party Invoice No." />
-                    <asp:BoundField DataField="PARTY_INVOICE_DATE" HeaderText="Party Invoice Date" />
-                    <asp:BoundField DataField="GSTIN" HeaderText="GSTIN" />
-                    <asp:BoundField DataField="CURRENCY_CODE" HeaderText="Currency Code" />
-                    <asp:BoundField DataField="TAXABLE_AMOUNT" HeaderText="Taxable Amount" />
-                    <asp:BoundField DataField="COUNTRY" HeaderText="Country" />
-                    <asp:BoundField DataField="MONTH" HeaderText="Month" />
-                    <asp:BoundField DataField="YEAR" HeaderText="Year" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 
