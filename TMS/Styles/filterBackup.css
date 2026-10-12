@@ -1,0 +1,692 @@
+﻿
+/* =========================================================
+   FILTER.CSS
+   =========================================================
+
+   Purpose:
+       Filter panel for left/right report layout.
+
+   Layout:
+       Left  = 20% Filter
+       Right = 80% Grid
+
+   Filter design:
+       - Single column
+       - Controls stacked vertically
+       - Labels above controls
+       - No controls escaping the filter
+       - Independent vertical scrolling
+       - Works with browser zoom
+       - Responsive
+   ========================================================= */
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FILTER CARD
+   ========================================================= */
+
+.filter-card {
+    width: 100%;
+    max-width: 100%;
+    /*
+        Do not use viewport based height here.
+        The parent report layout controls the height.
+    */
+    height: auto;
+    max-height: none;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    /*
+        Filter itself can scroll vertically
+        if there are many controls.
+    */
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 12px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+}
+
+
+    /* =========================================================
+   FILTER LEGEND
+   ========================================================= */
+
+    .filter-card legend {
+        width: auto;
+        max-width: 100%;
+        padding: 0 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+        /*
+        Prevent long report titles from
+        forcing the filter wider.
+    */
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+
+/* =========================================================
+   MAIN FILTER GRID
+   =========================================================
+
+   IMPORTANT:
+
+   Previously:
+
+       140px 1fr 140px 1fr
+
+   That does not work well in a 20% sidebar.
+
+   Now every filter item is stacked.
+   ========================================================= */
+
+.form-grid {
+    width: 100%;
+    display: grid;
+    /*
+        ONE COLUMN ONLY
+    */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    align-items: start;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   OVERRIDE FORM GRID VARIANTS
+   =========================================================
+
+   Even if the page uses:
+
+       .form-grid-2
+       .form-grid-3
+
+   they will still become a single column.
+   ========================================================= */
+
+.form-grid-2,
+.form-grid-3 {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) !important;
+}
+
+
+/* =========================================================
+   FILTER LABELS
+   ========================================================= */
+
+.form-grid label,
+.form-label {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    margin: 4px 0 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333333;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   FILTER CONTROLS
+   =========================================================
+
+   Every control gets the full available width.
+   ========================================================= */
+
+.filter-card input[type="text"],
+.filter-card input[type="password"],
+.filter-card input[type="email"],
+.filter-card input[type="number"],
+.filter-card input[type="date"],
+.filter-card input[type="datetime-local"],
+.filter-card input[type="tel"],
+.filter-card select,
+.filter-card textarea,
+.filter-card .form-control {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   STANDARD FORM CONTROL
+   ========================================================= */
+
+.form-control {
+    width: 100%;
+    max-width: 100%;
+    height: 30px;
+    min-height: 30px;
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: #ffffff;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+textarea.form-control {
+    width: 100%;
+    max-width: 100%;
+    height: 70px;
+    min-height: 70px;
+    resize: vertical;
+}
+
+
+/* =========================================================
+   FORM CONTROL FOCUS
+   ========================================================= */
+
+.form-control:focus {
+    outline: none;
+    border-color: #0078d4;
+    box-shadow: 0 0 3px rgba(0, 120, 212, 0.25);
+}
+
+
+/* =========================================================
+   DROPDOWN
+   ========================================================= */
+
+select.form-control {
+    width: 100%;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FILE UPLOAD
+   ========================================================= */
+
+.form-file {
+    width: 100%;
+    max-width: 100%;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FULL WIDTH
+   ========================================================= */
+
+.full-width {
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+
+/* =========================================================
+   CHECKBOX / RADIO CONTROLS
+   ========================================================= */
+
+.filter-card input[type="checkbox"],
+.filter-card input[type="radio"] {
+    max-width: 100%;
+}
+
+
+    /* =========================================================
+   CHECKBOX LABEL ROW
+   ========================================================= */
+
+    .filter-card input[type="checkbox"] + label,
+    .filter-card input[type="radio"] + label {
+        display: inline-block;
+        width: auto;
+        margin-left: 5px;
+    }
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.button {
+    width: 100%;
+    max-width: 100%;
+    height: 32px;
+    min-height: 32px;
+    border: none;
+    border-radius: 4px;
+    background: #0078d4;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+
+    /* =========================================================
+   BUTTON HOVER
+   ========================================================= */
+
+    .button:hover {
+        background: #005ea6;
+    }
+
+
+    /* =========================================================
+   BUTTON ACTIVE
+   ========================================================= */
+
+    .button:active {
+        transform: scale(0.98);
+    }
+
+
+/* =========================================================
+   BUTTON GROUP
+   ========================================================= */
+
+.button-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+
+    /* =========================================================
+   BUTTON GROUP BUTTONS
+   ========================================================= */
+
+    .button-group .button {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+/* =========================================================
+   MESSAGE PANEL
+   ========================================================= */
+
+#pnlMsg {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   READONLY
+   ========================================================= */
+
+.form-control[readonly] {
+    background: #f8f9fa;
+}
+
+
+/* =========================================================
+   DISABLED
+   ========================================================= */
+
+.form-control:disabled {
+    background: #eeeeee;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   INPUT FONT SIZE
+   ========================================================= */
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="tel"],
+select,
+textarea {
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FILTER CARD SCROLLBAR
+   ========================================================= */
+
+.filter-card::-webkit-scrollbar {
+    width: 7px;
+}
+
+
+/* =========================================================
+   FILTER SCROLLBAR TRACK
+   ========================================================= */
+
+.filter-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* =========================================================
+   FILTER SCROLLBAR THUMB
+   ========================================================= */
+
+.filter-card::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 120, .45);
+    border-radius: 20px;
+}
+
+
+    /* =========================================================
+   FILTER SCROLLBAR HOVER
+   ========================================================= */
+
+    .filter-card::-webkit-scrollbar-thumb:hover {
+        background: rgba(120, 120, 120, .75);
+    }
+
+
+/* =========================================================
+   FIREFOX SCROLLBAR
+   ========================================================= */
+
+.filter-card {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120, 120, 120, .5) transparent;
+}
+
+
+    /* =========================================================
+   FILTER FIELD GROUP
+   =========================================================
+
+   If your markup has wrappers around individual
+   controls, force them to fit the sidebar.
+   ========================================================= */
+
+    .filter-card .form-group,
+    .filter-card .filter-group,
+    .filter-card .field-group {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+
+    /* =========================================================
+   ASP.NET TABLE / PANEL SUPPORT
+   ========================================================= */
+
+    .filter-card table {
+        width: 100%;
+        max-width: 100%;
+        table-layout: fixed;
+    }
+
+
+    .filter-card td,
+    .filter-card th {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+
+    /* =========================================================
+   IMAGES / ICONS
+   ========================================================= */
+
+    .filter-card img {
+        max-width: 100%;
+        height: auto;
+    }
+
+
+    /* =========================================================
+   DATE CONTROL / DATE ICON
+   ========================================================= */
+
+    .filter-card input[type="date"] {
+        min-width: 0;
+    }
+
+
+/* =========================================================
+   1200px
+   ========================================================= */
+
+@media screen and (max-width: 1200px) {
+
+    .filter-card {
+        padding: 10px;
+    }
+
+
+        .filter-card legend {
+            font-size: 16px;
+        }
+
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 5px;
+    }
+
+
+        .form-grid label,
+        .form-label {
+            font-size: 11px;
+        }
+
+
+    .form-control {
+        height: 29px;
+        min-height: 29px;
+        font-size: 11px;
+    }
+
+
+    .button {
+        height: 31px;
+        min-height: 31px;
+        font-size: 11px;
+    }
+}
+
+
+/* =========================================================
+   900px
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+
+    .filter-card {
+        padding: 9px;
+    }
+
+
+        .filter-card legend {
+            font-size: 15px;
+        }
+
+
+    .form-control {
+        height: 28px;
+        min-height: 28px;
+        font-size: 11px;
+    }
+
+
+    .form-grid {
+        gap: 5px;
+    }
+}
+
+
+/* =========================================================
+   768px
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+
+    .filter-card {
+        width: 100%;
+        padding: 8px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+
+    .form-grid,
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 5px;
+    }
+
+
+        .form-grid label,
+        .form-label {
+            font-size: 11px;
+        }
+
+
+    .form-control {
+        height: 28px;
+        min-height: 28px;
+        font-size: 11px;
+    }
+
+
+    textarea.form-control {
+        height: 60px;
+    }
+
+
+    .button-group {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+
+        .button-group .button {
+            width: 100%;
+        }
+}
+
+
+/* =========================================================
+   480px
+   ========================================================= */
+
+@media screen and (max-width: 480px) {
+
+    .filter-card {
+        padding: 7px;
+    }
+
+
+        .filter-card legend {
+            font-size: 14px;
+        }
+
+
+    .form-grid,
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 4px;
+    }
+
+
+        .form-grid label,
+        .form-label {
+            font-size: 10px;
+        }
+
+
+    .form-control {
+        height: 27px;
+        min-height: 27px;
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+
+
+    .button {
+        height: 30px;
+        min-height: 30px;
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   HIGH ZOOM SUPPORT
+   ========================================================= */
+
+@media screen and (min-resolution: 120dpi) {
+
+    .filter-card {
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+
+    .form-grid,
+    .form-grid-2,
+    .form-grid-3 {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+
+        .form-grid > *,
+        .form-grid-2 > *,
+        .form-grid-3 > * {
+            min-width: 0;
+            max-width: 100%;
+        }
+
+
+    .form-control,
+    .button,
+    select,
+    textarea,
+    input {
+        max-width: 100%;
+        min-width: 0;
+    }
+}
+
+
+/* =========================================================
+   END OF FILTER.CSS
+   ========================================================= */

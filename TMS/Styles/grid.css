@@ -1,22 +1,25 @@
-﻿```css
-/* =========================================================
-   REPORT GRID CSS
+﻿/* =========================================================
+   GRID.CSS
    =========================================================
 
-   Layout:
-       Filter  = 40%
-       Grid    = Remaining available space
+   REPORT LAYOUT
+
+   Left  : 20%  -> Filter
+   Right : 80%  -> Grid
 
    Features:
-       - Independent filter scrollbar
+       - Left/right report layout
+       - Filter occupies 20%
+       - Grid occupies remaining 80%
+       - Independent filter vertical scrollbar
        - Independent grid vertical scrollbar
        - Independent grid horizontal scrollbar
        - Sticky grid header
-       - Browser/page scrolling prevented
-       - Uses available viewport space
-       - Zoom friendly
+       - Prevents grid from escaping page
+       - Prevents entire page scrolling
+       - Works with Master Page layout
+       - Works with high browser zoom
        - Responsive
-
    ========================================================= */
 /* =========================================================
    GLOBAL BOX SIZING
@@ -29,36 +32,25 @@
 
 
 /* =========================================================
-   MAIN REPORT PAGE
+   MAIN REPORT LAYOUT
+   =========================================================
+
+   LEFT  = FILTER
+   RIGHT = GRID
    ========================================================= */
 
 .page-layout {
     width: 100%;
-    /*
-       Use almost the complete viewport.
-
-       45px is reserved for the surrounding
-       Master Page/content area.
-    */
-    height: calc(100vh - 45px);
+    height: 100%;
     display: grid;
     /*
-       Filter = 40%
-       Grid = remaining available space
+        LEFT  = 20%
+        RIGHT = Remaining available space
     */
-    grid-template-rows: 40% minmax(0, 1fr);
-    /*
-       Small separation between filter and grid
-    */
+    grid-template-columns: 20% minmax(0, 1fr);
     gap: 10px;
-    /*
-       Critical for CSS Grid scrolling
-    */
-    min-height: 0;
     min-width: 0;
-    /*
-       Prevent browser-level scrolling
-    */
+    min-height: 0;
     overflow: hidden;
 }
 
@@ -70,19 +62,15 @@
 .form-grid-container {
     width: 100%;
     height: 100%;
-    /*
-       Critical when inside CSS Grid.
-    */
-    min-height: 0;
     min-width: 0;
+    min-height: 0;
     box-sizing: border-box;
     /*
-       Filter has its OWN scrollbar.
+        Filter scrolls independently
     */
     overflow-y: auto;
     /*
-       Normal filter controls should not
-       create horizontal scrolling.
+        Prevent horizontal scrollbar
     */
     overflow-x: hidden;
     padding: 2px;
@@ -101,6 +89,10 @@
     border-radius: 8px;
     padding: 12px 16px;
     background: #ffffff;
+    /*
+        Important for narrow 20% filter area
+    */
+    min-width: 0;
 }
 
 
@@ -113,6 +105,13 @@
         font-weight: 600;
         padding: 0 10px;
         color: #334155;
+        /*
+        Prevent long title from increasing width
+    */
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
 
@@ -123,17 +122,12 @@
 .employee-grid-container {
     width: 100%;
     height: 100%;
-    /*
-       Critical.
-
-       Allows the grid container to shrink
-       inside the parent grid and scroll internally.
-    */
-    min-height: 0;
     min-width: 0;
+    min-height: 0;
     box-sizing: border-box;
     /*
-       Grid gets BOTH scrollbars.
+        Horizontal + vertical scrolling belongs
+        ONLY to the grid container.
     */
     overflow-x: auto;
     overflow-y: auto;
@@ -145,17 +139,17 @@
 
 
 /* =========================================================
-   EMPLOYEE GRID / TABLE
+   GRID TABLE
    ========================================================= */
 
 .employee-grid {
     /*
-       Allow table to expand horizontally
-       when there are many columns.
+        Allow table to become wider than container
+        when there are many columns.
     */
     width: max-content;
     /*
-       At minimum, table fills the container.
+        But never smaller than available width.
     */
     min-width: 100%;
     border-collapse: collapse;
@@ -168,12 +162,6 @@
    ========================================================= */
 
     .employee-grid th {
-        /*
-       Sticky header.
-
-       It remains visible while the grid
-       container is vertically scrolled.
-    */
         position: sticky;
         top: 0;
         z-index: 5;
@@ -202,7 +190,7 @@
 
 
     /* =========================================================
-   ALTERNATE ROWS
+   ALTERNATE ROW
    ========================================================= */
 
     .employee-grid tr:nth-child(even) {
@@ -240,17 +228,16 @@
         text-decoration: none;
     }
 
+
         .employee-grid a:hover {
             text-decoration: underline;
         }
 
 
 /* =========================================================
-   FILTER SCROLLBAR
    GRID SCROLLBAR
    ========================================================= */
 
-.form-grid-container::-webkit-scrollbar,
 .employee-grid-container::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -258,10 +245,9 @@
 
 
 /* =========================================================
-   SCROLLBAR TRACK
+   GRID SCROLLBAR TRACK
    ========================================================= */
 
-.form-grid-container::-webkit-scrollbar-track,
 .employee-grid-container::-webkit-scrollbar-track {
     background: #f1f3f5;
     border-radius: 8px;
@@ -269,10 +255,9 @@
 
 
 /* =========================================================
-   SCROLLBAR THUMB
+   GRID SCROLLBAR THUMB
    ========================================================= */
 
-.form-grid-container::-webkit-scrollbar-thumb,
 .employee-grid-container::-webkit-scrollbar-thumb {
     background: #aeb6c2;
     border-radius: 8px;
@@ -281,23 +266,93 @@
 
 
     /* =========================================================
-   SCROLLBAR HOVER
+   GRID SCROLLBAR HOVER
    ========================================================= */
 
-    .form-grid-container::-webkit-scrollbar-thumb:hover,
     .employee-grid-container::-webkit-scrollbar-thumb:hover {
         background: #858e9b;
     }
 
 
 /* =========================================================
-   FIREFOX SCROLLBAR
+   FILTER SCROLLBAR
    ========================================================= */
 
-.form-grid-container,
+.form-grid-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+
+/* =========================================================
+   FILTER SCROLLBAR TRACK
+   ========================================================= */
+
+.form-grid-container::-webkit-scrollbar-track {
+    background: #f1f3f5;
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   FILTER SCROLLBAR THUMB
+   ========================================================= */
+
+.form-grid-container::-webkit-scrollbar-thumb {
+    background: #aeb6c2;
+    border-radius: 8px;
+    border: 2px solid #f1f3f5;
+}
+
+
+    /* =========================================================
+   FILTER SCROLLBAR HOVER
+   ========================================================= */
+
+    .form-grid-container::-webkit-scrollbar-thumb:hover {
+        background: #858e9b;
+    }
+
+
+/* =========================================================
+   FIREFOX SCROLLBARS
+   ========================================================= */
+
+.form-grid-container {
+    scrollbar-width: thin;
+    scrollbar-color: #aeb6c2 #f1f3f5;
+}
+
+
 .employee-grid-container {
     scrollbar-width: auto;
     scrollbar-color: #aeb6c2 #f1f3f5;
+}
+
+
+/* =========================================================
+   IMPORTANT:
+   PREVENT CHILD CONTENT FROM FORCING
+   THE GRID COLUMN WIDER
+   ========================================================= */
+
+.page-layout > * {
+    min-width: 0;
+    min-height: 0;
+}
+
+
+/* =========================================================
+   FILTER CONTROLS
+
+   Since filter is now only 20% wide,
+   controls must never exceed the filter.
+   ========================================================= */
+
+.form-grid-container input,
+.form-grid-container select,
+.form-grid-container textarea,
+.form-grid-container .form-control {
+    max-width: 100%;
 }
 
 
@@ -309,14 +364,10 @@
 
     .page-layout {
         /*
-           Use almost all available height.
+            Slightly larger filter because
+            20% can become too narrow.
         */
-        height: calc(100vh - 40px);
-        /*
-           Filter remains 40%.
-           Grid uses everything else.
-        */
-        grid-template-rows: 40% minmax(0, 1fr);
+        grid-template-columns: 25% minmax(0, 1fr);
         gap: 8px;
     }
 
@@ -331,78 +382,9 @@
         font-size: 12px;
         padding: 6px 7px;
     }
-}
-
-
-/* =========================================================
-   MOBILE / TABLET
-   ========================================================= */
-
-@media screen and (max-width: 768px) {
-
-    .page-layout {
-        /*
-           Use almost the entire viewport.
-        */
-        height: calc(100vh - 35px);
-        grid-template-rows: 40% minmax(0, 1fr);
-        gap: 8px;
-    }
-
-
-    /* -----------------------------------------
-       Filter
-       ----------------------------------------- */
-
-    .form-grid-container {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        overflow-y: auto;
-        /*
-           Allow horizontal scroll if
-           controls become too wide.
-        */
-        overflow-x: auto;
-    }
-
-
-    /* -----------------------------------------
-       Grid
-       ----------------------------------------- */
-
-    .employee-grid-container {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        overflow-x: auto;
-        overflow-y: auto;
-    }
-
-
-    /*
-       Force horizontal scrolling
-       for wide tables.
-    */
-    .employee-grid {
-        min-width: 1200px;
-    }
-
-
-        .employee-grid th {
-            font-size: 12px;
-            padding: 8px 6px;
-        }
-
-
-        .employee-grid td {
-            font-size: 12px;
-            padding: 6px;
-        }
 
 
     .employee-grid-fieldset {
-        width: 100%;
         padding: 10px 12px;
     }
 
@@ -414,25 +396,184 @@
 
 
 /* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+
+    .page-layout {
+        /*
+            Give filters more usable width
+            on smaller screens.
+        */
+        grid-template-columns: 30% minmax(0, 1fr);
+        gap: 8px;
+    }
+
+
+    .employee-grid th {
+        font-size: 12px;
+        padding: 7px 6px;
+    }
+
+
+    .employee-grid td {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 768px) {
+
+    .page-layout {
+        /*
+            Still left/right,
+            but give filter more space.
+        */
+        grid-template-columns: 35% minmax(0, 1fr);
+        gap: 6px;
+    }
+
+
+    /* -----------------------------------------
+       FILTER
+       ----------------------------------------- */
+
+    .form-grid-container {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    /* -----------------------------------------
+       GRID
+       ----------------------------------------- */
+
+    .employee-grid-container {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
+
+    /*
+        Force horizontal scrolling
+        for wide tables.
+    */
+
+    .employee-grid {
+        min-width: 1000px;
+    }
+
+
+    .employee-grid-fieldset {
+        width: 100%;
+        padding: 8px 10px;
+    }
+
+
+        .employee-grid-fieldset legend {
+            font-size: 15px;
+            padding: 0 6px;
+        }
+}
+
+
+/* =========================================================
    VERY SMALL DEVICES
    ========================================================= */
 
 @media screen and (max-width: 480px) {
 
     .page-layout {
-        height: calc(100vh - 30px);
-        grid-template-rows: 40% minmax(0, 1fr);
-        gap: 6px;
+        /*
+            On very small screens,
+            keep filter usable.
+        */
+        grid-template-columns: 40% minmax(0, 1fr);
+        gap: 5px;
     }
 
 
     .employee-grid {
-        min-width: 1100px;
+        min-width: 900px;
+    }
+
+
+        .employee-grid th {
+            font-size: 11px;
+            padding: 6px 5px;
+        }
+
+
+        .employee-grid td {
+            font-size: 11px;
+            padding: 5px;
+        }
+
+
+    .employee-grid-fieldset {
+        padding: 6px 8px;
+    }
+
+
+        .employee-grid-fieldset legend {
+            font-size: 14px;
+        }
+}
+
+
+/* =========================================================
+   HIGH ZOOM SUPPORT
+   =========================================================
+
+   Browser zoom such as:
+       125%
+       150%
+       175%
+
+   should not make the entire page scroll.
+   The filter and grid handle their own scrolling.
+   ========================================================= */
+
+@media screen and (min-resolution: 120dpi) {
+
+    .page-layout {
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+
+    .form-grid-container {
+        min-width: 0;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    .employee-grid-container {
+        min-width: 0;
+        min-height: 0;
+        overflow-x: auto;
+        overflow-y: auto;
     }
 }
 
 
 /* =========================================================
-   END OF REPORT GRID CSS
+   END OF GRID.CSS
    ========================================================= */
-```
