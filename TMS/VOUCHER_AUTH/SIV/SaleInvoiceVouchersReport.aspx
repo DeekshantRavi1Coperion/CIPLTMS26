@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - SIV - Sale Invioce Vouchers Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="SaleInvoiceVouchersReport.aspx.cs" Inherits="VOUCHER_AUTH_SIV_SaleInvoiceVouchersReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -372,7 +372,7 @@
             }
     </style>
 
-    
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <asp:ToolkitScriptManager ID="ScriptManager2" runat="server">
@@ -386,13 +386,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Sale Invioce Vouchers Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -418,8 +416,8 @@
                         <label>Date Filter:</label>
                         <table style="width: 100%;">
                             <tr>
-                                <td style="width: 20%;">
-                                    <asp:DropDownList ID="ddlDateSignToS" runat="server" 
+                                <td style="width: 30%;">
+                                    <asp:DropDownList ID="ddlDateSignToS" runat="server"
                                         CssClass="form-control"
                                         onchange="EnableEndDateSearch()">
                                         <asp:ListItem Text="Between" Value="BETWEEN"></asp:ListItem>
@@ -430,9 +428,8 @@
                                         <asp:ListItem Text="=" Value="="></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
-                                <td>&nbsp;</td>
-                                <td style="width: 75%;">
-                                    <asp:DropDownList ID="ddlDateTypeToS" runat="server" 
+                                <td>
+                                    <asp:DropDownList ID="ddlDateTypeToS" runat="server"
                                         CssClass="form-control">
                                         <asp:ListItem Text="Voucher Date" Value="VOUCHER_DATE"></asp:ListItem>
                                         <asp:ListItem Text="Due Date" Value="DUE_DATE"></asp:ListItem>
@@ -449,7 +446,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -459,7 +456,7 @@
                                 </asp:CalendarExtender>
                             </td>
                             <td align="right">
-                                <asp:ImageButton ID="imgbtnStartDateSearch" runat="server" 
+                                <asp:ImageButton ID="imgbtnStartDateSearch" runat="server"
                                     ImageUrl="~/Images/Calendar2.png"
                                     ToolTip="Start Date Calendar" />
                             </td>
@@ -469,8 +466,8 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
@@ -479,7 +476,7 @@
                                 </asp:CalendarExtender>
                             </td>
                             <td align="right">
-                                <asp:ImageButton ID="imgbtnEndDateSearch" runat="server" 
+                                <asp:ImageButton ID="imgbtnEndDateSearch" runat="server"
                                     ImageUrl="~/Images/Calendar2.png"
                                     ToolTip="End Date Calendar" Width="20px" />
                             </td>
@@ -487,22 +484,22 @@
                     </table>
 
                     <label>Status:</label>
-                    <asp:DropDownList ID="ddlStatusToS" runat="server" 
+                    <asp:DropDownList ID="ddlStatusToS" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Unit:</label>
-                    <asp:DropDownList ID="ddlUnitToS" runat="server" 
+                    <asp:DropDownList ID="ddlUnitToS" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Created By:</label>
-                    <asp:DropDownList ID="ddlCreatedByToS" runat="server" 
+                    <asp:DropDownList ID="ddlCreatedByToS" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Search By:</label>
-                    <asp:DropDownList ID="ddlSearchByToS" runat="server" 
+                    <asp:DropDownList ID="ddlSearchByToS" runat="server"
                         CssClass="form-control">
                         <asp:ListItem Text="Voucher No." Value="VOUCHER_NO"></asp:ListItem>
                         <asp:ListItem Text="OA No." Value="OA_NO"></asp:ListItem>
@@ -512,7 +509,7 @@
 
                     <div class="full-width">
                         <label>Search Text:</label>
-                        <asp:TextBox ID="txtSearchTextToS" runat="server" 
+                        <asp:TextBox ID="txtSearchTextToS" runat="server"
                             CssClass="form-control"
                             TextMode="MultiLine" Rows="4">
                         </asp:TextBox>
@@ -531,7 +528,7 @@
                         <table width="100%">
                             <tr>
                                 <td style="width: 30%">
-                                    <asp:DropDownList ID="ddlAmountSign" runat="server" 
+                                    <asp:DropDownList ID="ddlAmountSign" runat="server"
                                         CssClass="form-control"
                                         onchange="EnableAmount2()">
                                         <asp:ListItem Text=">=" Value=">="></asp:ListItem>
@@ -544,13 +541,13 @@
                                 </td>
                                 <td>&nbsp;</td>
                                 <td style="width: 35%">
-                                    <asp:TextBox ID="txtAmountOneS" runat="server" 
+                                    <asp:TextBox ID="txtAmountOneS" runat="server"
                                         CssClass="form-control"
                                         onkeypress="return inNumberKeyWithDecimal(this, event);"></asp:TextBox>
                                 </td>
                                 <td>&nbsp;</td>
                                 <td style="width: 35%">
-                                    <asp:TextBox ID="txtAmountTwoS" runat="server" 
+                                    <asp:TextBox ID="txtAmountTwoS" runat="server"
                                         CssClass="form-control"
                                         Enabled="false"
                                         onkeypress="return inNumberKeyWithDecimal(this, event);"></asp:TextBox>
@@ -571,79 +568,86 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Sale Invioce Vouchers Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    ID="gvVouchersList"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvVouchersList_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:BoundField DataField="SR_NO" HeaderText="Sr No." />
+                        <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
+                        <asp:BoundField DataField="STATUS" HeaderText="Status" />
+                        <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
+                        <asp:BoundField DataField="YO_NO" HeaderText="YO No" />
+                        <asp:BoundField DataField="YO_DATE" HeaderText="YO Date" />
+                        <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="Customer Code" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="Customer Name" />
+                        <asp:BoundField DataField="CLASS" HeaderText="Class" />
+                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
+                        <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
+
+                        <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency Desc" />
+                        <asp:BoundField DataField="CURRENCY_RATE" HeaderText="Currency Rate" />
+
+                        <asp:BoundField DataField="FC_RATE" HeaderText="FC Rate" />
+
+                        <asp:BoundField DataField="CURR_BASIC" HeaderText="Curr Basic" />
+                        <asp:BoundField DataField="CURR_VAL" HeaderText="Curr Val" />
+
+
+                        <asp:BoundField DataField="FC_BASIC_AMOUNT" HeaderText="FC Basic Amount" />
+                        <asp:BoundField DataField="FC_OTHER_AMOUNT" HeaderText="FC Other Amount" />
+                        <asp:BoundField DataField="INR_BASIC_AMOUNT" HeaderText="INR Basic Amount" />
+                        <asp:BoundField DataField="INR_GST_AMOUNT" HeaderText="INR GST Amount" />
+                        <asp:BoundField DataField="INR_OTHER_AMOUNT" HeaderText="INR Other Amount" />
+
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+                        <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Voucher Created By" />
+                        <asp:BoundField DataField="AUTHORIZED_BY" HeaderText="Authorized By" />
+                        <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized On" />
+                        <asp:BoundField DataField="AUTHORIZED_REMARKS" HeaderText="Authorized Remarks" />
+                        <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
+                        <asp:BoundField DataField="APPROVED_ON" HeaderText="Approved On" />
+                        <asp:BoundField DataField="APPROVED_REMARKS" HeaderText="Approved Remarks" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-
-            <asp:GridView
-                ID="gvVouchersList"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvVouchersList_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:BoundField DataField="SR_NO" HeaderText="Sr No." />
-                    <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
-                    <asp:BoundField DataField="STATUS" HeaderText="Status" />
-                    <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
-                    <asp:BoundField DataField="YO_NO" HeaderText="YO No" />
-                    <asp:BoundField DataField="YO_DATE" HeaderText="YO Date" />
-                    <asp:BoundField DataField="CUSTOMER_CODE" HeaderText="Customer Code" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="Customer Name" />
-                    <asp:BoundField DataField="CLASS" HeaderText="Class" />
-                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
-                    <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
-
-                    <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency Desc" />
-                    <asp:BoundField DataField="CURRENCY_RATE" HeaderText="Currency Rate" />
-
-                    <asp:BoundField DataField="FC_RATE" HeaderText="FC Rate" />
-
-                    <asp:BoundField DataField="CURR_BASIC" HeaderText="Curr Basic" />
-                    <asp:BoundField DataField="CURR_VAL" HeaderText="Curr Val" />
-
-
-                    <asp:BoundField DataField="FC_BASIC_AMOUNT" HeaderText="FC Basic Amount" />
-                    <asp:BoundField DataField="FC_OTHER_AMOUNT" HeaderText="FC Other Amount" />
-                    <asp:BoundField DataField="INR_BASIC_AMOUNT" HeaderText="INR Basic Amount" />
-                    <asp:BoundField DataField="INR_GST_AMOUNT" HeaderText="INR GST Amount" />
-                    <asp:BoundField DataField="INR_OTHER_AMOUNT" HeaderText="INR Other Amount" />
-
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-                    <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Voucher Created By" />
-                    <asp:BoundField DataField="AUTHORIZED_BY" HeaderText="Authorized By" />
-                    <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized On" />
-                    <asp:BoundField DataField="AUTHORIZED_REMARKS" HeaderText="Authorized Remarks" />
-                    <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
-                    <asp:BoundField DataField="APPROVED_ON" HeaderText="Approved On" />
-                    <asp:BoundField DataField="APPROVED_REMARKS" HeaderText="Approved Remarks" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
