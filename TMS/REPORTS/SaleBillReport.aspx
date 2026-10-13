@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Sale Bill Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="SaleBillReport.aspx.cs" Inherits="REPORTS_SaleBillReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -259,18 +259,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Sale Bill Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -289,7 +287,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -321,57 +319,63 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvSaleBill" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%" HorizontalAlign="Center"
-                AllowPaging="True" OnPageIndexChanging="gvSaleBill_PageIndexChanging" OnRowDataBound="gvSaleBill_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
-                    <asp:BoundField DataField="OA_NO" HeaderText="OA_NO" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="BILL_DATE" HeaderText="BILL_DATE" />
-                    <asp:BoundField DataField="CLASS" HeaderText="CLASS" />
-                    <asp:BoundField DataField="CURR_DESC" HeaderText="CURR_DESC" />
-                    <asp:BoundField DataField="RATE" HeaderText="RATE" />
-                    <asp:BoundField DataField="F_CURRENCY" HeaderText="F_CURRENCY" />
-                    <asp:BoundField DataField="AMOUNT_INR" HeaderText="AMOUNT_INR" />
-                    <asp:BoundField DataField="BILL_NO" HeaderText="BILL_NO" />
-                    <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
-                    <asp:BoundField DataField="BUS_SEGMENT" HeaderText="OLD_BU" />
-                    <%--<asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />--%>
-                    <asp:BoundField DataField="NEW_BU" HeaderText="NEW_BU" />
-                    <asp:BoundField DataField="CLASS1" HeaderText="CLASS1" />
-                    <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
-                    <asp:BoundField DataField="DOC" HeaderText="DOC" />
-                    <asp:BoundField DataField="WARRANTY" HeaderText="WARRANTY" />
-                    <asp:BoundField DataField="PERCENTAGE" HeaderText="PERCENTAGE" />
-                    <asp:BoundField DataField="PERCENTAGE_AMOUNT" HeaderText="PERCENTAGE_AMOUNT" />
-                    <asp:BoundField DataField="GLCODE" HeaderText="GLCODE" />
-                    <asp:BoundField DataField="GROSS_MARGIN" HeaderText="GROSS_MARGIN" />
-                    <asp:BoundField DataField="GROSS_MARGIN_PER" HeaderText="GROSS_MARGIN_PER" />
-                    <asp:BoundField DataField="GROSS_MARGIN_VALUE" HeaderText="GROSS_MARGIN_VALUE" />
-                    <asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />
-                    <asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />
-                    <asp:BoundField DataField="POC" HeaderText="POC" />
-                    <asp:BoundField DataField="ORG_TYPE" HeaderText="ORG_TYPE" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Sale Bill Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-        </div>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvSaleBill" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%" HorizontalAlign="Center"
+                    AllowPaging="True" OnPageIndexChanging="gvSaleBill_PageIndexChanging" OnRowDataBound="gvSaleBill_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
+                        <asp:BoundField DataField="OA_NO" HeaderText="OA_NO" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="BILL_DATE" HeaderText="BILL_DATE" />
+                        <asp:BoundField DataField="CLASS" HeaderText="CLASS" />
+                        <asp:BoundField DataField="CURR_DESC" HeaderText="CURR_DESC" />
+                        <asp:BoundField DataField="RATE" HeaderText="RATE" />
+                        <asp:BoundField DataField="F_CURRENCY" HeaderText="F_CURRENCY" />
+                        <asp:BoundField DataField="AMOUNT_INR" HeaderText="AMOUNT_INR" />
+                        <asp:BoundField DataField="BILL_NO" HeaderText="BILL_NO" />
+                        <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
+                        <asp:BoundField DataField="BUS_SEGMENT" HeaderText="OLD_BU" />
+                        <%--<asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />--%>
+                        <asp:BoundField DataField="NEW_BU" HeaderText="NEW_BU" />
+                        <asp:BoundField DataField="CLASS1" HeaderText="CLASS1" />
+                        <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
+                        <asp:BoundField DataField="DOC" HeaderText="DOC" />
+                        <asp:BoundField DataField="WARRANTY" HeaderText="WARRANTY" />
+                        <asp:BoundField DataField="PERCENTAGE" HeaderText="PERCENTAGE" />
+                        <asp:BoundField DataField="PERCENTAGE_AMOUNT" HeaderText="PERCENTAGE_AMOUNT" />
+                        <asp:BoundField DataField="GLCODE" HeaderText="GLCODE" />
+                        <asp:BoundField DataField="GROSS_MARGIN" HeaderText="GROSS_MARGIN" />
+                        <asp:BoundField DataField="GROSS_MARGIN_PER" HeaderText="GROSS_MARGIN_PER" />
+                        <asp:BoundField DataField="GROSS_MARGIN_VALUE" HeaderText="GROSS_MARGIN_VALUE" />
+                        <asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />
+                        <asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />
+                        <asp:BoundField DataField="POC" HeaderText="POC" />
+                        <asp:BoundField DataField="ORG_TYPE" HeaderText="ORG_TYPE" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 

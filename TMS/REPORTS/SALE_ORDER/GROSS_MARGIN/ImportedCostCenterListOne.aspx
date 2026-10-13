@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ImportedCostCenterListOne.aspx.cs"
-    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_ImportedCostCenterListOne" Title="Untitled Page" %>
+    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_ImportedCostCenterListOne" Title="CIPLTMS - Imported Cost Center Report" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -203,18 +203,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Imported Cost Center Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtPostingMonth" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
@@ -266,60 +264,66 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
+        <fieldset class="employee-grid-fieldset">
+            <legend>Imported Cost Center Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvCostCenterList" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="100%"
+                    ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvCostCenterList_RowDataBound"
+                    OnRowCommand="gvCostCenterList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCostCenterID" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_ID" ) %>' />
+                                <asp:Label ID="lblCostCenterCode" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_CODE" ) %>' />
+                                <asp:Label ID="lblCostCenterName" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_NAME" ) %>' />
+                                <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("ORDER_NO" ) %>' />
+                                <asp:Label ID="lblCostCenterAmount" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_AMOUNT" ) %>' />
+                                <asp:Label ID="lblDirectBilling" runat="server" Visible="false" Text='<%# Eval("DIRECT_BILLING" ) %>' />
+                                <asp:Label ID="lblPartialBilling" runat="server" Visible="false" Text='<%# Eval("PARTIAL_BILLING" ) %>' />
+                                <asp:Label ID="lblNetAmount" runat="server" Visible="false" Text='<%# Eval("NET_AMOUNT" ) %>' />
+                                <asp:Label ID="lblMonth" runat="server" Visible="false" Text='<%# Eval("MONTH" ) %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID" ) %>' />
+                                <asp:Label ID="lblUnit" runat="server" Visible="false" Text='<%# Eval("UNIT" ) %>' />
+
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
+                                    ToolTip="Edit Posted Bill" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="COST_CENTER_CODE" HeaderText="COST_CENTER_CODE" />
+                        <asp:BoundField DataField="COST_CENTER_NAME" HeaderText="COST_CENTER_NAME" />
+                        <asp:BoundField DataField="ORDER_NO" HeaderText="ORDER_NO" />
+                        <asp:BoundField DataField="COST_CENTER_AMOUNT" HeaderText="COST_CENTER_AMOUNT" />
+                        <asp:BoundField DataField="DIRECT_BILLING" HeaderText="DIRECT_BILLING" />
+                        <asp:BoundField DataField="PARTIAL_BILLING" HeaderText="PARTIAL_BILLING" />
+                        <asp:BoundField DataField="NET_AMOUNT" HeaderText="NET_AMOUNT" />
+                        <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
+                        <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
+                        <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" CssClass="FrozenHeader" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvCostCenterList" runat="server" AutoGenerateColumns="False" CellPadding="4" Width="100%"
-                ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvCostCenterList_RowDataBound"
-                OnRowCommand="gvCostCenterList_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCostCenterID" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_ID" ) %>' />
-                            <asp:Label ID="lblCostCenterCode" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_CODE" ) %>' />
-                            <asp:Label ID="lblCostCenterName" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_NAME" ) %>' />
-                            <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("ORDER_NO" ) %>' />
-                            <asp:Label ID="lblCostCenterAmount" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_AMOUNT" ) %>' />
-                            <asp:Label ID="lblDirectBilling" runat="server" Visible="false" Text='<%# Eval("DIRECT_BILLING" ) %>' />
-                            <asp:Label ID="lblPartialBilling" runat="server" Visible="false" Text='<%# Eval("PARTIAL_BILLING" ) %>' />
-                            <asp:Label ID="lblNetAmount" runat="server" Visible="false" Text='<%# Eval("NET_AMOUNT" ) %>' />
-                            <asp:Label ID="lblMonth" runat="server" Visible="false" Text='<%# Eval("MONTH" ) %>' />
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID" ) %>' />
-                            <asp:Label ID="lblUnit" runat="server" Visible="false" Text='<%# Eval("UNIT" ) %>' />
-
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server" ImageUrl="~/Images/royal_search.png"
-                                ToolTip="Edit Posted Bill" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="COST_CENTER_CODE" HeaderText="COST_CENTER_CODE" />
-                    <asp:BoundField DataField="COST_CENTER_NAME" HeaderText="COST_CENTER_NAME" />
-                    <asp:BoundField DataField="ORDER_NO" HeaderText="ORDER_NO" />
-                    <asp:BoundField DataField="COST_CENTER_AMOUNT" HeaderText="COST_CENTER_AMOUNT" />
-                    <asp:BoundField DataField="DIRECT_BILLING" HeaderText="DIRECT_BILLING" />
-                    <asp:BoundField DataField="PARTIAL_BILLING" HeaderText="PARTIAL_BILLING" />
-                    <asp:BoundField DataField="NET_AMOUNT" HeaderText="NET_AMOUNT" />
-                    <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
-                    <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
-                    <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" CssClass="FrozenHeader" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
 
 

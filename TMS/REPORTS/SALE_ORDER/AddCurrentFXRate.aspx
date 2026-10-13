@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Add Current FX Rate" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     MaintainScrollPositionOnPostback="true" CodeFile="AddCurrentFXRate.aspx.cs" Inherits="REPORTS_SALE_ORDER_AddCurrentFXRate" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -114,19 +114,17 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Add Current FX Rate:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Posting Month:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtPostingMonth" runat="server" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtPostingMonth" runat="server"
                                     CssClass="form-control"
                                     onkeyDown="javascript:preventInput(event);"></asp:TextBox>
                                 <asp:HiddenField ID="hdPostingMonth" runat="server" />
@@ -144,67 +142,74 @@
                         </tr>
                     </table>
 
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
 
-                    <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server" Text="Save"
-                        OnClick="btnSave_Click" />
 
                 </div>
             </fieldset>
             <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnSave" CssClass="button" Width="100%" runat="server" Text="Save"
+                    OnClick="btnSave_Click" />
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
-            <asp:UpdatePanel runat="server" ID="uppanel">
-                <ContentTemplate>
-                    <asp:GridView
-                        CssClass="employee-grid"
-                        ID="gvCurrencyList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowDataBound="gvCurrencyList_RowDataBound">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-                            <asp:TemplateField HeaderText="CURRENCY_CODE">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblCurrencyCode" runat="server" Text='<%# Eval("CODE") %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="CREATED_DATED[FACT]">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblDated" runat="server" Text='<%# Eval("DATED") %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="CURRENT_MONTH">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblCurrentMonth" runat="server" Text='<%# Eval("CURRENT_MONTH") %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="CURRENT_FX_RATE">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtFxRate" 
-                                        CssClass="form-control"
-                                        runat="server" Text='<%# Eval("CURRENT_FX_RATE") %>'
-                                        onkeypress="return inNumberKey(this, event);" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
-                </ContentTemplate>
-            </asp:UpdatePanel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Add Current FX Rate:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-        </div>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView
+                            CssClass="employee-grid"
+                            ID="gvCurrencyList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                            ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowDataBound="gvCurrencyList_RowDataBound">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+                                <asp:TemplateField HeaderText="CURRENCY_CODE">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCurrencyCode" runat="server" Text='<%# Eval("CODE") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="CREATED_DATED[FACT]">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblDated" runat="server" Text='<%# Eval("DATED") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="CURRENT_MONTH">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCurrentMonth" runat="server" Text='<%# Eval("CURRENT_MONTH") %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="CURRENT_FX_RATE">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtFxRate"
+                                            CssClass="form-control"
+                                            runat="server" Text='<%# Eval("CURRENT_FX_RATE") %>'
+                                            onkeypress="return inNumberKey(this, event);" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+
+            </div>
+        </fieldset>
 
     </div>
 

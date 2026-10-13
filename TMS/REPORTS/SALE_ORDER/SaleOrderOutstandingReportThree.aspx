@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Sale Order Backlog/Forecast Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="SaleOrderOutstandingReportThree.aspx.cs" Inherits="REPORTS_SALE_ORDER_SaleOrderOutstandingReportThree" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -153,19 +153,17 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Sale Order Backlog/Forecast Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Posting Month:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtPostingMonth" runat="server" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtPostingMonth" runat="server"
                                     CssClass="form-control"
                                     onkeyDown="javascript:preventInput(event);"></asp:TextBox>
                                 <asp:HiddenField ID="hdPostingMonth" runat="server" />
@@ -184,15 +182,15 @@
                     </table>
 
                     <label>JOB No:</label>
-                    <asp:TextBox ID="txtJobNo" runat="server" 
+                    <asp:TextBox ID="txtJobNo" runat="server"
                         CssClass="form-control"></asp:TextBox>
 
                     <label>Customer Name:</label>
-                    <asp:TextBox ID="txtCustomerName" runat="server" 
+                    <asp:TextBox ID="txtCustomerName" runat="server"
                         CssClass="form-control"></asp:TextBox>
 
                     <label>Customer Type:</label>
-                    <asp:DropDownList ID="ddlCustomerType" runat="server" 
+                    <asp:DropDownList ID="ddlCustomerType" runat="server"
                         CssClass="form-control">
                         <asp:ListItem Text="Select" Value="0" />
                         <asp:ListItem Text="Inter Company" Value="1" />
@@ -200,51 +198,58 @@
                     </asp:DropDownList>
 
                     <label>BU:</label>
-                    <asp:TextBox ID="txtBU" runat="server" 
+                    <asp:TextBox ID="txtBU" runat="server"
                         CssClass="form-control"></asp:TextBox>
 
                     <label>Currency:</label>
-                    <asp:DropDownList ID="ddlCurrency" runat="server" 
+                    <asp:DropDownList ID="ddlCurrency" runat="server"
                         CssClass="form-control">
                         <asp:ListItem Text="SELECT" Value="0" />
                         <asp:ListItem Text="IC" Value="1" />
                         <asp:ListItem Text="THIRD_PARTY" Value="2" />
                     </asp:DropDownList>
-                    
+
                 </div>
             </fieldset>
             <div class="full-width button-group">
 
                 <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
+                    OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
 
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
 
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvSaleOrder" runat="server" AutoGenerateColumns="true" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvSaleOrder_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Sale Order Backlog/Forecast Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-        </div>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvSaleOrder" runat="server" AutoGenerateColumns="true" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvSaleOrder_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 

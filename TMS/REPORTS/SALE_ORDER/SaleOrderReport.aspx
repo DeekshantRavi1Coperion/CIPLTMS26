@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CPLTMS - Sale Order Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="SaleOrderReport.aspx.cs" Inherits="REPORTS_SALE_ORDER_SaleOrderReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -258,24 +258,23 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
-            <fieldset class="filter-card">
-                <legend>Sale Order Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+        <div class="filter-grid-container">
 
-                <div class="form-grid form-grid-3">
+            <fieldset class="filter-card">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtStartDateSearch" runat="server" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarStartDateSearch" PopupButtonID="imgbtnStartDateSearch"
-                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy" 
+                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy"
                                     OnClientDateSelectionChanged="clientChangedSearch">
                                 </asp:CalendarExtender>
                             </td>
@@ -289,9 +288,9 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
-                                   CssClass="form-control" />
+                                    CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
                                 <asp:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
                                     runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy"
@@ -320,56 +319,62 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
+        <fieldset class="employee-grid-fieldset">
+            <legend>Sale Order Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvSaleOrder" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvSaleOrder_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="OA_NO" HeaderText="OA_NO" />
+                        <asp:BoundField DataField="OA_DATE" HeaderText="OA_DATE" />
+                        <asp:BoundField DataField="DELIVERY_DATE" HeaderText="DELIVERY_DATE" />
+                        <asp:BoundField DataField="NAME" HeaderText="NAME" />
+                        <asp:BoundField DataField="CLASS" HeaderText="CLASS" />
+                        <asp:BoundField DataField="CURR_DESC" HeaderText="CURR_DESC" />
+                        <asp:BoundField DataField="CURR_RATE" HeaderText="CURR_RATE" />
+                        <asp:BoundField DataField="CURR_BASIC" HeaderText="CURR_BASIC" />
+                        <asp:BoundField DataField="BASIC_INR" HeaderText="BASIC_INR" />
+                        <asp:BoundField DataField="YO_NO" HeaderText="YO_NO" />
+                        <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
+                        <%-- <asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />--%>
+                        <asp:BoundField DataField="BUS_SEGMENT" HeaderText="OLD_BU" />
+                        <asp:BoundField DataField="NEW_BU" HeaderText="NEW_BU" />
+
+                        <asp:BoundField DataField="CLASS1" HeaderText="CLASS1" />
+                        <asp:BoundField DataField="DOC" HeaderText="DOC" />
+                        <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
+                        <asp:BoundField DataField="GLCODE" HeaderText="GLCODE" />
+                        <asp:BoundField DataField="GROSS_MARGIN" HeaderText="GROSS_MARGIN" />
+                        <asp:BoundField DataField="GROSS_MARGIN_PER" HeaderText="GROSS_MARGIN_PER" />
+                        <asp:BoundField DataField="GROSS_MARGIN_VALUE" HeaderText="GROSS_MARGIN_VALUE" />
+                        <asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />
+                        <asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />
+                        <asp:BoundField DataField="POC" HeaderText="POC" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvSaleOrder" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvSaleOrder_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="OA_NO" HeaderText="OA_NO" />
-                    <asp:BoundField DataField="OA_DATE" HeaderText="OA_DATE" />
-                    <asp:BoundField DataField="DELIVERY_DATE" HeaderText="DELIVERY_DATE" />
-                    <asp:BoundField DataField="NAME" HeaderText="NAME" />
-                    <asp:BoundField DataField="CLASS" HeaderText="CLASS" />
-                    <asp:BoundField DataField="CURR_DESC" HeaderText="CURR_DESC" />
-                    <asp:BoundField DataField="CURR_RATE" HeaderText="CURR_RATE" />
-                    <asp:BoundField DataField="CURR_BASIC" HeaderText="CURR_BASIC" />
-                    <asp:BoundField DataField="BASIC_INR" HeaderText="BASIC_INR" />
-                    <asp:BoundField DataField="YO_NO" HeaderText="YO_NO" />
-                    <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
-                    <%-- <asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />--%>
-                    <asp:BoundField DataField="BUS_SEGMENT" HeaderText="OLD_BU" />
-                    <asp:BoundField DataField="NEW_BU" HeaderText="NEW_BU" />
 
-                    <asp:BoundField DataField="CLASS1" HeaderText="CLASS1" />
-                    <asp:BoundField DataField="DOC" HeaderText="DOC" />
-                    <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
-                    <asp:BoundField DataField="GLCODE" HeaderText="GLCODE" />
-                    <asp:BoundField DataField="GROSS_MARGIN" HeaderText="GROSS_MARGIN" />
-                    <asp:BoundField DataField="GROSS_MARGIN_PER" HeaderText="GROSS_MARGIN_PER" />
-                    <asp:BoundField DataField="GROSS_MARGIN_VALUE" HeaderText="GROSS_MARGIN_VALUE" />
-                    <asp:BoundField DataField="END_MARKET" HeaderText="END_MARKET" />
-                    <asp:BoundField DataField="GEOGROPHY" HeaderText="GEOGROPHY" />
-                    <asp:BoundField DataField="POC" HeaderText="POC" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
 
 
