@@ -1,5 +1,4 @@
-﻿```css
-/* =========================================================
+﻿/* =========================================================
    GLOBAL RESET
    ========================================================= */
 * {
@@ -869,43 +868,129 @@ body {
     outline-offset: 2px;
 }
 
-
-
 /* =========================================================
-   SIDEBAR RESIZER
+   RESIZABLE SIDEBAR
    ========================================================= */
+
+:root {
+    --sidebar-width: 280px;
+}
+
+/* Sidebar width controlled by JavaScript */
+
+.app-layout > .sidebar {
+    width: var(--sidebar-width) !important;
+    min-width: var(--sidebar-width) !important;
+    max-width: var(--sidebar-width) !important;
+    flex: 0 0 var(--sidebar-width) !important;
+    position: relative;
+    transition: none;
+}
+
+/* Resize handle */
 
 .sidebar-resizer {
     position: absolute;
     top: 0;
-    right: -4px;
-    width: 8px;
+    right: 0;
+    width: 7px;
     height: 100%;
     cursor: col-resize;
-    z-index: 1000;
+    z-index: 999;
     background: transparent;
-    transition: background-color .15s ease;
+    transition: background 0.2s ease;
 }
 
-    .sidebar-resizer:hover {
-        background: rgba(37, 99, 235, 0.35);
+    /* Visible handle on hover */
+
+    .sidebar-resizer:hover,
+    .sidebar-resizer.dragging,
+    .sidebar-resizer:focus-visible {
+        background: #3b82f6;
     }
 
-    .sidebar-resizer:active {
-        background: rgba(37, 99, 235, 0.55);
+    /* Small visual indicator */
+
+    .sidebar-resizer::after {
+        content: "";
+        position: absolute;
+        width: 3px;
+        height: 42px;
+        top: 50%;
+        left: 2px;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.35);
+        border-radius: 4px;
     }
+
+/* Prevent text selection while dragging */
+
+body.sidebar-resizing,
+body.sidebar-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+/* Main area automatically adjusts */
+
+.app-layout > .main-area {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+}
+
+/* Keep menu names visible when expanded */
+
+.sidebar .menu-text {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
 
 
 /* =========================================================
-   REDUCED MOTION
+   SIDEBAR RESIZE - FINAL OVERRIDES
    ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
+:root {
+    --sidebar-width: 280px;
+}
 
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        transition: none !important;
+.app-layout > .sidebar {
+    width: var(--sidebar-width) !important;
+    min-width: var(--sidebar-width) !important;
+    max-width: var(--sidebar-width) !important;
+    flex: 0 0 var(--sidebar-width) !important;
+    transition: none !important;
+}
+
+.sidebar-resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    z-index: 9999;
+    cursor: col-resize;
+    background: transparent;
+    touch-action: none;
+}
+
+    .sidebar-resizer:hover,
+    .sidebar-resizer.dragging {
+        background: #3b82f6;
     }
+
+body.sidebar-resizing,
+body.sidebar-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+.app-layout > .main-area {
+    flex: 1 1 0;
+    min-width: 0;
 }
