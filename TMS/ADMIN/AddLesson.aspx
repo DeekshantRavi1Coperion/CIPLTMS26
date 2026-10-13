@@ -5,22 +5,19 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 
-   <link rel="icon" href="../../Images/Icon04.png" />
-   <%-- <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="../../Images/Icon04.png" />
+    <%-- <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
 
     <link href="../Styles/form.css" rel="stylesheet" />
-    <link href="../Styles/filter.css" rel="stylesheet" />
     <link href="../Styles/grid.css" rel="stylesheet" />
     <link href="../Styles/popup.css" rel="stylesheet" />
 
     <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
-
     <script src="../../Scripts/NumericValidation.js" type="text/javascript"></script>
 
     <style type="text/css">
-        .modalBackground
-        {
+        .modalBackground {
             background-color: Gray;
             filter: alpha(opacity=80);
             opacity: 0.8;
@@ -160,182 +157,182 @@
                 }
     </style>
 
-     <script type="text/javascript" language="javascript">
-         function pageLoad() {
-             document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
-             document.getElementById('<%=hdDate.ClientID %>').value = document.getElementById('<%=txtDate.ClientID %>').value;
-             document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
-         }
+    <script type="text/javascript" language="javascript">
+        function pageLoad() {
+            document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
+            document.getElementById('<%=hdDate.ClientID %>').value = document.getElementById('<%=txtDate.ClientID %>').value;
+            document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
+        }
 
-         function clientChanged(sender, args) {
-          
-             document.getElementById('<%=hdDate.ClientID %>').value = document.getElementById('<%=txtDate.ClientID %>').value;
-             document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
-         }
+        function clientChanged(sender, args) {
 
-         function ValidateEmployee() {
-             var Employee = document.getElementById('<%=ddlInitiatedBy.ClientID %>').selectedIndex;
-             if (Employee == '' || Employee == '0') {
-                 document.getElementById('<%=ddlInitiatedBy.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=ddlInitiatedBy.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+            document.getElementById('<%=hdDate.ClientID %>').value = document.getElementById('<%=txtDate.ClientID %>').value;
+            document.getElementById('<%=txtDate.ClientID %>').value = document.getElementById('<%=hdDate.ClientID %>').value;
+        }
 
-         function ValidateDepartment() {
-             var Department = document.getElementById('<%=ddlDepartment.ClientID %>').selectedIndex;
-             if (Department == '' || Department == '0') {
-                 document.getElementById('<%=ddlDepartment.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=ddlDepartment.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateEmployee() {
+            var Employee = document.getElementById('<%=ddlInitiatedBy.ClientID %>').selectedIndex;
+            if (Employee == '' || Employee == '0') {
+                document.getElementById('<%=ddlInitiatedBy.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlInitiatedBy.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateUnit() {
-             var Unit = document.getElementById('<%=ddlCompany.ClientID %>').selectedIndex;
-             if (Unit == '' && Unit != '0') {
-                 document.getElementById('<%=ddlCompany.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=ddlCompany.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
-         function ValidateEquipments() {
-             var Equipment = document.getElementById('<%=ddlEquipments.ClientID %>').selectedIndex;
-             if (Equipment == '' || Equipment == '0') {
-                 document.getElementById('<%=ddlEquipments.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=ddlEquipments.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateDepartment() {
+            var Department = document.getElementById('<%=ddlDepartment.ClientID %>').selectedIndex;
+            if (Department == '' || Department == '0') {
+                document.getElementById('<%=ddlDepartment.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlDepartment.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateProblemFacedRemark() {
-             var ProblemFacedRemark = document.getElementById('<%=txtProblemFaced.ClientID %>').value;
-             if (ProblemFacedRemark == '') {
-                 document.getElementById('<%=txtProblemFaced.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=txtProblemFaced.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateUnit() {
+            var Unit = document.getElementById('<%=ddlCompany.ClientID %>').selectedIndex;
+            if (Unit == '' && Unit != '0') {
+                document.getElementById('<%=ddlCompany.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlCompany.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
+        function ValidateEquipments() {
+            var Equipment = document.getElementById('<%=ddlEquipments.ClientID %>').selectedIndex;
+            if (Equipment == '' || Equipment == '0') {
+                document.getElementById('<%=ddlEquipments.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=ddlEquipments.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateLessonLearntRemark() {
-             var LessonLearntRemark = document.getElementById('<%=txtLessonLearnt.ClientID %>').value;
-             if (LessonLearntRemark == '') {
-                 document.getElementById('<%=txtLessonLearnt.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=txtLessonLearnt.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateProblemFacedRemark() {
+            var ProblemFacedRemark = document.getElementById('<%=txtProblemFaced.ClientID %>').value;
+            if (ProblemFacedRemark == '') {
+                document.getElementById('<%=txtProblemFaced.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtProblemFaced.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateJobNo() {
-             var JOBNo = document.getElementById('<%=txtJOBNo.ClientID %>').value;
-             if (JOBNo == '') {
-                 document.getElementById('<%=txtJOBNo.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=txtJOBNo.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateLessonLearntRemark() {
+            var LessonLearntRemark = document.getElementById('<%=txtLessonLearnt.ClientID %>').value;
+            if (LessonLearntRemark == '') {
+                document.getElementById('<%=txtLessonLearnt.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtLessonLearnt.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateCustName() {
-             var CustName = document.getElementById('<%=txtCustomerName.ClientID %>').value;
-             if (CustName == '') {
-                 document.getElementById('<%=txtCustomerName.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=txtCustomerName.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateJobNo() {
+            var JOBNo = document.getElementById('<%=txtJOBNo.ClientID %>').value;
+            if (JOBNo == '') {
+                document.getElementById('<%=txtJOBNo.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtJOBNo.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateCustCode() {
-             var CustCode = document.getElementById('<%=txtCustomerCode.ClientID %>').value;
-             if (CustCode == '') {
-                 document.getElementById('<%=txtCustomerCode.ClientID %>').style.borderColor = "#F7627F";
-                 return true;
-             }
-             else {
-                 document.getElementById('<%=txtCustomerCode.ClientID %>').style.borderColor = "";
-                 return false;
-             }
-         }
+        function ValidateCustName() {
+            var CustName = document.getElementById('<%=txtCustomerName.ClientID %>').value;
+            if (CustName == '') {
+                document.getElementById('<%=txtCustomerName.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtCustomerName.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-         function ValidateAll() {
+        function ValidateCustCode() {
+            var CustCode = document.getElementById('<%=txtCustomerCode.ClientID %>').value;
+            if (CustCode == '') {
+                document.getElementById('<%=txtCustomerCode.ClientID %>').style.borderColor = "#F7627F";
+                return true;
+            }
+            else {
+                document.getElementById('<%=txtCustomerCode.ClientID %>').style.borderColor = "";
+                return false;
+            }
+        }
 
-             var check = true;
+        function ValidateAll() {
 
-             if (ValidateEmployee()) {
-                 check = false;
-             }
+            var check = true;
 
-             if (ValidateDepartment()) {
-                 check = false;
-             }
+            if (ValidateEmployee()) {
+                check = false;
+            }
 
-             if (ValidateUnit()) {
-                 check = false;
-             }
+            if (ValidateDepartment()) {
+                check = false;
+            }
 
-             if (ValidateEquipments()) {
-                 check = false;
-             }
+            if (ValidateUnit()) {
+                check = false;
+            }
 
-             if (ValidateProblemFacedRemark()) {
-                 check = false;
-             }
+            if (ValidateEquipments()) {
+                check = false;
+            }
 
-             if (ValidateLessonLearntRemark()) {
-                 check = false;
-             }
+            if (ValidateProblemFacedRemark()) {
+                check = false;
+            }
 
-             if (ValidateJobNo()) {
-                 check = false;
-             }
+            if (ValidateLessonLearntRemark()) {
+                check = false;
+            }
 
-
-             if (ValidateCustName()) {
-                 check = false;
-             }
-
-             if (ValidateCustCode()) {
-                 check = false;
-             }
+            if (ValidateJobNo()) {
+                check = false;
+            }
 
 
-             if (check) {
-                 if (confirm("Would you like to submit?")) {
-                     document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
-                     return true;
-                 }
-                 else {
-                     document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
-                     return false;
-                 }
-             }
-             else {
-                 return false;
-             }
-         }
+            if (ValidateCustName()) {
+                check = false;
+            }
+
+            if (ValidateCustCode()) {
+                check = false;
+            }
+
+
+            if (check) {
+                if (confirm("Would you like to submit?")) {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "1";
+                    return true;
+                }
+                else {
+                    document.getElementById('<%=hdConfirmValue.ClientID %>').value = "0";
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
 
         <%-- function clientChangedSearch(sender, args) {
 
@@ -441,18 +438,18 @@
                  return false;
              }
          }--%>
-     </script>
+    </script>
 
-     <script type="text/javascript">
-         function stopEnterKey(evt) {
-             var evt = (evt) ? evt : ((event) ? event : null);
-             var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-             if (evt.keyCode == 13) {
-                 return false;
-             }
-         }
-         document.onkeypress = stopEnterKey;
-     </script>
+    <script type="text/javascript">
+        function stopEnterKey(evt) {
+            var evt = (evt) ? evt : ((event) ? event : null);
+            var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+            if (evt.keyCode == 13) {
+                return false;
+            }
+        }
+        document.onkeypress = stopEnterKey;
+    </script>
 
 
     <script type="text/javascript">
@@ -576,303 +573,222 @@
             return true;
         }
     </script>
---%>
-
-
+    --%>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
     </ajax:ToolkitScriptManager>
     <asp:HiddenField ID="hdConfirmValue" runat="server" />
     <div align="center" width="100%" style="margin-top: 50px;">
-            <fieldset style="width: 70%">
-                <legend style="text-align: center;">
+
+
+
+        <div class="form-entry-container">
+
+            <fieldset class="form-card">
+                <legend>
                     <asp:Label ID="lblLegend" runat="server" Text="Add Lesson Learnt"></asp:Label></legend>
 
-                <table width="100%" align="left">
-                    <tr>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td colspan="4" align="center">
-                        <asp:Panel ID="pnlMsg" Visible="false" runat="server" Height="30px">
-                            <asp:Label ID="lblMsg" runat="server" Font-Bold="True" />
-                        </asp:Panel>
-                    </td>
-                </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                        <td colspan="4" align="center">
-                            <asp:Panel ID="Panel1" Visible="false" runat="server" Height="30px">
-                                <asp:Label ID="Label1" runat="server" Font-Bold="True" />
-                            </asp:Panel>
-                        </td>
-                    </tr>
+                <div class="form-grid form-grid-2">
 
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Date:
-                        </td>
-                        <td>
-                            <asp:TextBox ID="txtDate" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
-                            <asp:HiddenField ID="hdDate" runat="server" />
-                            <ajax:CalendarExtender ID="calendarDate" PopupButtonID="imgBtnDate"
-                                runat="server" TargetControlID="txtDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChanged" >
-                            </ajax:CalendarExtender>
-                        </td>
-                        <td>
-                            <asp:ImageButton ID="imgBtnDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Date of Logging Lesson Learnt" />
-                        </td>
-                       
-                        <td>Initiated By:
-                        </td>
-                        <td>
-                            <asp:DropDownList ID="ddlInitiatedBy" runat="server" Width="100%" Height="25px" onblur="return ValidateEmployee();">
-                            </asp:DropDownList>
-                        </td>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Department:
-                        </td>
-                        <td>
-                            <asp:DropDownList ID="ddlDepartment" runat="server" Width="100%" Height="25px" onblur="return ValidateDepartment();">
-                            </asp:DropDownList>
-                        </td>
-                        <td>&nbsp;
-                        </td>
-
-                        <td style="width: 15%;">Unit:</td>
-                        <td style="width: 30%;">
-                            <asp:DropDownList ID="ddlCompany" runat="server" Width="100%" Height="26px" AutoPostBack="true"  OnSelectedIndexChanged="ddlCompany_SelectedIndexChanged" onblur="return ValidateUnit();" />
-                            <%--<asp:DropDownList ID="ddlCompany" runat="server" Width="100%" Height="26px" AutoPostBack="true"  OnSelectedIndexChanged="ddlCompany_SelectedIndexChanged" />--%>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 15%;">JOB Number:</td>
-                        <td style="width: 30%;">
-                            <table width="100%">
-                                <tr>
-                                    <td style="width: 90%">
-                                        <asp:TextBox ID="txtJOBNo" runat="server" Width="100%" Enabled="false" onblur="return ValidateJOBNo();" />
-                                    </td>
-
-                                    <td style="width: 10%">
-                                        <asp:Button ID="btnGetJOBNo" runat="server" Width="100%" Text="Get" CssClass="button" 
-                                            OnClick="btnGetJOBNo_Click" />
-
-                                        <asp:Button ID="btnAddApprover" runat="server" Width="100%" Text="Add Approver" CssClass="button"
-                                            Visible="false" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>&nbsp;</td>
-
-                    </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Customer Name:</td>
-                        <td colspan="4">
-                            <table width="100%">
-                                <tr>
-                                    <td style="width: 85%">
-                                        <asp:TextBox ID="txtCustomerName" runat="server" Width="100%" Enabled="false" onblur="return ValidateCustName();" />
-                                    </td>
-                                    <td style="width: 15%">
-                                        <asp:TextBox ID="txtCustomerCode" runat="server" Width="100%" Enabled="false" onblur="return ValidateCustCode();" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Equipments:
-                        </td>
-                        <td>
-                            <asp:DropDownList ID="ddlEquipments" runat="server" Width="100%" Height="25px" onblur="return ValidateEquipments();">
-                            </asp:DropDownList>
-                        </td>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Problem Faced:
-                        </td>
-                        <td colspan="4">
-                            <asp:TextBox ID="txtProblemFaced" runat="server" Width="100%" Enabled="true" TextMode="MultiLine"
-                               onblur="return ValidateProblemFacedRemark();" Rows="2" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Lesson Learnt:
-                        </td>
-                        <td colspan="4">
-                            <asp:TextBox ID="txtLessonLearnt" runat="server" Width="100%" Enabled="true" TextMode="MultiLine"
-                                Rows="2" onblur="return ValidateLessonLearntRemark();"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                    </tr>
-
-                    <tr>
-                        <td>&nbsp;
-                        </td>
-
-                        <td colspan="4">
-                            <table width="100%" align="center">
-                                <tr>
-                                    <td align="center" style="width: 45%">
-                                        <asp:Button ID="btnSubmit" CssClass="button" runat="server" Text="Save" OnClientClick="return ValidateAll();"
-                                            OnClick="btnSubmit_Click" Width="80%" />
-                                    </td>
-                                    <td style="width: 10%">&nbsp;
-                                    </td>
-                                    <td align="center" style="width: 45%">
-                                        <asp:Button ID="btnLessonLearntList" CssClass="button" runat="server" Text="Lesson Learnt List"
-                                           OnClick="btnLessonList_Click" Width="80%" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-
-            </fieldset>
-
-        </div>
-        <br />
-      <div>
-
-            <%--JOB DETAIL START--%>
-            <asp:Button ID="btnShowPopupJOBDetail" runat="server" Style="display: none" />
-            <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
-                PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
-            </ajax:ModalPopupExtender>
-            <asp:Panel ID="pnlPopupJOBDetail" runat="server" BackColor="White" Height="600px" Width="1100px"
-                Style="display: block">
-                <table width="100%">
-                    <tr>
-                        <td align="right">
-                            <asp:ImageButton ID="imgBtnCancelJOBDetail" ImageUrl="~/Images/cancelled_img.png" runat="server" />
-                        </td>
-                    </tr>
-                </table>
-                <fieldset style="width: 90%; margin-left: 5%; margin-top: 10px;">
-                    <legend style="text-align: center;">
-                        <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
-                    <br />
-                    <asp:Label ID="lblJOBMsg" runat="server" />
-                    <br />
-                    <table style="width: 100%; margin-left: 0px;">
+                    <label>Date:</label>
+                    <table style="width: 100%;">
                         <tr>
-                            <td>JOB No.:
+                            <td width="80%">
+                                <asp:TextBox ID="txtDate" runat="server" ReadOnly="true" CssClass="form-control"></asp:TextBox>
+                                <asp:HiddenField ID="hdDate" runat="server" />
+                                <ajax:CalendarExtender ID="calendarDate" PopupButtonID="imgBtnDate"
+                                    runat="server" TargetControlID="txtDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChanged">
+                                </ajax:CalendarExtender>
                             </td>
                             <td>
-                                <asp:TextBox ID="txtJOBNoSearch" runat="server" Width="100%" />
-                            </td>
-                            <td>&nbsp;
-                            </td>
-
-                            <td>Customer Code:
-                            </td>
-                            <td>
-                                <asp:TextBox ID="txtCustomerCodeSearch" runat="server" Width="100%" />
-                            </td>
-                            <td>&nbsp;
-                            </td>
-                            <td>Customer Name.:
-                            </td>
-                            <td>
-                                <asp:TextBox ID="txtPONoSearch" runat="server" Width="100%" />
-                            </td>
-                            <td>&nbsp;
-                            </td>
-                            <td>
-                                <%--  <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
-                            Width="100%" OnClick="btnSearchJOBNo_Click" />--%>
-
-                                <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
-                                    Width="100%" OnClick="btnSearchJOBNo_Click" />
+                                <asp:ImageButton ID="imgBtnDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Date of Logging Lesson Learnt" />
                             </td>
                         </tr>
                     </table>
-                    <br />
-                    <div style='overflow: auto; width: 99%; height: 390px; border: 1px solid lightgray; margin-left: 5px;'>
-                        <div align="center">
-                            <asp:GridView ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
-                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                                <Columns>
-                                    <asp:TemplateField HeaderText="Get JOB">
-                                        <ItemTemplate>
-                                            <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                                            <asp:Label ID="lblAppJOBNo" runat="server" Visible="false" Text='<%# Eval("APP_JOB_NO") %>' />
-                                            <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
-                                            <asp:Label ID="lblCustCode" runat="server" Visible="false" Text='<%# Eval("CUST_CODE") %>' />
-                                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("JOB_UNIT_ID") %>' />
-                                            <asp:Label ID="lblUnitName" runat="server" Visible="false" Text='<%# Eval("JOB_UNIT") %>' />
 
-                                            <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No." Width="100%"
-                                                runat="server" Text="Get JOB No." CssClass="cancelbutton" />
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
-                                    <asp:BoundField DataField="CUST_CODE" HeaderText="CUST_CODE" />
-                                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                                    <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
-                                     <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                                    <asp:BoundField DataField="JOB_UNIT" HeaderText="UNIT" />
-                                </Columns>
-                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                <EditRowStyle BackColor="#7C6F57" />
-                                <AlternatingRowStyle BackColor="White" />
-                            </asp:GridView>
-                        </div>
-                    </div>
-                </fieldset>
-            </asp:Panel>
-            <%--JOB DETAIL END--%>
+
+
+
+                    <label>Initiated By:</label>
+                    <asp:DropDownList ID="ddlInitiatedBy" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Department:</label>
+                    <asp:DropDownList ID="ddlDepartment" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Unit:</label>
+                    <asp:DropDownList ID="ddlCompany" runat="server"
+                        CssClass="form-control"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlCompany_SelectedIndexChanged" />
+
+                    <label>JOB Number:</label>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 90%">
+                                <asp:TextBox ID="txtJOBNo" runat="server"
+                                    CssClass="form-control"
+                                    Enabled="false" />
+                            </td>
+
+                            <td style="width: 10%">
+                                <asp:Button ID="btnGetJOBNo" runat="server" Width="100%" Text="Get" CssClass="button"
+                                    OnClick="btnGetJOBNo_Click" />
+
+                                <asp:Button ID="btnAddApprover" runat="server" Width="100%" Text="Add Approver" CssClass="button"
+                                    Visible="false" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <label>Customer Name:</label>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 85%">
+                                <asp:TextBox ID="txtCustomerName" runat="server"
+                                    CssClass="form-control"
+                                    Enabled="false" />
+                            </td>
+                            <td style="width: 15%">
+                                <asp:TextBox ID="txtCustomerCode" runat="server"
+                                    CssClass="form-control"
+                                    Enabled="false" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <label>Equipments:</label>
+                    <asp:DropDownList ID="ddlEquipments" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Problem Faced:</label>
+                    <asp:TextBox ID="txtProblemFaced" runat="server"
+                        CssClass="form-control"
+                        Enabled="true" TextMode="MultiLine"
+                        Rows="2" />
+
+                    <label>Lesson Learnt:</label>
+                    <asp:TextBox ID="txtLessonLearnt" runat="server"
+                        CssClass="form-control"
+                        Enabled="true" TextMode="MultiLine"
+                        Rows="2" />
+                </div>
+            </fieldset>
+
+            <div class="full-width button-group">
+                <asp:Button ID="btnSubmit" CssClass="button" runat="server" Text="Save"
+                    OnClientClick="return ValidateAll();"
+                    OnClick="btnSubmit_Click" Width="100%" />
+
+                <asp:Button ID="btnLessonLearntList" CssClass="button" runat="server"
+                    Text="Lesson Learnt List"
+                    OnClick="btnLessonList_Click" Width="100%" />
+            </div>
+
+
+            <div class="full-width">
+
+                <asp:Panel ID="pnlMsg" Visible="false" runat="server" Height="30px">
+                    <asp:Label ID="lblMsg" runat="server" Font-Bold="True" />
+                </asp:Panel>
+
+            </div>
+
         </div>
+
+
+    </div>
+    <br />
+    <div>
+
+        <%--JOB DETAIL START--%>
+        <asp:Button ID="btnShowPopupJOBDetail" runat="server" Style="display: none" />
+        <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
+            PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
+        </ajax:ModalPopupExtender>
+        <asp:Panel ID="pnlPopupJOBDetail" runat="server" CssClass="popup-edit">
+            <table width="100%">
+                <tr>
+                    <td align="right">
+                        <asp:ImageButton ID="imgBtnCancelJOBDetail" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                    </td>
+                </tr>
+            </table>
+
+
+
+            <div class="popup-layout">
+
+                <div class="form-grid-container">
+                    <fieldset class="filter-card">
+                        <legend>
+                            <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" />
+                        </legend>
+
+                        <div class="form-grid form-grid-3">
+                            <label>JOB No.:</label>
+                            <asp:TextBox ID="txtJOBNoSearch" runat="server" CssClass="form-control"/>
+
+
+                            <label>Customer Code:</label>
+                            <asp:TextBox ID="txtCustomerCodeSearch" runat="server" CssClass="form-control" />
+
+                            <label>Customer Name.:</label>
+                            <asp:TextBox ID="txtPONoSearch" runat="server" CssClass="form-control" />
+
+
+                            <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
+                                Width="100%" OnClick="btnSearchJOBNo_Click" />
+
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="popup-grid-container">
+                <asp:Label ID="lblJOBMsg" runat="server" />
+
+                <asp:GridView 
+                    CssClass="popup-grid"
+                    ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" 
+                    OnRowCommand="gvJOBDetail_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Get JOB">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblAppJOBNo" runat="server" Visible="false" Text='<%# Eval("APP_JOB_NO") %>' />
+                                <asp:Label ID="lblPONo" runat="server" Visible="false" Text='<%# Eval("PO_NO") %>' />
+                                <asp:Label ID="lblCustCode" runat="server" Visible="false" Text='<%# Eval("CUST_CODE") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("JOB_UNIT_ID") %>' />
+                                <asp:Label ID="lblUnitName" runat="server" Visible="false" Text='<%# Eval("JOB_UNIT") %>' />
+
+                                <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No." Width="100%"
+                                    runat="server" Text="Get JOB No." CssClass="cancelbutton" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="CUST_CODE" HeaderText="CUST_CODE" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="JOB_UNIT" HeaderText="UNIT" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+            </div>
+
+        </asp:Panel>
+        <%--JOB DETAIL END--%>
+    </div>
 </asp:Content>
