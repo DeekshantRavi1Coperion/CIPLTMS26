@@ -1,5 +1,7 @@
-﻿<%@ Page Title="GST Reconciliation  Report By Books B2B" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    CodeFile="PurchaseBalanceReportByBooksB2B.aspx.cs" Inherits="REPORTS_PURCHASE_BALANCE_PurchaseBalanceReportByBooksB2B" %>
+﻿<%@ Page Title="CIPLTMS - GST Reconciliation  Report By Books B2B" 
+    Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    CodeFile="PurchaseBalanceReportByBooksB2B.aspx.cs" 
+    Inherits="REPORTS_PURCHASE_BALANCE_PurchaseBalanceReportByBooksB2B" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -365,13 +367,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>GST Reconciliation  Report By Books B2B:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -398,7 +398,7 @@
                         <label>Date Filter:</label>
                         <table style="width: 100%;">
                             <tr>
-                                <td style="width: 20%;">
+                                <td style="width: 30%;">
                                     <asp:DropDownList ID="ddlDateSignToS" runat="server"
                                         CssClass="form-control"
                                         onchange="EnableEndDateSearch()">
@@ -410,7 +410,7 @@
                                         <asp:ListItem Text="=" Value="="></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
-                                <td style="width: 80%;">
+                                <td>
                                     <asp:DropDownList ID="ddlDateTypeToS" runat="server"
                                         CssClass="form-control">
                                         <asp:ListItem Text="Invoice Date" Value="B2B_INVOICE_DATE"></asp:ListItem>
@@ -471,7 +471,7 @@
                         <label>Start Date:</label>
                         <table width="100%">
                             <tr>
-                                <td>
+                                <td style="width: 90%;">
                                     <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                         CssClass="form-control"></asp:TextBox>
                                     <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -490,7 +490,7 @@
                         <label>End Date:</label>
                         <table width="100%">
                             <tr>
-                                <td>
+                                <td style="width: 90%;">
                                     <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                         CssClass="form-control"></asp:TextBox>
                                     <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -556,9 +556,7 @@
                 <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server"
                     Text="Export to Excel"
                     OnClick="btnExport_Click" />
-            </div>
 
-            <div class="full-width button-group">
                 <label>Imported:</label>
                 <asp:TextBox ID="txtImportedCounts" runat="server" ReadOnly="true"
                     CssClass="form-control"
@@ -579,9 +577,7 @@
                     CssClass="form-control"
                     Text="0" />
 
-            </div>
 
-            <div class="full-width button-group">
                 <label>M2 Matched:</label>
                 <asp:TextBox ID="txtM2MatchedCounts" runat="server" ReadOnly="true"
                     CssClass="form-control"
@@ -605,60 +601,65 @@
 
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>GST Reconciliation  Report By Books B2B:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvReport"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvReport_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:BoundField DataField="B2B_GSTIN_OF_SUPPLIER" HeaderText="B2B_Gstin_Of_Supplier" />
+                        <asp:BoundField DataField="B2B_VENDOR_CODE" HeaderText="B2B_Vendor_Code" />
+                        <asp:BoundField DataField="B2B_VENDOR_NAME" HeaderText="B2B_Vendor_Name" />
+                        <asp:BoundField DataField="B2B_INVOICE_NUMBER" HeaderText="B2B_Invoice_Number" />
+                        <asp:BoundField DataField="B2B_INVOICE_DATE" HeaderText="B2B_Invoice_Date" />
+                        <asp:BoundField DataField="B2B_TAXABLE_VALUE" HeaderText="B2B_Taxable_Value" />
+                        <asp:BoundField DataField="GST_M1_GSTIN_OF_SUPPLIER" HeaderText="Gst_M1_Gstin_Of_Supplier" />
+                        <asp:BoundField DataField="GST_M1_INVOICE_NO" HeaderText="Gst_M1_Invoice_No" />
+                        <asp:BoundField DataField="GST_M1_TAXABLE_VALUE" HeaderText="Gst_M1_Taxable_Value" />
+                        <asp:BoundField DataField="GST_M1_GST_INVOICE_NO_AMOUNT_MATCHED" HeaderText="Gst_M1_Gst_Invoice_No_Amount_Matched" />
+                        <asp:BoundField DataField="GST_M2_GSTIN_OF_SUPPLIER" HeaderText="Gst_M2_Gstin_Of_Supplier" />
+                        <asp:BoundField DataField="GST_M2_INVOICE_DATE" HeaderText="Gst_M2_Invoice_Date" />
+                        <asp:BoundField DataField="GST_M2_TAXABLE_VALUE" HeaderText="Gst_M2_Taxable_Value" />
+                        <asp:BoundField DataField="GST_M2_GST_INVOICE_DATE_AMOUNT_MATCHED" HeaderText="Gst_M2_Gst_Invoice_Date_Amount_Matched" />
+                        <asp:BoundField DataField="FULLY_UNMATCHED_GSTIN" HeaderText="Fully_Unmatched_Gstin" />
+                        <asp:BoundField DataField="GSTIN_NOT_IN_GSTR2B" HeaderText="Gstin_Not_In_Gstr2B" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvReport"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvReport_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:BoundField DataField="B2B_GSTIN_OF_SUPPLIER" HeaderText="B2B_Gstin_Of_Supplier" />
-                    <asp:BoundField DataField="B2B_VENDOR_CODE" HeaderText="B2B_Vendor_Code" />
-                    <asp:BoundField DataField="B2B_VENDOR_NAME" HeaderText="B2B_Vendor_Name" />
-                    <asp:BoundField DataField="B2B_INVOICE_NUMBER" HeaderText="B2B_Invoice_Number" />
-                    <asp:BoundField DataField="B2B_INVOICE_DATE" HeaderText="B2B_Invoice_Date" />
-                    <asp:BoundField DataField="B2B_TAXABLE_VALUE" HeaderText="B2B_Taxable_Value" />
-                    <asp:BoundField DataField="GST_M1_GSTIN_OF_SUPPLIER" HeaderText="Gst_M1_Gstin_Of_Supplier" />
-                    <asp:BoundField DataField="GST_M1_INVOICE_NO" HeaderText="Gst_M1_Invoice_No" />
-                    <asp:BoundField DataField="GST_M1_TAXABLE_VALUE" HeaderText="Gst_M1_Taxable_Value" />
-                    <asp:BoundField DataField="GST_M1_GST_INVOICE_NO_AMOUNT_MATCHED" HeaderText="Gst_M1_Gst_Invoice_No_Amount_Matched" />
-                    <asp:BoundField DataField="GST_M2_GSTIN_OF_SUPPLIER" HeaderText="Gst_M2_Gstin_Of_Supplier" />
-                    <asp:BoundField DataField="GST_M2_INVOICE_DATE" HeaderText="Gst_M2_Invoice_Date" />
-                    <asp:BoundField DataField="GST_M2_TAXABLE_VALUE" HeaderText="Gst_M2_Taxable_Value" />
-                    <asp:BoundField DataField="GST_M2_GST_INVOICE_DATE_AMOUNT_MATCHED" HeaderText="Gst_M2_Gst_Invoice_Date_Amount_Matched" />
-                    <asp:BoundField DataField="FULLY_UNMATCHED_GSTIN" HeaderText="Fully_Unmatched_Gstin" />
-                    <asp:BoundField DataField="GSTIN_NOT_IN_GSTR2B" HeaderText="Gstin_Not_In_Gstr2B" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-        </div>
-
+        </fieldset>
     </div>
 
 

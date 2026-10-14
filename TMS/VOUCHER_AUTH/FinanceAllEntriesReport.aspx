@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Finance All Entries Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="FinanceAllEntriesReport.aspx.cs" Inherits="VOUCHER_AUTH_FinanceAllEntriesReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -383,13 +383,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Finance All Entries Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -414,7 +412,7 @@
                     <label>Date Filter:</label>
                     <table style="width: 100%;">
                         <tr>
-                            <td style="width: 20%;">
+                            <td style="width: 30%;">
                                 <asp:DropDownList ID="ddlDateSignToS" runat="server"
                                     CssClass="form-control"
                                     onchange="EnableEndDateSearch()">
@@ -426,8 +424,7 @@
                                     <asp:ListItem Text="=" Value="="></asp:ListItem>
                                 </asp:DropDownList>
                             </td>
-                            <td>&nbsp;</td>
-                            <td style="width: 75%;">
+                            <td>
                                 <asp:DropDownList ID="ddlDateTypeToS" runat="server"
                                     CssClass="form-control">
                                     <asp:ListItem Text="Voucher Date" Value="VOUCHER_DATE"></asp:ListItem>
@@ -442,7 +439,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -461,7 +458,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -583,6 +580,13 @@
             </div>
         </div>
 
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Finance All Entries Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                </legend>
+
+
         <div class="employee-grid-container">
 
             <div align="center">
@@ -676,6 +680,7 @@
 
         </div>
 
+            </fieldset>
     </div>
 
 

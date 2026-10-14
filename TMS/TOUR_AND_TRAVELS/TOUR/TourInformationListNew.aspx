@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS-Tour Information List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - Tour Information List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     AspCompat="true" CodeFile="TourInformationListNew.aspx.cs" Inherits="TOUR_AND_TRAVELS_TOUR_TourInformationListNew" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -730,17 +730,15 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Tour Information List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
 
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch"
                                     runat="server" ReadOnly="true"
                                     CssClass="form-control">
@@ -761,7 +759,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control">
                                 </asp:TextBox>
@@ -800,206 +798,210 @@
                         runat="server"
                         CssClass="form-control" />
 
-
-                    &nbsp;
-                    &nbsp;
-                    <asp:Button ID="btnSearch"
-                        OnClick="btnSearch_Click"
-                        runat="server"
-                        Text="Search"
-                        CssClass="button" />
-
-                    &nbsp;
-                    <asp:Button ID="btnAddNewTourInfo"
-                        OnClick="btnAddNewTourInfo_Click"
-                        runat="server"
-                        Text="Add new tour"
-                        CssClass="button" />
-
-
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
 
-
-        </div>
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnAddNewTourInfo"
+                    OnClick="btnAddNewTourInfo_Click"
+                    runat="server"
+                    Text="Add new tour"
+                    CssClass="button" />
             </div>
 
 
-            <asp:GridView ID="gvTourList"
-                CssClass="employee-grid"
-                runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvTourList_RowCommand"
-                OnRowDataBound="gvTourList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="VIEW" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail"
-                                Height="20px"
-                                Width="20px"
-                                CommandArgument="ViewDETAIL"
-                                runat="server"
-                                ImageUrl="~/Images/pdficon1.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="PASSPORT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPassportCopyName" runat="server" Visible="false" Text='<%# Eval("PASSPORT_COPY_NAME") %>' />
-                            <asp:ImageButton ID="btnPassportCopy"
-                                Height="20px"
-                                Width="20px"
-                                ImageUrl="~/Images/NEWICONS/PASSPORT_01.png"
-                                CommandArgument="VIEWPASSPORT"
-                                runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="EDIT">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgProperties"
-                                CommandArgument="PROPERTIES"
-                                runat="server"
-                                ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="CANCEL" HeaderStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnCancel"
-                                CommandArgument="CANCEL"
-                                ToolTip="Cancel Tour"
-                                runat="server"
-                                Text="Cancel"
-                                CssClass="cancelbutton" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="APPROVE" HeaderStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnApprove"
-                                CommandArgument="APPROVE"
-                                ToolTip="Approve Tour"
-                                runat="server"
-                                Text="Approve"
-                                CssClass="cancelbutton" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="ADVICE">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnGenerateAdvice"
-                                CommandArgument="ADVICE"
-                                ToolTip="Generate Advice"
-                                runat="server"
-                                ImageUrl="~/Images/NEWICONS/ADVICE03.PNG" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="SEND_MAIL">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnSendMail"
-                                CommandArgument="SEND_MAIL"
-                                ToolTip="Send Mail"
-                                runat="server"
-                                ImageUrl="~/Images/NEWICONS/email05.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="TOUR_NO" HeaderText="TOUR_NO" />
-                    <asp:BoundField DataField="TOUR_SANCTION_NO" HeaderText="SANCTION_NO" />
-                    <asp:TemplateField HeaderText="STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblTourID" runat="server" Visible="false" Text='<%# Eval("TOUR_ID") %>' />
-                            <asp:Label ID="lblTourNO" runat="server" Visible="false" Text='<%# Eval("TOUR_NO") %>' />
-                            <asp:Label ID="lblTourSanctionNo" runat="server" Visible="false" Text='<%# Eval("TOUR_SANCTION_NO") %>' />
-                            <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
-                            <asp:Label ID="lblEmployeeName" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_NAME") %>' />
-                            <asp:Label ID="lblEmployeeID" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_ID") %>' />
-                            <asp:Label ID="lblEmpEmailID" runat="server" Visible="false" Text='<%# Eval("EMAIL_ID") %>' />
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblDesignation" runat="server" Visible="false" Text='<%# Eval("DESIGNATION") %>' />
-                            <asp:Label ID="lblStartDate" runat="server" Visible="false" Text='<%# Eval("START_DATE") %>' />
-                            <asp:Label ID="lblEndDate" runat="server" Visible="false" Text='<%# Eval("END_DATE") %>' />
-                            <asp:Label ID="lblCustVendName" runat="server" Visible="false" Text='<%# Eval("CUST_VEND_NAME") %>' />
-                            <asp:Label ID="lblPlaceOfVisit" runat="server" Visible="false" Text='<%# Eval("PLACE_OF_VISIT") %>' />
-                            <%--//////--%>
-                            <asp:Label ID="lblCountryOfVisitID" runat="server" Visible="false" Text='<%# Eval("COUNTRY_OF_VISIT_ID") %>' />
-                            <asp:Label ID="lblTourBasedOn" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_BASED_ON_ID") %>' />
-                            <asp:Label ID="lblTourBasedOnID" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_BASED_ON_ID") %>' />
-                            <asp:Label ID="lblTourInitiativeID" runat="server" Visible="false" Text='<%# Eval("TOUR_INITIATIVE_ID") %>' />
-                            <%--//////--%>
-
-                            <asp:Label ID="lblPurposeOfVisitTypeId" runat="server" Visible="false" Text='<%# Eval("VISIT_TYPE_ID") %>' />
-                            <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                            <asp:Label ID="lblBusSegmentID" runat="server" Visible="false" Text='<%# Eval("BUS_SEGMENT_ID") %>' />
-                            <asp:Label ID="lblBusSegment" runat="server" Visible="false" Text='<%# Eval("BUS_SEGMENT") %>' />
-                            <asp:Label ID="lblTraveModeID" runat="server" Visible="false" Text='<%# Eval("TRAVEL_MODE_ID") %>' />
-                            <asp:Label ID="lblTravelMode" runat="server" Visible="false" Text='<%# Eval("TRAVEL_MODE") %>' />
-                            <asp:Label ID="lblTripTypeID" runat="server" Visible="false" Text='<%# Eval("TRIP_TYPE_ID") %>' />
-                            <asp:Label ID="lblTripType" runat="server" Visible="false" Text='<%# Eval("TRIP_TYPE") %>' />
-                            <asp:Label ID="lblLocalTravelTypeID" runat="server" Visible="false" Text='<%# Eval("LOCAL_TRAVEL_TYPE_ID") %>' />
-                            <asp:Label ID="lblLocalTravelType" runat="server" Visible="false" Text='<%# Eval("LOCAL_TRAVEL_TYPE") %>' />
-                            <asp:Label ID="lblExpenditureAmt" runat="server" Visible="false" Text='<%# Eval("EXPENDITURE_AMT") %>' />
-                            <asp:Label ID="lblExpenditureCurrencyID" runat="server" Visible="false" Text='<%# Eval("EXPENDITURE_CURRENCY_ID") %>' />
-                            <asp:Label ID="lblAdvanceAmt" runat="server" Visible="false" Text='<%# Eval("ADVANCE_AMT") %>' />
-                            <asp:Label ID="lblAdvanceCurrencyID" runat="server" Visible="false" Text='<%# Eval("ADVANCE_CURRENCY_ID") %>' />
-                            <asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("CREATED_REMARKS") %>' />
-                            <asp:Label ID="lblTourStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_ID") %>' />
-                            <asp:Label ID="lblTourStatus" runat="server" Visible="false" Text='<%# Eval("TOUR_STATUS_NAME") %>' />
-                            <asp:Label ID="lblIsSentToSettlement" runat="server" Visible="false" Text='<%# Eval("IS_SENT_TO_SETTLEMENT") %>' />
-                            <asp:Label ID="lblTeamLeaderID" runat="server" Visible="false" Text='<%# Eval("TEAMLEADER_ID") %>' />
-                            <asp:Label ID="lblIsApprovalMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVAL_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
-
-                            <asp:Label ID="lblIsMgmtApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_MGMT_APPROVED_MAIL_SENT") %>' />
-
-                            <asp:Label ID="lblIsFinalApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_FINAL_APPROVED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsDeletedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_DELETED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsCancelledMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CANCELLED_MAIL_SENT") %>' />
-                            <asp:Label ID="lblIsAdviceGenerated" runat="server" Visible="false" Text='<%# Eval("IS_ADVICE_GENERATED") %>' />
-                            <asp:Label ID="lblCretedByAccNo" runat="server" Visible="false" Text='<%# Eval("CREATED_BY_ACC") %>' />
-                            <asp:Label ID="lblCretedByIFSC" runat="server" Visible="false" Text='<%# Eval("CREATED_BY_IFSC") %>' />
-
-                            <asp:Label ID="lblMgmtHODEmpRecordID" runat="server" Visible="false" Text='<%# Eval("MGMT_HOD_RECORD_ID") %>' />
-                            <asp:Label ID="lblFinalHODEmpRecordID" runat="server" Visible="false" Text='<%# Eval("FINAL_HOD_RECORD_ID") %>' />
-                            <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="START_DATE" HeaderText="START_DATE" />
-                    <asp:BoundField DataField="END_DATE" HeaderText="END_DATE" />
-                    <asp:BoundField DataField="CUST_VEND_NAME" HeaderText="CUST_VEND_NAME" />
-                    <asp:BoundField DataField="PLACE_OF_VISIT" HeaderText="PLACE_OF_VISIT" />
-                    <asp:BoundField DataField="COUNTRY_OF_VISIT" HeaderText="COUNTRY_OF_VISIT" />
-
-                    <asp:BoundField DataField="CUSTOMER_BASED_ON" HeaderText="CUSTOMER_BASED_ON" />
-                    <asp:BoundField DataField="INITIATIVE_NAME" HeaderText="INITIATIVE_NAME" />
-
-                    <asp:BoundField DataField="VISIT_TYPE" HeaderText="VISIT_TYPE" />
-                    <asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />
-                    <asp:BoundField DataField="TRAVEL_MODE" HeaderText="TRAVEL_MODE" />
-                    <asp:BoundField DataField="TRIP_TYPE" HeaderText="TRIP_TYPE" />
-                    <asp:BoundField DataField="LOCAL_TRAVEL_TYPE" HeaderText="LOCAL_TRAVEL_TYPE" />
-                    <asp:BoundField DataField="EXPENDITURE_AMT" HeaderText="EXPENDITURE_AMT" />
-                    <asp:BoundField DataField="EXPENDITURE_CURRENCY" HeaderText="EXPENDITURE_CURRENCY" />
-                    <asp:BoundField DataField="ADVANCE_AMT" HeaderText="ADVANCE_AMT" />
-                    <asp:BoundField DataField="ADVANCE_CURRENCY" HeaderText="ADVANCE_CURRENCY" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
 
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Tour Information List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+
+                <asp:GridView ID="gvTourList"
+                    CssClass="employee-grid"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvTourList_RowCommand"
+                    OnRowDataBound="gvTourList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="VIEW" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail"
+                                    Height="20px"
+                                    Width="20px"
+                                    CommandArgument="ViewDETAIL"
+                                    runat="server"
+                                    ImageUrl="~/Images/pdficon1.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="PASSPORT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPassportCopyName" runat="server" Visible="false" Text='<%# Eval("PASSPORT_COPY_NAME") %>' />
+                                <asp:ImageButton ID="btnPassportCopy"
+                                    Height="20px"
+                                    Width="20px"
+                                    ImageUrl="~/Images/NEWICONS/PASSPORT_01.png"
+                                    CommandArgument="VIEWPASSPORT"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="EDIT">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgProperties"
+                                    CommandArgument="PROPERTIES"
+                                    runat="server"
+                                    ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="CANCEL" HeaderStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnCancel"
+                                    CommandArgument="CANCEL"
+                                    ToolTip="Cancel Tour"
+                                    runat="server"
+                                    Text="Cancel"
+                                    CssClass="cancelbutton" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="APPROVE" HeaderStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnApprove"
+                                    CommandArgument="APPROVE"
+                                    ToolTip="Approve Tour"
+                                    runat="server"
+                                    Text="Approve"
+                                    CssClass="cancelbutton" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ADVICE">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnGenerateAdvice"
+                                    CommandArgument="ADVICE"
+                                    ToolTip="Generate Advice"
+                                    runat="server"
+                                    ImageUrl="~/Images/NEWICONS/ADVICE03.PNG" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="SEND_MAIL">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnSendMail"
+                                    CommandArgument="SEND_MAIL"
+                                    ToolTip="Send Mail"
+                                    runat="server"
+                                    ImageUrl="~/Images/NEWICONS/email05.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="TOUR_NO" HeaderText="TOUR_NO" />
+                        <asp:BoundField DataField="TOUR_SANCTION_NO" HeaderText="SANCTION_NO" />
+                        <asp:TemplateField HeaderText="STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTourID" runat="server" Visible="false" Text='<%# Eval("TOUR_ID") %>' />
+                                <asp:Label ID="lblTourNO" runat="server" Visible="false" Text='<%# Eval("TOUR_NO") %>' />
+                                <asp:Label ID="lblTourSanctionNo" runat="server" Visible="false" Text='<%# Eval("TOUR_SANCTION_NO") %>' />
+                                <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
+                                <asp:Label ID="lblEmployeeName" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_NAME") %>' />
+                                <asp:Label ID="lblEmployeeID" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_ID") %>' />
+                                <asp:Label ID="lblEmpEmailID" runat="server" Visible="false" Text='<%# Eval("EMAIL_ID") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblDesignation" runat="server" Visible="false" Text='<%# Eval("DESIGNATION") %>' />
+                                <asp:Label ID="lblStartDate" runat="server" Visible="false" Text='<%# Eval("START_DATE") %>' />
+                                <asp:Label ID="lblEndDate" runat="server" Visible="false" Text='<%# Eval("END_DATE") %>' />
+                                <asp:Label ID="lblCustVendName" runat="server" Visible="false" Text='<%# Eval("CUST_VEND_NAME") %>' />
+                                <asp:Label ID="lblPlaceOfVisit" runat="server" Visible="false" Text='<%# Eval("PLACE_OF_VISIT") %>' />
+                                <%--//////--%>
+                                <asp:Label ID="lblCountryOfVisitID" runat="server" Visible="false" Text='<%# Eval("COUNTRY_OF_VISIT_ID") %>' />
+                                <asp:Label ID="lblTourBasedOn" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_BASED_ON_ID") %>' />
+                                <asp:Label ID="lblTourBasedOnID" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_BASED_ON_ID") %>' />
+                                <asp:Label ID="lblTourInitiativeID" runat="server" Visible="false" Text='<%# Eval("TOUR_INITIATIVE_ID") %>' />
+                                <%--//////--%>
+
+                                <asp:Label ID="lblPurposeOfVisitTypeId" runat="server" Visible="false" Text='<%# Eval("VISIT_TYPE_ID") %>' />
+                                <asp:Label ID="lblJobNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Label ID="lblBusSegmentID" runat="server" Visible="false" Text='<%# Eval("BUS_SEGMENT_ID") %>' />
+                                <asp:Label ID="lblBusSegment" runat="server" Visible="false" Text='<%# Eval("BUS_SEGMENT") %>' />
+                                <asp:Label ID="lblTraveModeID" runat="server" Visible="false" Text='<%# Eval("TRAVEL_MODE_ID") %>' />
+                                <asp:Label ID="lblTravelMode" runat="server" Visible="false" Text='<%# Eval("TRAVEL_MODE") %>' />
+                                <asp:Label ID="lblTripTypeID" runat="server" Visible="false" Text='<%# Eval("TRIP_TYPE_ID") %>' />
+                                <asp:Label ID="lblTripType" runat="server" Visible="false" Text='<%# Eval("TRIP_TYPE") %>' />
+                                <asp:Label ID="lblLocalTravelTypeID" runat="server" Visible="false" Text='<%# Eval("LOCAL_TRAVEL_TYPE_ID") %>' />
+                                <asp:Label ID="lblLocalTravelType" runat="server" Visible="false" Text='<%# Eval("LOCAL_TRAVEL_TYPE") %>' />
+                                <asp:Label ID="lblExpenditureAmt" runat="server" Visible="false" Text='<%# Eval("EXPENDITURE_AMT") %>' />
+                                <asp:Label ID="lblExpenditureCurrencyID" runat="server" Visible="false" Text='<%# Eval("EXPENDITURE_CURRENCY_ID") %>' />
+                                <asp:Label ID="lblAdvanceAmt" runat="server" Visible="false" Text='<%# Eval("ADVANCE_AMT") %>' />
+                                <asp:Label ID="lblAdvanceCurrencyID" runat="server" Visible="false" Text='<%# Eval("ADVANCE_CURRENCY_ID") %>' />
+                                <asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("CREATED_REMARKS") %>' />
+                                <asp:Label ID="lblTourStatusID" runat="server" Visible="false" Text='<%# Eval("STATUS_ID") %>' />
+                                <asp:Label ID="lblTourStatus" runat="server" Visible="false" Text='<%# Eval("TOUR_STATUS_NAME") %>' />
+                                <asp:Label ID="lblIsSentToSettlement" runat="server" Visible="false" Text='<%# Eval("IS_SENT_TO_SETTLEMENT") %>' />
+                                <asp:Label ID="lblTeamLeaderID" runat="server" Visible="false" Text='<%# Eval("TEAMLEADER_ID") %>' />
+                                <asp:Label ID="lblIsApprovalMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVAL_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_APPROVED_MAIL_SENT") %>' />
+
+                                <asp:Label ID="lblIsMgmtApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_MGMT_APPROVED_MAIL_SENT") %>' />
+
+                                <asp:Label ID="lblIsFinalApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_FINAL_APPROVED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsDeletedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_DELETED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsCancelledMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CANCELLED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblIsAdviceGenerated" runat="server" Visible="false" Text='<%# Eval("IS_ADVICE_GENERATED") %>' />
+                                <asp:Label ID="lblCretedByAccNo" runat="server" Visible="false" Text='<%# Eval("CREATED_BY_ACC") %>' />
+                                <asp:Label ID="lblCretedByIFSC" runat="server" Visible="false" Text='<%# Eval("CREATED_BY_IFSC") %>' />
+
+                                <asp:Label ID="lblMgmtHODEmpRecordID" runat="server" Visible="false" Text='<%# Eval("MGMT_HOD_RECORD_ID") %>' />
+                                <asp:Label ID="lblFinalHODEmpRecordID" runat="server" Visible="false" Text='<%# Eval("FINAL_HOD_RECORD_ID") %>' />
+                                <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="START_DATE" HeaderText="START_DATE" />
+                        <asp:BoundField DataField="END_DATE" HeaderText="END_DATE" />
+                        <asp:BoundField DataField="CUST_VEND_NAME" HeaderText="CUST_VEND_NAME" />
+                        <asp:BoundField DataField="PLACE_OF_VISIT" HeaderText="PLACE_OF_VISIT" />
+                        <asp:BoundField DataField="COUNTRY_OF_VISIT" HeaderText="COUNTRY_OF_VISIT" />
+
+                        <asp:BoundField DataField="CUSTOMER_BASED_ON" HeaderText="CUSTOMER_BASED_ON" />
+                        <asp:BoundField DataField="INITIATIVE_NAME" HeaderText="INITIATIVE_NAME" />
+
+                        <asp:BoundField DataField="VISIT_TYPE" HeaderText="VISIT_TYPE" />
+                        <asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />
+                        <asp:BoundField DataField="TRAVEL_MODE" HeaderText="TRAVEL_MODE" />
+                        <asp:BoundField DataField="TRIP_TYPE" HeaderText="TRIP_TYPE" />
+                        <asp:BoundField DataField="LOCAL_TRAVEL_TYPE" HeaderText="LOCAL_TRAVEL_TYPE" />
+                        <asp:BoundField DataField="EXPENDITURE_AMT" HeaderText="EXPENDITURE_AMT" />
+                        <asp:BoundField DataField="EXPENDITURE_CURRENCY" HeaderText="EXPENDITURE_CURRENCY" />
+                        <asp:BoundField DataField="ADVANCE_AMT" HeaderText="ADVANCE_AMT" />
+                        <asp:BoundField DataField="ADVANCE_CURRENCY" HeaderText="ADVANCE_CURRENCY" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 

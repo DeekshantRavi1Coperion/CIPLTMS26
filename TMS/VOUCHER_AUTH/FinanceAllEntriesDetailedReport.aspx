@@ -1,5 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    CodeFile="FinanceAllEntriesDetailedReport.aspx.cs" Inherits="VOUCHER_AUTH_FinanceAllEntriesDetailedReport" %>
+﻿<%@ Page Title="CIPLTMS - Finance All Entries Detailed Report" 
+    Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    CodeFile="FinanceAllEntriesDetailedReport.aspx.cs" 
+    Inherits="VOUCHER_AUTH_FinanceAllEntriesDetailedReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -383,18 +385,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Finance All Entries Detailed Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                    <asp:ImageButton ID="imgBtnExportToExcel" runat="server"
-                        ImageUrl="~/Images/excel.png"
-                        Width="30px" Height="30px"
-                        OnClick="imgBtnExportToExcel_Click"
-                        ToolTip="Export to CSV" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -421,7 +416,7 @@
                         <label>Date Filter:</label>
                         <table style="width: 100%;">
                             <tr>
-                                <td style="width: 20%;">
+                                <td style="width: 30%;">
                                     <asp:DropDownList ID="ddlDateSignToS" runat="server"
                                         CssClass="form-control"
                                         onchange="EnableEndDateSearch()">
@@ -433,8 +428,7 @@
                                         <asp:ListItem Text="=" Value="="></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
-                                <td>&nbsp;</td>
-                                <td style="width: 75%;">
+                                <td>
                                     <asp:DropDownList ID="ddlDateTypeToS" runat="server"
                                         CssClass="form-control">
                                         <asp:ListItem Text="Voucher Date" Value="VOUCHER_DATE"></asp:ListItem>
@@ -448,7 +442,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control">
                                 </asp:TextBox>
@@ -468,7 +462,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control">
                                 </asp:TextBox>
@@ -618,128 +612,141 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Finance All Entries Detailed Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                <asp:ImageButton ID="imgBtnExportToExcel" runat="server"
+                    ImageUrl="~/Images/excel.png"
+                    Width="30px" Height="30px"
+                    OnClick="imgBtnExportToExcel_Click"
+                    ToolTip="Export to CSV" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvVouchersList"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvVouchersList_RowCommand"
+                    OnRowDataBound="gvVouchersList_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:BoundField DataField="SR_NO" HeaderText="Sl No." />
+
+                        <asp:TemplateField HeaderText="Zoom" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:ImageButton ID="btnViewVoucherDetail" Height="30px" Width="30px"
+                                    CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/viewdetails.png"
+                                    ToolTip="View Details" />
+
+
+                                <asp:Label ID="lblVoucherId" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
+                                <asp:Label ID="lblVoucherNo" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
+                                <asp:Label ID="lblVoucherDate" runat="server" Text='<%# Eval("VOUCHER_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblChallanNo" runat="server" Text='<%# Eval("CHALLAN_NO") %>' Visible="false" />
+                                <asp:Label ID="lblGLCode" runat="server" Text='<%# Eval("GL_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblGLDescription" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
+
+                                <asp:Label ID="lblPartyCode" runat="server" Text='<%# Eval("PARTY_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblPartyName" runat="server" Text='<%# Eval("PARTY_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblCreditDebitType" runat="server" Text='<%# Eval("CREDIT_DEBIT_TYPE") %>' Visible="false" />
+                                <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
+                                <asp:Label ID="lblDOCClass" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
+
+                                <asp:Label ID="lblVoucherType" runat="server" Text='<%# Eval("VOUCHER_TYPE") %>' Visible="false" />
+                                <asp:Label ID="lblVoucherTypeId" runat="server" Text='<%# Eval("TYPE_ID") %>' Visible="false" />
+
+                                <asp:Label ID="lblProductCode" runat="server" Text='<%# Eval("PRODUCT_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblProductDescription" runat="server" Text='<%# Eval("PRODUCT_DESCRIPTION") %>' Visible="false" />
+
+                                <asp:Label ID="lblVoucherCreatedBy" runat="server" Text='<%# Eval("VOUCHER_CREATED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblStatus" runat="server" Text='<%# Eval("STATUS") %>' Visible="false" />
+                                <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
+
+                                <asp:Label ID="lblAuthorizedBy" runat="server" Text='<%# Eval("AUTHORIZED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblAuthorizedOn" runat="server" Text='<%# Eval("AUTHORIZED_ON") %>' Visible="false" />
+                                <asp:Label ID="lblApprovedBy" runat="server" Text='<%# Eval("APPROVED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblApprovedOn" runat="server" Text='<%# Eval("APPROVED_ON") %>' Visible="false" />
+
+                                <asp:Label ID="lblSRPNo" runat="server" Text='<%# Eval("SRP_FLAG") %>' Visible="false" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField
+                            HeaderText="Download"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnDownloadAllDocuments"
+                                    CommandArgument="DOWNLOAD_ALL_DOCUMENTS"
+                                    runat="server"
+                                    ImageUrl="~/Images/Download/download3.png"
+                                    Height="35px"
+                                    Width="35px"
+                                    ToolTip="Download All Documents" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
+                        <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
+                        <asp:BoundField DataField="GL_CODE" HeaderText="GL Code" />
+                        <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
+
+                        <asp:BoundField DataField="PARTY_CODE" HeaderText="Party code" />
+                        <asp:BoundField DataField="PARTY_NAME" HeaderText="Party Name" />
+
+                        <asp:BoundField DataField="CREDIT_DEBIT_TYPE" HeaderText="Credit/Debit Type" />
+                        <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
+                        <asp:BoundField DataField="DOC_CLASS" HeaderText="DOC Class" />
+
+                        <asp:BoundField DataField="VOUCHER_MONTH" HeaderText="Voucher Month" />
+                        <asp:BoundField DataField="VOUCHER_TYPE" HeaderText="Voucher Type" />
+                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
+                        <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
+                        <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Voucher Created By" />
+                        <asp:BoundField DataField="STATUS" HeaderText="Status" />
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+
+                        <asp:BoundField DataField="AUTHORIZED_BY" HeaderText="Authorized By" />
+                        <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized oN" />
+                        <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
+                        <asp:BoundField DataField="APPROVED_ON" HeaderText="Approved On" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvVouchersList"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvVouchersList_RowCommand"
-                OnRowDataBound="gvVouchersList_RowDataBound">
-
-                <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
-                <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
-                <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
-                <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
-                <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
-                <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
-                <editrowstyle backcolor="#7C6F57" />
-                <alternatingrowstyle backcolor="White" />
-                <columns>
-
-                    <asp:BoundField DataField="SR_NO" HeaderText="Sl No." />
-
-                    <asp:TemplateField HeaderText="Zoom" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <itemtemplate>
-
-                            <asp:ImageButton ID="btnViewVoucherDetail" Height="30px" Width="30px"
-                                CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/viewdetails.png"
-                                ToolTip="View Details" />
-
-
-                            <asp:Label ID="lblVoucherId" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
-                            <asp:Label ID="lblVoucherNo" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
-                            <asp:Label ID="lblVoucherDate" runat="server" Text='<%# Eval("VOUCHER_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblChallanNo" runat="server" Text='<%# Eval("CHALLAN_NO") %>' Visible="false" />
-                            <asp:Label ID="lblGLCode" runat="server" Text='<%# Eval("GL_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblGLDescription" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
-
-                            <asp:Label ID="lblPartyCode" runat="server" Text='<%# Eval("PARTY_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblPartyName" runat="server" Text='<%# Eval("PARTY_NAME") %>' Visible="false" />
-                            <asp:Label ID="lblCreditDebitType" runat="server" Text='<%# Eval("CREDIT_DEBIT_TYPE") %>' Visible="false" />
-                            <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
-                            <asp:Label ID="lblDOCClass" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
-
-                            <asp:Label ID="lblVoucherType" runat="server" Text='<%# Eval("VOUCHER_TYPE") %>' Visible="false" />
-                            <asp:Label ID="lblVoucherTypeId" runat="server" Text='<%# Eval("TYPE_ID") %>' Visible="false" />
-
-                            <asp:Label ID="lblProductCode" runat="server" Text='<%# Eval("PRODUCT_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblProductDescription" runat="server" Text='<%# Eval("PRODUCT_DESCRIPTION") %>' Visible="false" />
-
-                            <asp:Label ID="lblVoucherCreatedBy" runat="server" Text='<%# Eval("VOUCHER_CREATED_BY") %>' Visible="false" />
-                            <asp:Label ID="lblStatus" runat="server" Text='<%# Eval("STATUS") %>' Visible="false" />
-                            <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
-
-                            <asp:Label ID="lblAuthorizedBy" runat="server" Text='<%# Eval("AUTHORIZED_BY") %>' Visible="false" />
-                            <asp:Label ID="lblAuthorizedOn" runat="server" Text='<%# Eval("AUTHORIZED_ON") %>' Visible="false" />
-                            <asp:Label ID="lblApprovedBy" runat="server" Text='<%# Eval("APPROVED_BY") %>' Visible="false" />
-                            <asp:Label ID="lblApprovedOn" runat="server" Text='<%# Eval("APPROVED_ON") %>' Visible="false" />
-
-                            <asp:Label ID="lblSRPNo" runat="server" Text='<%# Eval("SRP_FLAG") %>' Visible="false" />
-
-                        </itemtemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField
-                        HeaderText="Download"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <itemtemplate>
-                            <asp:ImageButton ID="imgBtnDownloadAllDocuments"
-                                CommandArgument="DOWNLOAD_ALL_DOCUMENTS"
-                                runat="server"
-                                ImageUrl="~/Images/Download/download3.png"
-                                Height="35px"
-                                Width="35px"
-                                ToolTip="Download All Documents" />
-                        </itemtemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
-                    <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
-                    <asp:BoundField DataField="GL_CODE" HeaderText="GL Code" />
-                    <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
-
-                    <asp:BoundField DataField="PARTY_CODE" HeaderText="Party code" />
-                    <asp:BoundField DataField="PARTY_NAME" HeaderText="Party Name" />
-
-                    <asp:BoundField DataField="CREDIT_DEBIT_TYPE" HeaderText="Credit/Debit Type" />
-                    <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
-                    <asp:BoundField DataField="DOC_CLASS" HeaderText="DOC Class" />
-
-                    <asp:BoundField DataField="VOUCHER_MONTH" HeaderText="Voucher Month" />
-                    <asp:BoundField DataField="VOUCHER_TYPE" HeaderText="Voucher Type" />
-                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
-                    <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
-                    <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Voucher Created By" />
-                    <asp:BoundField DataField="STATUS" HeaderText="Status" />
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-
-                    <asp:BoundField DataField="AUTHORIZED_BY" HeaderText="Authorized By" />
-                    <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized oN" />
-                    <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
-                    <asp:BoundField DataField="APPROVED_ON" HeaderText="Approved On" />
-                </columns>
-                <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
-                <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
-                <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
-                <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
-                <editrowstyle backcolor="#7C6F57" />
-                <alternatingrowstyle backcolor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -869,48 +876,48 @@
                                         HorizontalAlign="Center"
                                         OnRowDataBound="gvAttachedFiles_RowDataBound"
                                         OnRowCommand="gvAttachedFiles_RowCommand">
-                                        <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
+                                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                                        <columns>
+                                        <Columns>
 
                                             <asp:TemplateField HeaderText="Sl No."
                                                 HeaderStyle-HorizontalAlign="Center"
                                                 ItemStyle-HorizontalAlign="Center">
-                                                <itemtemplate>
+                                                <ItemTemplate>
                                                     <asp:Label ID="lblSlNo" runat="server" Text='<%# Eval("SR_NO") %>' />
                                                     <asp:Label ID="lblPID" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
 
                                                     <asp:Label ID="lblAttachedFileName" runat="server" Visible="false" Text='<%# Eval("FILE_NAME") %>' />
 
-                                                </itemtemplate>
+                                                </ItemTemplate>
                                             </asp:TemplateField>
 
                                             <asp:TemplateField
                                                 HeaderStyle-HorizontalAlign="Center"
                                                 ItemStyle-HorizontalAlign="Center">
 
-                                                <itemtemplate>
+                                                <ItemTemplate>
                                                     <asp:ImageButton ID="imgBtnAttachment1"
                                                         Height="20px"
                                                         Width="20px"
                                                         CommandArgument="ViewATTACHMENT1"
                                                         runat="server" />
-                                                </itemtemplate>
+                                                </ItemTemplate>
                                             </asp:TemplateField>
 
                                             <asp:BoundField DataField="FILE_NAME" HeaderText="File Name" />
                                             <asp:BoundField DataField="ATTACHED_BY" HeaderText="Attached By" />
                                             <asp:BoundField DataField="ATTACHED_ON" HeaderText="Attached On" />
 
-                                        </columns>
+                                        </Columns>
 
 
-                                        <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
-                                        <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
-                                        <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
-                                        <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
-                                        <editrowstyle backcolor="#7C6F57" />
-                                        <alternatingrowstyle backcolor="White" />
+                                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                        <EditRowStyle BackColor="#7C6F57" />
+                                        <AlternatingRowStyle BackColor="White" />
                                     </asp:GridView>
 
                                 </div>
@@ -937,48 +944,48 @@
                                         HorizontalAlign="Center"
                                         OnRowDataBound="gvAttachedOtherFiles_RowDataBound"
                                         OnRowCommand="gvAttachedOtherFiles_RowCommand">
-                                        <rowstyle backcolor="#E3EAEB" horizontalalign="Left" />
+                                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                                        <columns>
+                                        <Columns>
 
                                             <asp:TemplateField HeaderText="Sl No."
                                                 HeaderStyle-HorizontalAlign="Center"
                                                 ItemStyle-HorizontalAlign="Center">
-                                                <itemtemplate>
+                                                <ItemTemplate>
                                                     <asp:Label ID="lblSlNoO" runat="server" Text='<%# Eval("SR_NO") %>' />
                                                     <asp:Label ID="lblPIDO" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
 
                                                     <asp:Label ID="lblAttachedFileNameO" runat="server" Visible="false" Text='<%# Eval("FILE_NAME") %>' />
 
-                                                </itemtemplate>
+                                                </ItemTemplate>
                                             </asp:TemplateField>
 
                                             <asp:TemplateField
                                                 HeaderStyle-HorizontalAlign="Center"
                                                 ItemStyle-HorizontalAlign="Center">
 
-                                                <itemtemplate>
+                                                <ItemTemplate>
                                                     <asp:ImageButton ID="imgBtnAttachment1O"
                                                         Height="20px"
                                                         Width="20px"
                                                         CommandArgument="ViewATTACHMENT1O"
                                                         runat="server" />
-                                                </itemtemplate>
+                                                </ItemTemplate>
                                             </asp:TemplateField>
 
                                             <asp:BoundField DataField="FILE_NAME" HeaderText="File Name" />
                                             <asp:BoundField DataField="ATTACHED_BY" HeaderText="Attached By" />
                                             <asp:BoundField DataField="ATTACHED_ON" HeaderText="Attached On" />
 
-                                        </columns>
+                                        </Columns>
 
 
-                                        <footerstyle backcolor="#1C5E55" forecolor="White" font-bold="True" />
-                                        <pagerstyle backcolor="#666666" forecolor="White" horizontalalign="Center" />
-                                        <selectedrowstyle backcolor="#C5BBAF" font-bold="True" forecolor="#333333" />
-                                        <headerstyle backcolor="#1C5E55" font-bold="True" forecolor="White" />
-                                        <editrowstyle backcolor="#7C6F57" />
-                                        <alternatingrowstyle backcolor="White" />
+                                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                        <EditRowStyle BackColor="#7C6F57" />
+                                        <AlternatingRowStyle BackColor="White" />
                                     </asp:GridView>
 
                                 </div>

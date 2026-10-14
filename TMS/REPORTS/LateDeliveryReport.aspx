@@ -1,5 +1,6 @@
-﻿<%@ Page Title="Project - Late Delivery Report" Language="C#" AutoEventWireup="true" 
-    MasterPageFile="~/HOME.master" CodeFile="LateDeliveryReport.aspx.cs" Inherits="REPORTS_Project___Late_Order_Delivery_Date" %>
+﻿<%@ Page Title="CIPLTMS - OTD Report" Language="C#" AutoEventWireup="true"
+    MasterPageFile="~/HOME.master" CodeFile="LateDeliveryReport.aspx.cs" 
+    Inherits="REPORTS_Project___Late_Order_Delivery_Date" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -107,18 +108,18 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>OTD Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
 
                     <label>Month:</label>
                     <table width="80%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtPostingMonth" runat="server" 
-                                    onkeyDown="javascript:preventInput(event);" 
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtPostingMonth" runat="server"
+                                    onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdPostingMonth" runat="server" />
                                 <asp:CalendarExtender ID="calendarPostingMonth" runat="server" OnClientHidden="onCalendarHidden"
@@ -135,42 +136,50 @@
                         </tr>
                     </table>
 
-                    <asp:Button ID="btnSearch" Width="100%" CssClass="button" runat="server" Text="Search"
-                        OnClick="btnSearch_Click" />
-
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
-
                 </div>
+
             </fieldset>
-        </div>
-        <div class="employee-grid-container">
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" Width="100%" CssClass="button" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" />
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
             </div>
-            <asp:GridView ID="gvOTDDetailReport"
-                CssClass="employee-grid"
-                runat="server" AutoGenerateColumns="true" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%"
-                HorizontalAlign="Center"
-                AllowPaging="false">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-
         </div>
 
+        <fieldset class="employee-grid-fieldset">
+            <legend>OTD Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView ID="gvOTDDetailReport"
+                    CssClass="employee-grid"
+                    runat="server" AutoGenerateColumns="true" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%"
+                    HorizontalAlign="Center"
+                    AllowPaging="false">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+
+            </div>
+
+        </fieldset>
     </div>
 
 </asp:Content>

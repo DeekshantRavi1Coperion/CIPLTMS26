@@ -115,7 +115,7 @@
                         runat="server"
                         Text="Menu List"
                         CssClass="button"
-                        OnClick="btnMenuList_Click" />
+                        OnClick="btnMenuList_Click" Width="100%"/>
                 </div>
 
                 <div class="full-width">

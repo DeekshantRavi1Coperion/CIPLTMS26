@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - JV - Approve Journal Vouchers" Language="C#" MasterPageFile="~/HOME.master" 
+    AutoEventWireup="true"
     CodeFile="ApproveJournalVouchers.aspx.cs" Inherits="VOUCHER_AUTH_JV_ApproveJournalVouchers" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -559,13 +560,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Approve Journal Vouchers:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -590,7 +589,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -609,7 +608,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -663,6 +662,11 @@
 
             </div>
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Approve Journal Vouchers:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                </legend>
 
         <div class="employee-grid-container">
             <div align="center">
@@ -816,6 +820,7 @@
 
         </div>
 
+            </fieldset>
     </div>
 
 

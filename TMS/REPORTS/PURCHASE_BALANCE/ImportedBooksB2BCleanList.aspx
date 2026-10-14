@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ImportedBooksB2BCleanList.aspx.cs"
-    Inherits="REPORTS_PURCHASE_BALANCE_ImportedBooksB2BCleanList" Title="Imported Books B2B List" %>
+    Inherits="REPORTS_PURCHASE_BALANCE_ImportedBooksB2BCleanList" Title="CIPLTMS - Imported Books B2B List" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -103,7 +103,7 @@
             }
     </style>
 
-   
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
@@ -118,13 +118,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Imported Books B2B List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <asp:DropDownList ID="ddlYear" runat="server"
                         CssClass="form-control">
@@ -176,94 +174,100 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Imported Books B2B List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView ID="gvDesignDetails"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvDesignDetails_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="SrNo.">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="true" />
+                                <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
+                                <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VENDOR_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblGstinOfSupplier" runat="server" Text='<%# Eval("GSTIN_OF_SUPPLIER") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceNumber" runat="server" Text='<%# Eval("INVOICE_NUMBER") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceDate" runat="server" Text='<%# Eval("INVOICE_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceValue" runat="server" Text='<%# Eval("INVOICE_VALUE") %>' Visible="false" />
+                                <asp:Label ID="lblPlaceOfSupply" runat="server" Text='<%# Eval("PLACE_OF_SUPPLY") %>' Visible="false" />
+                                <asp:Label ID="lblReverseCharge" runat="server" Text='<%# Eval("REVERSE_CHARGE") %>' Visible="false" />
+                                <asp:Label ID="lblInvoiceType" runat="server" Text='<%# Eval("INVOICE_TYPE") %>' Visible="false" />
+                                <asp:Label ID="lblRate" runat="server" Text='<%# Eval("RATE") %>' Visible="false" />
+                                <asp:Label ID="lblTaxableValue" runat="server" Text='<%# Eval("TAXABLE_VALUE") %>' Visible="false" />
+                                <asp:Label ID="lblIntegratedTaxPaid" runat="server" Text='<%# Eval("INTEGRATED_TAX_PAID") %>' Visible="false" />
+                                <asp:Label ID="lblCentralTaxPaid" runat="server" Text='<%# Eval("CENTRAL_TAX_PAID") %>' Visible="false" />
+                                <asp:Label ID="lblStateUtTaxPaid" runat="server" Text='<%# Eval("STATE_UT_TAX_PAID") %>' Visible="false" />
+                                <asp:Label ID="lblCessPaid" runat="server" Text='<%# Eval("CESS_PAID") %>' Visible="false" />
+                                <asp:Label ID="lblEligibilityForItc" runat="server" Text='<%# Eval("ELIGIBILITY_FOR_ITC") %>' Visible="false" />
+                                <asp:Label ID="lblAvailedItcIntegratedTax" runat="server" Text='<%# Eval("AVAILED_ITC_INTEGRATED_TAX") %>' Visible="false" />
+                                <asp:Label ID="lblAvailedItcCentralTax" runat="server" Text='<%# Eval("AVAILED_ITC_CENTRAL_TAX") %>' Visible="false" />
+                                <asp:Label ID="lblAvailedItcStateUtTax" runat="server" Text='<%# Eval("AVAILED_ITC_STATE_UT_TAX") %>' Visible="false" />
+                                <asp:Label ID="lblAvailedItcCess" runat="server" Text='<%# Eval("AVAILED_ITC_CESS") %>' Visible="false" />
+                                <asp:Label ID="lblMonth" runat="server" Text='<%# Eval("MONTH") %>' Visible="false" />
+                                <asp:Label ID="lblYear" runat="server" Text='<%# Eval("YEAR") %>' Visible="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
+                        <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
+                        <asp:BoundField DataField="GSTIN_OF_SUPPLIER" HeaderText="Gstin Of Supplier" />
+                        <asp:BoundField DataField="INVOICE_NUMBER" HeaderText="Invoice Number" />
+                        <asp:BoundField DataField="INVOICE_DATE" HeaderText="Invoice Date" />
+                        <asp:BoundField DataField="INVOICE_VALUE" HeaderText="Invoice Value" />
+                        <asp:BoundField DataField="PLACE_OF_SUPPLY" HeaderText="Place Of Supply" />
+                        <asp:BoundField DataField="REVERSE_CHARGE" HeaderText="Reverse Charge" />
+                        <asp:BoundField DataField="INVOICE_TYPE" HeaderText="Invoice Type" />
+                        <asp:BoundField DataField="RATE" HeaderText="Rate" />
+                        <asp:BoundField DataField="TAXABLE_VALUE" HeaderText="Taxable Value" />
+                        <asp:BoundField DataField="INTEGRATED_TAX_PAID" HeaderText="Integrated Tax Paid" />
+                        <asp:BoundField DataField="CENTRAL_TAX_PAID" HeaderText="Central Tax Paid" />
+                        <asp:BoundField DataField="STATE_UT_TAX_PAID" HeaderText="State Ut Tax Paid" />
+                        <asp:BoundField DataField="CESS_PAID" HeaderText="Cess Paid" />
+                        <asp:BoundField DataField="ELIGIBILITY_FOR_ITC" HeaderText="Eligibility For Itc" />
+                        <asp:BoundField DataField="AVAILED_ITC_INTEGRATED_TAX" HeaderText="Availed Itc Integrated Tax" />
+                        <asp:BoundField DataField="AVAILED_ITC_CENTRAL_TAX" HeaderText="Availed Itc Central Tax" />
+                        <asp:BoundField DataField="AVAILED_ITC_STATE_UT_TAX" HeaderText="Availed Itc State/Ut Tax" />
+                        <asp:BoundField DataField="AVAILED_ITC_CESS" HeaderText="Availed Itc Cess" />
+                        <asp:BoundField DataField="MONTH" HeaderText="Month" />
+                        <asp:BoundField DataField="YEAR" HeaderText="Year" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
             </div>
-            <asp:GridView ID="gvDesignDetails"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvDesignDetails_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-
-                <Columns>
-
-                    <asp:TemplateField HeaderText="SrNo.">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="true" />
-                            <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
-                            <asp:Label ID="lblVendorName" runat="server" Text='<%# Eval("VENDOR_NAME") %>' Visible="false" />
-                            <asp:Label ID="lblGstinOfSupplier" runat="server" Text='<%# Eval("GSTIN_OF_SUPPLIER") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceNumber" runat="server" Text='<%# Eval("INVOICE_NUMBER") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceDate" runat="server" Text='<%# Eval("INVOICE_DATE") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceValue" runat="server" Text='<%# Eval("INVOICE_VALUE") %>' Visible="false" />
-                            <asp:Label ID="lblPlaceOfSupply" runat="server" Text='<%# Eval("PLACE_OF_SUPPLY") %>' Visible="false" />
-                            <asp:Label ID="lblReverseCharge" runat="server" Text='<%# Eval("REVERSE_CHARGE") %>' Visible="false" />
-                            <asp:Label ID="lblInvoiceType" runat="server" Text='<%# Eval("INVOICE_TYPE") %>' Visible="false" />
-                            <asp:Label ID="lblRate" runat="server" Text='<%# Eval("RATE") %>' Visible="false" />
-                            <asp:Label ID="lblTaxableValue" runat="server" Text='<%# Eval("TAXABLE_VALUE") %>' Visible="false" />
-                            <asp:Label ID="lblIntegratedTaxPaid" runat="server" Text='<%# Eval("INTEGRATED_TAX_PAID") %>' Visible="false" />
-                            <asp:Label ID="lblCentralTaxPaid" runat="server" Text='<%# Eval("CENTRAL_TAX_PAID") %>' Visible="false" />
-                            <asp:Label ID="lblStateUtTaxPaid" runat="server" Text='<%# Eval("STATE_UT_TAX_PAID") %>' Visible="false" />
-                            <asp:Label ID="lblCessPaid" runat="server" Text='<%# Eval("CESS_PAID") %>' Visible="false" />
-                            <asp:Label ID="lblEligibilityForItc" runat="server" Text='<%# Eval("ELIGIBILITY_FOR_ITC") %>' Visible="false" />
-                            <asp:Label ID="lblAvailedItcIntegratedTax" runat="server" Text='<%# Eval("AVAILED_ITC_INTEGRATED_TAX") %>' Visible="false" />
-                            <asp:Label ID="lblAvailedItcCentralTax" runat="server" Text='<%# Eval("AVAILED_ITC_CENTRAL_TAX") %>' Visible="false" />
-                            <asp:Label ID="lblAvailedItcStateUtTax" runat="server" Text='<%# Eval("AVAILED_ITC_STATE_UT_TAX") %>' Visible="false" />
-                            <asp:Label ID="lblAvailedItcCess" runat="server" Text='<%# Eval("AVAILED_ITC_CESS") %>' Visible="false" />
-                            <asp:Label ID="lblMonth" runat="server" Text='<%# Eval("MONTH") %>' Visible="false" />
-                            <asp:Label ID="lblYear" runat="server" Text='<%# Eval("YEAR") %>' Visible="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
-                    <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
-                    <asp:BoundField DataField="GSTIN_OF_SUPPLIER" HeaderText="Gstin Of Supplier" />
-                    <asp:BoundField DataField="INVOICE_NUMBER" HeaderText="Invoice Number" />
-                    <asp:BoundField DataField="INVOICE_DATE" HeaderText="Invoice Date" />
-                    <asp:BoundField DataField="INVOICE_VALUE" HeaderText="Invoice Value" />
-                    <asp:BoundField DataField="PLACE_OF_SUPPLY" HeaderText="Place Of Supply" />
-                    <asp:BoundField DataField="REVERSE_CHARGE" HeaderText="Reverse Charge" />
-                    <asp:BoundField DataField="INVOICE_TYPE" HeaderText="Invoice Type" />
-                    <asp:BoundField DataField="RATE" HeaderText="Rate" />
-                    <asp:BoundField DataField="TAXABLE_VALUE" HeaderText="Taxable Value" />
-                    <asp:BoundField DataField="INTEGRATED_TAX_PAID" HeaderText="Integrated Tax Paid" />
-                    <asp:BoundField DataField="CENTRAL_TAX_PAID" HeaderText="Central Tax Paid" />
-                    <asp:BoundField DataField="STATE_UT_TAX_PAID" HeaderText="State Ut Tax Paid" />
-                    <asp:BoundField DataField="CESS_PAID" HeaderText="Cess Paid" />
-                    <asp:BoundField DataField="ELIGIBILITY_FOR_ITC" HeaderText="Eligibility For Itc" />
-                    <asp:BoundField DataField="AVAILED_ITC_INTEGRATED_TAX" HeaderText="Availed Itc Integrated Tax" />
-                    <asp:BoundField DataField="AVAILED_ITC_CENTRAL_TAX" HeaderText="Availed Itc Central Tax" />
-                    <asp:BoundField DataField="AVAILED_ITC_STATE_UT_TAX" HeaderText="Availed Itc State/Ut Tax" />
-                    <asp:BoundField DataField="AVAILED_ITC_CESS" HeaderText="Availed Itc Cess" />
-                    <asp:BoundField DataField="MONTH" HeaderText="Month" />
-                    <asp:BoundField DataField="YEAR" HeaderText="Year" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
-        </div>
+        </fieldset>
 
     </div>
 

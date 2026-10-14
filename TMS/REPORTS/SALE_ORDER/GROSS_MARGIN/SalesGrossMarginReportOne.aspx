@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="SalesGrossMarginReportOne.aspx.cs"
-    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_SalesGrossMarginReportOne" Title="Untitled Page" %>
+    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_SalesGrossMarginReportOne" Title="CIPLTMS - Monthly Sales Gross Margin Report" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -172,19 +172,17 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Monthly Sales Gross Margin Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
 
                     <label>Month: </label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdPostingMonth" runat="server" />
@@ -233,113 +231,113 @@
 
                 </div>
 
-                <div class="full-width button-group">
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClick="btnSearch_Click" />
-
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
-                </div>
-
-                <div class="full-width button-group">
-
-                    <label>Total Amount INR:</label>
-                    <asp:Label ID="lblTotalAmountINR" runat="server" Text="0" Font-Bold="true" Font-Size="Large" ForeColor="Green" />
-
-                    <label>Total Cost As Per Order:</label>
-                    <asp:Label ID="lblTotalCostAsPerOrder" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
-
-                    <label>Total Margin As Per Order</label>
-                    <asp:Label ID="lblTotalMarginAsPerOrder" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
-
-                    <label>Total Cost As Per Cost Center</label>
-                    <asp:Label ID="lblTotalCostAsPerCostCenter" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
-
-                </div>
-
-                <div class="full-width button-group">
-                    <label>Total Material Overheads</label>
-                    <asp:Label ID="lblTotalMaterialOverheads" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
-
-                    <label>Total Warranty</label>
-                    <asp:Label ID="lblTotalWarranty" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
-
-                    <label>Total Actual Grosss Margin</label>
-                    <asp:Label ID="lblTotalActualGrossMargin" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
-                </div>
-
             </fieldset>
-        </div>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
 
 
+                <label>Total Amount INR:</label>
+                <asp:Label ID="lblTotalAmountINR" runat="server" Text="0" Font-Bold="true" Font-Size="Large" ForeColor="Green" />
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <label>Total Cost As Per Order:</label>
+                <asp:Label ID="lblTotalCostAsPerOrder" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
+
+                <label>Total Margin As Per Order</label>
+                <asp:Label ID="lblTotalMarginAsPerOrder" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
+
+                <label>Total Cost As Per Cost Center</label>
+                <asp:Label ID="lblTotalCostAsPerCostCenter" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
+
+
+                <label>Total Material Overheads</label>
+                <asp:Label ID="lblTotalMaterialOverheads" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
+
+                <label>Total Warranty</label>
+                <asp:Label ID="lblTotalWarranty" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
+
+                <label>Total Actual Grosss Margin</label>
+                <asp:Label ID="lblTotalActualGrossMargin" runat="server" Text="0" Font-Bold="true" ForeColor="Green" />
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvSaleMargin" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvSaleMargin_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="OA_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                            <asp:Label ID="lblOANo" runat="server" Visible="true" Text='<%# Eval("OA_NO") %>' />
-                            <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
-                            <asp:Label ID="lblAmountINR" runat="server" Visible="false" Text='<%# Eval("AMOUNT_INR") %>' />
-                            <asp:Label ID="lblCostAsPerOrder" runat="server" Visible="false" Text='<%# Eval("COST_AS_PER_ORDER") %>' />
-                            <asp:Label ID="lblMarginAsPerOrder" runat="server" Visible="false" Text='<%# Eval("MARGIN_AS_PER_ORDER") %>' />
-                            <asp:Label ID="lblCostAsPerCostCenter" runat="server" Visible="false" Text='<%# Eval("COST_AS_PER_COST_CENTER") %>' />
-                            <asp:Label ID="lblMaterialOverheads" runat="server" Visible="false" Text='<%# Eval("MATERIAL_OVERHEADS") %>' />
-                            <asp:Label ID="lblWarranty" runat="server" Visible="false" Text='<%# Eval("WARRANTY") %>' />
-                            <asp:Label ID="lblActualGrossMargin" runat="server" Visible="false" Text='<%# Eval("ACTUAL_GROSS_MARGIN") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="WARRANTY_PER" HeaderText="WARRANTY_PER" />
-                    <asp:BoundField DataField="MO" HeaderText="MO" />
-                    <%--<asp:BoundField DataField="BILL_DATE" HeaderText="BILL_DATE" />--%>
-                    <asp:BoundField DataField="CLASS" HeaderText="CLASS" />
-                    <asp:BoundField DataField="CURR_DESC" HeaderText="CURR_DESC" />
-                    <asp:BoundField DataField="RATE" HeaderText="RATE" />
-                    <asp:BoundField DataField="F_CURRENCY" HeaderText="F_CURRENCY" />
-                    <asp:BoundField DataField="AMOUNT_INR" HeaderText="AMOUNT_INR" />
-                    <%--<asp:BoundField DataField="BILL_NO" HeaderText="BILL_NO" />--%>
-                    <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
-                    <%--<asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />--%>
-                    <asp:BoundField DataField="BUS_SEGMENT" HeaderText="OLD_BU" />
-                    <asp:BoundField DataField="NEW_BU" HeaderText="NEW_BU" />
-                    <asp:BoundField DataField="GROSS_MARGIN_AS_PER_ORDER" HeaderText="GROSS_MARGIN_AS_PER_ORDER" />
-                    <asp:BoundField DataField="PERCENTAGE" HeaderText="PERCENTAGE" />
-                    <asp:BoundField DataField="COST_AS_PER_ORDER" HeaderText="COST_AS_PER_ORDER" />
-                    <asp:BoundField DataField="MARGIN_AS_PER_ORDER" HeaderText="MARGIN_AS_PER_ORDER" />
-                    <asp:BoundField DataField="COST_AS_PER_COST_CENTER" HeaderText="COST_AS_PER_COST_CENTER" />
-                    <asp:BoundField DataField="MATERIAL_OVERHEADS" HeaderText="MATERIAL_OVERHEADS" />
-                    <asp:BoundField DataField="PROJECT_COSTS" HeaderText="PROJECT_COSTS" />
-                    <asp:BoundField DataField="WARRANTY" HeaderText="WARRANTY" />
-                    <asp:BoundField DataField="ACTUAL_GROSS_MARGIN" HeaderText="ACTUAL_GROSS_MARGIN" />
-                    <asp:BoundField DataField="STANDARD" HeaderText="STANDARD" />
-                    <asp:BoundField DataField="ACTUAL" HeaderText="ACTUAL" />
-                    <asp:BoundField DataField="HIGH_DELTA" HeaderText="HIGH_DELTA" />
-                    <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
-                    <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
-                    <asp:BoundField DataField="POC_NONPOC" HeaderText="POC_NONPOC" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
+
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Monthly Sales Gross Margin Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvSaleMargin" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvSaleMargin_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="OA_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                <asp:Label ID="lblOANo" runat="server" Visible="true" Text='<%# Eval("OA_NO") %>' />
+                                <asp:Label ID="lblCustomerName" runat="server" Visible="false" Text='<%# Eval("CUSTOMER_NAME") %>' />
+                                <asp:Label ID="lblAmountINR" runat="server" Visible="false" Text='<%# Eval("AMOUNT_INR") %>' />
+                                <asp:Label ID="lblCostAsPerOrder" runat="server" Visible="false" Text='<%# Eval("COST_AS_PER_ORDER") %>' />
+                                <asp:Label ID="lblMarginAsPerOrder" runat="server" Visible="false" Text='<%# Eval("MARGIN_AS_PER_ORDER") %>' />
+                                <asp:Label ID="lblCostAsPerCostCenter" runat="server" Visible="false" Text='<%# Eval("COST_AS_PER_COST_CENTER") %>' />
+                                <asp:Label ID="lblMaterialOverheads" runat="server" Visible="false" Text='<%# Eval("MATERIAL_OVERHEADS") %>' />
+                                <asp:Label ID="lblWarranty" runat="server" Visible="false" Text='<%# Eval("WARRANTY") %>' />
+                                <asp:Label ID="lblActualGrossMargin" runat="server" Visible="false" Text='<%# Eval("ACTUAL_GROSS_MARGIN") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="WARRANTY_PER" HeaderText="WARRANTY_PER" />
+                        <asp:BoundField DataField="MO" HeaderText="MO" />
+                        <%--<asp:BoundField DataField="BILL_DATE" HeaderText="BILL_DATE" />--%>
+                        <asp:BoundField DataField="CLASS" HeaderText="CLASS" />
+                        <asp:BoundField DataField="CURR_DESC" HeaderText="CURR_DESC" />
+                        <asp:BoundField DataField="RATE" HeaderText="RATE" />
+                        <asp:BoundField DataField="F_CURRENCY" HeaderText="F_CURRENCY" />
+                        <asp:BoundField DataField="AMOUNT_INR" HeaderText="AMOUNT_INR" />
+                        <%--<asp:BoundField DataField="BILL_NO" HeaderText="BILL_NO" />--%>
+                        <asp:BoundField DataField="LOCATION" HeaderText="LOCATION" />
+                        <%--<asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />--%>
+                        <asp:BoundField DataField="BUS_SEGMENT" HeaderText="OLD_BU" />
+                        <asp:BoundField DataField="NEW_BU" HeaderText="NEW_BU" />
+                        <asp:BoundField DataField="GROSS_MARGIN_AS_PER_ORDER" HeaderText="GROSS_MARGIN_AS_PER_ORDER" />
+                        <asp:BoundField DataField="PERCENTAGE" HeaderText="PERCENTAGE" />
+                        <asp:BoundField DataField="COST_AS_PER_ORDER" HeaderText="COST_AS_PER_ORDER" />
+                        <asp:BoundField DataField="MARGIN_AS_PER_ORDER" HeaderText="MARGIN_AS_PER_ORDER" />
+                        <asp:BoundField DataField="COST_AS_PER_COST_CENTER" HeaderText="COST_AS_PER_COST_CENTER" />
+                        <asp:BoundField DataField="MATERIAL_OVERHEADS" HeaderText="MATERIAL_OVERHEADS" />
+                        <asp:BoundField DataField="PROJECT_COSTS" HeaderText="PROJECT_COSTS" />
+                        <asp:BoundField DataField="WARRANTY" HeaderText="WARRANTY" />
+                        <asp:BoundField DataField="ACTUAL_GROSS_MARGIN" HeaderText="ACTUAL_GROSS_MARGIN" />
+                        <asp:BoundField DataField="STANDARD" HeaderText="STANDARD" />
+                        <asp:BoundField DataField="ACTUAL" HeaderText="ACTUAL" />
+                        <asp:BoundField DataField="HIGH_DELTA" HeaderText="HIGH_DELTA" />
+                        <asp:BoundField DataField="TYPE" HeaderText="TYPE" />
+                        <asp:BoundField DataField="MONTH" HeaderText="MONTH" />
+                        <asp:BoundField DataField="POC_NONPOC" HeaderText="POC_NONPOC" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 

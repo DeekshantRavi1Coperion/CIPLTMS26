@@ -15,7 +15,10 @@
 
     <link href="Styles/Site.css" rel="stylesheet" />
     <link href="Styles/MasterPage.css" rel="stylesheet" />
-    <script src="Scripts/mssidebar.js"></script>
+    <script src="/Scripts/sidebar-resize.js?v=3" type="text/javascript"></script>
+
+
+
     <asp:ContentPlaceHolder ID="head" runat="server" />
 
 
@@ -54,7 +57,8 @@
                  LEFT SIDEBAR
                  ===================================================== -->
 
-            <aside class="sidebar">
+            <%--<aside class="sidebar">--%>
+            <aside id="appSidebar" class="sidebar">
 
                 <!-- =================================================
                      SIDEBAR HEADER
@@ -224,6 +228,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="sidebarResizer"
+                    class="sidebar-resizer"
+                    title="Drag to resize. Double-click to reset."
+                    role="separator"
+                    aria-label="Resize sidebar"
+                    aria-orientation="vertical"
+                    tabindex="0">
+                </div>
+
             </aside>
 
 
@@ -456,10 +470,7 @@
             });
 
         </script>
-
-
-    </form>
-
+    </form>    
 </body>
 
 </html>

@@ -233,20 +233,21 @@
         <ContentTemplate>
             <div align="center" style="margin-top: 20px;">
 
-                <%--<div class="page-layout">--%>
+                <div class="page-layout">
 
-                    <div class="form-grid-container">
+                    <div class="filter-grid-container">
                         <fieldset class="filter-card">
                             <legend>Weekly Site Report</legend>
-                            <div class="form-grid form-grid-3">
 
-                                <td align="right">Tour Sanction Number:</td>
+                            <div class="form-filter-grid">
+
+                                <label>Tour Sanction Number:</label>
                                 <asp:DropDownList ID="ddlTSNumber" AutoPostBack="true" runat="server"
                                     OnSelectedIndexChanged="ddlTSNumber_SelectedIndexChanged"
                                     CssClass="form-control">
                                 </asp:DropDownList>
 
-                                <td align="right">Tour Start Date:</td>
+                                <label>Tour Start Date:</label>
                                 <table width="100%">
                                     <tr>
                                         <td>
@@ -262,7 +263,7 @@
                                     </tr>
                                 </table>
 
-                                <td align="right">Tour End Date:</td>
+                                <label>Tour End Date:</label>
                                 <table width="100%">
                                     <tr>
                                         <td>
@@ -277,34 +278,34 @@
                                     </tr>
                                 </table>
 
-                                <td align="right">Customer Name:</td>
+                                <label>Customer Name:</label>
                                 <asp:TextBox ID="txtCustName" runat="server"
                                     CssClass="form-control"></asp:TextBox>
 
-                                <td align="right">End User & Site:</td>
+                                <label>End User & Site:</label>
                                 <asp:TextBox ID="txtEndUserSite" runat="server"
                                     CssClass="form-control"></asp:TextBox>
 
 
-                                <td align="right">Coperion Employee Name:</td>
+                                <label>Coperion Employee Name:</label>
                                 <asp:TextBox ID="txtEmployeeName" runat="server"
                                     CssClass="form-control"></asp:TextBox>
 
-                                <td align="right">Coperion PO No.:</td>
+                                <label>Coperion PO No.:</label>
                                 <asp:TextBox ID="txtPoNo" runat="server"
                                     CssClass="form-control"></asp:TextBox>
 
-                                <td align="right">Coperion Job No.:</td>
+                                <label>Coperion Job No.:</label>
                                 <asp:TextBox ID="txtJobNo" runat="server"
                                     CssClass="form-control"></asp:TextBox>
 
-                                <td align="right">Remarks:</td>
+                                <label>Remarks:</label>
                                 <asp:TextBox ID="txtRemarks" runat="server"
                                     CssClass="form-control"
                                     Enabled="true" TextMode="MultiLine"
                                     Rows="2" />
 
-                                <td align="right">FOC Type:</td>
+                                <label>FOC Type:</label>
                                 <asp:DropDownList ID="ddlFOCType" AutoPostBack="true" runat="server"
                                     OnSelectedIndexChanged="ddlFOCType_SelectedIndexChanged"
                                     CssClass="form-control">
@@ -323,9 +324,10 @@
                                 OnClick="btnSubmit_Click" />
                         </div>
                     </div>
+
                     <div class="employee-grid-container">
 
-                        <fieldset class="filter-card">
+                        <fieldset class="employee-grid-fieldset">
                             <legend>
                                 <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
@@ -462,12 +464,10 @@
 
 
                         </fieldset>
-                    </div>
 
+                        <br />
 
-                    <div class="employee-grid-container">
-
-                        <fieldset class="filter-card">
+                        <fieldset class="employee-grid-fieldset">
                             <legend>
                                 <asp:Label ID="Label1" runat="server" Text="Records[0]" /></legend>
 
@@ -562,10 +562,12 @@
                             </asp:GridView>
 
                         </fieldset>
+
+
                     </div>
 
 
-                <%--</div>--%>
+                </div>
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Content>

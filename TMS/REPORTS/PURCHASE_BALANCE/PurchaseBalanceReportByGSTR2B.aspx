@@ -1,4 +1,4 @@
-﻿<%@ Page Title="GST Reconciliation  Report By GSTR2B" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - GST Reconciliation  Report By GSTR2B" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="PurchaseBalanceReportByGSTR2B.aspx.cs" Inherits="REPORTS_PURCHASE_BALANCE_PurchaseBalanceReportByGSTR2B" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -363,13 +363,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>GST Reconciliation  Report By GSTR2B:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -408,8 +406,7 @@
                                         <asp:ListItem Text="=" Value="="></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
-                                <td>&nbsp;</td>
-                                <td style="width: 70%;">
+                                <td>
                                     <asp:DropDownList ID="ddlDateTypeToS" runat="server"
                                         CssClass="form-control">
                                         <asp:ListItem Text="Invoice Date" Value="B2B_INVOICE_DATE"></asp:ListItem>
@@ -553,114 +550,114 @@
                 <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server"
                     Text="Export to Excel"
                     OnClick="btnExport_Click" />
+
+                <label>Imported:</label>
+                <asp:TextBox ID="txtImportedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>Processed:</label>
+                <asp:TextBox ID="txtProcessedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>M1 Matched:</label>
+                <asp:TextBox ID="txtM1MatchedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>M1 Unmatched:</label>
+                <asp:TextBox ID="txtM1UnmatchedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>M2 Matched:</label>
+                <asp:TextBox ID="txtM2MatchedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>M2 Unmatched:</label>
+                <asp:TextBox ID="txtM2UnmatchedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>Fully Unmatched:</label>
+                <asp:TextBox ID="txtFullyUnmatchedCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+                <label>Not In BOOKS:</label>
+                <asp:TextBox ID="txtNotInGSTR2BCounts" runat="server" ReadOnly="true"
+                    CssClass="form-control"
+                    Text="0" />
+
+
             </div>
+        </div>
 
 
-            <fieldset class="filter-card">
-                <legend>Stats</legend>
-                <div class="form-grid form-grid-3">
+        <fieldset class="employee-grid-fieldset">
+            <legend>GST Reconciliation  Report By GSTR2B:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-                    <label>Imported:</label>
-                    <asp:TextBox ID="txtImportedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>Processed:</label>
-                    <asp:TextBox ID="txtProcessedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>M1 Matched:</label>
-                    <asp:TextBox ID="txtM1MatchedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>M1 Unmatched:</label>
-                    <asp:TextBox ID="txtM1UnmatchedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>M2 Matched:</label>
-                    <asp:TextBox ID="txtM2MatchedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>M2 Unmatched:</label>
-                    <asp:TextBox ID="txtM2UnmatchedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>Fully Unmatched:</label>
-                    <asp:TextBox ID="txtFullyUnmatchedCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
-                    <label>Not In BOOKS:</label>
-                    <asp:TextBox ID="txtNotInGSTR2BCounts" runat="server" ReadOnly="true"
-                        CssClass="form-control"
-                        Text="0" />
-
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
                 </div>
+                <asp:GridView ID="gvReport"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both"
+                    Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvReport_RowDataBound">
 
-            </fieldset>
-        </div>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                        <asp:BoundField DataField="POSTED_YEAR" HeaderText="Posted_Year" />
+                        <asp:BoundField DataField="POSTED_MONTH" HeaderText="Posted_Month" />
+                        <asp:BoundField DataField="GSTR2B_GSTIN_OF_SUPPLIER" HeaderText="Gstr2B_Gstin_Of_Supplier" />
+                        <asp:BoundField DataField="GSTR2B_VENDOR_CODE" HeaderText="Gstr2B_Vendor_Code" />
+                        <asp:BoundField DataField="GSTR2B_VENDOR_NAME" HeaderText="Gstr2B_Vendor_Name" />
+                        <asp:BoundField DataField="GSTR2B_INVOICE_NUMBER" HeaderText="Gstr2B_Invoice_Number" />
+                        <asp:BoundField DataField="GSTR2B_INVOICE_DATE" HeaderText="Gstr2B_Invoice_Date" />
+                        <asp:BoundField DataField="GSTR2B_TAXABLE_VALUE" HeaderText="Gstr2B_Taxable_Value" />
+                        <asp:BoundField DataField="B2B_M1_GSTIN_OF_SUPPLIER" HeaderText="B2B_M1_Gstin_Of_Supplier" />
+                        <asp:BoundField DataField="B2B_M1_INVOICE_NO" HeaderText="B2B_M1_Invoice_No" />
+                        <asp:BoundField DataField="B2B_M1_TAXABLE_VALUE" HeaderText="B2B_M1_Taxable_Value" />
+                        <asp:BoundField DataField="B2B_M1_GST_INVOICE_NO_AMOUNT_MATCHED" HeaderText="B2B_M1_Gst_Invoice_No_Amount_Matched" />
+                        <asp:BoundField DataField="B2B_M2_GSTIN_OF_SUPPLIER" HeaderText="B2B_M2_Gstin_Of_Supplier" />
+                        <asp:BoundField DataField="B2B_M2_INVOICE_DATE" HeaderText="B2B_M2_Invoice_Date" />
+                        <asp:BoundField DataField="B2B_M2_TAXABLE_VALUE" HeaderText="B2B_M2_Taxable_Value" />
+                        <asp:BoundField DataField="B2B_M2_GST_INVOICE_DATE_AMOUNT_MATCHED" HeaderText="B2B_M2_Gst_Invoice_Date_Amount_Matched" />
+                        <asp:BoundField DataField="FULLY_UNMATCHED_GSTIN" HeaderText="Fully_Unmatched_Gstin" />
+                        <asp:BoundField DataField="GSTIN_NOT_IN_GSTR2B" HeaderText="Gstin_Not_In_Gstr2B" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-            <asp:GridView ID="gvReport"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both"
-                Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvReport_RowDataBound">
 
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:BoundField DataField="POSTED_YEAR" HeaderText="Posted_Year" />
-                    <asp:BoundField DataField="POSTED_MONTH" HeaderText="Posted_Month" />
-                    <asp:BoundField DataField="GSTR2B_GSTIN_OF_SUPPLIER" HeaderText="Gstr2B_Gstin_Of_Supplier" />
-                    <asp:BoundField DataField="GSTR2B_VENDOR_CODE" HeaderText="Gstr2B_Vendor_Code" />
-                    <asp:BoundField DataField="GSTR2B_VENDOR_NAME" HeaderText="Gstr2B_Vendor_Name" />
-                    <asp:BoundField DataField="GSTR2B_INVOICE_NUMBER" HeaderText="Gstr2B_Invoice_Number" />
-                    <asp:BoundField DataField="GSTR2B_INVOICE_DATE" HeaderText="Gstr2B_Invoice_Date" />
-                    <asp:BoundField DataField="GSTR2B_TAXABLE_VALUE" HeaderText="Gstr2B_Taxable_Value" />
-                    <asp:BoundField DataField="B2B_M1_GSTIN_OF_SUPPLIER" HeaderText="B2B_M1_Gstin_Of_Supplier" />
-                    <asp:BoundField DataField="B2B_M1_INVOICE_NO" HeaderText="B2B_M1_Invoice_No" />
-                    <asp:BoundField DataField="B2B_M1_TAXABLE_VALUE" HeaderText="B2B_M1_Taxable_Value" />
-                    <asp:BoundField DataField="B2B_M1_GST_INVOICE_NO_AMOUNT_MATCHED" HeaderText="B2B_M1_Gst_Invoice_No_Amount_Matched" />
-                    <asp:BoundField DataField="B2B_M2_GSTIN_OF_SUPPLIER" HeaderText="B2B_M2_Gstin_Of_Supplier" />
-                    <asp:BoundField DataField="B2B_M2_INVOICE_DATE" HeaderText="B2B_M2_Invoice_Date" />
-                    <asp:BoundField DataField="B2B_M2_TAXABLE_VALUE" HeaderText="B2B_M2_Taxable_Value" />
-                    <asp:BoundField DataField="B2B_M2_GST_INVOICE_DATE_AMOUNT_MATCHED" HeaderText="B2B_M2_Gst_Invoice_Date_Amount_Matched" />
-                    <asp:BoundField DataField="FULLY_UNMATCHED_GSTIN" HeaderText="Fully_Unmatched_Gstin" />
-                    <asp:BoundField DataField="GSTIN_NOT_IN_GSTR2B" HeaderText="Gstin_Not_In_Gstr2B" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
 
 

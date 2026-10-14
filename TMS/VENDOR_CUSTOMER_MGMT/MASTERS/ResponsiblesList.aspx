@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - VCM - Responsibles List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ResponsiblesList.aspx.cs"
     Inherits="VENDOR_CUSTOMER_MGMT_MASTERS_ResponsiblesList" %>
 
@@ -61,13 +61,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Responsibles List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Short Name:</label>
                     <asp:TextBox ID="txtShortName" runat="server"
@@ -96,56 +94,62 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Responsibles List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvMastersList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvMastersList_RowCommand"
+                    OnRowDataBound="gvMastersList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
+                                <asp:Label ID="lblEmployeeRecordId" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_FID") %>' />
+                                <asp:Label ID="lblName" runat="server" Visible="false" Text='<%# Eval("NAME") %>' />
+                                <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>' />
+                                <asp:Label ID="lblIsDeleted" runat="server" Visible="false" Text='<%# Eval("IS_DELETED") %>' />
+                                <asp:Label ID="Label1" runat="server" Visible="false" Text='<%# Eval("IS_DELETED") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Master Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="NAME" HeaderText="Name" />
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="Tagged Employee" />
+
+                        <asp:TemplateField HeaderText="Is Active" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsActive" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvMastersList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvMastersList_RowCommand"
-                OnRowDataBound="gvMastersList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
-                            <asp:Label ID="lblEmployeeRecordId" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_FID") %>' />
-                            <asp:Label ID="lblName" runat="server" Visible="false" Text='<%# Eval("NAME") %>' />
-                            <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>' />
-                            <asp:Label ID="lblIsDeleted" runat="server" Visible="false" Text='<%# Eval("IS_DELETED") %>' />
-                            <asp:Label ID="Label1" runat="server" Visible="false" Text='<%# Eval("IS_DELETED") %>' />
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Master Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="NAME" HeaderText="Name" />
-                    <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="Tagged Employee" />
-
-                    <asp:TemplateField HeaderText="Is Active" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsActive" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 

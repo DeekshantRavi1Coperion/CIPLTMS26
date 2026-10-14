@@ -1352,6 +1352,10 @@ public partial class VOUCHER_AUTH_PV_AuthorizePurchaseVouchers : System.Web.UI.P
                 Label lblFCBasicAmount = gvVouchersList.Rows[rowindex].FindControl("lblFCBasicAmount") as Label;
                 Label lblFCOtherAmount = gvVouchersList.Rows[rowindex].FindControl("lblFCOtherAmount") as Label;
 
+                Label lblPartyBill = gvVouchersList.Rows[rowindex].FindControl("lblPartyBill") as Label;
+                Label lblVendorInvoiceNo = gvVouchersList.Rows[rowindex].FindControl("lblVendorInvoiceNo") as Label;
+                Label lblVendorInvoiceNoFlag = gvVouchersList.Rows[rowindex].FindControl("lblVendorInvoiceNoFlag") as Label;
+
                 ViewState["PID"] = lblPID.Text;
                 ViewState["VoucherNo"] = lblVoucherNo.Text;
                 ViewState["VoucherDate"] = lblVoucherDate.Text;
@@ -1434,6 +1438,8 @@ public partial class VOUCHER_AUTH_PV_AuthorizePurchaseVouchers : System.Web.UI.P
                     //txtClassToAS.Text = lblClass.Text;
                     //txtParticularToAS.Text = lblParticular.Text;
                     txtCreatedByToAS.Text = lblCreatedBy.Text;
+                    txtPartyBillToAS.Text = lblPartyBill.Text;
+                    txtVendorInvoiceNoToAS.Text = lblVendorInvoiceNo.Text;
 
                     GetVouchersDetails(lblVoucherNo.Text, Convert.ToInt32(lblUnitId.Text));
 
@@ -1453,6 +1459,12 @@ public partial class VOUCHER_AUTH_PV_AuthorizePurchaseVouchers : System.Web.UI.P
                 }
                 else if (Convert.ToString(e.CommandArgument) == "AUTHORIZE")
                 {
+                    btnAuthorize.Visible = true;
+                    pnlAuthMsg.Visible = false;
+                    lblAuthMsg.Text = string.Empty;
+                    lblAuthMsg.ForeColor = System.Drawing.Color.Red;
+
+
                     //dvViewAuthorizeVoucherPopup.Style["height"] = "600px";
 
                     pnlRemarksToAS.Visible = true;
@@ -1476,9 +1488,18 @@ public partial class VOUCHER_AUTH_PV_AuthorizePurchaseVouchers : System.Web.UI.P
                     txtUnitToAS.Text = lblUnitName.Text;
                     txtCreatedByToAS.Text = lblCreatedBy.Text;
 
-                    GetVouchersDetails(lblVoucherNo.Text, Convert.ToInt32(lblUnitId.Text));
+                    txtPartyBillToAS.Text = lblPartyBill.Text;
+                    txtVendorInvoiceNoToAS.Text = lblVendorInvoiceNo.Text;
 
+                    GetVouchersDetails(lblVoucherNo.Text, Convert.ToInt32(lblUnitId.Text));
                     BindAttachedDocs(Convert.ToInt32(lblPID.Text), lblChallanNo.Text);
+
+                    if (Convert.ToInt32(lblVendorInvoiceNoFlag.Text) == 0)
+                    {
+                        btnAuthorize.Visible = false;
+                        pnlAuthMsg.Visible = true;
+                        lblAuthMsg.Text = "Party Bill and Vendor Invoice No. does not match!";
+                    }
 
                     mpeAuthorizeVoucher.Show();
                     //pnlViewAuthorizeVoucherPopup.Height = 700;
@@ -1901,32 +1922,110 @@ public partial class VOUCHER_AUTH_PV_AuthorizePurchaseVouchers : System.Web.UI.P
 
     protected void btnBulkAuthorize_Click(object sender, EventArgs e)
     {
+
+        DataTable dtVvouchers = new DataTable();
+        dtVvouchers.Columns.Add("VOUCHER_NO", typeof(string));
+        dtVvouchers.Columns.Add("VENDOR_INVOICE_FLAG", typeof(int));
+
         int count = 0;
+        int vcount = 0;
+        string vvoucherNos = "";
+
+        //if (gvVouchersList.Rows.Count > 0)
+        //{
+        //    foreach (GridViewRow gr in gvVouchersList.Rows)
+        //    {
+        //        CheckBox chkSelectVoucher = (CheckBox)gr.FindControl("chkSelectVoucher");
+        //        if (chkSelectVoucher.Checked)
+        //        {
+        //            count++;
+        //            if (count > 0)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+
+        //if (count > 0)
+        //{
+
+        //    foreach (GridViewRow gr in gvVouchersList.Rows)
+        //    {
+        //        CheckBox chkSelectVoucher = (CheckBox)gr.FindControl("chkSelectVoucher");
+        //        Label lblVoucherNo = (Label)gr.FindControl("lblVoucherNo");
+        //        Label lblVendorInvoiceNoFlag = (Label)gr.FindControl("lblVendorInvoiceNoFlag");
+        //        if (chkSelectVoucher.Checked && Convert.ToInt32(lblVendorInvoiceNoFlag.Text) == 0)
+        //        {
+        //            vcount++;
+        //            vvoucherNos = vvoucherNos + lblVoucherNo.Text + ", ";
+        //        }
+        //    }
+
+
+        //    if (vcount == 0 && string.IsNullOrEmpty(vvoucherNos))
+        //    {
+        //        BulkAuthorize();
+        //    }
+        //    else
+        //    {
+        //        vvoucherNos = vvoucherNos.Trim().TrimEnd(',');
+        //        ExceptionMessage("Party Bill & Vendor Invoice No does not match of vouchers: " + vvoucherNos);
+        //        return;
+        //    }
+
+        //}
+        //else
+        //{
+        //    ExceptionMessage("Please select at-least 1 voucher!");
+        //    return;
+        //}
+
+
+
         if (gvVouchersList.Rows.Count > 0)
         {
             foreach (GridViewRow gr in gvVouchersList.Rows)
             {
                 CheckBox chkSelectVoucher = (CheckBox)gr.FindControl("chkSelectVoucher");
+                Label lblVoucherNo = (Label)gr.FindControl("lblVoucherNo");
+                Label lblVendorInvoiceNoFlag = (Label)gr.FindControl("lblVendorInvoiceNoFlag");
                 if (chkSelectVoucher.Checked)
                 {
-                    count++;
-                    if (count > 0)
-                    {
-                        break;
-                    }
+                    DataRow dr = dtVvouchers.NewRow();
+                    dr["VOUCHER_NO"] = lblVoucherNo.Text;
+                    dr["VENDOR_INVOICE_FLAG"] = lblVendorInvoiceNoFlag.Text;
+
+                    dtVvouchers.Rows.Add(dr);
                 }
             }
         }
 
-        if (count > 0)
-        {
-            BulkAuthorize();
-        }
-        else
+
+        if (dtVvouchers.Rows.Count == 0 || dtVvouchers == null)
         {
             ExceptionMessage("Please select at-least 1 voucher!");
             return;
         }
+        else
+        {
+            foreach (DataRow dr in dtVvouchers.Select("VENDOR_INVOICE_FLAG = 0"))
+            {
+                vvoucherNos = vvoucherNos + Convert.ToString(dr["VOUCHER_NO"]) + ", ";
+            }
+
+            if (!string.IsNullOrEmpty(vvoucherNos))
+            {
+                vvoucherNos = vvoucherNos.Trim().TrimEnd(',');
+                ExceptionMessage("Party Bill & Vendor Invoice No does not match of vouchers: " + vvoucherNos);
+                return;
+            }
+            else
+            {
+                BulkAuthorize();
+            }
+        }
+
     }
 
     protected void chkSelectDeselectVouchers_CheckedChanged(object sender, EventArgs e)

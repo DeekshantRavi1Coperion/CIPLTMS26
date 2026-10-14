@@ -7,7 +7,7 @@
     <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
 
 
-    <link href="../../Styles/form.css" rel="stylesheet" />
+    <%--<link href="../../Styles/form.css" rel="stylesheet" />--%>
     <link href="../../Styles/filter.css" rel="stylesheet" />
     <link href="../../Styles/grid.css" rel="stylesheet" />
 
@@ -17,14 +17,16 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <asp:ScriptManager ID="ScriptManager1" runat="server">
     </asp:ScriptManager>
-    <asp:UpdatePanel runat="server" ID="uppanel">
-        <ContentTemplate>
+
+   <%-- <asp:UpdatePanel runat="server" ID="uppanel">
+        <ContentTemplate>--%>
 
             <div class="page-layout">
 
                 <div class="filter-grid-container">
                     <fieldset class="filter-card">
                         <legend>Filters</legend>
+
                         <div class="form-filter-grid">
 
                             <label>Menu Name</label>
@@ -114,6 +116,6 @@
             </div>
 
 
-        </ContentTemplate>
-    </asp:UpdatePanel>
+        <%--</ContentTemplate>
+    </asp:UpdatePanel>--%>
 </asp:Content>

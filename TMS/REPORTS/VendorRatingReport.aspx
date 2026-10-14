@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Vendor Rating Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="VendorRatingReport.aspx.cs" Inherits="REPORTS_VendorRatingReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -272,7 +272,7 @@
         }
     </script>
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvVendorRating.ClientID %>";
         var ScrollHeight = 570;
         window.onload = function () {
@@ -320,6 +320,10 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
+
+    </script>--%>
+
+    <script type="text/javascript">
 
         function ClearAllFilters() {
             document.getElementById('<%=ddlUnit.ClientID %>').selectedIndex = 0;
@@ -395,13 +399,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Vendor Rating Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -433,7 +435,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -453,7 +455,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -732,63 +734,69 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Vendor Rating Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvVendorRating" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvVendorRating_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
+            <div class="employee-grid-container">
 
-                    <asp:TemplateField HeaderText="Zoom"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                            <asp:ImageButton ID="btnViewSubitemDetail" Height="30px"
-                                Width="30px"
-                                CommandArgument="VIEW_PRODUCT_LIST"
-                                runat="server"
-                                ImageUrl="~/Images/viewdetails.png"
-                                ToolTip="View Details" />
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvVendorRating" runat="server"
+                    AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvVendorRating_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
 
-                            <asp:Label ID="lblUnit" runat="server" Text='<%# Eval("Unit") %>' Visible="false" />
-                            <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("Vendor_Code") %>' Visible="false" />
+                        <asp:TemplateField HeaderText="Zoom"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
 
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:ImageButton ID="btnViewSubitemDetail" Height="30px"
+                                    Width="30px"
+                                    CommandArgument="VIEW_PRODUCT_LIST"
+                                    runat="server"
+                                    ImageUrl="~/Images/viewdetails.png"
+                                    ToolTip="View Details" />
 
-                    <asp:TemplateField HeaderText="Sl No."
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSlNo" runat="server"
-                                Text='<%# Eval("Sl_No") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:Label ID="lblUnit" runat="server" Text='<%# Eval("Unit") %>' Visible="false" />
+                                <asp:Label ID="lblVendorCode" runat="server" Text='<%# Eval("Vendor_Code") %>' Visible="false" />
+
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Sl No."
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSlNo" runat="server"
+                                    Text='<%# Eval("Sl_No") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:BoundField DataField="Unit" HeaderText="Unit" />
-                    <asp:BoundField DataField="Vendor_Code" HeaderText="Vendor Code" />
-                    <asp:BoundField DataField="Vendor_Name" HeaderText="Vendor Name" />
+                        <asp:BoundField DataField="Unit" HeaderText="Unit" />
+                        <asp:BoundField DataField="Vendor_Code" HeaderText="Vendor Code" />
+                        <asp:BoundField DataField="Vendor_Name" HeaderText="Vendor Name" />
 
-                    <%-- <asp:TemplateField HeaderText="No. of Counts"
+                        <%-- <asp:TemplateField HeaderText="No. of Counts"
                                         HeaderStyle-HorizontalAlign="Center"
                                         ItemStyle-HorizontalAlign="Center">
                                         <itemtemplate>
@@ -797,79 +805,80 @@
                                         </itemtemplate>
                                     </asp:TemplateField>--%>
 
-                    <asp:TemplateField HeaderText="No. of Counts For Delivery"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNoOfCountsForDelivery" runat="server"
-                                Text='<%# Eval("No_Of_Counts_For_Delivery") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="No. of Counts For Delivery"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNoOfCountsForDelivery" runat="server"
+                                    Text='<%# Eval("No_Of_Counts_For_Delivery") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="No. of Counts For Quality"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNoOfCountsForQuality" runat="server"
-                                Text='<%# Eval("No_Of_Counts_For_Quality") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="No. of Counts For Quality"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNoOfCountsForQuality" runat="server"
+                                    Text='<%# Eval("No_Of_Counts_For_Quality") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="No. of Rejected Deliveries"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNoOfRejectedDeliveries" runat="server"
-                                Text='<%# Eval("No_Of_Rejected_Deliveries") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="No. of Rejected Deliveries"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNoOfRejectedDeliveries" runat="server"
+                                    Text='<%# Eval("No_Of_Rejected_Deliveries") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Quality"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblQuality" runat="server"
-                                Text='<%# Eval("Quality") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Quality"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblQuality" runat="server"
+                                    Text='<%# Eval("Quality") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Delivery"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDelivery" runat="server"
-                                Text='<%# Eval("Delivery") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Delivery"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDelivery" runat="server"
+                                    Text='<%# Eval("Delivery") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="No. Of Delays"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNoOfDelays" runat="server"
-                                Text='<%# Eval("No_Of_Delays") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="No. Of Delays"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNoOfDelays" runat="server"
+                                    Text='<%# Eval("No_Of_Delays") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Commulative"
-                        HeaderStyle-HorizontalAlign="Center"
-                        ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCommulative" runat="server"
-                                Text='<%# Eval("Commulative") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Commulative"
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCommulative" runat="server"
+                                    Text='<%# Eval("Commulative") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-        </div>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+            </div>
 
+        </fieldset>
     </div>
 
 
@@ -930,7 +939,7 @@
 
             <div class="popup-grid-container">
 
-                <asp:GridView 
+                <asp:GridView
                     CssClass="popup-grid"
                     ID="gvMRNDetailReport" runat="server" AutoGenerateColumns="true" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" PageSize="20" Width="100%" HorizontalAlign="Center"

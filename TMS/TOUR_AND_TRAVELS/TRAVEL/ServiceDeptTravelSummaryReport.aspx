@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Monthly Summary Report (Service Department)" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ServiceDeptTravelSummaryReport.aspx.cs" Inherits="TOUR_AND_TRAVELS_TRAVEL_ServiceDeptTravelSummaryReport" %>
 
 
@@ -250,16 +250,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Monthly Summary Report (Service Department):
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
 
                     <label>Start Date</label>
                     <table>
                         <tr>
-                            <td align="left" style="width: 23%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox
                                     ID="txtStartDate"
                                     runat="server"
@@ -270,16 +270,18 @@
                                     TargetControlID="txtStartDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChanged">
                                 </asp:CalendarExtender>
                             </td>
-                            <td align="left" style="width: 5%;">
+                            <td>
                                 <asp:ImageButton ID="imgbtnStartDate" runat="server" ImageUrl="~/Images/Calendar2.png"
                                     ToolTip="Start Date Calendar" />
                             </td>
                         </tr>
                     </table>
+
+
                     <label>End Date</label>
                     <table>
                         <tr>
-                            <td style="width: 24%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox
                                     ID="txtEndDate"
                                     runat="server"
@@ -290,67 +292,70 @@
                                     TargetControlID="txtEndDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChanged">
                                 </asp:CalendarExtender>
                             </td>
-                            <td align="left" style="width: 5%;">
+                            <td>
                                 <asp:ImageButton ID="imgbtnEndDate" runat="server" ImageUrl="~/Images/Calendar2.png"
                                     ToolTip="End Date Calendar" />
                             </td>
                         </tr>
                     </table>
 
-                    &nbsp;
-
-                 <asp:Button ID="Button1"
-                     OnClick="btnSearch_Click"
-                     runat="server"
-                     Text="Search"
-                     CssClass="button" />
-
-                    &nbsp;
-
-                    <asp:Button ID="Button2"
-                        OnClick="btnExport_Click"
-                        runat="server"
-                        Text="Export"
-                        CssClass="button" />
-
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
+                <asp:Button ID="Button1"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+                <asp:Button ID="Button2"
+                    OnClick="btnExport_Click"
+                    runat="server"
+                    Text="Export"
+                    CssClass="button" />
             </div>
-
-            <asp:GridView ID="gvServiceDeptTravelList"
-                runat="server"
-                CssClass="employee-grid"
-                AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-
-                    <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="TOTAL_WORKING_DAYS" HeaderText="TOTAL_WORKING_DAYS" />
-                    <%--<asp:BoundField DataField="ESS_OD_DAYS" HeaderText="ESS_OD_DAYS" />--%>
-                    <asp:BoundField DataField="TOTAL_TOUR_DAYS" HeaderText="TOTAL_TOUR_DAYS" />
-                    <asp:BoundField DataField="TOTAL_BILLABLE_DAYS" HeaderText="TOTAL_BILLABLE_DAYS" />
-                    <asp:BoundField DataField="TOTAL_NON_BILLABLE_DAYS" HeaderText="TOTAL_NON_BILLABLE_DAYS" />
-                    <asp:BoundField DataField="TOTAL_INVOICE_AMOUNT" HeaderText="TOTAL_INVOICE_AMOUNT" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Monthly Summary Report (Service Department):
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView ID="gvServiceDeptTravelList"
+                    runat="server"
+                    CssClass="employee-grid"
+                    AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+
+                        <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="TOTAL_WORKING_DAYS" HeaderText="TOTAL_WORKING_DAYS" />
+                        <%--<asp:BoundField DataField="ESS_OD_DAYS" HeaderText="ESS_OD_DAYS" />--%>
+                        <asp:BoundField DataField="TOTAL_TOUR_DAYS" HeaderText="TOTAL_TOUR_DAYS" />
+                        <asp:BoundField DataField="TOTAL_BILLABLE_DAYS" HeaderText="TOTAL_BILLABLE_DAYS" />
+                        <asp:BoundField DataField="TOTAL_NON_BILLABLE_DAYS" HeaderText="TOTAL_NON_BILLABLE_DAYS" />
+                        <asp:BoundField DataField="TOTAL_INVOICE_AMOUNT" HeaderText="TOTAL_INVOICE_AMOUNT" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+            </div>
+        </fieldset>
     </div>
 </asp:Content>

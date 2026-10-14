@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - VCM - Approvers List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ApproversList.aspx.cs"
     Inherits="VENDOR_CUSTOMER_MGMT_MASTERS_ApproversList" %>
 
@@ -95,13 +95,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Approvers List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Entity Type:</label>
                     <asp:DropDownList ID="ddlEntityType" runat="server"
@@ -131,55 +129,61 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Approvers List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvEmployeeList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvEmployeeList_RowCommand"
+                    OnRowDataBound="gvEmployeeList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
+                                <asp:Label ID="lblEntityTypeFID" runat="server" Visible="false" Text='<%# Eval("ENTITY_TYPE_FID") %>' />
+                                <asp:Label ID="lblApproverTypeFID" runat="server" Visible="false" Text='<%# Eval("APPROVER_TYPE_FID") %>' />
+                                <asp:Label ID="lblApproverID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_FID") %>' />
+                                <asp:Label ID="lblIsDeleted" runat="server" Visible="false" Text='<%# Eval("IS_DELETED") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Approver Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="ENTITY_TYPE" HeaderText="Entity Type" />
+                        <asp:BoundField DataField="APPROVER_TYPE" HeaderText="Approver Type" />
+                        <asp:BoundField DataField="APPROVER" HeaderText="Approver" />
+                        <asp:BoundField DataField="APPROVER_EMAIL_ID" HeaderText="Email" />
+
+
+                        <asp:TemplateField HeaderText="Is Active" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsActive" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvEmployeeList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvEmployeeList_RowCommand"
-                OnRowDataBound="gvEmployeeList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
-                            <asp:Label ID="lblEntityTypeFID" runat="server" Visible="false" Text='<%# Eval("ENTITY_TYPE_FID") %>' />
-                            <asp:Label ID="lblApproverTypeFID" runat="server" Visible="false" Text='<%# Eval("APPROVER_TYPE_FID") %>' />
-                            <asp:Label ID="lblApproverID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_FID") %>' />
-                            <asp:Label ID="lblIsDeleted" runat="server" Visible="false" Text='<%# Eval("IS_DELETED") %>' />
-
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Approver Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="ENTITY_TYPE" HeaderText="Entity Type" />
-                    <asp:BoundField DataField="APPROVER_TYPE" HeaderText="Approver Type" />
-                    <asp:BoundField DataField="APPROVER" HeaderText="Approver" />
-                    <asp:BoundField DataField="APPROVER_EMAIL_ID" HeaderText="Email" />
-
-
-                    <asp:TemplateField HeaderText="Is Active" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsActive" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-        </div>
+        </fieldset>
 
     </div>
 
@@ -209,17 +213,17 @@
                 <div class="form-grid form-grid-2">
 
                     <label>Entity Type:</label>
-                    <asp:DropDownList ID="ddlEntityTypeToS" runat="server" 
+                    <asp:DropDownList ID="ddlEntityTypeToS" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Approver Type:</label>
-                    <asp:DropDownList ID="ddlApproverTypeToS" runat="server" 
+                    <asp:DropDownList ID="ddlApproverTypeToS" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Approver:</label>
-                    <asp:DropDownList ID="ddlApproverToS" runat="server" 
+                    <asp:DropDownList ID="ddlApproverToS" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 

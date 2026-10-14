@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - MR Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="MRReport.aspx.cs" Inherits="PROJECT_MGMT_MRReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -264,18 +264,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>MR Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -295,7 +293,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -324,66 +322,70 @@
                     <asp:TextBox ID="txtMRNo" runat="server"
                         CssClass="form-control"></asp:TextBox>
 
-
-                    <div class="full-width button-group">
-
-                        <asp:Button ID="btnSearch" CssClass="button" Width="95%" runat="server" Text="Search"
-                            OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
-
-                        <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                            OnClick="btnExport_Click" />
-
-                    </div>
-
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnSearch" CssClass="button" Width="95%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
+
             </div>
-
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvMRList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" PageSize="15" Width="100%" HorizontalAlign="Center"
-                AllowPaging="True" OnPageIndexChanging="gvMRList_PageIndexChanging" OnRowDataBound="gvMRList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="MR_NO" HeaderText="MR_NO" />
-                    <asp:BoundField DataField="PROJECT_NO" HeaderText="PROJECT_NO" />
-                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="PRODUCT_CODE" />
-                    <asp:BoundField DataField="DOCUMENT_CLASS" HeaderText="DOCUMENT_CLASS" />
-                    <asp:BoundField DataField="MR_TYPE" HeaderText="MR_TYPE" />
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="UNIT" />
-                    <asp:BoundField DataField="DESCRIPTION" HeaderText="DESCRIPTION" />
-                    <asp:BoundField DataField="UINT_OF_MEASUREMENT" HeaderText="UOM" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
-                    <asp:BoundField DataField="ADDITIONAL_DESCRIPTION" HeaderText="ADDITIONAL_DESCRIPTION" />
-                    <asp:BoundField DataField="EXPECTED_PO_DATE" HeaderText="EXPECTED_PO_DATE" />
-                    <asp:BoundField DataField="DELIVERY_REQUIRED_BY" HeaderText="DELIVERY_REQUIRED_BY" />
-                    <asp:BoundField DataField="AV1" HeaderText="AV1" />
-                    <asp:BoundField DataField="AV2" HeaderText="AV2" />
-                    <asp:BoundField DataField="AV3" HeaderText="AV3" />
-                    <asp:BoundField DataField="AV4" HeaderText="AV4" />
-                    <asp:BoundField DataField="AV5" HeaderText="AV5" />
-                    <asp:BoundField DataField="BUDGET" HeaderText="BUDGET" />
-                    <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
-                    <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>MR Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvMRList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="15" Width="100%" HorizontalAlign="Center"
+                    AllowPaging="True" OnPageIndexChanging="gvMRList_PageIndexChanging" OnRowDataBound="gvMRList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="MR_NO" HeaderText="MR_NO" />
+                        <asp:BoundField DataField="PROJECT_NO" HeaderText="PROJECT_NO" />
+                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="PRODUCT_CODE" />
+                        <asp:BoundField DataField="DOCUMENT_CLASS" HeaderText="DOCUMENT_CLASS" />
+                        <asp:BoundField DataField="MR_TYPE" HeaderText="MR_TYPE" />
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="UNIT" />
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="DESCRIPTION" />
+                        <asp:BoundField DataField="UINT_OF_MEASUREMENT" HeaderText="UOM" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
+                        <asp:BoundField DataField="ADDITIONAL_DESCRIPTION" HeaderText="ADDITIONAL_DESCRIPTION" />
+                        <asp:BoundField DataField="EXPECTED_PO_DATE" HeaderText="EXPECTED_PO_DATE" />
+                        <asp:BoundField DataField="DELIVERY_REQUIRED_BY" HeaderText="DELIVERY_REQUIRED_BY" />
+                        <asp:BoundField DataField="AV1" HeaderText="AV1" />
+                        <asp:BoundField DataField="AV2" HeaderText="AV2" />
+                        <asp:BoundField DataField="AV3" HeaderText="AV3" />
+                        <asp:BoundField DataField="AV4" HeaderText="AV4" />
+                        <asp:BoundField DataField="AV5" HeaderText="AV5" />
+                        <asp:BoundField DataField="BUDGET" HeaderText="BUDGET" />
+                        <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
+                        <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+        </fieldset>
 
     </div>
 

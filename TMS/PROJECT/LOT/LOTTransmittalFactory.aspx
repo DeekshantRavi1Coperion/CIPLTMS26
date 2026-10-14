@@ -1165,7 +1165,8 @@
             <div class="form-grid form-grid-2">
 
                 <label>LOT Type</label>
-                <asp:DropDownList ID="ddlLOTType" runat="server" Width="100%" Height="26px"
+                <asp:DropDownList ID="ddlLOTType" runat="server" 
+                    CssClass="form-control"
                     OnSelectedIndexChanged="ddlLOTType_SelectedIndexChanged" AutoPostBack="true">
                     <asp:ListItem Text="New" Value="1" />
                     <asp:ListItem Text="Revision" Value="2" />
@@ -2162,7 +2163,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>

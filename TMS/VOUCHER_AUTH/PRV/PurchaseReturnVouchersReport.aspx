@@ -1,5 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    CodeFile="PurchaseReturnVouchersReport.aspx.cs" Inherits="VOUCHER_AUTH_PRV_PurchaseReturnVouchersReport" %>
+﻿<%@ Page Title="CIPLTMS - PRV - Purchase Return Vouchers Report" Language="C#" MasterPageFile="~/HOME.master"
+    AutoEventWireup="true"
+    CodeFile="PurchaseReturnVouchersReport.aspx.cs"
+    Inherits="VOUCHER_AUTH_PRV_PurchaseReturnVouchersReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -373,7 +375,7 @@
             }
     </style>
 
-   
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <asp:ToolkitScriptManager ID="ScriptManager2" runat="server">
@@ -387,13 +389,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Purchase Return Vouchers Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Select/Unselect Dates:</label>
                     <table width="100%">
@@ -419,7 +419,7 @@
                         <label>Date Filter:</label>
                         <table style="width: 100%;">
                             <tr>
-                                <td style="width: 20%;">
+                                <td style="width: 30%;">
                                     <asp:DropDownList ID="ddlDateSignToS" runat="server"
                                         CssClass="form-control"
                                         onchange="EnableEndDateSearch()">
@@ -431,8 +431,7 @@
                                         <asp:ListItem Text="=" Value="="></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
-                                <td>&nbsp;</td>
-                                <td style="width: 75%;">
+                                <td>
                                     <asp:DropDownList ID="ddlDateTypeToS" runat="server"
                                         CssClass="form-control">
                                         <asp:ListItem Text="Voucher Date" Value="VOUCHER_DATE"></asp:ListItem>
@@ -447,7 +446,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -466,7 +465,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -585,72 +584,80 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Purchase Return Vouchers Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvVouchersList"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvVouchersList_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:BoundField DataField="SR_NO" HeaderText="Sr No." />
+                        <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
+                        <asp:BoundField DataField="STATUS" HeaderText="Status" />
+                        <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
+                        <asp:BoundField DataField="REFERENCE_INVOICE_NO" HeaderText="Reference Invoice No" />
+                        <asp:BoundField DataField="REFERENCE_INVOICE_DATE" HeaderText="Reference Invoice Date" />
+                        <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
+                        <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
+                        <asp:BoundField DataField="DOC_CLASS" HeaderText="Class" />
+                        <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency Desc" />
+                        <asp:BoundField DataField="CURRENCY_RATE" HeaderText="Currency Rate" />
+                        <asp:BoundField DataField="GL_CODE" HeaderText="GL Code" />
+                        <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
+                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
+                        <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
+                        <asp:BoundField DataField="UOM" HeaderText="UOM" />
+                        <asp:BoundField DataField="RATE" HeaderText="Rate" />
+                        <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
+                        <asp:BoundField DataField="TERM_AMOUNT" HeaderText="Term Amount" />
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+                        <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Voucher Created By" />
+                        <asp:BoundField DataField="AUTHORIZED_BY" HeaderText="Authorized By" />
+                        <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized On" />
+                        <asp:BoundField DataField="AUTHORIZED_REMARKS" HeaderText="Authorized Remarks" />
+                        <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
+                        <asp:BoundField DataField="APPROVED_ON" HeaderText="Approved On" />
+                        <asp:BoundField DataField="APPROVED_REMARKS" HeaderText="Approved Remarks" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvVouchersList"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvVouchersList_RowDataBound">
-
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:BoundField DataField="SR_NO" HeaderText="Sr No." />
-                    <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
-                    <asp:BoundField DataField="STATUS" HeaderText="Status" />
-                    <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
-                    <asp:BoundField DataField="REFERENCE_INVOICE_NO" HeaderText="Reference Invoice No" />
-                    <asp:BoundField DataField="REFERENCE_INVOICE_DATE" HeaderText="Reference Invoice Date" />
-                    <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />
-                    <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor Name" />
-                    <asp:BoundField DataField="DOC_CLASS" HeaderText="Class" />
-                    <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency Desc" />
-                    <asp:BoundField DataField="CURRENCY_RATE" HeaderText="Currency Rate" />
-                    <asp:BoundField DataField="GL_CODE" HeaderText="GL Code" />
-                    <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
-                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
-                    <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
-                    <asp:BoundField DataField="UOM" HeaderText="UOM" />
-                    <asp:BoundField DataField="RATE" HeaderText="Rate" />
-                    <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
-                    <asp:BoundField DataField="TERM_AMOUNT" HeaderText="Term Amount" />
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-                    <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Voucher Created By" />
-                    <asp:BoundField DataField="AUTHORIZED_BY" HeaderText="Authorized By" />
-                    <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized On" />
-                    <asp:BoundField DataField="AUTHORIZED_REMARKS" HeaderText="Authorized Remarks" />
-                    <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
-                    <asp:BoundField DataField="APPROVED_ON" HeaderText="Approved On" />
-                    <asp:BoundField DataField="APPROVED_REMARKS" HeaderText="Approved Remarks" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 

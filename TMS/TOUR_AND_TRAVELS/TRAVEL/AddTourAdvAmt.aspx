@@ -333,7 +333,7 @@
     </asp:ModalPopupExtender>
     <asp:Panel ID="pnlbtnViewInPDFPopup"
         runat="server"
-        CssClass="popup-pdf">
+        CssClass="popup-layout">
         <table width="100%">
             <tr>
                 <td align="right">

@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS-Transmittal To Factory Report" Language="C#" MasterPageFile="~/HOME.master"
+<%@ Page Title="CIPLTMS - Purchase Order Report (Historical)" Language="C#" MasterPageFile="~/HOME.master"
     AutoEventWireup="true"
     EnableViewState="true" CodeFile="PurchaseOrderReport.aspx.cs"
     Inherits="REPORTS_HISTORICAL_DATA_PurchaseOrderReport" %>
@@ -361,7 +361,7 @@
     </style>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvPoReport.ClientID %>";
         var ScrollHeight = 335;
         window.onload = function () {
@@ -409,7 +409,7 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
-    </script>
+    </script>--%>
 
 
 </asp:Content>
@@ -425,19 +425,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Purchase Order Report (Historical):
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
-
+                <div class="form-filter-grid">
 
                     <label>Order Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -456,7 +453,7 @@
                     <label>Order End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -562,64 +559,70 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Purchase Order Report (Historical):
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPoReport" runat="server"
+                    AutoGenerateColumns="false" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit_Name" />
+                        <asp:BoundField DataField="YEAR" HeaderText="Year" />
+                        <asp:BoundField DataField="ORDER_NO" HeaderText="Order_No" />
+                        <asp:BoundField DataField="ORDER_DATE" HeaderText="Order_Date" />
+                        <asp:BoundField DataField="EXPECTED_DATE" HeaderText="Expected_Date" />
+                        <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor_Name" />
+                        <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor_Code" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="Job_No" />
+                        <asp:BoundField DataField="ORDER_SEQ_NO" HeaderText="Order_Seq_No" />
+                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product_Code" />
+                        <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product_Description" />
+                        <asp:BoundField DataField="ADDITIONAL_DESCRIPTION" HeaderText="Additional_Description" />
+                        <asp:BoundField DataField="PRODUCT_GROUP" HeaderText="Product_Group" />
+                        <asp:BoundField DataField="PRODUCT_SUBGROUP" HeaderText="Product_Subgroup" />
+                        <asp:BoundField DataField="GST_HSN_CODE" HeaderText="Gst_Hsn_Code" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
+                        <asp:BoundField DataField="UOM" HeaderText="Uom" />
+                        <asp:BoundField DataField="CURR_DESC" HeaderText="Curr_Desc" />
+                        <asp:BoundField DataField="CURR_RATE" HeaderText="Curr_Rate" />
+                        <asp:BoundField DataField="RATE" HeaderText="Rate" />
+                        <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
+                        <asp:BoundField DataField="TERM_AMOUNT" HeaderText="Term_Amount" />
+                        <asp:BoundField DataField="FUSER" HeaderText="Fuser" />
+                        <asp:BoundField DataField="IND_NO" HeaderText="Ind_No" />
+                        <asp:BoundField DataField="IND_SEQ" HeaderText="Ind_Seq" />
+                        <asp:BoundField DataField="PIVOT_GROUP" HeaderText="Pivot_Group" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPoReport" runat="server"
-                AutoGenerateColumns="false" CellPadding="4"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit_Name" />
-                    <asp:BoundField DataField="YEAR" HeaderText="Year" />
-                    <asp:BoundField DataField="ORDER_NO" HeaderText="Order_No" />
-                    <asp:BoundField DataField="ORDER_DATE" HeaderText="Order_Date" />
-                    <asp:BoundField DataField="EXPECTED_DATE" HeaderText="Expected_Date" />
-                    <asp:BoundField DataField="VENDOR_NAME" HeaderText="Vendor_Name" />
-                    <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor_Code" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="Job_No" />
-                    <asp:BoundField DataField="ORDER_SEQ_NO" HeaderText="Order_Seq_No" />
-                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product_Code" />
-                    <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product_Description" />
-                    <asp:BoundField DataField="ADDITIONAL_DESCRIPTION" HeaderText="Additional_Description" />
-                    <asp:BoundField DataField="PRODUCT_GROUP" HeaderText="Product_Group" />
-                    <asp:BoundField DataField="PRODUCT_SUBGROUP" HeaderText="Product_Subgroup" />
-                    <asp:BoundField DataField="GST_HSN_CODE" HeaderText="Gst_Hsn_Code" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
-                    <asp:BoundField DataField="UOM" HeaderText="Uom" />
-                    <asp:BoundField DataField="CURR_DESC" HeaderText="Curr_Desc" />
-                    <asp:BoundField DataField="CURR_RATE" HeaderText="Curr_Rate" />
-                    <asp:BoundField DataField="RATE" HeaderText="Rate" />
-                    <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
-                    <asp:BoundField DataField="TERM_AMOUNT" HeaderText="Term_Amount" />
-                    <asp:BoundField DataField="FUSER" HeaderText="Fuser" />
-                    <asp:BoundField DataField="IND_NO" HeaderText="Ind_No" />
-                    <asp:BoundField DataField="IND_SEQ" HeaderText="Ind_Seq" />
-                    <asp:BoundField DataField="PIVOT_GROUP" HeaderText="Pivot_Group" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 
@@ -629,7 +632,7 @@
     <ajax:ModalPopupExtender ID="mpeShowImageFile" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -650,7 +653,7 @@
     <ajax:ModalPopupExtender ID="mpeShowPDFFile" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -659,11 +662,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- SHOW PDF FILE END--%>
 
@@ -674,7 +676,7 @@
         PopupControlID="pnlbtnViewInPDFPopup" CancelControlID="imgBtnViewInPDFPopup"
         BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server" 
+    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -684,11 +686,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewTravelStatementInPDF"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- VIEW DETAIL IN PDF END--%>
 

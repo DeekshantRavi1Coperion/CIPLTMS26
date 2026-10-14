@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Engineering Hours Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="EnggHoursReport.aspx.cs" Inherits="REPORTS_EnggHoursReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -269,17 +269,16 @@
 
 
     <div class="page-layout">
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Engineering Hours Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Start Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -297,7 +296,7 @@
                     <label>End Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -332,66 +331,69 @@
                     </div>
                 </div>
 
-                <div class="full-width button-group">
+            </fieldset>
+            <div class="full-width button-group">
 
-                    <asp:Button ID="btnSearch"
-                        OnClick="btnSearch_Click"
-                        runat="server"
-                        Text="Search"
-                        Width="50%"
-                        CssClass="button" />
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    Width="50%"
+                    CssClass="button" />
 
-                    <asp:Button ID="btnExport"
-                        OnClick="btnExport_Click"
-                        runat="server"
-                        Text="Export"
-                        Width="50%"
-                        CssClass="button" />
+                <asp:Button ID="btnExport"
+                    OnClick="btnExport_Click"
+                    runat="server"
+                    Text="Export"
+                    Width="50%"
+                    CssClass="button" />
 
+            </div>
+        </div>
+
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Engineering Hours Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
                 </div>
 
-
-            </fieldset>
-        </div>
-
-
-        <div class="employee-grid-container">
-
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvTimesheetList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvTimesheetList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="USER_NAME" HeaderText="USER_NAME" />
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
-                    <asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />
-                    <asp:BoundField DataField="START_TIME" HeaderText="START_TIME" />
-                    <asp:BoundField DataField="END_TIME" HeaderText="END_TIME" />
-                    <asp:BoundField DataField="TIME_SPENT" HeaderText="TIME_SPENT" />
-                    <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
-                    <%--<asp:BoundField DataField="TITLE" HeaderText="TITLE" />
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvTimesheetList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvTimesheetList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="USER_NAME" HeaderText="USER_NAME" />
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
+                        <asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />
+                        <asp:BoundField DataField="START_TIME" HeaderText="START_TIME" />
+                        <asp:BoundField DataField="END_TIME" HeaderText="END_TIME" />
+                        <asp:BoundField DataField="TIME_SPENT" HeaderText="TIME_SPENT" />
+                        <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
+                        <%--<asp:BoundField DataField="TITLE" HeaderText="TITLE" />
                                 <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />--%>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
 
-        </div>
-
+            </div>
+        </fieldset>
     </div>
 
 </asp:Content>

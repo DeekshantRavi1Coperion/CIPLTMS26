@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ImportTimesheet.aspx.cs"
-    Inherits="TIMESHEET_ImportTimesheet" Title="CIPLTMS- Import Timesheet" %>
+    Inherits="TIMESHEET_ImportTimesheet" Title="CIPLTMS - Import Timesheet" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -164,154 +164,155 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Import Timesheet:
+
+                <div class="form-filter-grid">
+
+                    <asp:Button
+                        ID="btnGetFormat"
+                        CssClass="button"
+                        Width="100%"
+                        runat="server"
+                        Text="Download Format"
+                        OnClick="btnGetFormat_Click" />
+
+
+                    <label>Browse</label>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <asp:FileUpload ID="fileUploadTimesheet" runat="server"
+                                    CssClass="form-control"
+                                    BorderStyle="Groove" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="divfileUploadTimesheet" style="display: none;">
+                                    <asp:Label ID="lblfileUploadTimesheet" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </fieldset>
+            <div class="full-width button-group">
+                <asp:Button
+                    ID="btnGetTimesheetDetails"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Get Detail" OnClientClick="return ValidateAll();"
+                    OnClick="btnGetTimesheetDetails_Click" />
+
+                <asp:Button
+                    ID="btnSave"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Save"
+                    OnClick="btnSave_Click"
+                    OnClientClick="Confirm();" />
+            </div>
+        </div>
+
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Import Timesheet:
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
 
-
-                <div class="form-grid form-grid-3">
-
-                    <div class="full-width button-group">
-                        <asp:Button
-                            ID="btnGetFormat"
-                            CssClass="button"
-                            Width="100%"
-                            runat="server"
-                            Text="Download Format"
-                            OnClick="btnGetFormat_Click" />
-
-
-                        <label>Browse</label>
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <asp:FileUpload ID="fileUploadTimesheet" runat="server"
-                                        CssClass="form-control"
-                                        BorderStyle="Groove" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="divfileUploadTimesheet" style="display: none;">
-                                        <asp:Label ID="lblfileUploadTimesheet" runat="server" ForeColor="Red" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="full-width button-group">
-                        <asp:Button
-                            ID="btnGetTimesheetDetails"
-                            CssClass="button"
-                            Width="100%"
-                            runat="server"
-                            Text="Get Detail" OnClientClick="return ValidateAll();"
-                            OnClick="btnGetTimesheetDetails_Click" />
-
-                        <asp:Button
-                            ID="btnSave"
-                            CssClass="button"
-                            Width="100%"
-                            runat="server"
-                            Text="Save"
-                            OnClick="btnSave_Click"
-                            OnClientClick="Confirm();" />
-                    </div>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
                 </div>
-            </fieldset>
-        </div>
 
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvTimesheet" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                    HorizontalAlign="Center" OnRowDataBound="gvTimesheet_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                        <asp:TemplateField HeaderText="User_Name">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlUserName" runat="server" Width="120px" />
+                                <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
+                                <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID" ) %>' />
+                                <asp:Label ID="lblProjectCategory" runat="server" Visible="false" Text='<%# Eval("PROJECT_CATETORY" ) %>' />
+                                <asp:Label ID="lblProjectNumber" runat="server" Visible="false" Text='<%# Eval("PROJECT_NUMBER" ) %>' />
+                                <asp:Label ID="lblJobNumber" runat="server" Visible="false" Text='<%# Eval("JOB_NUMBER" ) %>' />
+                                <asp:Label ID="lblDrwaingCategory" runat="server" Visible="false" Text='<%# Eval("DRAWING_CATEGORY" ) %>' />
+                                <asp:Label ID="lblSerialNumber" runat="server" Visible="false" Text='<%# Eval("SERIAL_NUMBER" ) %>' />
+                                <asp:Label ID="lblSize" runat="server" Visible="false" Text='<%# Eval("SIZE" ) %>' />
+                                <asp:Label ID="lblRev" runat="server" Visible="false" Text='<%# Eval("REV" ) %>' />
+                                <asp:Label ID="lblSheets" runat="server" Visible="false" Text='<%# Eval("SHEETS" ) %>' />
+                                <asp:Label ID="lblDrawingID" runat="server" Visible="false" Text='<%# Eval("DRAWING_ID" ) %>' />
+                                <asp:Label ID="lblDrawingTypeID" runat="server" Visible="false" Text='<%# Eval("DRAWING_TYPE_ID" ) %>' />
+                                <asp:Label ID="lblTimeSpent" runat="server" Visible="false" Text='<%# Eval("TIME_SPENT" ) %>' />
+                                <asp:Label ID="lblTitle" runat="server" Visible="false" Text='<%# Eval("TITLE" ) %>' />
+                                <asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("REMARKS" ) %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Entry_Date">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtEntryDate" runat="server" Width="100px" onkeyDown="javascript:preventInput(event);" Text='<%# Eval("ENTRY_DATE") %>' />
+                                <ajax:CalendarExtender ID="calendarEntryDate" PopupButtonID="imgbtnEntryDate"
+                                    runat="server" TargetControlID="txtEntryDate" Format="dd-MMM-yyyy">
+                                </ajax:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnEntryDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Entry Date" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField HeaderText="Project_Category" DataField="PROJECT_CATETORY" />
+                        <asp:BoundField HeaderText="Project_Number" DataField="PROJECT_NUMBER" />
+                        <asp:BoundField HeaderText="Job_Number" DataField="JOB_NUMBER" />
+                        <asp:BoundField HeaderText="Drawing_Category" DataField="DRAWING_CATEGORY" />
+                        <asp:BoundField HeaderText="Serial_Number" DataField="SERIAL_NUMBER" />
+                        <asp:BoundField HeaderText="Size" DataField="SIZE" />
+                        <asp:BoundField HeaderText="Rev" DataField="REV" />
+                        <asp:BoundField HeaderText="Sheets" DataField="SHEETS" />
+                        <asp:BoundField HeaderText="Drawing_ID" DataField="DRAWING_ID" />
+
+                        <asp:TemplateField HeaderText="Drawing_Type">
+                            <ItemTemplate>
+                                <asp:DropDownList ID="ddlDrawingType" runat="server" Width="120px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Start_Time">
+                            <ItemTemplate>
+                                <asp:Label ID="lblStartTime" runat="server" Text='<%# Eval("START_TIME" ) %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="End_Time">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEndTime" runat="server" Text='<%# Eval("END_TIME" ) %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="Time_Spent" HeaderText="TIME_SPENT" />
+                        <asp:BoundField DataField="Title" HeaderText="TITLE" />
+                        <asp:BoundField DataField="Remarks" HeaderText="REMARKS" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvTimesheet" runat="server" AutoGenerateColumns="False"
-                CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                HorizontalAlign="Center" OnRowDataBound="gvTimesheet_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-
-                    <asp:TemplateField HeaderText="User_Name">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlUserName" runat="server" Width="120px" />
-                            <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
-                            <asp:Label ID="lblEmpRecordID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID" ) %>' />
-                            <asp:Label ID="lblProjectCategory" runat="server" Visible="false" Text='<%# Eval("PROJECT_CATETORY" ) %>' />
-                            <asp:Label ID="lblProjectNumber" runat="server" Visible="false" Text='<%# Eval("PROJECT_NUMBER" ) %>' />
-                            <asp:Label ID="lblJobNumber" runat="server" Visible="false" Text='<%# Eval("JOB_NUMBER" ) %>' />
-                            <asp:Label ID="lblDrwaingCategory" runat="server" Visible="false" Text='<%# Eval("DRAWING_CATEGORY" ) %>' />
-                            <asp:Label ID="lblSerialNumber" runat="server" Visible="false" Text='<%# Eval("SERIAL_NUMBER" ) %>' />
-                            <asp:Label ID="lblSize" runat="server" Visible="false" Text='<%# Eval("SIZE" ) %>' />
-                            <asp:Label ID="lblRev" runat="server" Visible="false" Text='<%# Eval("REV" ) %>' />
-                            <asp:Label ID="lblSheets" runat="server" Visible="false" Text='<%# Eval("SHEETS" ) %>' />
-                            <asp:Label ID="lblDrawingID" runat="server" Visible="false" Text='<%# Eval("DRAWING_ID" ) %>' />
-                            <asp:Label ID="lblDrawingTypeID" runat="server" Visible="false" Text='<%# Eval("DRAWING_TYPE_ID" ) %>' />
-                            <asp:Label ID="lblTimeSpent" runat="server" Visible="false" Text='<%# Eval("TIME_SPENT" ) %>' />
-                            <asp:Label ID="lblTitle" runat="server" Visible="false" Text='<%# Eval("TITLE" ) %>' />
-                            <asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("REMARKS" ) %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Entry_Date">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtEntryDate" runat="server" Width="100px" onkeyDown="javascript:preventInput(event);" Text='<%# Eval("ENTRY_DATE") %>' />
-                            <ajax:CalendarExtender ID="calendarEntryDate" PopupButtonID="imgbtnEntryDate"
-                                runat="server" TargetControlID="txtEntryDate" Format="dd-MMM-yyyy">
-                            </ajax:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnEntryDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Entry Date" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField HeaderText="Project_Category" DataField="PROJECT_CATETORY" />
-                    <asp:BoundField HeaderText="Project_Number" DataField="PROJECT_NUMBER" />
-                    <asp:BoundField HeaderText="Job_Number" DataField="JOB_NUMBER" />
-                    <asp:BoundField HeaderText="Drawing_Category" DataField="DRAWING_CATEGORY" />
-                    <asp:BoundField HeaderText="Serial_Number" DataField="SERIAL_NUMBER" />
-                    <asp:BoundField HeaderText="Size" DataField="SIZE" />
-                    <asp:BoundField HeaderText="Rev" DataField="REV" />
-                    <asp:BoundField HeaderText="Sheets" DataField="SHEETS" />
-                    <asp:BoundField HeaderText="Drawing_ID" DataField="DRAWING_ID" />
-
-                    <asp:TemplateField HeaderText="Drawing_Type">
-                        <ItemTemplate>
-                            <asp:DropDownList ID="ddlDrawingType" runat="server" Width="120px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Start_Time">
-                        <ItemTemplate>
-                            <asp:Label ID="lblStartTime" runat="server" Text='<%# Eval("START_TIME" ) %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="End_Time">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEndTime" runat="server" Text='<%# Eval("END_TIME" ) %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="Time_Spent" HeaderText="TIME_SPENT" />
-                    <asp:BoundField DataField="Title" HeaderText="TITLE" />
-                    <asp:BoundField DataField="Remarks" HeaderText="REMARKS" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
+        </fieldset>
 
     </div>
 

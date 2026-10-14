@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="PostedBillsInDetailsTwo.aspx.cs"
-    Inherits="USGAAP_BILLING_PostedBillsInDetailsTwo" Title="USGAAP Billing - Posted List In Detail" %>
+    Inherits="USGAAP_BILLING_PostedBillsInDetailsTwo" Title="CIPLTMS - USGAAP Billing - Posted List In Detail" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -505,7 +505,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" type="text/javascript"></script>
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvPostedList.ClientID %>";
         var ScrollHeight = 490;
         window.onload = function () {
@@ -560,7 +560,7 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
-    </script>
+    </script>--%>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
@@ -572,16 +572,15 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Posted List In Detail:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -600,7 +599,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -631,32 +630,31 @@
                     <label>Company</label>
                     <asp:DropDownList ID="ddlCompany" runat="server"
                         CssClass="form-control" />
-
-
-                    &nbsp;
-                    <asp:Button
-                        ID="btnSearch"
-                        CssClass="button"
-                        Width="100%"
-                        runat="server"
-                        Text="Search"
-                        OnClick="btnSearch_Click" />
-
-                    &nbsp;
-                    <asp:Button
-                        ID="btnExport"
-                        CssClass="button"
-                        Width="100%"
-                        runat="server"
-                        Text="Export"
-                        OnClick="btnExport_Click" />
-
                 </div>
-
-
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button
+                    ID="btnSearch"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Search"
+                    OnClick="btnSearch_Click" />
+
+                <asp:Button
+                    ID="btnExport"
+                    CssClass="button"
+                    Width="100%"
+                    runat="server"
+                    Text="Export"
+                    OnClick="btnExport_Click" />
+            </div>
         </div>
 
+
+        <fieldset class="employee-grid-fieldset">
+                <legend>Posted List In Detail:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
         <div class="employee-grid-container">
             <div align="center">
@@ -751,6 +749,7 @@
 
 
         </div>
+            </fieldset>
 
     </div>
 

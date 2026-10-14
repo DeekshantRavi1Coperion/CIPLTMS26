@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="ImportCostCenterTwo.aspx.cs"
-    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_ImportCostCenterTwo" Title="Untitled Page" %>
+    Inherits="REPORTS_SALE_ORDER_GROSS_MARGIN_ImportCostCenterTwo" Title="CIPLTMS - Import Cost Center" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -249,7 +249,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvCostCenter.ClientID %>";
         var ScrollHeight = 380;
         window.onload = function () {
@@ -297,7 +297,7 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
-    </script>
+    </script>--%>
 
 
 </asp:Content>
@@ -312,68 +312,60 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Import Cost Center:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
-                    <div class="full-width button-group">
+                    <asp:Button ID="btnGetFormat" CssClass="button" Width="100%" runat="server"
+                        Text="Download Format" OnClick="btnGetFormat_Click" />
 
-                        <asp:Button ID="btnGetFormat" CssClass="button" Width="100%" runat="server"
-                            Text="Download Format" OnClick="btnGetFormat_Click" />
+                    <label>Month:</label>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);"
+                                    CssClass="form-control"></asp:TextBox>
+                                <asp:HiddenField ID="hdPostingMonth" runat="server" />
+                                <ajax:CalendarExtender ID="calendarPostingMonth" runat="server" OnClientHidden="onCalendarHidden"
+                                    PopupButtonID="imgbtnPostingMonth" OnClientShown="onCalendarShown" Format="MM/yyyy"
+                                    BehaviorID="calendarPostingMonth" TargetControlID="txtPostingMonth"
+                                    OnClientDateSelectionChanged="clientChangedPostingMonth">
+                                </ajax:CalendarExtender>
+                                <ajax:FilteredTextBoxExtender ID="FilteredTextBoxExtender1" runat="server" TargetControlID="txtPostingMonth"
+                                    FilterType="Custom, Numbers" ValidChars="/" Enabled="True" />
+                            </td>
+                            <td align="right">
+                                <asp:ImageButton ID="imgbtnPostingMonth" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Posting Month Calendar" Width="20px" />
+                            </td>
+                        </tr>
+                    </table>
 
-                        <label>Month:</label>
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <asp:TextBox ID="txtPostingMonth" runat="server" onkeyDown="javascript:preventInput(event);"
-                                        CssClass="form-control"></asp:TextBox>
-                                    <asp:HiddenField ID="hdPostingMonth" runat="server" />
-                                    <ajax:CalendarExtender ID="calendarPostingMonth" runat="server" OnClientHidden="onCalendarHidden"
-                                        PopupButtonID="imgbtnPostingMonth" OnClientShown="onCalendarShown" Format="MM/yyyy"
-                                        BehaviorID="calendarPostingMonth" TargetControlID="txtPostingMonth"
-                                        OnClientDateSelectionChanged="clientChangedPostingMonth">
-                                    </ajax:CalendarExtender>
-                                    <ajax:FilteredTextBoxExtender ID="FilteredTextBoxExtender1" runat="server" TargetControlID="txtPostingMonth"
-                                        FilterType="Custom, Numbers" ValidChars="/" Enabled="True" />
-                                </td>
-                                <td align="right">
-                                    <asp:ImageButton ID="imgbtnPostingMonth" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                        ToolTip="Posting Month Calendar" Width="20px" />
-                                </td>
-                            </tr>
-                        </table>
+                    <label>Company:</label>
+                    <asp:DropDownList ID="ddlCompany" runat="server"
+                        CssClass="form-control" />
 
-                        <label>Company:</label>
-                        <asp:DropDownList ID="ddlCompany" runat="server"
-                            CssClass="form-control" />
 
-                    </div>
-
-                    <div class="full-width">
-                        <label>Browse:</label>
-                        <table>
-                            <tr>
-                                <td>
-                                    <asp:FileUpload ID="fileUploadCostCenter" runat="server"
-                                        CssClass="form-control"
-                                        BorderStyle="Groove" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="divfileUploadCostCenter" style="display: none;">
-                                        <asp:Label ID="lblfileUploadCostCenter" runat="server" ForeColor="Red" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
+                    <label>Browse:</label>
+                    <table>
+                        <tr>
+                            <td>
+                                <asp:FileUpload ID="fileUploadCostCenter" runat="server"
+                                    CssClass="form-control"
+                                    BorderStyle="Groove" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="divfileUploadCostCenter" style="display: none;">
+                                    <asp:Label ID="lblfileUploadCostCenter" runat="server" ForeColor="Red" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
+
             </fieldset>
             <div class="full-width button-group">
 
@@ -388,104 +380,111 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Import Cost Center:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:UpdatePanel runat="server" ID="uppanel">
+                    <ContentTemplate>
+                        <asp:GridView
+                            CssClass="employee-grid"
+                            ID="gvCostCenter" runat="server" AutoGenerateColumns="False"
+                            CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
+                            HorizontalAlign="Center" OnRowDataBound="gvCostCenter_RowDataBound">
+                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                            <Columns>
+                                <asp:BoundField DataField="ORDER_NO" HeaderText="ORDER_NO" />
+
+                                <asp:TemplateField HeaderText="COST_CENTER_CODE">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCostCenterID" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_ID" ) %>' />
+
+                                        <asp:Label ID="lblCostCenterCode" runat="server" Visible="true" Text='<%# Eval("COST_CENTER_CODE" ) %>' />
+                                        <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("ORDER_NO" ) %>' />
+                                        <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID" ) %>' />
+                                        <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
+                                        <asp:Label ID="lblStatusID" runat="server" Visible="true" Text='<%# Eval("STATUS_ID" ) %>' />
+
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="COST_CENTER_NAME">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblCostCenterName" runat="server" Visible="true" Text='<%# Eval("COST_CENTER_NAME" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="COST_CENTER_AMOUNT" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtCostCenterAmount" runat="server" Text='<%# Eval("COST_CENTER_AMOUNT" ) %>' Width="100%"
+                                            onkeyDown="javascript:preventInput(event);"
+                                            CssClass="textbox"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="DIRECT_BILLING" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtDirectBilling" runat="server" Text='<%# Eval("DIRECT_BILLING" ) %>' Width="100%"
+                                            onKeyUp="checkDec1(this)" onkeypress="return inNumberKeyWithDecimal(this, event);"
+                                            CssClass="textbox1"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="PARTIAL_BILLING" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtPartialBilling" runat="server" Text='<%# Eval("PARTIAL_BILLING" ) %>' Width="100%"
+                                            onKeyUp="checkDec1(this)" onkeypress="return negNumberKeyWithDecimal(this, event);"
+                                            CssClass="textbox2"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="NET_AMOUNT" HeaderStyle-HorizontalAlign="Right">
+                                    <ItemTemplate>
+                                        <asp:TextBox ID="txtNetAmount" runat="server" Text='<%# Eval("NET_AMOUNT" ) %>'
+                                            Width="100%" onkeyDown="javascript:preventInput(event);" CssClass="textbox3"></asp:TextBox>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="MONTH">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblMonth" runat="server" Visible="true" Text='<%# Eval("MONTH" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="UNIT">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblUnitName" runat="server" Visible="true" Text='<%# Eval("UNIT" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="STATUS">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblStatusName" runat="server" Visible="true" Text='<%# Eval("STATUS_NAME" ) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                            </Columns>
+                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#7C6F57" />
+                            <AlternatingRowStyle BackColor="White" />
+                        </asp:GridView>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
             </div>
 
-            <asp:UpdatePanel runat="server" ID="uppanel">
-                <ContentTemplate>
-                    <asp:GridView 
-                        CssClass="employee-grid"
-                        ID="gvCostCenter" runat="server" AutoGenerateColumns="False"
-                        CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                        HorizontalAlign="Center" OnRowDataBound="gvCostCenter_RowDataBound">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-                            <asp:BoundField DataField="ORDER_NO" HeaderText="ORDER_NO" />
-
-                            <asp:TemplateField HeaderText="COST_CENTER_CODE">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblCostCenterID" runat="server" Visible="false" Text='<%# Eval("COST_CENTER_ID" ) %>' />
-
-                                    <asp:Label ID="lblCostCenterCode" runat="server" Visible="true" Text='<%# Eval("COST_CENTER_CODE" ) %>' />
-                                    <asp:Label ID="lblOrderNo" runat="server" Visible="false" Text='<%# Eval("ORDER_NO" ) %>' />
-                                    <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID" ) %>' />
-                                    <asp:Label ID="lblSRNo" runat="server" Visible="false" Text='<%# Eval("SR_NO" ) %>' />
-                                    <asp:Label ID="lblStatusID" runat="server" Visible="true" Text='<%# Eval("STATUS_ID" ) %>' />
-
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="COST_CENTER_NAME">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblCostCenterName" runat="server" Visible="true" Text='<%# Eval("COST_CENTER_NAME" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="COST_CENTER_AMOUNT" HeaderStyle-HorizontalAlign="Right">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtCostCenterAmount" runat="server" Text='<%# Eval("COST_CENTER_AMOUNT" ) %>' Width="100%"
-                                        onkeyDown="javascript:preventInput(event);"
-                                        CssClass="textbox"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="DIRECT_BILLING" HeaderStyle-HorizontalAlign="Right">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtDirectBilling" runat="server" Text='<%# Eval("DIRECT_BILLING" ) %>' Width="100%"
-                                        onKeyUp="checkDec1(this)" onkeypress="return inNumberKeyWithDecimal(this, event);"
-                                        CssClass="textbox1"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="PARTIAL_BILLING" HeaderStyle-HorizontalAlign="Right">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtPartialBilling" runat="server" Text='<%# Eval("PARTIAL_BILLING" ) %>' Width="100%"
-                                        onKeyUp="checkDec1(this)" onkeypress="return negNumberKeyWithDecimal(this, event);"
-                                        CssClass="textbox2"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="NET_AMOUNT" HeaderStyle-HorizontalAlign="Right">
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtNetAmount" runat="server" Text='<%# Eval("NET_AMOUNT" ) %>'
-                                        Width="100%" onkeyDown="javascript:preventInput(event);" CssClass="textbox3"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="MONTH">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblMonth" runat="server" Visible="true" Text='<%# Eval("MONTH" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="UNIT">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblUnitName" runat="server" Visible="true" Text='<%# Eval("UNIT" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                            <asp:TemplateField HeaderText="STATUS">
-                                <ItemTemplate>
-                                    <asp:Label ID="lblStatusName" runat="server" Visible="true" Text='<%# Eval("STATUS_NAME" ) %>' />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-        </div>
-
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>

@@ -5,18 +5,16 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 
-       <link href="../../Styles/form.css" rel="stylesheet" />
-    <link href="../../Styles/filter.css" rel="stylesheet" />
-   <%-- <link href="../../Styles/grid.css" rel="stylesheet" />--%>
-     <link href="../Styles/grid.css" rel="stylesheet" />
-    <link href="../../Styles/popup.css" rel="stylesheet" />
+    <link href="../Styles/form.css" rel="stylesheet" />
+    <link href="../Styles/filter.css" rel="stylesheet" />
+    <link href="../Styles/grid.css" rel="stylesheet" />
+    <link href="../Styles/popup.css" rel="stylesheet" />
 
 
     <link rel="icon" href="../Images/Icons/Icon04.png" />
     <link href="../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
-        .modalBackground
-        {
+        .modalBackground {
             background-color: Gray;
             filter: alpha(opacity=80);
             opacity: 0.8;
@@ -24,16 +22,16 @@
         }
     </style>
 
-     <script type="text/javascript" language="javascript">
-         function pageLoad() {
-             document.getElementById('<%=txtStartDate.ClientID %>').value = document.getElementById('<%=hdStartDate.ClientID %>').value;
-             document.getElementById('<%=txtEndDate.ClientID %>').value = document.getElementById('<%=hdEndDate.ClientID %>').value;
-         }
+    <script type="text/javascript" language="javascript">
+        function pageLoad() {
+            document.getElementById('<%=txtStartDate.ClientID %>').value = document.getElementById('<%=hdStartDate.ClientID %>').value;
+            document.getElementById('<%=txtEndDate.ClientID %>').value = document.getElementById('<%=hdEndDate.ClientID %>').value;
+        }
 
-         function clientChangedSearch(sender, args) {
+        function clientChangedSearch(sender, args) {
 
-             document.getElementById('<%=hdStartDate.ClientID %>').value = document.getElementById('<%=txtStartDate.ClientID %>').value;
-             document.getElementById('<%=hdEndDate.ClientID %>').value = document.getElementById('<%=txtEndDate.ClientID %>').value;
+            document.getElementById('<%=hdStartDate.ClientID %>').value = document.getElementById('<%=txtStartDate.ClientID %>').value;
+            document.getElementById('<%=hdEndDate.ClientID %>').value = document.getElementById('<%=txtEndDate.ClientID %>').value;
 
             var formatLowerCase = "dd-MMM-yyyy".toLowerCase();
             var formatItems = formatLowerCase.split("-");
@@ -85,62 +83,62 @@
 
             var endFormatLowerCase = "dd-MMM-yyyy".toLowerCase();
             var endFormatItems = endFormatLowerCase.split("-");
-             var endDateItems = document.getElementById('<%=hdEndDate.ClientID %>').value.split("-");
-             var endMonthIndex = endFormatItems.indexOf("mmm");
-             var endDayIndex = endFormatItems.indexOf("dd");
-             var endYearIndex = endFormatItems.indexOf("yyyy");
-             var endMonth;
-             if (endDateItems[endMonthIndex] == 'Jan') {
-                 endMonth = 1;
-             }
-             else if (endDateItems[endMonthIndex] == 'Feb') {
-                 endMonth = 2;
-             }
-             else if (endDateItems[endMonthIndex] == 'Mar') {
-                 endMonth = 3;
-             }
-             else if (endDateItems[endMonthIndex] == 'Apr') {
-                 endMonth = 4;
-             }
-             else if (endDateItems[endMonthIndex] == 'May') {
-                 endMonth = 5;
-             }
-             else if (endDateItems[endMonthIndex] == 'Jun') {
-                 endMonth = 6;
-             }
-             else if (endDateItems[endMonthIndex] == 'Jul') {
-                 endMonth = 7;
-             }
-             else if (endDateItems[endMonthIndex] == 'Aug') {
-                 endMonth = 8;
-             }
-             else if (endDateItems[endMonthIndex] == 'Sep') {
-                 endMonth = 9;
-             }
-             else if (endDateItems[endMonthIndex] == 'Oct') {
-                 endMonth = 10;
-             }
-             else if (endDateItems[endMonthIndex] == 'Nov') {
-                 endMonth = 11;
-             }
-             else if (endDateItems[endMonthIndex] == 'Dec') {
-                 endMonth = 12;
-             }
-             endMonth -= 1;
-             var endFormatedDate = new Date(endDateItems[endYearIndex], endMonth, endDateItems[endDayIndex]);
+            var endDateItems = document.getElementById('<%=hdEndDate.ClientID %>').value.split("-");
+            var endMonthIndex = endFormatItems.indexOf("mmm");
+            var endDayIndex = endFormatItems.indexOf("dd");
+            var endYearIndex = endFormatItems.indexOf("yyyy");
+            var endMonth;
+            if (endDateItems[endMonthIndex] == 'Jan') {
+                endMonth = 1;
+            }
+            else if (endDateItems[endMonthIndex] == 'Feb') {
+                endMonth = 2;
+            }
+            else if (endDateItems[endMonthIndex] == 'Mar') {
+                endMonth = 3;
+            }
+            else if (endDateItems[endMonthIndex] == 'Apr') {
+                endMonth = 4;
+            }
+            else if (endDateItems[endMonthIndex] == 'May') {
+                endMonth = 5;
+            }
+            else if (endDateItems[endMonthIndex] == 'Jun') {
+                endMonth = 6;
+            }
+            else if (endDateItems[endMonthIndex] == 'Jul') {
+                endMonth = 7;
+            }
+            else if (endDateItems[endMonthIndex] == 'Aug') {
+                endMonth = 8;
+            }
+            else if (endDateItems[endMonthIndex] == 'Sep') {
+                endMonth = 9;
+            }
+            else if (endDateItems[endMonthIndex] == 'Oct') {
+                endMonth = 10;
+            }
+            else if (endDateItems[endMonthIndex] == 'Nov') {
+                endMonth = 11;
+            }
+            else if (endDateItems[endMonthIndex] == 'Dec') {
+                endMonth = 12;
+            }
+            endMonth -= 1;
+            var endFormatedDate = new Date(endDateItems[endYearIndex], endMonth, endDateItems[endDayIndex]);
 
-             if (endFormatedDate < formatedDate) {
-                 alert("Invalid Date Range");
-                 return false;
-             }
-         }
-     </script>
+            if (endFormatedDate < formatedDate) {
+                alert("Invalid Date Range");
+                return false;
+            }
+        }
+    </script>
 
-     <script type="text/Javascript">
-         function ValidateDateRange() {
-             var formatLowerCase = "dd-MMM-yyyy".toLowerCase();
-             var formatItems = formatLowerCase.split("-");
-             var dateItems = document.getElementById('<%=hdStartDate.ClientID %>').value.split("-");
+    <script type="text/Javascript">
+        function ValidateDateRange() {
+            var formatLowerCase = "dd-MMM-yyyy".toLowerCase();
+            var formatItems = formatLowerCase.split("-");
+            var dateItems = document.getElementById('<%=hdStartDate.ClientID %>').value.split("-");
             var monthIndex = formatItems.indexOf("mmm");
             var dayIndex = formatItems.indexOf("dd");
             var yearIndex = formatItems.indexOf("yyyy");
@@ -237,7 +235,7 @@
                 return true;
             }
         }
-     </script>
+    </script>
 
     <script type="text/javascript" language="javascript">
         function ValidateAllNew() {
@@ -258,170 +256,114 @@
     <ajax:ToolkitScriptManager ID="ScriptManager2" runat="server">
     </ajax:ToolkitScriptManager>
 
-    <div align="center" style="margin-top: 20px;">
-      <fieldset style="width: 90%">
-          <legend style="text-align: center;">Lesson Learnt Report</legend>
-          <table width="100%">
-              <tr>
-                    <td colspan="2">
-                        &nbsp;
-                    </td>
-                    <td align="right">
-                        From Date:
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtStartDate" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
-                        <asp:HiddenField ID="hdStartDate" runat="server" />
-                        <ajax:CalendarExtender ID="calendarStartDate" PopupButtonID="imgbtnStartDate" runat="server"
-                            TargetControlID="txtStartDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedSearch">
-                        </ajax:CalendarExtender>
-                    </td>
-                    <td>
-                        <asp:ImageButton ID="imgbtnStartDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                            ToolTip="Start Date Calendar" />
-                    </td>
 
-                    <td align="right">
-                        To Date:
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtEndDate" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
-                        <asp:HiddenField ID="hdEndDate" runat="server" />
-                        <ajax:CalendarExtender ID="calendarEndDate" PopupButtonID="imgbtnEndDate" runat="server"
-                            TargetControlID="txtEndDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedSearch">
-                        </ajax:CalendarExtender>
-                    </td>
-                    <td>
-                        <asp:ImageButton ID="imgbtnEndDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                            ToolTip="End Date Calendar" Width="20px" />
-                    </td>
-                  <td></td>
-                    <td align="right">
-                        Initiated By:
-                    </td>
-                    <td>
-                        <asp:DropDownList ID="ddlEmployee" runat="server" Width="100%" Height="26px">
-                        </asp:DropDownList>
-                    </td>
-                  <td colspan="1">
-                        &nbsp;
-                    </td>
-                 
-                    <td align="right">
-                        Department:
-                    </td>
-                    <td>
-                        <asp:DropDownList ID="ddlDepartment" runat="server" Width="80%" Height="26px">
-                        </asp:DropDownList>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        &nbsp;
-                    </td>
-                </tr>
-              <tr>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td align="right">
-                        Unit:
-                    </td>
-                    <td>
-                        <asp:DropDownList ID="ddlUnit" runat="server" Width="100%" Height="26px">
-                        </asp:DropDownList>
-                    </td>
-                    <td>
-                    </td>
-                    <td align="right">
-                        Job No.:
-                    </td>
-                    <td>
-                         <asp:TextBox ID="txtJobNo" runat="server" Width="100%"></asp:TextBox>
-                    </td>
-                    <td colspan="2">
-                        &nbsp;
-                    </td>
-                  <td align="right">
-                        Customer Name:
-                    </td>
-                    <td>
-                        <asp:TextBox ID="txtCustomerName" runat="server" Width="100%"></asp:TextBox>
-                    </td>
-                    <td colspan="1">
-                        &nbsp;
-                    </td>
-                  
-                  <td align="right">
-                        Equipment:
-                    </td>
-                    <td>
-                        <asp:DropDownList ID="ddlEquipments" runat="server" Width="80%" Height="26px">
-                        </asp:DropDownList>
-                    </td>
-                </tr>
-               <tr>
-                    <td>
-                        &nbsp;
-                    </td>
-                </tr>
-              <tr>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td align="right">
-                        Created By:
-                    </td>
-                    <td>
-                        <asp:DropDownList ID="ddlCreatedBy" runat="server" Width="100%" Height="26px">
-                        </asp:DropDownList>
-                    </td>
-                    <td>
-                         &nbsp;
-                    </td>
-                   <td>
-                         &nbsp;
-                    </td>
-                   
-                    <td>
-                        <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                            OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
-                    </td>
-                     <td>
-                         &nbsp;
-                    </td>
-                   <td>
-                         &nbsp;
-                    </td>
-                    <td>
-                        <asp:Button ID="btnExport" CssClass="button" Width="160%" runat="server" Text="Export"
-                            OnClick="btnExport_Click" />
-                    </td>
-                </tr>
-          </table>
-      </fieldset>
-    </div>
-    <br />
-    
-    
-    <div align="center">
-        <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-            <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-        </asp:Panel>
-    </div>
-    <br />
-    <div align="center">
-        <fieldset style="width: 95%;">
-            <legend style="text-align: center;">
-                <asp:Label ID="lblRecords" runat="server" Text="Records[0]"></asp:Label></legend>
-            <div style='overflow: auto; width: 100%; height: 350px; border: 1px solid lightgray;'>
-                <asp:GridView ID="gvLessonLearntList" runat="server" AutoGenerateColumns="False"
+    <div class="page-layout">
+
+        <div class="filter-grid-container">
+            <fieldset class="filter-card">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
+
+                    <label>From Date:</label>
+                    <table>
+                        <tr>
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtStartDate" runat="server" ReadOnly="true"
+                                    CssClass="form-control"></asp:TextBox>
+                                <asp:HiddenField ID="hdStartDate" runat="server" />
+                                <ajax:CalendarExtender ID="calendarStartDate" PopupButtonID="imgbtnStartDate" runat="server"
+                                    TargetControlID="txtStartDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedSearch">
+                                </ajax:CalendarExtender>
+                            </td>
+                            <td>
+                                <asp:ImageButton ID="imgbtnStartDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Start Date Calendar" />
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+                    <label>To Date:</label>
+                    <table>
+                        <tr>
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtEndDate" runat="server" ReadOnly="true"
+                                    CssClass="form-control"></asp:TextBox>
+                                <asp:HiddenField ID="hdEndDate" runat="server" />
+                                <ajax:CalendarExtender ID="calendarEndDate" PopupButtonID="imgbtnEndDate" runat="server"
+                                    TargetControlID="txtEndDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedSearch">
+                                </ajax:CalendarExtender>
+                            </td>
+                            <td>
+                                <asp:ImageButton ID="imgbtnEndDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="End Date Calendar" Width="20px" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <label>Initiated By:</label>
+                    <asp:DropDownList ID="ddlEmployee" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Department:</label>
+                    <asp:DropDownList ID="ddlDepartment" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Unit:</label>
+                    <asp:DropDownList ID="ddlUnit" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Job No.:</label>
+                    <asp:TextBox ID="txtJobNo" runat="server"
+                        CssClass="form-control"></asp:TextBox>
+
+                    <label>Customer Name:</label>
+                    <asp:TextBox ID="txtCustomerName" runat="server"
+                        CssClass="form-control"></asp:TextBox>
+
+                    <label>Equipment:</label>
+                    <asp:DropDownList ID="ddlEquipments" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                    <label>Created By:</label>
+                    <asp:DropDownList ID="ddlCreatedBy" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
+
+                </div>
+            </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClick="btnSearch_Click" OnClientClick="return ValidateAllNew();" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="160%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
+            </div>
+        </div>
+
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Lesson Learnt Report:
+                <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvLessonLearntList" runat="server" AutoGenerateColumns="False"
                     CellPadding="4" ForeColor="#333333" GridLines="Vertical" PageSize="15" Width="100%"
                     HorizontalAlign="Center" OnRowDataBound="gvLessonLearntList_RowDataBound" AllowPaging="True"
                     OnPageIndexChanging="gvLessonLearntList_PageIndexChanging">
@@ -445,7 +387,7 @@
                         <asp:BoundField DataField="PROBLEM_FACED" HeaderText="PROBLEM_FACED" />
                         <asp:BoundField DataField="LESSON_LEARNT" HeaderText="LESSON_LEARNT" />
                         <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY" />
-                      
+
                     </Columns>
                     <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
                     <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
@@ -454,7 +396,9 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
+
             </div>
         </fieldset>
+
     </div>
 </asp:Content>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Timesheet List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="TimesheetListNew.aspx.cs" Inherits="TIMESHEET_TimesheetListNew" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -245,19 +245,19 @@
     </asp:ToolkitScriptManager>
     <%--<asp:UpdatePanel runat="server" ID="uppanel">
         <ContentTemplate>--%>
-    
+
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Timesheet List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
                     <label>Start Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -275,7 +275,7 @@
                     <label>End Date</label>
                     <table>
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -293,75 +293,76 @@
                     <label>JOB No.</label>
                     <asp:TextBox ID="txtJobNo" runat="server" CssClass="form-control"></asp:TextBox>
 
-
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnSearch"
-                     OnClick="btnSearch_Click"
-                     runat="server"
-                     Text="Search"
-                     CssClass="button" />
-
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnAddNewTimeSheet"
-                     OnClick="btnAddNewTimeSheet_Click"
-                     runat="server"
-                     Text="Add New"
-                     CssClass="button" />
-
-                    &nbsp;
-                 &nbsp;
-                 <asp:Button ID="btnExport"
-                     OnClick="btnExport_Click"
-                     runat="server"
-                     Text="Export"
-                     CssClass="button" />
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
 
-        <div class="employee-grid-container">
+                <asp:Button ID="btnAddNewTimeSheet"
+                    OnClick="btnAddNewTimeSheet_Click"
+                    runat="server"
+                    Text="Add New"
+                    CssClass="button" />
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnExport"
+                    OnClick="btnExport_Click"
+                    runat="server"
+                    Text="Export"
+                    CssClass="button" />
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvTimesheetList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="15" 
-                HorizontalAlign="Center"
-                AllowPaging="True" OnPageIndexChanging="gvTimesheetList_PageIndexChanging" OnRowDataBound="gvTimesheetList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
-                    <asp:BoundField DataField="PROJECT_CATETORY" HeaderText="PROJECT_CATETORY" />
-                    <asp:BoundField DataField="PROJECT_NUMBER" HeaderText="PROJECT_NUMBER" />
-                    <asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />
-                    <asp:BoundField DataField="DRAWING_CATEGORY" HeaderText="DRAWING_CATEGORY" />
-                    <asp:BoundField DataField="SERIAL_NUMBER" HeaderText="SERIAL_NUMBER" />
-                    <asp:BoundField DataField="SIZE" HeaderText="SIZE" />
-                    <asp:BoundField DataField="REV" HeaderText="REV" />
-                    <asp:BoundField DataField="SHEETS" HeaderText="SHEETS" />
-                    <asp:BoundField DataField="DRAWING_ID" HeaderText="DRAWING_ID" />
-                    <asp:BoundField DataField="DRAWING_TYPE" HeaderText="DRAWING_TYPE" />
-                    <asp:BoundField DataField="START_TIME" HeaderText="START_TIME" />
-                    <asp:BoundField DataField="END_TIME" HeaderText="END_TIME" />
-                    <asp:BoundField DataField="TIME_SPENT" HeaderText="TIME_SPENT" />
-                    <asp:BoundField DataField="TITLE" HeaderText="TITLE" />
-                    <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
         </div>
+
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Timesheet List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
+
+            <div class="employee-grid-container">
+
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvTimesheetList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="15"
+                    HorizontalAlign="Center"
+                    AllowPaging="True" OnPageIndexChanging="gvTimesheetList_PageIndexChanging" OnRowDataBound="gvTimesheetList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
+                        <asp:BoundField DataField="PROJECT_CATETORY" HeaderText="PROJECT_CATETORY" />
+                        <asp:BoundField DataField="PROJECT_NUMBER" HeaderText="PROJECT_NUMBER" />
+                        <asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />
+                        <asp:BoundField DataField="DRAWING_CATEGORY" HeaderText="DRAWING_CATEGORY" />
+                        <asp:BoundField DataField="SERIAL_NUMBER" HeaderText="SERIAL_NUMBER" />
+                        <asp:BoundField DataField="SIZE" HeaderText="SIZE" />
+                        <asp:BoundField DataField="REV" HeaderText="REV" />
+                        <asp:BoundField DataField="SHEETS" HeaderText="SHEETS" />
+                        <asp:BoundField DataField="DRAWING_ID" HeaderText="DRAWING_ID" />
+                        <asp:BoundField DataField="DRAWING_TYPE" HeaderText="DRAWING_TYPE" />
+                        <asp:BoundField DataField="START_TIME" HeaderText="START_TIME" />
+                        <asp:BoundField DataField="END_TIME" HeaderText="END_TIME" />
+                        <asp:BoundField DataField="TIME_SPENT" HeaderText="TIME_SPENT" />
+                        <asp:BoundField DataField="TITLE" HeaderText="TITLE" />
+                        <asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+            </div>
+        </fieldset>
     </div>
 
     <%-- </ContentTemplate>

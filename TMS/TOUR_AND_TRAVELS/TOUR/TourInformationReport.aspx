@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - Tour Information Report" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="TourInformationReport.aspx.cs" Inherits="TOUR_AND_TRAVELS_TOUR_TourInformationReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
@@ -271,17 +271,16 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Tour Information Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
-                <div class="form-grid form-grid-3">
+                <legend>Filters</legend>
+
+                <div class="form-filter-grid">
 
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDate"
                                     runat="server"
                                     ReadOnly="true"
@@ -301,7 +300,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDate"
                                     runat="server"
                                     ReadOnly="true" CssClass="form-control"></asp:TextBox>
@@ -332,92 +331,94 @@
                         runat="server"
                         CssClass="form-control" />
 
-                    &nbsp;
-                    &nbsp;
-
-                    <asp:Button ID="btnSearch"
-                        OnClick="btnSearch_Click"
-                        runat="server"
-                        Text="Search"
-                        CssClass="button" />
-
-                    &nbsp;
-                    <asp:Button ID="btnExport"
-                        OnClick="btnExport_Click"
-                        runat="server"
-                        Text="Export"
-                        CssClass="button" />
-
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
 
-
-        </div>
-
-
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnExport"
+                    OnClick="btnExport_Click"
+                    runat="server"
+                    Text="Export"
+                    CssClass="button" />
             </div>
 
-            <asp:GridView ID="gvTourList"
-                CssClass="employee-grid"
-                runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="17" Width="100%" HorizontalAlign="Center"
-                AllowPaging="True" OnPageIndexChanging="gvTourList_PageIndexChanging" OnRowDataBound="gvTourList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="TOUR_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblTourStatus" runat="server" Visible="false" Text='<%# Eval("TOUR_STATUS") %>' />
-                            <asp:Label ID="lblTourNo" runat="server" Text='<%# Eval("TOUR_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="TOUR_SANCTION_NO" HeaderText="SANCTION_NO" />
-                    <asp:BoundField DataField="TOUR_STATUS" HeaderText="STATUS" />
-                    <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                    <asp:BoundField DataField="START_DATE" HeaderText="START_DATE" />
-                    <asp:BoundField DataField="END_DATE" HeaderText="END_DATE" />
-                    <asp:BoundField DataField="CUST_VEND_NAME" HeaderText="CUST_VEND_NAME" />
-                    <asp:BoundField DataField="PLACE_OF_VISIT" HeaderText="PLACE_OF_VISIT" />
-                    <%--//////--%>
-                    <asp:BoundField DataField="COUNTRY_OF_VISIT" HeaderText="COUNTRY_OF_VISIT" />
-                    <asp:BoundField DataField="TOUR_BASED_ON" HeaderText="TOUR_BASED_ON" />
-                    <asp:BoundField DataField="TOUR_INITIATIVE" HeaderText="TOUR_INITIATIVE" />
-                    <%-- //////--%>
-                    <asp:BoundField DataField="VISIT_TYPE" HeaderText="VISIT_TYPE" />
-                    <asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />
-                    <asp:BoundField DataField="TRAVEL_MODE" HeaderText="TRAVEL_MODE" />
-                    <asp:BoundField DataField="TRIP_TYPE" HeaderText="TRIP_TYPE" />
-                    <asp:BoundField DataField="LOCAL_TRAVEL_TYPE" HeaderText="LOCAL_TRAVEL_TYPE" />
-                    <asp:BoundField DataField="EXPENDITURE_AMT" HeaderText="EXPENDITURE_AMT" />
-                    <asp:BoundField DataField="EXPENDITURE_CURRENCY" HeaderText="EXPENDITURE_CURRENCY" />
-                    <asp:BoundField DataField="ADVANCE_AMT" HeaderText="ADVANCE_AMT" />
-                    <asp:BoundField DataField="ADVANCE_CURRENCY" HeaderText="ADVANCE_CURRENCY" />
-                    <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY"></asp:BoundField>
-                    <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON"></asp:BoundField>
-                    <asp:BoundField DataField="DELETED_BY" HeaderText="DELETED_BY"></asp:BoundField>
-                    <asp:BoundField DataField="DELETED_ON" HeaderText="DELETED_ON"></asp:BoundField>
-                    <asp:BoundField DataField="APPROVED_BY" HeaderText="APPROVED_BY"></asp:BoundField>
-                    <asp:BoundField DataField="APPROVED_ON" HeaderText="APPROVED_ON"></asp:BoundField>
-                    <asp:BoundField DataField="CANCELLED_BY" HeaderText="CANCELLED_BY"></asp:BoundField>
-                    <asp:BoundField DataField="CANCELLED_ON" HeaderText="CANCELLED_ON"></asp:BoundField>
-                    <asp:BoundField DataField="MODIFIED_BY" HeaderText="MODIFIED_BY"></asp:BoundField>
-                    <asp:BoundField DataField="MODIFIED_ON" HeaderText="MODIFIED_ON"></asp:BoundField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-
         </div>
 
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Tour Information Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView ID="gvTourList"
+                    CssClass="employee-grid"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="17" Width="100%" HorizontalAlign="Center"
+                    AllowPaging="True" OnPageIndexChanging="gvTourList_PageIndexChanging" OnRowDataBound="gvTourList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="TOUR_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblTourStatus" runat="server" Visible="false" Text='<%# Eval("TOUR_STATUS") %>' />
+                                <asp:Label ID="lblTourNo" runat="server" Text='<%# Eval("TOUR_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="TOUR_SANCTION_NO" HeaderText="SANCTION_NO" />
+                        <asp:BoundField DataField="TOUR_STATUS" HeaderText="STATUS" />
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="START_DATE" HeaderText="START_DATE" />
+                        <asp:BoundField DataField="END_DATE" HeaderText="END_DATE" />
+                        <asp:BoundField DataField="CUST_VEND_NAME" HeaderText="CUST_VEND_NAME" />
+                        <asp:BoundField DataField="PLACE_OF_VISIT" HeaderText="PLACE_OF_VISIT" />
+                        <%--//////--%>
+                        <asp:BoundField DataField="COUNTRY_OF_VISIT" HeaderText="COUNTRY_OF_VISIT" />
+                        <asp:BoundField DataField="TOUR_BASED_ON" HeaderText="TOUR_BASED_ON" />
+                        <asp:BoundField DataField="TOUR_INITIATIVE" HeaderText="TOUR_INITIATIVE" />
+                        <%-- //////--%>
+                        <asp:BoundField DataField="VISIT_TYPE" HeaderText="VISIT_TYPE" />
+                        <asp:BoundField DataField="BUS_SEGMENT" HeaderText="BUS_SEGMENT" />
+                        <asp:BoundField DataField="TRAVEL_MODE" HeaderText="TRAVEL_MODE" />
+                        <asp:BoundField DataField="TRIP_TYPE" HeaderText="TRIP_TYPE" />
+                        <asp:BoundField DataField="LOCAL_TRAVEL_TYPE" HeaderText="LOCAL_TRAVEL_TYPE" />
+                        <asp:BoundField DataField="EXPENDITURE_AMT" HeaderText="EXPENDITURE_AMT" />
+                        <asp:BoundField DataField="EXPENDITURE_CURRENCY" HeaderText="EXPENDITURE_CURRENCY" />
+                        <asp:BoundField DataField="ADVANCE_AMT" HeaderText="ADVANCE_AMT" />
+                        <asp:BoundField DataField="ADVANCE_CURRENCY" HeaderText="ADVANCE_CURRENCY" />
+                        <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY"></asp:BoundField>
+                        <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON"></asp:BoundField>
+                        <asp:BoundField DataField="DELETED_BY" HeaderText="DELETED_BY"></asp:BoundField>
+                        <asp:BoundField DataField="DELETED_ON" HeaderText="DELETED_ON"></asp:BoundField>
+                        <asp:BoundField DataField="APPROVED_BY" HeaderText="APPROVED_BY"></asp:BoundField>
+                        <asp:BoundField DataField="APPROVED_ON" HeaderText="APPROVED_ON"></asp:BoundField>
+                        <asp:BoundField DataField="CANCELLED_BY" HeaderText="CANCELLED_BY"></asp:BoundField>
+                        <asp:BoundField DataField="CANCELLED_ON" HeaderText="CANCELLED_ON"></asp:BoundField>
+                        <asp:BoundField DataField="MODIFIED_BY" HeaderText="MODIFIED_BY"></asp:BoundField>
+                        <asp:BoundField DataField="MODIFIED_ON" HeaderText="MODIFIED_ON"></asp:BoundField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+
+            </div>
+
+        </fieldset>
     </div>
 
     <%--</ContentTemplate>

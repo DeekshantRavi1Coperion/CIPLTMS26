@@ -1,5 +1,7 @@
-﻿<%@ Page Title="GST Reconciliation  Report By Books B2B" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    CodeFile="GSTR2BToFACTGSTINLookupReport.aspx.cs" Inherits="REPORTS_PURCHASE_BALANCE_GSTR2BToFACTGSTINLookupReport" %>
+﻿<%@ Page Title="CIPLTMS - GSTR2B To FACT GSTIN Lookup Report" Language="C#"
+    MasterPageFile="~/HOME.master" AutoEventWireup="true"
+    CodeFile="GSTR2BToFACTGSTINLookupReport.aspx.cs"
+    Inherits="REPORTS_PURCHASE_BALANCE_GSTR2BToFACTGSTINLookupReport" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -81,13 +83,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>GSTR2B To FACT GSTIN Lookup Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>GSTIN:</label>
                     <asp:TextBox ID="txtGSTINToS" runat="server"
@@ -143,49 +143,57 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>GSTR2B To FACT GSTIN Lookup Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+                <asp:GridView ID="gvReport"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvReport_RowDataBound">
+
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                    <Columns>
+
+                        <asp:BoundField DataField="GSTR2B_GSTIN" HeaderText="GSTR2B_GSTIN" />
+                        <asp:BoundField DataField="FACT_GSTIN" HeaderText="FACT_GSTIN" />
+                        <asp:BoundField DataField="GSTR2B_PAN_NO" HeaderText="GSTR2B_PAN_NO" />
+                        <asp:BoundField DataField="FACT_PAN_NO" HeaderText="FACT_PAN_NO" />
+                        <asp:BoundField DataField="GSTR2B_VENDOR_NAME" HeaderText="GSTR2B_VENDOR_NAME" />
+                        <asp:BoundField DataField="FACT_VENDOR_CODE" HeaderText="FACT_VENDOR_CODE" />
+                        <asp:BoundField DataField="FACT_VENDOR_NAME" HeaderText="FACT_VENDOR_NAME" />
+                        <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
+
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
             </div>
-            <asp:GridView ID="gvReport"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowDataBound="gvReport_RowDataBound">
+        </fieldset>
 
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-                <Columns>
-
-                    <asp:BoundField DataField="GSTR2B_GSTIN" HeaderText="GSTR2B_GSTIN" />
-                    <asp:BoundField DataField="FACT_GSTIN" HeaderText="FACT_GSTIN" />
-                    <asp:BoundField DataField="GSTR2B_PAN_NO" HeaderText="GSTR2B_PAN_NO" />
-                    <asp:BoundField DataField="FACT_PAN_NO" HeaderText="FACT_PAN_NO" />
-                    <asp:BoundField DataField="GSTR2B_VENDOR_NAME" HeaderText="GSTR2B_VENDOR_NAME" />
-                    <asp:BoundField DataField="FACT_VENDOR_CODE" HeaderText="FACT_VENDOR_CODE" />
-                    <asp:BoundField DataField="FACT_VENDOR_NAME" HeaderText="FACT_VENDOR_NAME" />
-                    <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
-
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-        </div>
 
     </div>
 

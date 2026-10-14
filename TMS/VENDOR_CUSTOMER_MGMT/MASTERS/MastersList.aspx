@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - VCM - Masters List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="MastersList.aspx.cs"
     Inherits="VENDOR_CUSTOMER_MGMT_MASTERS_MastersList" %>
 
@@ -109,13 +109,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>Masters List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Type:</label>
                     <asp:DropDownList ID="ddlMasterType" runat="server"
@@ -159,58 +157,65 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
 
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Masters List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvMastersList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                OnRowCommand="gvMastersList_RowCommand"
-                OnRowDataBound="gvMastersList_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
+            <div class="employee-grid-container">
 
-                            <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
-                            <asp:Label ID="lblItemCategoryFID" runat="server" Visible="false" Text='<%# Eval("ITEM_CATEGORY_FID") %>' />
-                            <asp:Label ID="lblTypeFID" runat="server" Visible="false" Text='<%# Eval("TYPE_FID") %>' />
-                            <asp:Label ID="lblName" runat="server" Visible="false" Text='<%# Eval("NAME") %>' />
-                            <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>' />
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                            <asp:ImageButton ID="imgProperties" ToolTip="Edit Master Details...!!" CommandArgument="PROPERTIES"
-                                runat="server" ImageUrl="~/Images/royal_search.png" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvMastersList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvMastersList_RowCommand"
+                    OnRowDataBound="gvMastersList_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+
+                                <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
+                                <asp:Label ID="lblItemCategoryFID" runat="server" Visible="false" Text='<%# Eval("ITEM_CATEGORY_FID") %>' />
+                                <asp:Label ID="lblTypeFID" runat="server" Visible="false" Text='<%# Eval("TYPE_FID") %>' />
+                                <asp:Label ID="lblName" runat="server" Visible="false" Text='<%# Eval("NAME") %>' />
+                                <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>' />
+
+                                <asp:ImageButton ID="imgProperties" ToolTip="Edit Master Details...!!" CommandArgument="PROPERTIES"
+                                    runat="server" ImageUrl="~/Images/royal_search.png" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:BoundField DataField="TYPE" HeaderText="Type" />
-                    <asp:BoundField DataField="ITEM_CATEGORY" HeaderText="Item Category" />
+                        <asp:BoundField DataField="TYPE" HeaderText="Type" />
+                        <asp:BoundField DataField="ITEM_CATEGORY" HeaderText="Item Category" />
 
-                    <%--<asp:TemplateField HeaderText="ITEM_CATEGORY">
+                        <%--<asp:TemplateField HeaderText="ITEM_CATEGORY">
                             <ItemTemplate>
                                 <asp:Label ID="lblItemCategory" runat="server" Text='<%# Eval("ITEM_CATEGORY") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:BoundField DataField="NAME" HeaderText="Name" />
-                    <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                        <asp:BoundField DataField="NAME" HeaderText="Name" />
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
+            </div>
+        </fieldset>
 
     </div>
 

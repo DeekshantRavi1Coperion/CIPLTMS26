@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS- LOT Approver List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+<%@ Page Title="CIPLTMS - TC Department List" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     EnableViewState="true" CodeFile="ViewTCDepartmentList.aspx.cs" Inherits="TC_ViewTCDepartmentList" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
@@ -127,21 +127,19 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
-                <legend>TC Department List:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Unit:</label>
-                    <asp:DropDownList ID="ddlUnit" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:DropDownList ID="ddlUnit" runat="server"
+                        CssClass="form-control" />
 
                     <label>Department:</label>
-                    <asp:TextBox ID="txtDepartment" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtDepartment" runat="server"
+                        CssClass="form-control" />
 
                 </div>
             </fieldset>
@@ -156,43 +154,48 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>TC Department List:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvDepartment" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="10" Width="100%" HorizontalAlign="Center"
+                    AllowPaging="True" OnRowCommand="gvDepartment_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server"
+                                    ImageUrl="~/Images/LOT/edit5.png" Width="20px" Height="20px" ToolTip="Edit" />
+
+                                <asp:Label ID="lblDepartmentID" runat="server" Visible="false" Text='<%# Eval("TC_DEPARTMENT_ID") %>' />
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblDepartment" runat="server" Visible="false" Text='<%# Eval("TC_DEPARTMENT") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
+                        <asp:BoundField DataField="TC_DEPARTMENT" HeaderText="Department" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
             </div>
-
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvDepartment" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="10" Width="100%" HorizontalAlign="Center"
-                AllowPaging="True" OnRowCommand="gvDepartment_RowCommand">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:TemplateField HeaderText="EDIT">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" runat="server"
-                                ImageUrl="~/Images/LOT/edit5.png" Width="20px" Height="20px" ToolTip="Edit" />
-
-                            <asp:Label ID="lblDepartmentID" runat="server" Visible="false" Text='<%# Eval("TC_DEPARTMENT_ID") %>' />
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblDepartment" runat="server" Visible="false" Text='<%# Eval("TC_DEPARTMENT") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
-                    <asp:BoundField DataField="TC_DEPARTMENT" HeaderText="Department" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
-        </div>
-
+        </fieldset>
     </div>
 
 
@@ -203,7 +206,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
         PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlpopup" runat="server" 
+    <asp:Panel ID="pnlpopup" runat="server"
         CssClass="popup-edit">
         <table width="100%">
             <tr>
@@ -219,12 +222,12 @@
                 <legend>Update Department</legend>
                 <div class="form-grid form-grid-2">
                     <label>Unit:</label>
-                    <asp:DropDownList ID="ddlUnitToUpdate" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:DropDownList ID="ddlUnitToUpdate" runat="server"
+                        CssClass="form-control" />
 
                     <label>Department:</label>
-                    <asp:TextBox ID="txtDepartmentToUpdate" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtDepartmentToUpdate" runat="server"
+                        CssClass="form-control" />
                 </div>
 
             </fieldset>

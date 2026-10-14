@@ -404,7 +404,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvTicketList.ClientID %>";
         var ScrollHeight = 450;
         window.onload = function () {
@@ -453,7 +453,7 @@
             parentDiv.appendChild(scrollableDiv);
         }
 
-    </script>
+    </script>--%>
 
     <style type="text/css">
         .myGrid {
@@ -616,6 +616,8 @@
             </div>
         </div>
 
+
+
         <fieldset class="employee-grid-fieldset">
             <legend>Ticket List:
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
@@ -628,14 +630,21 @@
                     </asp:Panel>
                 </div>
 
-                <asp:GridView ID="gvTicketList"
+                <%--<asp:GridView ID="gvTicketList"
                     CssClass="employee-grid"
                     runat="server"
                     AutoGenerateColumns="false" CellPadding="4"
                     ForeColor="#333333" GridLines="Both" Width="100%"
                     HorizontalAlign="Center"
                     OnRowCommand="gvTicketList_RowCommand"
-                    OnRowDataBound="gvTicketList_RowDataBound">
+                    OnRowDataBound="gvTicketList_RowDataBound">--%>
+
+
+                    <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvTicketList" runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="False" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvTicketList_RowDataBound" OnRowCommand="gvTicketList_RowCommand">
 
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                     <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
