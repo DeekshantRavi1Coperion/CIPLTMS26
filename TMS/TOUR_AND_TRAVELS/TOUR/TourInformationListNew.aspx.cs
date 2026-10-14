@@ -1144,6 +1144,7 @@ public partial class TOUR_AND_TRAVELS_TOUR_TourInformationListNew : System.Web.U
             if (Convert.ToInt32(Session["DEPARTMENT_ID"]) == 4 ||
                 Convert.ToInt32(Session["DEPARTMENT_ID"]) == 2 ||
                 Convert.ToInt32(Session["EMP_RECORD_ID"]) == 117 ||
+                Convert.ToInt32(Session["EMP_RECORD_ID"]) == 45 ||
                 Convert.ToString(Session["USER_TYPE"]) == "A")
                 dsEmployee = objTourAndTravels.GetEmployeeForTravel(0);
             else
