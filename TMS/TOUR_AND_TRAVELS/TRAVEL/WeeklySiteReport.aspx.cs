@@ -755,18 +755,50 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
             iTextSharp.text.Font headFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
             iTextSharp.text.Font normalFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.NORMAL);
 
+            // ----------------- Top Header Banner (Logo Left, Title Centered) -----------------
+            PdfPTable topBannerTable = new PdfPTable(3);
+            topBannerTable.WidthPercentage = 100;
+            topBannerTable.SetWidths(new float[] { 3f, 4f, 3f }); // Balanced columns with extra width for enlarged logo
+
+            // 1. Top-Left Logo Cell
+            PdfPCell logoCell = new PdfPCell();
+            logoCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            logoCell.HorizontalAlignment = Element.ALIGN_LEFT;
+            logoCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            logoCell.Padding = 0;
+
+            string imagePath = Server.MapPath("~/Images/COPERION/coperion_logo.jpg");
+            if (File.Exists(imagePath))
+            {
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imagePath);
+                logo.ScaleToFit(220f, 85f); // Increased size constraints
+                logo.Alignment = Element.ALIGN_LEFT;
+                logoCell.AddElement(logo);
+            }
+            topBannerTable.AddCell(logoCell);
+
+            // 2. Centered Title Cell
+            PdfPCell titleCell = new PdfPCell(new Phrase("Weekly Site Report", titleFont));
+            titleCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            titleCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            titleCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            topBannerTable.AddCell(titleCell);
+
+            // 3. Right Counterbalance Cell
+            PdfPCell rightSpacer = new PdfPCell(new Phrase(""));
+            rightSpacer.Border = iTextSharp.text.Rectangle.NO_BORDER;
+            topBannerTable.AddCell(rightSpacer);
+
+            doc.Add(topBannerTable);
+            doc.Add(new Paragraph("\n"));
+            // ---------------------------------------------------------------------------------
+
+            // Tour details table
             PdfPTable headerTable = new PdfPTable(4);
             headerTable.WidthPercentage = 100;
             headerTable.SetWidths(new float[] { 2f, 3f, 2f, 3f });
             headerTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
             headerTable.DefaultCell.Padding = 5;
-
-            PdfPCell titleCell = new PdfPCell(new Phrase("Weekly Site Report", titleFont));
-            titleCell.Colspan = 4;
-            titleCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            titleCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-            titleCell.PaddingBottom = 15f;
-            headerTable.AddCell(titleCell);
 
             headerTable.AddCell(new Phrase("Tour Sanction No:", headFont));
             headerTable.AddCell(new Phrase(ddlTSNumber.SelectedValue, normalFont));
@@ -786,17 +818,15 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
             headerTable.AddCell(new Phrase(txtJobNo.Text, normalFont));
             headerTable.AddCell(new Phrase("Remarks:", headFont));
             headerTable.AddCell(new Phrase(txtRemarks.Text, normalFont));
-            // FOC Type row removed here
 
             doc.Add(headerTable);
             doc.Add(new Paragraph("\n"));
 
+            // Main Activity Grid Table
             if (dt != null && dt.Rows.Count > 0)
             {
-                // Reduced column count from 9 to 8
                 PdfPTable mainTable = new PdfPTable(8);
                 mainTable.WidthPercentage = 100;
-                // Adjusted widths to distribute across 8 columns
                 mainTable.SetWidths(new float[] { 2.5f, 2f, 2.5f, 1.5f, 1.5f, 1.5f, 1.5f, 3f });
 
                 string[] headers = { "DATE", "DAY", "ACTIVITY", "START", "FINISH", "BREAK", "ACTIVE", "REMARKS" };
@@ -819,11 +849,11 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
                     mainTable.AddCell(new PdfPCell(new Phrase(dr["BREAK_TIME"].ToString(), normalFont)) { Padding = 4 });
                     mainTable.AddCell(new PdfPCell(new Phrase(dr["ACTIVE_TIME"].ToString(), normalFont)) { Padding = 4 });
                     mainTable.AddCell(new PdfPCell(new Phrase(dr["REMARKS"].ToString(), normalFont)) { Padding = 4 });
-                    // FOC_TYPE data cell removed here
                 }
                 doc.Add(mainTable);
             }
 
+            // Site Approval Table
             doc.Add(new Paragraph("\nSite Approval\n\n", FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD)));
             PdfPTable appTable = new PdfPTable(5);
             appTable.WidthPercentage = 100;
@@ -871,7 +901,6 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
             }
 
             doc.Add(appTable);
-
             doc.Close();
 
             Response.Clear();
@@ -882,7 +911,6 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
-
 
     //private void GeneratePDF()
     //{
