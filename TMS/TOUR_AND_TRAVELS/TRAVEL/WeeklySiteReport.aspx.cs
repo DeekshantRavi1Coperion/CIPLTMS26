@@ -786,19 +786,20 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
             headerTable.AddCell(new Phrase(txtJobNo.Text, normalFont));
             headerTable.AddCell(new Phrase("Remarks:", headFont));
             headerTable.AddCell(new Phrase(txtRemarks.Text, normalFont));
-            headerTable.AddCell(new Phrase("FOC Type:", headFont));
-            headerTable.AddCell(new Phrase(ddlFOCType.SelectedValue, normalFont));
+            // FOC Type row removed here
 
             doc.Add(headerTable);
             doc.Add(new Paragraph("\n"));
 
             if (dt != null && dt.Rows.Count > 0)
             {
-                PdfPTable mainTable = new PdfPTable(9);
+                // Reduced column count from 9 to 8
+                PdfPTable mainTable = new PdfPTable(8);
                 mainTable.WidthPercentage = 100;
-                mainTable.SetWidths(new float[] { 2.5f, 2f, 2f, 1.5f, 1.5f, 1.5f, 1.5f, 3f, 2f });
+                // Adjusted widths to distribute across 8 columns
+                mainTable.SetWidths(new float[] { 2.5f, 2f, 2.5f, 1.5f, 1.5f, 1.5f, 1.5f, 3f });
 
-                string[] headers = { "DATE", "DAY", "ACTIVITY", "START", "FINISH", "BREAK", "ACTIVE", "REMARKS", "FOC TYPE" };
+                string[] headers = { "DATE", "DAY", "ACTIVITY", "START", "FINISH", "BREAK", "ACTIVE", "REMARKS" };
                 foreach (string h in headers)
                 {
                     PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.BOLD)));
@@ -818,7 +819,7 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
                     mainTable.AddCell(new PdfPCell(new Phrase(dr["BREAK_TIME"].ToString(), normalFont)) { Padding = 4 });
                     mainTable.AddCell(new PdfPCell(new Phrase(dr["ACTIVE_TIME"].ToString(), normalFont)) { Padding = 4 });
                     mainTable.AddCell(new PdfPCell(new Phrase(dr["REMARKS"].ToString(), normalFont)) { Padding = 4 });
-                    mainTable.AddCell(new PdfPCell(new Phrase(dr["FOC_TYPE"].ToString(), normalFont)) { Padding = 4 });
+                    // FOC_TYPE data cell removed here
                 }
                 doc.Add(mainTable);
             }
@@ -840,13 +841,35 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
 
             foreach (GridViewRow row in GridView1.Rows)
             {
-                appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtDate")).Text, normalFont)) { Padding = 4 });
-                appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtPlace")).Text, normalFont)) { Padding = 4 });
-                appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtSiteIncharge")).Text, normalFont)) { Padding = 4 });
-                appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtDesignation")).Text, normalFont)) { Padding = 4 });
-                PdfPCell sigCell = new PdfPCell(new Phrase("\n\n__________________")) { FixedHeight = 40f, HorizontalAlignment = Element.ALIGN_CENTER };
+                TextBox txtDate = (TextBox)row.FindControl("txtDate");
+                TextBox txtPlace = (TextBox)row.FindControl("txtPlace");
+                TextBox txtSiteIncharge = (TextBox)row.FindControl("txtSiteIncharge");
+                TextBox txtDesignation = (TextBox)row.FindControl("txtDesignation");
+
+                string dateVal = txtDate != null ? txtDate.Text.Trim() : "";
+                string placeVal = txtPlace != null ? txtPlace.Text.Trim() : "";
+                string siteVal = txtSiteIncharge != null ? txtSiteIncharge.Text.Trim() : "";
+                string desigVal = txtDesignation != null ? txtDesignation.Text.Trim() : "";
+
+                if (string.IsNullOrEmpty(dateVal) && string.IsNullOrEmpty(placeVal) &&
+                    string.IsNullOrEmpty(siteVal) && string.IsNullOrEmpty(desigVal))
+                {
+                    continue;
+                }
+
+                appTable.AddCell(new PdfPCell(new Phrase(dateVal, normalFont)) { Padding = 4 });
+                appTable.AddCell(new PdfPCell(new Phrase(placeVal, normalFont)) { Padding = 4 });
+                appTable.AddCell(new PdfPCell(new Phrase(siteVal, normalFont)) { Padding = 4 });
+                appTable.AddCell(new PdfPCell(new Phrase(desigVal, normalFont)) { Padding = 4 });
+
+                PdfPCell sigCell = new PdfPCell(new Phrase("\n\n__________________"))
+                {
+                    FixedHeight = 40f,
+                    HorizontalAlignment = Element.ALIGN_CENTER
+                };
                 appTable.AddCell(sigCell);
             }
+
             doc.Add(appTable);
 
             doc.Close();
@@ -859,6 +882,127 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_WeeklySiteReport : System.Web.UI.Pa
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
     }
+
+
+    //private void GeneratePDF()
+    //{
+    //    SaveGridData();
+    //    DataTable dt = ViewState["GridData"] as DataTable;
+
+    //    using (MemoryStream ms = new MemoryStream())
+    //    {
+    //        Document doc = new Document(PageSize.A4.Rotate(), 20, 20, 30, 30);
+    //        PdfWriter.GetInstance(doc, ms);
+    //        doc.Open();
+
+    //        iTextSharp.text.Font titleFont = FontFactory.GetFont("Arial", 16, iTextSharp.text.Font.BOLD);
+    //        iTextSharp.text.Font headFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+    //        iTextSharp.text.Font normalFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.NORMAL);
+
+    //        PdfPTable headerTable = new PdfPTable(4);
+    //        headerTable.WidthPercentage = 100;
+    //        headerTable.SetWidths(new float[] { 2f, 3f, 2f, 3f });
+    //        headerTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+    //        headerTable.DefaultCell.Padding = 5;
+
+    //        PdfPCell titleCell = new PdfPCell(new Phrase("Weekly Site Report", titleFont));
+    //        titleCell.Colspan = 4;
+    //        titleCell.HorizontalAlignment = Element.ALIGN_CENTER;
+    //        titleCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+    //        titleCell.PaddingBottom = 15f;
+    //        headerTable.AddCell(titleCell);
+
+    //        headerTable.AddCell(new Phrase("Tour Sanction No:", headFont));
+    //        headerTable.AddCell(new Phrase(ddlTSNumber.SelectedValue, normalFont));
+    //        headerTable.AddCell(new Phrase("Tour Start Date:", headFont));
+    //        headerTable.AddCell(new Phrase(txtStartDate.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("Tour End Date:", headFont));
+    //        headerTable.AddCell(new Phrase(txtEndDate.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("Customer Name:", headFont));
+    //        headerTable.AddCell(new Phrase(txtCustName.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("End User & Site:", headFont));
+    //        headerTable.AddCell(new Phrase(txtEndUserSite.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("Employee Name:", headFont));
+    //        headerTable.AddCell(new Phrase(txtEmployeeName.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("Coperion PO No:", headFont));
+    //        headerTable.AddCell(new Phrase(txtPoNo.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("Coperion Job No:", headFont));
+    //        headerTable.AddCell(new Phrase(txtJobNo.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("Remarks:", headFont));
+    //        headerTable.AddCell(new Phrase(txtRemarks.Text, normalFont));
+    //        headerTable.AddCell(new Phrase("FOC Type:", headFont));
+    //        headerTable.AddCell(new Phrase(ddlFOCType.SelectedValue, normalFont));
+
+    //        doc.Add(headerTable);
+    //        doc.Add(new Paragraph("\n"));
+
+    //        if (dt != null && dt.Rows.Count > 0)
+    //        {
+    //            PdfPTable mainTable = new PdfPTable(9);
+    //            mainTable.WidthPercentage = 100;
+    //            mainTable.SetWidths(new float[] { 2.5f, 2f, 2f, 1.5f, 1.5f, 1.5f, 1.5f, 3f, 2f });
+
+    //            string[] headers = { "DATE", "DAY", "ACTIVITY", "START", "FINISH", "BREAK", "ACTIVE", "REMARKS", "FOC TYPE" };
+    //            foreach (string h in headers)
+    //            {
+    //                PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.BOLD)));
+    //                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+    //                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+    //                cell.Padding = 5;
+    //                mainTable.AddCell(cell);
+    //            }
+
+    //            foreach (DataRow dr in dt.Rows)
+    //            {
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["DATE"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["DAY"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["ACTIVITY"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["START_TIME"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["FINISH_TIME"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["BREAK_TIME"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["ACTIVE_TIME"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["REMARKS"].ToString(), normalFont)) { Padding = 4 });
+    //                mainTable.AddCell(new PdfPCell(new Phrase(dr["FOC_TYPE"].ToString(), normalFont)) { Padding = 4 });
+    //            }
+    //            doc.Add(mainTable);
+    //        }
+
+    //        doc.Add(new Paragraph("\nSite Approval\n\n", FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD)));
+    //        PdfPTable appTable = new PdfPTable(5);
+    //        appTable.WidthPercentage = 100;
+    //        appTable.SetWidths(new float[] { 2f, 2.5f, 2.5f, 2.5f, 2.5f });
+
+    //        string[] appHeaders = { "DATE", "PLACE", "INCHARGE", "DESIGNATION", "SIGNATURE" };
+    //        foreach (string h in appHeaders)
+    //        {
+    //            PdfPCell cell = new PdfPCell(new Phrase(h, FontFactory.GetFont("Arial", 9, iTextSharp.text.Font.BOLD)));
+    //            cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+    //            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+    //            cell.Padding = 5;
+    //            appTable.AddCell(cell);
+    //        }
+
+    //        foreach (GridViewRow row in GridView1.Rows)
+    //        {
+    //            appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtDate")).Text, normalFont)) { Padding = 4 });
+    //            appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtPlace")).Text, normalFont)) { Padding = 4 });
+    //            appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtSiteIncharge")).Text, normalFont)) { Padding = 4 });
+    //            appTable.AddCell(new PdfPCell(new Phrase(((TextBox)row.FindControl("txtDesignation")).Text, normalFont)) { Padding = 4 });
+    //            PdfPCell sigCell = new PdfPCell(new Phrase("\n\n__________________")) { FixedHeight = 40f, HorizontalAlignment = Element.ALIGN_CENTER };
+    //            appTable.AddCell(sigCell);
+    //        }
+    //        doc.Add(appTable);
+
+    //        doc.Close();
+
+    //        Response.Clear();
+    //        Response.ContentType = "application/pdf";
+    //        Response.AddHeader("content-disposition", "attachment;filename=WeeklySiteReport_" + DateTime.Now.ToString("ddMMyyyy_HHmm") + ".pdf");
+    //        Response.BinaryWrite(ms.ToArray());
+    //        Response.Flush();
+    //        HttpContext.Current.ApplicationInstance.CompleteRequest();
+    //    }
+    //}
 
     private void ClearAllFields()
     {
