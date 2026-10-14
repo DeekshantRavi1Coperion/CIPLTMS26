@@ -249,7 +249,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvCostCenter.ClientID %>";
         var ScrollHeight = 380;
         window.onload = function () {
@@ -297,7 +297,7 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
-    </script>
+    </script>--%>
 
 
 </asp:Content>

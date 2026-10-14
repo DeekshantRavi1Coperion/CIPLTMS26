@@ -93,7 +93,7 @@
 
     </script>
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvPOCList.ClientID %>";
         var ScrollHeight = 335;
         window.onload = function () {
@@ -141,7 +141,7 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
-    </script>
+    </script>--%>
 
     <script type="text/javascript">
         function checkDec1(el, val) {

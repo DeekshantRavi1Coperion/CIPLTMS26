@@ -272,7 +272,7 @@
         }
     </script>
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvVendorRating.ClientID %>";
         var ScrollHeight = 570;
         window.onload = function () {
@@ -320,6 +320,10 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
+
+    </script>--%>
+
+    <script type="text/javascript">
 
         function ClearAllFilters() {
             document.getElementById('<%=ddlUnit.ClientID %>').selectedIndex = 0;

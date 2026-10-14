@@ -311,7 +311,7 @@
         }
     </script>
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvPostedList.ClientID %>";
         var ScrollHeight = 490;
         window.onload = function () {
@@ -359,7 +359,7 @@
             scrollableDiv.appendChild(grid);
             parentDiv.appendChild(scrollableDiv);
         }
-    </script>
+    </script>--%>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">

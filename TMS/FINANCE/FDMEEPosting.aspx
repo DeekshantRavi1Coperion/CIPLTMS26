@@ -132,7 +132,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvFDMEE.ClientID %>";
         var ScrollHeight = 380;
         window.onload = function () {
@@ -181,6 +181,10 @@
             parentDiv.appendChild(scrollableDiv);
         }
 
+    </script>--%>
+
+
+    <script type = "text/javascript" >
 
 
         function preventInput(event) {

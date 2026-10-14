@@ -63,7 +63,7 @@
 
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvPivotGroup.ClientID %>";
         var ScrollHeight = 475;
         window.onload = function () {
@@ -112,7 +112,7 @@
             parentDiv.appendChild(scrollableDiv);
         }
 
-    </script>
+    </script>--%>
 
     <style type="text/css">
         .myGrid {

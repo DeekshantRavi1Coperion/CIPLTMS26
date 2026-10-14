@@ -263,7 +263,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvTicketList.ClientID %>";
         var ScrollHeight = 450;
         window.onload = function () {
@@ -312,7 +312,7 @@
             parentDiv.appendChild(scrollableDiv);
         }
 
-    </script>
+    </script>--%>
 
     <style type="text/css">
         .myGrid {

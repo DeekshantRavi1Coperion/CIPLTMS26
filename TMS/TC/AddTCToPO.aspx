@@ -857,7 +857,7 @@
     </script>
 
 
-    <script type="text/javascript">        
+    <%--<script type="text/javascript">        
         var GridId = "<%=gvPOList.ClientID %>";
         var ScrollHeight = 380;
         window.onload = function () {
@@ -908,7 +908,7 @@
                 parentDiv.appendChild(scrollableDiv);
             }
         }
-    </script>
+    </script>--%>
 
 
 </asp:Content>

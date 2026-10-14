@@ -132,7 +132,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
         var GridId = "<%=gvOneStream.ClientID %>";
         var ScrollHeight = 380;
         window.onload = function () {
@@ -181,7 +181,9 @@
             parentDiv.appendChild(scrollableDiv);
         }
 
+    </script>--%>
 
+    <script type = "text/javascript" >
 
         function preventInput(event) {
             if (event.which != 9) {
