@@ -290,7 +290,7 @@ public partial class USGAAP_BILLING_ImportPosting : System.Web.UI.Page
 
                 }
 
-                string[] validCompanies = { "A35", "GNU", "USGAAP", "CID2527", "USGAAPN2527", "CID_INDIANGAAP2527" };
+                string[] validCompanies = { "A35", "GNU", "USGAAP", "CID2628", "USGAAPN2628", "CID_INDIANGAAP2628" };
                 string labelValue = Convert.ToString(lblCompany.Text);
 
                 if (!string.IsNullOrEmpty(labelValue))

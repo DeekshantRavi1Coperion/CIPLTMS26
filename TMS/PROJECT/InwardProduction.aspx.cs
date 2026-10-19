@@ -259,7 +259,7 @@ public partial class PROJECT_InwardProduction: System.Web.UI.Page
                 DataTable filteredTable = dsUnit.Tables[0].Clone();
                 foreach (DataRow row in dsUnit.Tables[0].Rows)
                 {
-                    if (!row["UNIT_NAME"].ToString().Contains("CID2527") &&
+                    if (!row["UNIT_NAME"].ToString().Contains("CID2628") &&
                          !row["UNIT_NAME"].ToString().Contains("CID_INDIANGAAP2426"))
                     {
                         filteredTable.ImportRow(row);
