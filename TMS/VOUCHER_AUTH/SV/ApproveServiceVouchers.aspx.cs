@@ -1097,10 +1097,18 @@ public partial class VOUCHER_AUTH_SV_ApproveServiceVouchers : System.Web.UI.Page
                 imgBtnApprove.ToolTip = "Reauthorization voucher";
                 imgBtnApprove.Enabled = false;
             }
-            else if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED)
+            else if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED ||
+                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.RECONCILED)
             {
                 imgBtnApprove.ImageUrl = "~/Images/VC/vc-reauthorized.png";
                 imgBtnApprove.ToolTip = "Approve reauthorized voucher";
+
+                if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.RECONCILED)
+                {
+                    imgBtnApprove.ImageUrl = "~/Images/VC/vc-reconciled.png";
+                    imgBtnApprove.ToolTip = "Approve reconciled voucher";
+                }
+
                 imgBtnApprove.Enabled = true;
 
                 //if (Convert.ToInt32(lblApproverID.Text) == Convert.ToInt32(Session["EMP_RECORD_ID"]))
@@ -1256,7 +1264,8 @@ public partial class VOUCHER_AUTH_SV_ApproveServiceVouchers : System.Web.UI.Page
                     pnlRemarksToAS.Visible = true;
 
                     if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.AUTHORIZED ||
-                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED)
+                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED ||
+                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.RECONCILED)
                     {
                         btnApprove.Visible = true;
                         btnSendToReauthorization.Visible = true;
@@ -1464,7 +1473,7 @@ public partial class VOUCHER_AUTH_SV_ApproveServiceVouchers : System.Web.UI.Page
                 if (Convert.ToString(e.CommandArgument) == "ViewATTACHMENT1")
                 {
                     ViewAttachedFiles(Convert.ToInt32(lblPID.Text), Convert.ToString(lblAttachedFileName.Text).Trim()
-                                   , (int)VoucherStatusTypes.EnumVoucherTypes.MRN);
+                                   , (int)VoucherStatusTypes.EnumVoucherTypes.MRNV);
                     mpeAuthorizeVoucher.Show();
                 }
 

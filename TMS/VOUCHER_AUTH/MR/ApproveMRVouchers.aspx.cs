@@ -721,7 +721,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
 
             ImageButton imgBtnDownloadAllDocuments = (ImageButton)e.Row.FindControl("imgBtnDownloadAllDocuments");
             ImageButton imgBtnApprove = (ImageButton)e.Row.FindControl("imgBtnApprove");
-            
+
             CheckBox chkSelectVoucher = (CheckBox)e.Row.FindControl("chkSelectVoucher");
             chkSelectVoucher.Visible = false;
 
@@ -809,10 +809,18 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
                 imgBtnApprove.ToolTip = "Reauthorization voucher";
                 imgBtnApprove.Enabled = false;
             }
-            else if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED)
+            else if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED ||
+                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.RECONCILED)
             {
                 imgBtnApprove.ImageUrl = "~/Images/VC/vc-reauthorized.png";
                 imgBtnApprove.ToolTip = "Approve reauthorized voucher";
+
+                if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.RECONCILED)
+                {
+                    imgBtnApprove.ImageUrl = "~/Images/VC/vc-reconciled.png";
+                    imgBtnApprove.ToolTip = "Approve reconciled voucher";
+                }
+
                 imgBtnApprove.Enabled = true;
 
                 //if (Convert.ToInt32(lblApproverID.Text) == Convert.ToInt32(Session["EMP_RECORD_ID"]))
@@ -946,7 +954,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
                     //ExportZip(Convert.ToInt32(lblPID.Text), lblVoucherNo.Text);
                     ExportZip(Convert.ToInt32(lblPID.Text)
                             , lblVoucherNo.Text.Trim().ToUpper()
-                            , (int)VoucherStatusTypes.EnumVoucherTypes.MR
+                            , (int)VoucherStatusTypes.EnumVoucherTypes.MRV
                             , "");
                 }
 
@@ -956,7 +964,8 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
                     pnlRemarksToAS.Visible = true;
 
                     if (Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.AUTHORIZED ||
-                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED)
+                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.REAUTHORIZED ||
+                        Convert.ToInt32(lblStatusID.Text) == (int)VoucherStatusTypes.EnumStatus.RECONCILED)
                     {
                         btnApprove.Visible = true;
                         btnSendToReauthorization.Visible = true;
@@ -1101,12 +1110,12 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
     protected void btnApprove_Click(object sender, EventArgs e)
     {
         //mpeAuthorizeVoucher.Show();
-        ApproveVoucher((int)VoucherStatusTypes.EnumStatus.APPROVED, (int)VoucherStatusTypes.EnumVoucherTypes.MR);
+        ApproveVoucher((int)VoucherStatusTypes.EnumStatus.APPROVED, (int)VoucherStatusTypes.EnumVoucherTypes.MRV);
     }
 
     protected void btnSendToReauthorization_Click(object sender, EventArgs e)
     {
-        ApproveVoucher((int)VoucherStatusTypes.EnumStatus.REAUTHORIZATION, (int)VoucherStatusTypes.EnumVoucherTypes.MR);
+        ApproveVoucher((int)VoucherStatusTypes.EnumStatus.REAUTHORIZATION, (int)VoucherStatusTypes.EnumVoucherTypes.MRV);
     }
 
 
@@ -1119,7 +1128,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
                 foreach (GridViewRow gr in gvVouchersList.Rows)
                 {
                     CheckBox chkSelectVoucher = (CheckBox)gr.FindControl("chkSelectVoucher");
-                    if (chkSelectVoucher.Visible==true)
+                    if (chkSelectVoucher.Visible == true)
                     {
                         chkSelectVoucher.Checked = true;
                     }
@@ -1225,7 +1234,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
     {
         try
         {
-            _dsVoucherCreatedBy = objVouchersAuthorization.GetVouchersCreatedByList((int)VoucherStatusTypes.EnumVoucherTypes.MR);
+            _dsVoucherCreatedBy = objVouchersAuthorization.GetVouchersCreatedByList((int)VoucherStatusTypes.EnumVoucherTypes.MRV);
             if (_dsVoucherCreatedBy.Tables.Count > 0 && _dsVoucherCreatedBy.Tables[0].Rows.Count > 0)
             {
                 ddlCreatedBy.DataSource = _dsVoucherCreatedBy.Tables[0];
@@ -1371,7 +1380,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
     {
         try
         {
-            _dsAttachedDocs = objVouchersAuthorization.GetVoucherDOCS(PId, (int)VoucherStatusTypes.EnumVoucherTypes.MR, "");
+            _dsAttachedDocs = objVouchersAuthorization.GetVoucherDOCS(PId, (int)VoucherStatusTypes.EnumVoucherTypes.MRV, "");
 
             if (_dsAttachedDocs.Tables.Count > 0 && _dsAttachedDocs.Tables[0].Rows.Count > 0)
             {
@@ -1813,7 +1822,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
         int val = objVouchersAuthorization.SendVoucherToReauthorization
             (
                 Pid
-            , (int)VoucherStatusTypes.EnumVoucherTypes.MR
+            , (int)VoucherStatusTypes.EnumVoucherTypes.MRV
             , AddNewDOCToAS
             , RemarksToAS
             , FileNameToAS1
@@ -1870,7 +1879,7 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
 
         int val = objVouchersAuthorization.BulkApproveVoucher
             (
-              (int)VoucherStatusTypes.EnumVoucherTypes.MR
+              (int)VoucherStatusTypes.EnumVoucherTypes.MRV
             , dtVoucherPID
             , CreatedById
             );
@@ -1904,5 +1913,5 @@ public partial class VOUCHER_AUTH_MR_ApproveMRVouchers : System.Web.UI.Page
     #endregion
 
 
-    
+
 }
