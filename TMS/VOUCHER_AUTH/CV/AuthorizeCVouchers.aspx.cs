@@ -1134,10 +1134,10 @@ public partial class VOUCHER_AUTH_CV_AuthorizeCVouchers : System.Web.UI.Page
                     //txtReceiptAmountInrToAS.Text = lblReceiptAmountINR.Text;
                     //txtPaymentAmountInrToAS.Text = lblPaymentAmountINR.Text;
                     //txtPaidToOrReceivedFromToAS.Text = lblPaidToOrReceivedFrom.Text;
-                    
+
                     txtChequeOrReferenceNoToAS.Text = lblChequeOrReferenceNo.Text;
                     txtChequeDatedToAS.Text = lblChequeDated.Text;
-                    
+
                     //txtBankTransactionRefNoOrUtrToAS.Text = lblBankTransactionRefNoOrUTR.Text;
                     txtNarrationToAS.Text = lblNarration.Text;
                     txtCreatedByToAS.Text = lblCreatedBy.Text;
@@ -1186,10 +1186,10 @@ public partial class VOUCHER_AUTH_CV_AuthorizeCVouchers : System.Web.UI.Page
                     //txtReceiptAmountInrToAS.Text = lblReceiptAmountINR.Text;
                     //txtPaymentAmountInrToAS.Text = lblPaymentAmountINR.Text;
                     //txtPaidToOrReceivedFromToAS.Text = lblPaidToOrReceivedFrom.Text;
-                    
+
                     txtChequeOrReferenceNoToAS.Text = lblChequeOrReferenceNo.Text;
                     txtChequeDatedToAS.Text = lblChequeDated.Text;
-                    
+
                     //txtBankTransactionRefNoOrUtrToAS.Text = lblBankTransactionRefNoOrUTR.Text;
                     txtNarrationToAS.Text = lblNarration.Text;
                     txtCreatedByToAS.Text = lblCreatedBy.Text;
@@ -1401,9 +1401,57 @@ public partial class VOUCHER_AUTH_CV_AuthorizeCVouchers : System.Web.UI.Page
         }
     }
 
+    //protected void btnAuthorize_Click(object sender, EventArgs e)
+    //{
+    //    Authorize();
+    //}
+
     protected void btnAuthorize_Click(object sender, EventArgs e)
     {
-        Authorize();
+        if (Convert.ToInt32(ViewState["StatusID"]) == (int)VoucherStatusTypes.EnumStatus.OPEN)
+        {
+            Authorize();
+        }
+        else
+        {
+            ReAuthorize(Pid, (int)VoucherStatusTypes.EnumVoucherTypes.CV);
+        }
+    }
+
+    private void ReAuthorize(int Pid, int voucherTypeId)
+    {
+        int val = objVouchersAuthorization.ReauthorizeVoucher
+            (
+                    Pid
+                , voucherTypeId
+                , RemarksToAS
+                , FileNameToAS1
+                , FileBytesToAS1
+
+                , FileNameToAS2
+                , FileBytesToAS2
+
+                , FileNameToAS3
+                , FileBytesToAS3
+
+                , FileNameToAS4
+                , FileBytesToAS4
+
+                , FileNameToAS5
+                , FileBytesToAS5
+                , CreatedById
+            );
+
+        if (val > 0)
+        {
+            SuccessMessage("Voucher Number: " + VoucherNoToAS + " reauthorized successfully!");
+            GetVouchersList();
+        }
+        else
+        {
+            ExceptionMessage("Please try again.");
+            return;
+        }
     }
 
     protected void btnBulkAuthorize_Click(object sender, EventArgs e)
@@ -2233,8 +2281,8 @@ public partial class VOUCHER_AUTH_CV_AuthorizeCVouchers : System.Web.UI.Page
 
                 DataRow dr = dtVoucherDetails.NewRow();
 
-                
-                
+
+
                 dr["GL_CODE"] = lblGLCodeD.Text;
                 dr["GL_DESCRIPTION"] = lblGLDescriptionD.Text;
                 dr["DOC_CLASS"] = lblDOCClassD.Text;

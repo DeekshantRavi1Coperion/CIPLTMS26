@@ -2352,10 +2352,6 @@ namespace BAL
             return null;
         }
 
-        public int AuthorizeIIVoucher(int pid, string voucherNoToAS, string v, string classToAS, string currencyDescToAS, decimal receiptAmountFCToAS, decimal paymentAmountFCToAS, decimal receiptAmountINRToAS, decimal paymentAmountINRToAS, int unitIdToAS, string voucherCreatedByToAS, string remarksToAS, string fileNameToAS1, byte[] fileBytesToAS1, string fileNameToAS2, byte[] fileBytesToAS2, string fileNameToAS3, byte[] fileBytesToAS3, string fileNameToAS4, byte[] fileBytesToAS4, string fileNameToAS5, byte[] fileBytesToAS5, int createdById, DataTable dtVoucherDetails)
-        {
-            throw new NotImplementedException();
-        }
 
         public int AuthorizeServiceVoucher
             (
@@ -5146,6 +5142,57 @@ namespace BAL
 
 
 
+        public DataSet GetCBVouchersListToRecon(
+             string dateSignS
+           , string dateTypeS
+           , string startDateS
+           , string endDateS
+           , string warehouseIdS
+           , int unitIdS
+           , int statusToS
+           , int createdByIdS
+           , string searchByS
+           , string searchTextS
+           , string amountSearchByS
+           , string amountSignS
+           , decimal amountOneS
+           , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_cash_bank_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            //cmd.Parameters.AddWithValue("@PTypeId", typeIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+            cmd.Parameters.AddWithValue("@AmountSearchBy", amountSearchByS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
 
 
 
@@ -6752,7 +6799,7 @@ namespace BAL
 
             cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
             cmd.Parameters.AddWithValue("@tblVouchers", dtVouchers);
-            
+
             cmd.Parameters.Add(rCode);
             try
             {
@@ -7138,7 +7185,7 @@ namespace BAL
 
             cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
             cmd.Parameters.AddWithValue("@tblVouchers", dtVouchers);
-            
+
             cmd.Parameters.Add(rCode);
             try
             {
@@ -9504,7 +9551,7 @@ namespace BAL
             cmd.Parameters.AddWithValue("@GLCode", GLCodeS);
             cmd.Parameters.AddWithValue("@GLDescription", GLDescriptionS);
 
-            cmd.Parameters.AddWithValue("@UnitId", unitIdS);                                  
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
             cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
             cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
             cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
@@ -9545,7 +9592,7 @@ namespace BAL
             DataSet ds = new DataSet();
             string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
             SqlConnection con = new SqlConnection(cipltmsconnectionstring);
-            
+
             SqlCommand cmd = new SqlCommand();
 
             cmd.CommandText = "[dbVoucher].[sp_get_Finance_All_Entries_Detailed_Report]";
@@ -9603,7 +9650,7 @@ namespace BAL
 
             cmd.Parameters.AddWithValue("@VoucherTypeId", VoucherTypeId);
             cmd.Parameters.AddWithValue("@VoucherId", VoucherId);
-            
+
             da.Fill(ds);
             if (ds != null)
                 return ds;
@@ -9718,7 +9765,7 @@ namespace BAL
             return null;
         }
 
-       
+
 
         public int AuthorizePurchaseReturnVoucher
             (
@@ -9912,8 +9959,8 @@ namespace BAL
         }
 
         public DataSet GetPurchaseReturnVouchersReport(
-            string dateSignS, 
-            string dateTypeS, 
+            string dateSignS,
+            string dateTypeS,
             string startDateS,
             string endDateS,
             string WarehouseIdS,
@@ -10393,6 +10440,3408 @@ namespace BAL
             }
         }
 
+
+
+
+
+        //RECON
+
+        public int ReconJournalVoucher
+           (
+               int Pid,
+               string VoucherNo,
+               string VoucherDate,
+               int unitId,
+               string VoucherCreatedBy,
+               string AuthorizedRemarks,
+
+               string FileName1,
+               byte[] FileBytes1,
+
+               string FileName2,
+               byte[] FileBytes2,
+
+               string FileName3,
+               byte[] FileBytes3,
+
+               string FileName4,
+               byte[] FileBytes4,
+
+               string FileName5,
+               byte[] FileBytes5,
+
+               int CreatedBy,
+
+               DataTable dtVoucherDetails
+           )
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_authorize_journal_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            //cmd.Parameters.AddWithValue("@TypeFid", TypeFid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+
+        public int ReconPurchaseVoucher
+                    (
+                        int Pid,
+                        string VoucherNo,
+                        string VoucherDate,
+                        int unitId,
+
+                        string ChallanNo,
+                        string ChallanDate,
+                        string OANo,
+                        string OADate,
+                        string DOCClass,
+                        string VendorCode,
+                        string VendorName,
+                        decimal NetAmount,
+
+                        string CurrencyDesc,
+                        decimal CurrencyRate,
+
+                        decimal INRBasicAmount,
+                        decimal INROtherAmount,
+                        decimal FCBasicAmount,
+                         decimal FCOtherAmount,
+
+                        string VoucherCreatedBy,
+                        string AuthorizedRemarks,
+
+                        string FileName1,
+                        byte[] FileBytes1,
+
+                        string FileName2,
+                        byte[] FileBytes2,
+
+                        string FileName3,
+                        byte[] FileBytes3,
+
+                        string FileName4,
+                        byte[] FileBytes4,
+
+                        string FileName5,
+                        byte[] FileBytes5,
+
+                        //string FileName6,
+                        //byte[] FileBytes6,
+
+                        //string FileName7,
+                        //byte[] FileBytes7,
+
+                        //string FileName8,
+                        //byte[] FileBytes8,
+
+                        //string FileName9,
+                        //byte[] FileBytes9,
+
+                        //string FileName10,
+                        //byte[] FileBytes10,
+
+                        int CreatedBy,
+
+                        DataTable dtVoucherDetails,
+                        int ActId
+                     )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_authorize_purchase_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+
+            cmd.Parameters.AddWithValue("@ChallanNo", ChallanNo);
+            cmd.Parameters.AddWithValue("@ChallanDate", ChallanDate);
+            cmd.Parameters.AddWithValue("@OANo", OANo);
+            cmd.Parameters.AddWithValue("@OADate", OADate);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@NetAmount", NetAmount);
+
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+
+            cmd.Parameters.AddWithValue("@INRBasicAmount", INRBasicAmount);
+            cmd.Parameters.AddWithValue("@INROtherAmount", INROtherAmount);
+            cmd.Parameters.AddWithValue("@FCBasicAmount", FCBasicAmount);
+            cmd.Parameters.AddWithValue("@FCOtherAmount", FCOtherAmount);
+
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            //cmd.Parameters.AddWithValue("@ActId", ActId);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+
+
+
+            //if (FileBytes6 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName6", FileName6);
+            //    cmd.Parameters.AddWithValue("@FileBytes6", FileBytes6);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes6", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName6", "");
+            //}
+
+            //if (FileBytes7 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName7", FileName7);
+            //    cmd.Parameters.AddWithValue("@FileBytes7", FileBytes7);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes7", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName7", "");
+            //}
+
+            //if (FileBytes8 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName8", FileName8);
+            //    cmd.Parameters.AddWithValue("@FileBytes8", FileBytes8);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes8", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName8", "");
+            //}
+
+            //if (FileBytes9 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName9", FileName9);
+            //    cmd.Parameters.AddWithValue("@FileBytes9", FileBytes9);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes9", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName9", "");
+            //}
+
+            //if (FileBytes10 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName10", FileName10);
+            //    cmd.Parameters.AddWithValue("@FileBytes10", FileBytes10);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes10", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName10", "");
+            //}
+
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconMRNVoucher
+            (
+                int Pid,
+                string VoucherNo,
+                string VoucherDate,
+
+                string PurchaseOrderDate,
+                string VendorCode,
+                string VendorName,
+                string DOCClass,
+                decimal NetAmount,
+
+                string CurrencyDesc,
+                decimal CurrencyRate,
+
+                decimal INRBasicAmount,
+                decimal INROtherAmount,
+                decimal FCBasicAmount,
+                 decimal FCOtherAmount,
+
+                string GateEntryNo,
+                string GateEntryDate,
+
+                int unitId,
+                string VoucherCreatedBy,
+                string AuthorizedRemarks,
+                int IsMRNClosedToAS,
+                string FileName1,
+                byte[] FileBytes1,
+
+                string FileName2,
+                byte[] FileBytes2,
+
+                string FileName3,
+                byte[] FileBytes3,
+
+                string FileName4,
+                byte[] FileBytes4,
+
+                string FileName5,
+                byte[] FileBytes5,
+
+                int CreatedBy,
+
+                DataTable dtVoucherDetails
+            )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_mrn_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@OADate", PurchaseOrderDate);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+
+            cmd.Parameters.AddWithValue("@NetAmount", NetAmount);
+
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+
+            cmd.Parameters.AddWithValue("@INRBasicAmount", INRBasicAmount);
+            cmd.Parameters.AddWithValue("@INROtherAmount", INROtherAmount);
+            cmd.Parameters.AddWithValue("@FCBasicAmount", FCBasicAmount);
+            cmd.Parameters.AddWithValue("@FCOtherAmount", FCOtherAmount);
+
+            cmd.Parameters.AddWithValue("@GateEntryNo", GateEntryNo);
+            cmd.Parameters.AddWithValue("@GateEntryDate", GateEntryDate);
+
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+            cmd.Parameters.AddWithValue("@IsMRNClosed", IsMRNClosedToAS);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconServiceVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    int unitId,
+
+                    string ChallanNo,
+                    string ChallanDate,
+                    string OANo,
+                    string OADate,
+                    string DOCClass,
+                    string VendorCode,
+                    string VendorName,
+                    decimal NetAmount,
+
+                    string CurrencyDesc,
+                    decimal CurrencyRate,
+
+                    decimal INRBasicAmount,
+                    decimal INROtherAmount,
+                    decimal FCBasicAmount,
+                     decimal FCOtherAmount,
+
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    //string FileName6,
+                    //byte[] FileBytes6,
+
+                    //string FileName7,
+                    //byte[] FileBytes7,
+
+                    //string FileName8,
+                    //byte[] FileBytes8,
+
+                    //string FileName9,
+                    //byte[] FileBytes9,
+
+                    //string FileName10,
+                    //byte[] FileBytes10,
+
+                    int CreatedBy,
+
+                    DataTable dtVoucherDetails,
+                    int ActId
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_service_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+
+            cmd.Parameters.AddWithValue("@ChallanNo", ChallanNo);
+            cmd.Parameters.AddWithValue("@ChallanDate", ChallanDate);
+            cmd.Parameters.AddWithValue("@OANo", OANo);
+            cmd.Parameters.AddWithValue("@OADate", OADate);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@NetAmount", NetAmount);
+
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+
+            cmd.Parameters.AddWithValue("@INRBasicAmount", INRBasicAmount);
+            cmd.Parameters.AddWithValue("@INROtherAmount", INROtherAmount);
+            cmd.Parameters.AddWithValue("@FCBasicAmount", FCBasicAmount);
+            cmd.Parameters.AddWithValue("@FCOtherAmount", FCOtherAmount);
+
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            //cmd.Parameters.AddWithValue("@ActId", ActId);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+
+
+
+            //if (FileBytes6 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName6", FileName6);
+            //    cmd.Parameters.AddWithValue("@FileBytes6", FileBytes6);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes6", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName6", "");
+            //}
+
+            //if (FileBytes7 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName7", FileName7);
+            //    cmd.Parameters.AddWithValue("@FileBytes7", FileBytes7);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes7", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName7", "");
+            //}
+
+            //if (FileBytes8 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName8", FileName8);
+            //    cmd.Parameters.AddWithValue("@FileBytes8", FileBytes8);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes8", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName8", "");
+            //}
+
+            //if (FileBytes9 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName9", FileName9);
+            //    cmd.Parameters.AddWithValue("@FileBytes9", FileBytes9);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes9", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName9", "");
+            //}
+
+            //if (FileBytes10 != null)
+            //{
+            //    cmd.Parameters.AddWithValue("@FileName10", FileName10);
+            //    cmd.Parameters.AddWithValue("@FileBytes10", FileBytes10);
+            //}
+            //else
+            //{
+            //    cmd.Parameters.AddWithValue("@FileBytes10", System.Data.SqlTypes.SqlBinary.Null);
+            //    cmd.Parameters.AddWithValue("@FileName10", "");
+            //}
+
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconSaleOrderVoucher(int pid
+                , string voucherNo
+                , string voucherDate
+                , int unitId
+                , string yoNo
+                , string yoDate
+                , string Docclass
+                , string customerCode
+                , string customerName
+                , decimal currencyBasic
+                , decimal currencyVal
+                , string currencyDesc
+                , decimal currencyRate
+                , decimal iNRBasicAmount
+                , decimal iNROtherAmount
+                , decimal fCBasicAmount
+                , decimal fCOtherAmount
+                , string voucherCreatedBy
+                , string remarksToAS
+                , string fileNameToAS1
+                , byte[] fileBytesToAS1
+                , string fileNameToAS2
+                , byte[] fileBytesToAS2
+                , string fileNameToAS3
+                , byte[] fileBytesToAS3
+                , string fileNameToAS4
+                , byte[] fileBytesToAS4
+                , string fileNameToAS5
+                , byte[] fileBytesToAS5
+                , int createdById
+                , DataTable dtVoucherDetails
+                , int actId)
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_sale_order_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", voucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", voucherDate);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+
+            cmd.Parameters.AddWithValue("@YoNo", yoNo);
+            cmd.Parameters.AddWithValue("@YoDate", yoDate);
+            cmd.Parameters.AddWithValue("@DOCClass", Docclass);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", customerName);
+
+            cmd.Parameters.AddWithValue("@CurrBasic", currencyBasic);
+            cmd.Parameters.AddWithValue("@CurrVal", currencyVal);
+
+            cmd.Parameters.AddWithValue("@CurrencyDesc", currencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", currencyRate);
+
+            cmd.Parameters.AddWithValue("@INRBasicAmount", iNRBasicAmount);
+            cmd.Parameters.AddWithValue("@INROtherAmount", iNROtherAmount);
+            cmd.Parameters.AddWithValue("@FCBasicAmount", fCBasicAmount);
+            cmd.Parameters.AddWithValue("@FCOtherAmount", fCOtherAmount);
+
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", voucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", remarksToAS);
+
+            //cmd.Parameters.AddWithValue("@ActId", ActId);
+
+            if (fileBytesToAS1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", fileNameToAS1);
+                cmd.Parameters.AddWithValue("@FileBytes1", fileBytesToAS1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (fileBytesToAS2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", fileNameToAS2);
+                cmd.Parameters.AddWithValue("@FileBytes2", fileBytesToAS2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (fileBytesToAS3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", fileNameToAS3);
+                cmd.Parameters.AddWithValue("@FileBytes3", fileBytesToAS3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (fileBytesToAS4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", fileNameToAS4);
+                cmd.Parameters.AddWithValue("@FileBytes4", fileBytesToAS4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (fileBytesToAS5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", fileNameToAS5);
+                cmd.Parameters.AddWithValue("@FileBytes5", fileBytesToAS5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdById);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+        public int ReconSaleInvoiceVoucher(
+                  int pidToAS
+                , string voucherNo
+                , string voucherDate
+                , string dueDate
+                , string challanNo
+                , string challanDate
+                , string oANo
+                , string oADate
+                , string cNNo
+                , string cNDate
+                , string yoNo
+                , string yoDate
+                , string eGPNo
+                , string eGPDate
+                , string customerCode
+                , string customerName
+                , string DocClass
+                , decimal netAmount
+                , decimal basic
+                , string currencyDesc
+                , decimal currencyRate
+                , decimal currencyVal
+                , decimal currencyBasic
+                , decimal iNRBasicAmount
+                , decimal iNROtherAmount
+                , decimal fCBasicAmount
+                , decimal fCOtherAmount
+                , string voucherCreatedBy
+                , int unitId
+                , string remarksToAS
+
+                , string fileNameToAS1
+                , byte[] fileBytesToAS1
+                , string fileNameToAS2
+                , byte[] fileBytesToAS2
+                , string fileNameToAS3
+                , byte[] fileBytesToAS3
+                , string fileNameToAS4
+                , byte[] fileBytesToAS4
+                , string fileNameToAS5
+                , byte[] fileBytesToAS5
+                , int createdById
+                , DataTable dtVoucherDetails
+                )
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_sale_invoice_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", pidToAS);
+            cmd.Parameters.AddWithValue("@VoucherNo", voucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", voucherDate);
+            cmd.Parameters.AddWithValue("@DueDate", dueDate);
+            cmd.Parameters.AddWithValue("@ChallanNo", challanNo);
+            cmd.Parameters.AddWithValue("@ChallanDate", challanDate);
+            cmd.Parameters.AddWithValue("@OANo", oANo);
+            cmd.Parameters.AddWithValue("@OADate", oADate);
+            cmd.Parameters.AddWithValue("@CNNo", cNNo);
+            cmd.Parameters.AddWithValue("@CNDate", cNDate);
+            cmd.Parameters.AddWithValue("@YoNo", yoNo);
+            cmd.Parameters.AddWithValue("@YoDate", yoDate);
+            cmd.Parameters.AddWithValue("@EGPNo", eGPNo);
+            cmd.Parameters.AddWithValue("@EGPDate", eGPDate);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", customerName);
+            cmd.Parameters.AddWithValue("@DOCClass", DocClass);
+            cmd.Parameters.AddWithValue("@NetAmount", netAmount);
+            cmd.Parameters.AddWithValue("@Basic", basic);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", currencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", currencyRate);
+            cmd.Parameters.AddWithValue("@CurrVal", currencyVal);
+            cmd.Parameters.AddWithValue("@CurrBasic", currencyBasic);
+            cmd.Parameters.AddWithValue("@INRBasicAmount", iNRBasicAmount);
+            cmd.Parameters.AddWithValue("@INROtherAmount", iNROtherAmount);
+            cmd.Parameters.AddWithValue("@FCBasicAmount", fCBasicAmount);
+            cmd.Parameters.AddWithValue("@FCOtherAmount", fCOtherAmount);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", voucherCreatedBy);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", remarksToAS);
+
+
+
+            if (fileBytesToAS1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", fileNameToAS1);
+                cmd.Parameters.AddWithValue("@FileBytes1", fileBytesToAS1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (fileBytesToAS2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", fileNameToAS2);
+                cmd.Parameters.AddWithValue("@FileBytes2", fileBytesToAS2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (fileBytesToAS3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", fileNameToAS3);
+                cmd.Parameters.AddWithValue("@FileBytes3", fileBytesToAS3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (fileBytesToAS4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", fileNameToAS4);
+                cmd.Parameters.AddWithValue("@FileBytes4", fileBytesToAS4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (fileBytesToAS5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", fileNameToAS5);
+                cmd.Parameters.AddWithValue("@FileBytes5", fileBytesToAS5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdById);
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+        public int ReconVRPVoucher
+               (
+                   int Pid,
+                   string VoucherNo,
+                   string VoucherDate,
+                   string VendorCode,
+                   string VendorName,
+                   string DOCClass,
+                   decimal NetAmount,
+                   decimal CurrAmount,
+                   string CurrencyDesc,
+                   int unitId,
+                   string VoucherCreatedBy,
+                   string AuthorizedRemarks,
+
+                   string FileName1,
+                   byte[] FileBytes1,
+
+                   string FileName2,
+                   byte[] FileBytes2,
+
+                   string FileName3,
+                   byte[] FileBytes3,
+
+                   string FileName4,
+                   byte[] FileBytes4,
+
+                   string FileName5,
+                   byte[] FileBytes5,
+                   int CreatedBy,
+                   DataTable dtVoucherDetails
+                )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_vendor_receipt_payment_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+
+
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@NetAmount", NetAmount);
+            cmd.Parameters.AddWithValue("@CurrAmount", CurrAmount);
+            cmd.Parameters.AddWithValue("@CurrDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconCRPVoucher
+               (
+                   int Pid,
+                   string VoucherNo,
+                   string VoucherDate,
+                   string CustomerCode,
+                   string CustomerName,
+                   string DOCClass,
+                   decimal NetAmount,
+                   decimal CurrAmount,
+                   string CurrencyDesc,
+                   int unitId,
+                   string VoucherCreatedBy,
+                   string AuthorizedRemarks,
+
+                   string FileName1,
+                   byte[] FileBytes1,
+
+                   string FileName2,
+                   byte[] FileBytes2,
+
+                   string FileName3,
+                   byte[] FileBytes3,
+
+                   string FileName4,
+                   byte[] FileBytes4,
+
+                   string FileName5,
+                   byte[] FileBytes5,
+                   int CreatedBy,
+                   DataTable dtVoucherDetails
+                )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_customer_receipt_payment_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+
+
+            cmd.Parameters.AddWithValue("@CustomerCode", CustomerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", CustomerName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@NetAmount", NetAmount);
+            cmd.Parameters.AddWithValue("@CurrAmount", CurrAmount);
+            cmd.Parameters.AddWithValue("@CurrDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconCBVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    // string TypeId,
+                    string DOCClass,
+                    string CurrencyDesc,
+                    //decimal Amount,
+                    decimal ReceiptAmountFC,
+                    decimal PaymentAmountFC,
+                    decimal ReceiptAmountINR,
+                    decimal PaymentAmountINR,
+                    //string PaiedToReceivedFrom,
+                    int UnitId,
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+                    DataTable dtVoucherDetails
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_cash_bank_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+
+            //cmd.Parameters.AddWithValue("@Type", TypeId);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            //cmd.Parameters.AddWithValue("@Amount", Amount);
+
+            cmd.Parameters.AddWithValue("@ReceiptAmountFC", ReceiptAmountFC);
+            cmd.Parameters.AddWithValue("@PaymentAmountFC", PaymentAmountFC);
+            cmd.Parameters.AddWithValue("@ReceiptAmountINR", ReceiptAmountINR);
+            cmd.Parameters.AddWithValue("@PaymentAmountINR", PaymentAmountINR);
+
+            //cmd.Parameters.AddWithValue("@PaiedToReceivedFrom", PaiedToReceivedFrom);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconCVoucher
+                (
+                     int Pid
+                   , string VoucherNo
+                   , string VoucherDate
+                   , string TypeId
+                   , string Class
+                   , string GLCode
+                   , string GLDescription
+                   , string CurrencyDesc
+                   , decimal Amount
+                   , decimal ReceiptAmountFC
+                   , decimal PaymentAmountFC
+                   , decimal ReceiptAmountINR
+                   , decimal PaymentAmountINR
+                   , string PaiedToReceivedFrom
+                   , string ChequeOrReferenceNo
+                   , string ChequeDated
+                   , string BankTransactionRefNoOrUTR
+                   , string ReconcileDate
+                   , string Narration
+                   , int UnitId
+                   , string VoucherCreatedBy
+                   , string Remarks
+
+                   , string FileName1
+                   , byte[] FileBytes1
+
+                   , string FileName2
+                   , byte[] FileBytes2
+
+                   , string FileName3
+                   , byte[] FileBytes3
+
+                   , string FileName4
+                   , byte[] FileBytes4
+
+                   , string FileName5
+                   , byte[] FileBytes5
+                   , int CreatedBy
+                   , DataTable dtVoucherDetails
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_contra_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+
+
+            cmd.Parameters.AddWithValue("@Type", TypeId);
+            cmd.Parameters.AddWithValue("@DOCClass", Class);
+            cmd.Parameters.AddWithValue("@GLCode", GLCode);
+            cmd.Parameters.AddWithValue("@GLDescription", GLDescription);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@Amount", Amount);
+
+            cmd.Parameters.AddWithValue("@ReceiptAmountFC", ReceiptAmountFC);
+            cmd.Parameters.AddWithValue("@PaymentAmountFC", PaymentAmountFC);
+            cmd.Parameters.AddWithValue("@ReceiptAmountINR", ReceiptAmountINR);
+            cmd.Parameters.AddWithValue("@PaymentAmountINR", PaymentAmountINR);
+
+            cmd.Parameters.AddWithValue("@PaiedToReceivedFrom", PaiedToReceivedFrom);
+            cmd.Parameters.AddWithValue("@ChequeOrReferenceNo", ChequeOrReferenceNo);
+            cmd.Parameters.AddWithValue("@ChequeDated", ChequeDated);
+            cmd.Parameters.AddWithValue("@BankTransactionRefNoOrUTR", BankTransactionRefNoOrUTR);
+
+            cmd.Parameters.AddWithValue("@ReconcileDate", ReconcileDate);
+            cmd.Parameters.AddWithValue("@Narration", Narration);
+
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", Remarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconMRVoucher
+               (
+                   int Pid,
+                   string VoucherNo,
+                   string VoucherDate,
+                   int unitId,
+                   string DOCClass,
+                   string VoucherCreatedBy,
+                   string AuthorizedRemarks,
+
+                   string FileName1,
+                   byte[] FileBytes1,
+
+                   string FileName2,
+                   byte[] FileBytes2,
+
+                   string FileName3,
+                   byte[] FileBytes3,
+
+                   string FileName4,
+                   byte[] FileBytes4,
+
+                   string FileName5,
+                   byte[] FileBytes5,
+
+                   int CreatedBy,
+
+                   DataTable dtVoucherDetails
+               )
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_MR_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+        public int ReconPurchaseOrderVoucher
+            (
+                int Pid,
+                string VoucherNo,
+                string VoucherDate,
+                string VendorCode,
+                string VendorName,
+                string Particular,
+                string DOCClass,
+                string CurrencyDesc,
+                decimal CurrencyRate,
+                decimal INRAmount,
+                decimal FCAmount,
+                int UnitId,
+                string VoucherCreatedBy,
+                string AuthorizedRemarks,
+
+                string FileName1,
+                byte[] FileBytes1,
+
+                string FileName2,
+                byte[] FileBytes2,
+
+                string FileName3,
+                byte[] FileBytes3,
+
+                string FileName4,
+                byte[] FileBytes4,
+
+                string FileName5,
+                byte[] FileBytes5,
+
+                int CreatedBy,
+
+                DataTable dtVoucherDetails
+                )
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_purchase_Order_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@Particular", Particular);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@INRAmount", INRAmount);
+            cmd.Parameters.AddWithValue("@FCAmount", FCAmount);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+        public int ReconIIVoucher
+            (
+                int Pid,
+                string VoucherNo,
+                string VoucherDate,
+                string DOCClass,
+                string Factor,
+                int UnitId,
+                string VoucherCreatedBy,
+                string AuthorizedRemarks,
+
+                string FileName1,
+                byte[] FileBytes1,
+
+                string FileName2,
+                byte[] FileBytes2,
+
+                string FileName3,
+                byte[] FileBytes3,
+
+                string FileName4,
+                byte[] FileBytes4,
+
+                string FileName5,
+                byte[] FileBytes5,
+
+                int CreatedBy,
+
+                DataTable dtVoucherDetails
+                )
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_inventory_issue_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@Factor", Factor);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+        public int ReconIRVoucher
+            (
+                int Pid,
+                string VoucherNo,
+                string VoucherDate,
+                string ReferenceVoucherNo,
+                string ReferenceVoucherDate,
+                string DOCClass,
+                int UnitId,
+                string VoucherCreatedBy,
+                string AuthorizedRemarks,
+
+                string FileName1,
+                byte[] FileBytes1,
+
+                string FileName2,
+                byte[] FileBytes2,
+
+                string FileName3,
+                byte[] FileBytes3,
+
+                string FileName4,
+                byte[] FileBytes4,
+
+                string FileName5,
+                byte[] FileBytes5,
+
+                int CreatedBy,
+
+                DataTable dtVoucherDetails
+                )
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_inventory_return_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@ReferenceVoucherNo", ReferenceVoucherNo);
+            cmd.Parameters.AddWithValue("@ReferenceVoucherDate", ReferenceVoucherDate);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+        public int ReconVDNVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    string VendorCode,
+                    string VendorName,
+                    string DOCClass,
+                    string CurrencyDesc,
+                    decimal CurrencyRate,
+                    int UnitId,
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+                    DataTable dtVoucherDetails
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_vendor_debit_note_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconVCNVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    string VendorCode,
+                    string VendorName,
+                    string DOCClass,
+                    string CurrencyDesc,
+                    decimal CurrencyRate,
+                    int UnitId,
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+                    DataTable dtVoucherDetails
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_vendor_credit_note_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconCDNVoucher
+                    (
+                        int Pid,
+                        string VoucherNo,
+                        string VoucherDate,
+                        string CustomerCode,
+                        string CustomerName,
+                        string DOCClass,
+                        string CurrencyDesc,
+                        decimal CurrencyRate,
+                        int UnitId,
+                        string VoucherCreatedBy,
+                        string AuthorizedRemarks,
+
+                        string FileName1,
+                        byte[] FileBytes1,
+
+                        string FileName2,
+                        byte[] FileBytes2,
+
+                        string FileName3,
+                        byte[] FileBytes3,
+
+                        string FileName4,
+                        byte[] FileBytes4,
+
+                        string FileName5,
+                        byte[] FileBytes5,
+
+                        int CreatedBy,
+                        DataTable dtVoucherDetails
+                     )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_customer_debit_note_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@CustomerCode", CustomerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", CustomerName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconCCNVoucher
+                    (
+                        int Pid,
+                        string VoucherNo,
+                        string VoucherDate,
+                        string CustomerCode,
+                        string CustomerName,
+                        string DOCClass,
+                        string CurrencyDesc,
+                        decimal CurrencyRate,
+                        int UnitId,
+                        string VoucherCreatedBy,
+                        string AuthorizedRemarks,
+
+                        string FileName1,
+                        byte[] FileBytes1,
+
+                        string FileName2,
+                        byte[] FileBytes2,
+
+                        string FileName3,
+                        byte[] FileBytes3,
+
+                        string FileName4,
+                        byte[] FileBytes4,
+
+                        string FileName5,
+                        byte[] FileBytes5,
+
+                        int CreatedBy,
+                        DataTable dtVoucherDetails
+                     )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_customer_credit_note_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@CustomerCode", CustomerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", CustomerName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+
+        public int ReconSTVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+
+
+                    string StockTransferOrderNo,
+                    string CustomerCode,
+                    string CustomerName,
+                    string FromClass,
+                    string ToClass,
+                    string FromWarehouseCode,
+                    string ToWarehouseCode,
+                    string RemarksParticular,
+
+                    int UnitId,
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+                    DataTable dtVoucherDetails
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_stock_transfer_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@StockTransferOrderNo", StockTransferOrderNo);
+            cmd.Parameters.AddWithValue("@CustomerCode", CustomerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", CustomerName);
+            cmd.Parameters.AddWithValue("@FromDOCClass", FromClass);
+            cmd.Parameters.AddWithValue("@ToDOCClass", ToClass);
+            cmd.Parameters.AddWithValue("@FromWarehouseCode", FromWarehouseCode);
+            cmd.Parameters.AddWithValue("@ToWarehouseCode", ToWarehouseCode);
+            cmd.Parameters.AddWithValue("@Remarks", RemarksParticular);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconSAVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    string Particular,
+
+                    int UnitId,
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+                    DataTable dtVoucherDetails
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_stock_adjustment_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@Particular", Particular);
+            cmd.Parameters.AddWithValue("@UnitId", UnitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconPurchaseReturnVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    string ReferenceInvoiceNo,
+                    string ReferenceInvoiceDate,
+                    string VendorCode,
+                    string VendorName,
+                    string DOCClass,
+                    string CurrencyDesc,
+                    decimal CurrencyRate,
+                    decimal Amount,
+                    int unitId,
+
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+
+                    DataTable dtVoucherDetails,
+                    int ActId
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_purchase_return_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@ReferenceInvoiceNo", ReferenceInvoiceNo);
+            cmd.Parameters.AddWithValue("@ReferenceInvoiceDate", ReferenceInvoiceDate);
+            cmd.Parameters.AddWithValue("@VendorCode", VendorCode);
+            cmd.Parameters.AddWithValue("@VendorName", VendorName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@Amount", Amount);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
+
+
+        public int ReconSaleReturnVoucher
+                (
+                    int Pid,
+                    string VoucherNo,
+                    string VoucherDate,
+                    string ReferenceInvoiceNo,
+                    string ReferenceInvoiceDate,
+                    string CustomerCode,
+                    string CustomerName,
+                    string DOCClass,
+                    string CurrencyDesc,
+                    decimal CurrencyRate,
+                    decimal Amount,
+                    string AccountID,
+                    int unitId,
+
+                    string VoucherCreatedBy,
+                    string AuthorizedRemarks,
+
+                    string FileName1,
+                    byte[] FileBytes1,
+
+                    string FileName2,
+                    byte[] FileBytes2,
+
+                    string FileName3,
+                    byte[] FileBytes3,
+
+                    string FileName4,
+                    byte[] FileBytes4,
+
+                    string FileName5,
+                    byte[] FileBytes5,
+
+                    int CreatedBy,
+
+                    DataTable dtVoucherDetails,
+                    int ActId
+                 )
+
+        {
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.CommandText = "[dbVoucher].[sp_recon_sale_return_voucher]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+
+            cmd.Parameters.AddWithValue("@Pid", Pid);
+            cmd.Parameters.AddWithValue("@VoucherNo", VoucherNo);
+            cmd.Parameters.AddWithValue("@VoucherDate", VoucherDate);
+            cmd.Parameters.AddWithValue("@ReferenceInvoiceNo", ReferenceInvoiceNo);
+            cmd.Parameters.AddWithValue("@ReferenceInvoiceDate", ReferenceInvoiceDate);
+            cmd.Parameters.AddWithValue("@CustomerCode", CustomerCode);
+            cmd.Parameters.AddWithValue("@CustomerName", CustomerName);
+            cmd.Parameters.AddWithValue("@DOCClass", DOCClass);
+            cmd.Parameters.AddWithValue("@CurrencyDesc", CurrencyDesc);
+            cmd.Parameters.AddWithValue("@CurrencyRate", CurrencyRate);
+            cmd.Parameters.AddWithValue("@Amount", Amount);
+            cmd.Parameters.AddWithValue("@AccountID", AccountID);
+            cmd.Parameters.AddWithValue("@UnitId", unitId);
+            cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
+            cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+
+            if (FileBytes1 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName1", FileName1);
+                cmd.Parameters.AddWithValue("@FileBytes1", FileBytes1);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes1", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName1", "");
+            }
+
+            if (FileBytes2 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName2", FileName2);
+                cmd.Parameters.AddWithValue("@FileBytes2", FileBytes2);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes2", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName2", "");
+            }
+
+            if (FileBytes3 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName3", FileName3);
+                cmd.Parameters.AddWithValue("@FileBytes3", FileBytes3);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes3", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName3", "");
+            }
+
+            if (FileBytes4 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName4", FileName4);
+                cmd.Parameters.AddWithValue("@FileBytes4", FileBytes4);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes4", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName4", "");
+            }
+
+            if (FileBytes5 != null)
+            {
+                cmd.Parameters.AddWithValue("@FileName5", FileName5);
+                cmd.Parameters.AddWithValue("@FileBytes5", FileBytes5);
+            }
+            else
+            {
+                cmd.Parameters.AddWithValue("@FileBytes5", System.Data.SqlTypes.SqlBinary.Null);
+                cmd.Parameters.AddWithValue("@FileName5", "");
+            }
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedBy);
+
+            cmd.Parameters.AddWithValue("@tblVoucherDetails", dtVoucherDetails);
+
+
+            cmd.Parameters.Add(rCode);
+            try
+            {
+                if (con.State == ConnectionState.Closed)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+                int value = Convert.ToInt32(rCode.Value);
+                con.Close();
+                con.Dispose();
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+            }
+        }
 
 
     }

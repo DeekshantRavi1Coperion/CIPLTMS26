@@ -14,14 +14,15 @@ public class VoucherStatusTypes
         AUTHORIZED = 1,
         APPROVED = 2,
         REAUTHORIZATION = 3,
-        REAUTHORIZED = 4
+        REAUTHORIZED = 4,
+        RECONCILED = 5
     }
 
     public enum EnumVoucherTypes : int
     {
         JV = 1,
         PV = 2,
-        MRN = 3,
+        MRNV = 3,
         SV = 4,
         SOV = 5,
         SIV = 6,
@@ -29,10 +30,10 @@ public class VoucherStatusTypes
         CRPV = 8,
         CBV = 9,
         CV = 10,
-        MR = 11,
+        MRV = 11,
         POV = 12,
         IIV = 13,
-        IRV = 14,        
+        IRV = 14,
         VDNV = 15,
         VCNV = 16,
         CDNV = 17,

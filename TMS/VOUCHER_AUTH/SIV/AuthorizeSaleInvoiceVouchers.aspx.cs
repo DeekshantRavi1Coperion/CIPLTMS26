@@ -38,6 +38,17 @@ public partial class VOUCHER_AUTH_SIV_AuthorizeSaleInvoiceVouchers : System.Web.
     int _createdById = 0;
     int _attachedById = 0;
 
+    public int Pid
+    {
+        get
+        {
+            if (ViewState["PID"] != null)
+                _pid = Convert.ToInt32(ViewState["PID"]);
+            else _pid = 0;
+
+            return _pid;
+        }
+    }
 
     public string StartDate
     {
@@ -1940,9 +1951,57 @@ public partial class VOUCHER_AUTH_SIV_AuthorizeSaleInvoiceVouchers : System.Web.
     }
 
 
+    //protected void btnAuthorize_Click(object sender, EventArgs e)
+    //{
+    //    Authorize();
+    //}
+
     protected void btnAuthorize_Click(object sender, EventArgs e)
     {
-        Authorize();
+        if (Convert.ToInt32(ViewState["StatusID"]) == (int)VoucherStatusTypes.EnumStatus.OPEN)
+        {
+            Authorize();
+        }
+        else
+        {
+            ReAuthorize(Pid, (int)VoucherStatusTypes.EnumVoucherTypes.SIV);
+        }
+    }
+
+    private void ReAuthorize(int Pid, int voucherTypeId)
+    {
+        int val = objVouchersAuthorization.ReauthorizeVoucher
+            (
+                    Pid
+                , voucherTypeId
+                , RemarksToAS
+                , FileNameToAS1
+                , FileBytesToAS1
+
+                , FileNameToAS2
+                , FileBytesToAS2
+
+                , FileNameToAS3
+                , FileBytesToAS3
+
+                , FileNameToAS4
+                , FileBytesToAS4
+
+                , FileNameToAS5
+                , FileBytesToAS5
+                , CreatedById
+            );
+
+        if (val > 0)
+        {
+            SuccessMessage("Voucher Number: " + VoucherNoToAS + " reauthorized successfully!");
+            GetVouchersList();
+        }
+        else
+        {
+            ExceptionMessage("Please try again.");
+            return;
+        }
     }
 
     protected void btnBulkAuthorize_Click(object sender, EventArgs e)

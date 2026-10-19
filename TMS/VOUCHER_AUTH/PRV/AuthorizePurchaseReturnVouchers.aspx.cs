@@ -1776,9 +1776,32 @@ public partial class VOUCHER_AUTH_PRV_AuthorizePurchaseReturnVouchers : System.W
         }
     }
 
+    //protected void btnAuthorize_Click(object sender, EventArgs e)
+    //{
+    //    Authorize(Pid
+    //               , VoucherNoToAS
+    //               , VoucherDateToAS
+    //               , ReferenceInvoiceNoToAS
+    //               , ReferenceInvoiceDateToAS
+    //               , VendorCodeToAS
+    //               , VendorNameToAS
+    //               , ClassToAS
+    //               , CurrencyDescToAS
+    //               , CurrencyRateToAS
+    //               , AmountToAS
+    //               , UnitIdToAS
+    //               , VoucherCreatedByToAS
+    //               , ActIdToAS
+    //               );
+    //}
+
+
+
     protected void btnAuthorize_Click(object sender, EventArgs e)
     {
-        Authorize(Pid
+        if (Convert.ToInt32(ViewState["StatusID"]) == (int)VoucherStatusTypes.EnumStatus.OPEN)
+        {
+            Authorize(Pid
                    , VoucherNoToAS
                    , VoucherDateToAS
                    , ReferenceInvoiceNoToAS
@@ -1793,6 +1816,47 @@ public partial class VOUCHER_AUTH_PRV_AuthorizePurchaseReturnVouchers : System.W
                    , VoucherCreatedByToAS
                    , ActIdToAS
                    );
+        }
+        else
+        {
+            ReAuthorize(Pid, (int)VoucherStatusTypes.EnumVoucherTypes.PRV);
+        }
+    }
+
+    private void ReAuthorize(int Pid, int voucherTypeId)
+    {
+        int val = objVouchersAuthorization.ReauthorizeVoucher
+            (
+                    Pid
+                , voucherTypeId
+                , RemarksToAS
+                , FileNameToAS1
+                , FileBytesToAS1
+
+                , FileNameToAS2
+                , FileBytesToAS2
+
+                , FileNameToAS3
+                , FileBytesToAS3
+
+                , FileNameToAS4
+                , FileBytesToAS4
+
+                , FileNameToAS5
+                , FileBytesToAS5
+                , CreatedById
+            );
+
+        if (val > 0)
+        {
+            SuccessMessage("Voucher Number: " + VoucherNoToAS + " reauthorized successfully!");
+            GetVouchersList();
+        }
+        else
+        {
+            ExceptionMessage("Please try again.");
+            return;
+        }
     }
 
     protected void btnBulkAuthorize_Click(object sender, EventArgs e)

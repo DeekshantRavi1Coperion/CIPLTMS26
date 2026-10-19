@@ -983,7 +983,7 @@ public partial class VOUCHER_AUTH_MR_AuthorizeMRVouchers : System.Web.UI.Page
                     //ExportZip(Convert.ToInt32(lblPID.Text), lblVoucherNo.Text);
                     ExportZip(Convert.ToInt32(lblPID.Text)
                             , lblVoucherNo.Text.Trim().ToUpper()
-                            , (int)VoucherStatusTypes.EnumVoucherTypes.MR
+                            , (int)VoucherStatusTypes.EnumVoucherTypes.MRV
                             , "");
                 }
                 else if (Convert.ToString(e.CommandArgument) == "AUTHORIZE")
@@ -1213,11 +1213,65 @@ public partial class VOUCHER_AUTH_MR_AuthorizeMRVouchers : System.Web.UI.Page
         }
     }
 
+    //protected void btnAuthorize_Click(object sender, EventArgs e)
+    //{
+
+    //    Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, DOCClassToAS, VoucherCreatedByToAS);
+    //}
+
+    //protected void btnAuthorize_Click(object sender, EventArgs e)
+    //{
+    //    Authorize();
+    //}
+
     protected void btnAuthorize_Click(object sender, EventArgs e)
     {
-
-        Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, DOCClassToAS, VoucherCreatedByToAS);
+        if (Convert.ToInt32(ViewState["StatusID"]) == (int)VoucherStatusTypes.EnumStatus.OPEN)
+        {
+            Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, DOCClassToAS, VoucherCreatedByToAS);
+        }
+        else
+        {
+            ReAuthorize(Pid, (int)VoucherStatusTypes.EnumVoucherTypes.MRV);
+        }
     }
+
+    private void ReAuthorize(int Pid, int voucherTypeId)
+    {
+        int val = objVouchersAuthorization.ReauthorizeVoucher
+            (
+                    Pid
+                , voucherTypeId
+                , RemarksToAS
+                , FileNameToAS1
+                , FileBytesToAS1
+
+                , FileNameToAS2
+                , FileBytesToAS2
+
+                , FileNameToAS3
+                , FileBytesToAS3
+
+                , FileNameToAS4
+                , FileBytesToAS4
+
+                , FileNameToAS5
+                , FileBytesToAS5
+                , CreatedById
+            );
+
+        if (val > 0)
+        {
+            SuccessMessage("Voucher Number: " + VoucherNoToAS + " reauthorized successfully!");
+            GetVouchersList();
+        }
+        else
+        {
+            ExceptionMessage("Please try again.");
+            return;
+        }
+    }
+
 
     protected void btnBulkAuthorize_Click(object sender, EventArgs e)
     {
@@ -1344,7 +1398,7 @@ public partial class VOUCHER_AUTH_MR_AuthorizeMRVouchers : System.Web.UI.Page
     {
         txtFolderPathSS.Text = string.Empty;
 
-        DataTable dt = CollectFiles.GetFilePath(Convert.ToInt32(Session["EMP_RECORD_ID"]), (int)VoucherStatusTypes.EnumVoucherTypes.MR);
+        DataTable dt = CollectFiles.GetFilePath(Convert.ToInt32(Session["EMP_RECORD_ID"]), (int)VoucherStatusTypes.EnumVoucherTypes.MRV);
         if (dt != null && dt.Rows.Count > 0)
         {
             txtFolderPathSS.Text = Convert.ToString(dt.Rows[0]["DIRECTORY_PATH"]);
@@ -1376,7 +1430,7 @@ public partial class VOUCHER_AUTH_MR_AuthorizeMRVouchers : System.Web.UI.Page
                     view.RowFilter = "PID = 0";
                     DataTable dtFilteredVoucherNo = view.ToTable(false);
 
-                    List<DataTable> dtfilesList = CollectFiles.GetLocalFilesList(CreatedById, (int)VoucherStatusTypes.EnumVoucherTypes.MR
+                    List<DataTable> dtfilesList = CollectFiles.GetLocalFilesList(CreatedById, (int)VoucherStatusTypes.EnumVoucherTypes.MRV
                                                                                              , dtFilteredVoucherNo, filePath);
 
                     if (dtfilesList.Count > 0)
@@ -1517,7 +1571,7 @@ public partial class VOUCHER_AUTH_MR_AuthorizeMRVouchers : System.Web.UI.Page
     {
         try
         {
-            _dsAttachedDocs = objVouchersAuthorization.GetVoucherDOCS(PId, (int)VoucherStatusTypes.EnumVoucherTypes.MR, "");
+            _dsAttachedDocs = objVouchersAuthorization.GetVoucherDOCS(PId, (int)VoucherStatusTypes.EnumVoucherTypes.MRV, "");
 
             if (_dsAttachedDocs.Tables.Count > 0 && _dsAttachedDocs.Tables[0].Rows.Count > 0)
             {
