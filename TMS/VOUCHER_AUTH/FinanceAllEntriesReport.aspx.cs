@@ -836,7 +836,7 @@ public partial class VOUCHER_AUTH_FinanceAllEntriesReport : System.Web.UI.Page
             gvPVVoucherDetails.DataSource = dtVoucherDetails;
             gvPVVoucherDetails.DataBind();
         }
-        else if (voucherTypeId == (int)VoucherStatusTypes.EnumVoucherTypes.MRN)
+        else if (voucherTypeId == (int)VoucherStatusTypes.EnumVoucherTypes.MRNV)
         {
             pnlGVMRN.Visible = true;
             gvMRNVoucherDetails.DataSource = dtVoucherDetails;
@@ -885,7 +885,7 @@ public partial class VOUCHER_AUTH_FinanceAllEntriesReport : System.Web.UI.Page
             gvCVVoucherDetails.DataBind();
         }
 
-        else if (voucherTypeId == (int)VoucherStatusTypes.EnumVoucherTypes.MR)
+        else if (voucherTypeId == (int)VoucherStatusTypes.EnumVoucherTypes.MRV)
         {
             pnlGVMR.Visible = true;
             gvMRVoucherDetails.DataSource = dtVoucherDetails;

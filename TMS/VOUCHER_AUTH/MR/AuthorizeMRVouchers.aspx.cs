@@ -1219,11 +1219,6 @@ public partial class VOUCHER_AUTH_MR_AuthorizeMRVouchers : System.Web.UI.Page
     //    Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, DOCClassToAS, VoucherCreatedByToAS);
     //}
 
-    //protected void btnAuthorize_Click(object sender, EventArgs e)
-    //{
-    //    Authorize();
-    //}
-
     protected void btnAuthorize_Click(object sender, EventArgs e)
     {
         if (Convert.ToInt32(ViewState["StatusID"]) == (int)VoucherStatusTypes.EnumStatus.OPEN)

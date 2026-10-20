@@ -226,7 +226,7 @@ public partial class VOUCHER_AUTH_MR_MRVouchersReport : System.Web.UI.Page
     {
         try
         {
-            _dsVoucherCreatedBy = objVouchersAuthorization.GetVouchersCreatedByList((int)VoucherStatusTypes.EnumVoucherTypes.MR);
+            _dsVoucherCreatedBy = objVouchersAuthorization.GetVouchersCreatedByList((int)VoucherStatusTypes.EnumVoucherTypes.MRV);
             if (_dsVoucherCreatedBy.Tables.Count > 0 && _dsVoucherCreatedBy.Tables[0].Rows.Count > 0)
             {
                 ddlCreatedBy.DataSource = _dsVoucherCreatedBy.Tables[0];

@@ -49,7 +49,7 @@ public partial class VOUCHER_AUTH_MRN_VouchersPDF : System.Web.UI.Page
                 _PID = Convert.ToInt32(Request.QueryString["pid"]);
                 Session["dsDetail"] = null;
                 //GetDetail(_PID);
-                GetDetail(_PID, (int)VoucherStatusTypes.EnumVoucherTypes.MRN);
+                GetDetail(_PID, (int)VoucherStatusTypes.EnumVoucherTypes.MRNV);
 
                 ltTable.Text = GetPDFDetailAndReturnHTML();
             }

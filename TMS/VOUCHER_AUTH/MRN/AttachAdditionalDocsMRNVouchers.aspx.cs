@@ -779,7 +779,7 @@ public partial class VOUCHER_AUTH_MRN_AttachAdditionalDocsMRNVouchers : System.W
                     //ExportZip(Convert.ToInt32(lblPID.Text), lblVoucherNo.Text);
                     ExportZip(Convert.ToInt32(lblPID.Text)
                             , lblVoucherNo.Text.Trim().ToUpper()
-                            , (int)VoucherStatusTypes.EnumVoucherTypes.MRN
+                            , (int)VoucherStatusTypes.EnumVoucherTypes.MRNV
                             , "");
                 }
 
@@ -964,7 +964,7 @@ public partial class VOUCHER_AUTH_MRN_AttachAdditionalDocsMRNVouchers : System.W
     {
         try
         {
-            _dsVoucherCreatedBy = objVouchersAuthorization.GetVouchersCreatedByList((int)VoucherStatusTypes.EnumVoucherTypes.MRN);
+            _dsVoucherCreatedBy = objVouchersAuthorization.GetVouchersCreatedByList((int)VoucherStatusTypes.EnumVoucherTypes.MRNV);
             if (_dsVoucherCreatedBy.Tables.Count > 0 && _dsVoucherCreatedBy.Tables[0].Rows.Count > 0)
             {
                 ddlCreatedBy.DataSource = _dsVoucherCreatedBy.Tables[0];
@@ -1110,7 +1110,7 @@ public partial class VOUCHER_AUTH_MRN_AttachAdditionalDocsMRNVouchers : System.W
     {
         try
         {
-            _dsAttachedDocs = objVouchersAuthorization.GetVoucherDOCS(PId, (int)VoucherStatusTypes.EnumVoucherTypes.MRN,"");
+            _dsAttachedDocs = objVouchersAuthorization.GetVoucherDOCS(PId, (int)VoucherStatusTypes.EnumVoucherTypes.MRNV,"");
 
             if (_dsAttachedDocs.Tables.Count > 0 && _dsAttachedDocs.Tables[0].Rows.Count > 0)
             {
@@ -1400,7 +1400,7 @@ public partial class VOUCHER_AUTH_MRN_AttachAdditionalDocsMRNVouchers : System.W
         int val = objVouchersAuthorization.AttachMRNAdditionalDocs
             (
                 Pid
-            , (int)VoucherStatusTypes.EnumVoucherTypes.MRN
+            , (int)VoucherStatusTypes.EnumVoucherTypes.MRNV
             , IsMRNClosedToAS
             , FileNameToAS1
             , FileBytesToAS1

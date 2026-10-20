@@ -974,7 +974,7 @@ public partial class VOUCHER_AUTH_FinanceAllEntriesDetailedReport : System.Web.U
             lblAttachedFilesLegend.Text = voucherType;
             if (voucherTypeId == (int)VoucherStatusTypes.EnumVoucherTypes.PV)
             {
-                ViewState["VoucherTypeidO"] = (int)VoucherStatusTypes.EnumVoucherTypes.MRN;
+                ViewState["VoucherTypeidO"] = (int)VoucherStatusTypes.EnumVoucherTypes.MRNV;
                 lblAttachedOtherFilesLegend.Text = "MRN Voucher";
             }
 

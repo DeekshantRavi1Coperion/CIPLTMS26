@@ -1203,10 +1203,6 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
     //    }
     //}
 
-    //protected void btnAuthorize_Click(object sender, EventArgs e)
-    //{
-    //    Authorize();
-    //}
 
     protected void btnAuthorize_Click(object sender, EventArgs e)
     {

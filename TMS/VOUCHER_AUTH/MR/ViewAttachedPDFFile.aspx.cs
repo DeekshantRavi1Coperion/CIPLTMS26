@@ -19,7 +19,8 @@ public partial class VOUCHER_AUTH_MR_ViewAttachedPDFFile : System.Web.UI.Page
                 if (Request.QueryString["docID"] != null)
                 {
                     dsFiles = objVouchersAuthorization.GetAttachedPoDocumentFile(Convert.ToInt32(Request.QueryString["docID"])
-                                                                              , (int)VoucherStatusTypes.EnumVoucherTypes.MR);
+                                                                              , (int)VoucherStatusTypes.EnumVoucherTypes.MRV);
+
                     if (dsFiles.Tables.Count > 0 && dsFiles.Tables[0].Rows.Count > 0)
                     {
                         DataRow dr = dsFiles.Tables[0].Rows[0];
