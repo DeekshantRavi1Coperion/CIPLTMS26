@@ -883,7 +883,7 @@
 
                                 <asp:Label ID="lblCurrencyDesc" runat="server" Text='<%# Eval("CURR_DESC") %>' Visible="false" />
                                 <asp:Label ID="lblCurrencyRate" runat="server" Text='<%# Eval("CURR_RATE") %>' Visible="false" />
-                                <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("VOUCHER_CREATED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CREATED_BY") %>' Visible="false" />
                                 <asp:Label ID="lblUnitId" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
                                 <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
 
@@ -1015,7 +1015,7 @@
                         <asp:BoundField DataField="CURR_DESC" HeaderText="Currency Desc" />
                         <asp:BoundField DataField="CURR_RATE" HeaderText="Currency Rate" />
 
-                        <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Created By" />
+                        <asp:BoundField DataField="CREATED_BY" HeaderText="Created By" />
                         <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
                         <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
 

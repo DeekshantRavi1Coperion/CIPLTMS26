@@ -1575,8 +1575,8 @@ public partial class VOUCHER_AUTH_POV_ReconPurchaseOrderVouchers : System.Web.UI
             ExceptionMessage(ex.ToString());
         }
     }
-    
-    void btnAuthorize_Click(object sender, EventArgs e)
+
+    protected void btnAuthorize_Click(object sender, EventArgs e)
     {
         Authorize();
     }

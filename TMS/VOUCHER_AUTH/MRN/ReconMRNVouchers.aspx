@@ -699,7 +699,8 @@
 
             </fieldset>
             <div class="full-width button-group">
-                <asp:CheckBox ID="chkIsMRNClosed" Text="Tag ALL MRN Closed" runat="server" />
+                <asp:CheckBox ID="chkIsMRNClosed" Text="Tag ALL MRN Closed" runat="server"
+                    Visible="false" />
 
                 <asp:CheckBox ID="chkSelectDeselectVouchers" Text="Tag All Vouchers"
                     runat="server" AutoPostBack="true"

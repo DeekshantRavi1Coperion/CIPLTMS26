@@ -762,7 +762,8 @@
 
 
                     <label>Created By:</label>
-                    <asp:DropDownList ID="ddlCreatedByToS" runat="server" Width="100%" Height="23px">
+                    <asp:DropDownList ID="ddlCreatedByToS" runat="server" 
+                        CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Search By:</label>

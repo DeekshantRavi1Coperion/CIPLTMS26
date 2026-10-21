@@ -2613,11 +2613,24 @@ public partial class VOUCHER_AUTH_PRV_ReconPurchaseReturnVouchers : System.Web.U
                 dr["GL_DESCRIPTION"] = lblGLDescriptionD.Text;
                 dr["PRODUCT_CODE"] = lblProductCodeD.Text;
                 dr["PRODUCT_DESCRIPTION"] = lblProductDescriptionD.Text;
-                dr["QUANTITY"] = lblQuantityD.Text;
+
+                if (!string.IsNullOrEmpty(lblQuantityD.Text))
+                    dr["QUANTITY"] = lblQuantityD.Text;
+                else dr["QUANTITY"] = 0;
+
                 dr["UOM"] = lblUOMD.Text;
-                dr["RATE"] = lblRateD.Text;
-                dr["AMOUNT"] = lblAmountD.Text;
-                dr["TERM_AMOUNT"] = lblTermAmountD.Text;
+
+                if (!string.IsNullOrEmpty(lblRateD.Text))
+                    dr["RATE"] = lblRateD.Text;
+                else dr["RATE"] = 0;
+
+                if (!string.IsNullOrEmpty(lblAmountD.Text))
+                    dr["AMOUNT"] = lblAmountD.Text;
+                else dr["AMOUNT"] = 0;
+
+                if (!string.IsNullOrEmpty(lblTermAmountD.Text))
+                    dr["TERM_AMOUNT"] = lblTermAmountD.Text;
+                else dr["TERM_AMOUNT"] = 0;
 
                 dtVoucherDetails.Rows.Add(dr);
             }

@@ -1321,8 +1321,8 @@ public partial class VOUCHER_AUTH_CV_ReconCVouchers : System.Web.UI.Page
         }
     }
 
-    
-    void btnAuthorize_Click(object sender, EventArgs e)
+
+    protected void btnAuthorize_Click(object sender, EventArgs e)
     {
         Authorize();
     }

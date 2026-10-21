@@ -1,5 +1,6 @@
-﻿<%@ Page Title="CIPLTMS - SIV - Authorize Sale Invoice Vouchers" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
+﻿<%@ Page Title="CIPLTMS - SIV - Reconcile Sale Invoice Vouchers" Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
     CodeFile="ReconSaleInvoiceVouchers.aspx.cs" Inherits="VOUCHER_AUTH_SIV_ReconSaleInvoiceVouchers" %>
+
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -867,7 +868,7 @@
 
 
         <fieldset class="employee-grid-fieldset">
-            <legend>Authorize Sale Invoice Vouchers:
+            <legend>Reconcile Sale Invoice Vouchers:
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
             </legend>
 
@@ -916,7 +917,7 @@
                                 <asp:Label ID="lblDueDate" runat="server" Text='<%# Eval("RECON_DUE_DATE") %>' Visible="false" />
 								
                                 <asp:Label ID="lblChallanNo" runat="server" Text='<%# Eval("CHALLAN_NO") %>' Visible="false" />
-                                <asp:Label ID="lblChallanDate" runat="server" Text='<%# Eval("CHALLAN_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblChallanDate" runat="server" Text='<%# Eval("CHALLAN_DT") %>' Visible="false" />
                                 
 								<asp:Label ID="lblOANoORIG" runat="server" Text='<%# Eval("OA_NO") %>' Visible="false" />
                                 <asp:Label ID="lblOANo" runat="server" Text='<%# Eval("RECON_OA_NO") %>' Visible="false" />
@@ -928,10 +929,11 @@
                                 <asp:Label ID="lblYoDate" runat="server" Text='<%# Eval("YO_DATE") %>' Visible="false" />
                                 <asp:Label ID="lblEGPNo" runat="server" Text='<%# Eval("EGP_NO") %>' Visible="false" />
                                 <asp:Label ID="lblEGPDate" runat="server" Text='<%# Eval("EGP_DATE") %>' Visible="false" />
-                                <asp:Label ID="lblCustomerCode" runat="server" Text='<%# Eval("CUSTOMER_CODE") %>' Visible="false" />
-								
+                                								
                                 <asp:Label ID="lblCustomerCodeORIG" runat="server" Text='<%# Eval("CUSTOMER_CODE") %>' Visible="false" />
-                                <asp:Label ID="lblCustomerName" runat="server" Text='<%# Eval("RECON_CUSTOMER_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblCustomerCode" runat="server" Text='<%# Eval("RECON_CUSTOMER_CODE") %>' Visible="false" />
+
+                                <asp:Label ID="lblCustomerName" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' Visible="false" />
                                 
 								<asp:Label ID="lblClass" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
 								
@@ -1081,7 +1083,7 @@
 						
 
                         <asp:BoundField DataField="CHALLAN_NO" HeaderText="Challan No" />
-                        <asp:BoundField DataField="CHALLAN_DATE" HeaderText="Challan Date" />
+                        <asp:BoundField DataField="CHALLAN_DT" HeaderText="Challan Date" />
 
                         <asp:BoundField DataField="OA_NO" HeaderText="OA No" />
                         <asp:BoundField DataField="RECON_OA_NO" HeaderText="Recon OA No" />

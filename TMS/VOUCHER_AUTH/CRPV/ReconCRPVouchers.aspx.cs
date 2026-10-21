@@ -1516,8 +1516,8 @@ public partial class VOUCHER_AUTH_CRPV_ReconCRPVouchers : System.Web.UI.Page
         }
     }
 
-    
-    void btnAuthorize_Click(object sender, EventArgs e)
+
+    protected void btnAuthorize_Click(object sender, EventArgs e)
     {
         Authorize();
     }

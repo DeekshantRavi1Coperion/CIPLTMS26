@@ -879,7 +879,7 @@
                                 <asp:Label ID="lblReferenceVoucherDate" runat="server" Text='<%# Eval("RECON_REFERENCE_VOUCHER_DATE") %>' Visible="false" />
 
                                 <asp:Label ID="lblClass" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
-                                <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("VOUCHER_CREATED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CREATED_BY") %>' Visible="false" />
                                 <asp:Label ID="lblUnitId" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
                                 <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
 

@@ -914,8 +914,11 @@
 
                                 <asp:Label ID="lblChallanNo" runat="server" Text='<%# Eval("CHALLAN_NO") %>' Visible="false" />
                                 <asp:Label ID="lblChallanDate" runat="server" Text='<%# Eval("CHALLAN_DATE") %>' Visible="false" />
-                                <asp:Label ID="lblPurchaseOrderNo" runat="server" Text='<%# Eval("PURCHASE_ORDER_NO") %>' Visible="false" />
-                                <asp:Label ID="lblPurchaseOrderDate" runat="server" Text='<%# Eval("PURCHASE_ORDER_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblPurchaseOrderNo" runat="server" Text='<%# Eval("OA_NO") %>' Visible="false" />
+                                
+                                <asp:Label ID="lblPurchaseOrderDateORIG" runat="server" Text='<%# Eval("OA_DATE") %>' Visible="false" />
+                                <asp:Label ID="lblPurchaseOrderDate" runat="server" Text='<%# Eval("RECON_OA_DATE") %>' Visible="false" />
+                                
                                 <asp:Label ID="lblClass" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
 
                                 <asp:Label ID="lblVendorCodeORIG" runat="server" Text='<%# Eval("VENDOR_CODE") %>' Visible="false" />
@@ -1063,8 +1066,11 @@
 
                         <asp:BoundField DataField="CHALLAN_NO" HeaderText="Challan No" />
                         <asp:BoundField DataField="CHALLAN_DATE" HeaderText="Challan Date" />
-                        <asp:BoundField DataField="PURCHASE_ORDER_NO" HeaderText="Purchase Order No" />
-                        <asp:BoundField DataField="PURCHASE_ORDER_DATE" HeaderText="Purchase Order Date" />
+                        <asp:BoundField DataField="OA_NO" HeaderText="Purchase Order No" />
+                        
+                        <asp:BoundField DataField="OA_DATE" HeaderText="Purchase Order Date" />
+                        <asp:BoundField DataField="RECON_OA_DATE" HeaderText="Recon Purchase Order Date" />
+                        
                         <asp:BoundField DataField="DOC_CLASS" HeaderText="DOC Class" />
 						
                         <asp:BoundField DataField="VENDOR_CODE" HeaderText="Vendor Code" />

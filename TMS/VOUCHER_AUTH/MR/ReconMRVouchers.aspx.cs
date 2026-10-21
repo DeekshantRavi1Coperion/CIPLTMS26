@@ -1131,8 +1131,8 @@ public partial class VOUCHER_AUTH_MR_ReconMRVouchers : System.Web.UI.Page
             ExceptionMessage(ex.ToString());
         }
     }
-    
-    void btnAuthorize_Click(object sender, EventArgs e)
+
+    protected void btnAuthorize_Click(object sender, EventArgs e)
     {
         Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, DOCClassToAS, VoucherCreatedByToAS);
     }

@@ -896,7 +896,7 @@
 
                                 <asp:Label ID="lblGLDescription" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
 
-                                <asp:Label ID="lblCurrencyDesc" runat="server" Text='<%# Eval("CURRENCY_DESC") %>' Visible="false" />
+                                <asp:Label ID="lblCurrencyDesc" runat="server" Text='<%# Eval("CURR_DESC") %>' Visible="false" />
 
                                 <asp:Label ID="lblAmountORIG" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
                                 <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("RECON_AMOUNT") %>' Visible="false" />
@@ -1047,7 +1047,7 @@
                         <asp:BoundField DataField="RECON_GLCODE" HeaderText="Recon GL Code" />
 
                         <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
-                        <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency Desc" />
+                        <asp:BoundField DataField="CURR_DESC" HeaderText="Currency Desc" />
 
                         <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
                         <asp:BoundField DataField="RECON_AMOUNT" HeaderText="Recon Amount" />

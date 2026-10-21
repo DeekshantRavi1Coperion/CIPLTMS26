@@ -13,7 +13,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 
-public partial class VOUCHER_AUTH_SIV_AuthorizeSaleInvoiceVouchers : System.Web.UI.Page
+public partial class VOUCHER_AUTH_SIV_ReconSaleInvoiceVouchers : System.Web.UI.Page
 {
 
     #region VARIABLES[=====================]

@@ -2297,11 +2297,23 @@ public partial class VOUCHER_AUTH_SRV_ReconSaleReturnVouchers : System.Web.UI.Pa
                 dr["PRODUCT_CODE_RETURNED"] = lblProductCodeReturnedD.Text;
                 dr["PRODUCT_DESCRIPTION_RETURNED"] = lblProductDescriptionReturnedD.Text;
 
-                dr["QUANTITY"] = lblQuantityD.Text;
-                dr["UOM"] = lblUOMD.Text;                
-                dr["RATE"] = lblRateD.Text;
-                dr["AMOUNT"] = lblAmountD.Text;
-                dr["TERM_AMOUNT"] = lblTermAmountD.Text;
+                if (!string.IsNullOrEmpty(lblQuantityD.Text))
+                    dr["QUANTITY"] = lblQuantityD.Text;
+                else dr["QUANTITY"] = 0;
+
+                dr["UOM"] = lblUOMD.Text;
+
+                if (!string.IsNullOrEmpty(lblRateD.Text))
+                    dr["RATE"] = lblRateD.Text;
+                else dr["RATE"] = 0;
+
+                if (!string.IsNullOrEmpty(lblAmountD.Text))
+                    dr["AMOUNT"] = lblAmountD.Text;
+                else dr["AMOUNT"] = 0;
+
+                if (!string.IsNullOrEmpty(lblTermAmountD.Text))
+                    dr["TERM_AMOUNT"] = lblTermAmountD.Text;
+                else dr["TERM_AMOUNT"] = 0;
 
                 dtVoucherDetails.Rows.Add(dr);
             }
@@ -2343,7 +2355,7 @@ public partial class VOUCHER_AUTH_SRV_ReconSaleReturnVouchers : System.Web.UI.Pa
 
                , FileNameToAS5
                , FileBytesToAS5
-               
+
                , CreatedById
                , dtVoucherDetails
                , ActId
@@ -2398,7 +2410,7 @@ public partial class VOUCHER_AUTH_SRV_ReconSaleReturnVouchers : System.Web.UI.Pa
                 {
                     Label lblVoucherNo = (Label)gr.FindControl("lblVoucherNo");
                     Label lblVoucherDate = (Label)gr.FindControl("lblVoucherDate");
-                    
+
                     Label lblReferenceInvoiceNo = (Label)gr.FindControl("lblReferenceInvoiceNo");
                     Label lblReferenceInvoiceDate = (Label)gr.FindControl("lblReferenceInvoiceDate");
                     Label lblCustomerCode = (Label)gr.FindControl("lblCustomerCode");

@@ -922,7 +922,7 @@
 
                                 <asp:Label ID="lblRemarks" runat="server" Text='<%# Eval("REMARKS") %>' Visible="false" />
 
-                                <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("VOUCHER_CREATED_BY") %>' Visible="false" />
+                                <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CREATED_BY") %>' Visible="false" />
                                 <asp:Label ID="lblUnitId" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
                                 <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
 
@@ -1075,7 +1075,7 @@
 
                         <asp:BoundField DataField="REMARKS" HeaderText="Remarks" />
 
-                        <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Created By" />
+                        <asp:BoundField DataField="CREATED_BY" HeaderText="Created By" />
                         <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
                         <asp:BoundField DataField="APPROVED_BY" HeaderText="Approved By" />
 
