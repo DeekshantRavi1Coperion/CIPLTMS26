@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.36128.20
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RECON_VOUCHERS_AUTOMAILER", "RECON_VOUCHERS_AUTOMAILER.csproj", "{C91442FC-CD9E-4C44-93FA-230D3BA87632}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C91442FC-CD9E-4C44-93FA-230D3BA87632}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C91442FC-CD9E-4C44-93FA-230D3BA87632}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C91442FC-CD9E-4C44-93FA-230D3BA87632}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C91442FC-CD9E-4C44-93FA-230D3BA87632}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {24515BA4-8F81-46D7-A9B3-3F5009D59C5D}
+	EndGlobalSection
+EndGlobal
