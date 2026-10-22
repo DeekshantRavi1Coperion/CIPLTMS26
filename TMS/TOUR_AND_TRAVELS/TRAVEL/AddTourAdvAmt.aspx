@@ -121,33 +121,33 @@
 
     </script>
 
-     <script type="text/javascript">
-         function stopEnterKey(evt) {
-             var evt = (evt) ? evt : ((event) ? event : null);
-             var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-             if (evt.keyCode == 13) {
-                 return false;
-             }
-         }
-         document.onkeypress = stopEnterKey;
-     </script>
+    <script type="text/javascript">
+        function stopEnterKey(evt) {
+            var evt = (evt) ? evt : ((event) ? event : null);
+            var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+            if (evt.keyCode == 13) {
+                return false;
+            }
+        }
+        document.onkeypress = stopEnterKey;
+    </script>
 
-     <script type="text/javascript">
+    <script type="text/javascript">
 
-         function preventBack() { window.history.forward(); }
-         setTimeout("preventBack()", 0);
-         window.onunload = function () { null };
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
 
-     </script>
+    </script>
 
-     <script type="text/Javascript">
-         function checkDec(el) {
-             var ex = /^[0-9]+\.?[0-9]*$/;
-             if (ex.test(el.value) == false) {
-                 el.value = el.value.substring(0, el.value.length - 1);
-             }
-         }
-     </script>
+    <script type="text/Javascript">
+        function checkDec(el) {
+            var ex = /^[0-9]+\.?[0-9]*$/;
+            if (ex.test(el.value) == false) {
+                el.value = el.value.substring(0, el.value.length - 1);
+            }
+        }
+    </script>
 
 
 
@@ -333,7 +333,7 @@
     </asp:ModalPopupExtender>
     <asp:Panel ID="pnlbtnViewInPDFPopup"
         runat="server"
-        CssClass="popup-layout">
+        CssClass="popup-edit">
         <table width="100%">
             <tr>
                 <td align="right">
@@ -344,8 +344,13 @@
         </table>
         <%-- ///////////////////////////--%>
 
-        <div class="form-grid-container">
-            <fieldset class="filter-popup-card">
+
+        <div class="popup-layout">
+
+            <div class="form-grid-container">
+            </div>
+
+            <fieldset class="popup-grid-fieldset">
                 <legend>
                     <asp:Label ID="lblOpenTours" runat="server" Text="Records[0]" /></legend>
                 <table style="width: 95%;">
@@ -378,7 +383,10 @@
                     </asp:GridView>
                 </div>
             </fieldset>
+
+
         </div>
+
     </asp:Panel>
 
     <%--</ContentTemplate>

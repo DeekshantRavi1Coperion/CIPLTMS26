@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true" CodeFile="PrintEPaymentVoucher.aspx.cs"
-    Inherits="FINANCE_PrintEPaymentVoucher" 
+    Inherits="FINANCE_PrintEPaymentVoucher"
     Title="CIPLTMS - Print E Payment Voucher" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
@@ -453,7 +453,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -470,7 +470,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -766,7 +766,7 @@
 
             <div class="popup-layout">
 
-                <div class="form-grid-container">
+                <div class="popup-grid-container">
                     <fieldset class="filter-popup-card">
                         <legend>
                             <asp:Label ID="lblVouchersSIRerords" runat="server" Text="Vouchers Records[0]" />
@@ -781,7 +781,8 @@
                     </fieldset>
                 </div>
 
-                <div class="popup-grid-container">
+                <fieldset class="popup-grid-fieldset">
+                    <%--<div class="popup-grid-container">--%>
                     <asp:GridView
                         CssClass="popup-grid"
                         ID="gvVouchersDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -868,7 +869,8 @@
                         <EditRowStyle BackColor="#7C6F57" />
                         <AlternatingRowStyle BackColor="White" />
                     </asp:GridView>
-                </div>
+                    <%--</div>--%>
+                </fieldset>
 
             </div>
 

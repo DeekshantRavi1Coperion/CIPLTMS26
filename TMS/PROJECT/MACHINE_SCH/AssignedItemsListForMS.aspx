@@ -1487,7 +1487,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" />
@@ -1509,7 +1509,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
                 <asp:GridView
@@ -1540,7 +1541,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -1566,7 +1568,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" />
@@ -1596,7 +1598,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:Label ID="lblDrawingMsg" runat="server" />
 
                 <asp:GridView
@@ -1635,8 +1638,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
-
+                <%--</div>--%>
+            </fieldset>
         </div>
 
     </asp:Panel>
@@ -2019,7 +2022,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendScheduleMachine" runat="server" Text="Schedule Machine" />:
@@ -2147,107 +2150,110 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
 
-                <asp:GridView
-                    CssClass="popup-grid"
-                    ID="gvMachineSchedulingList" runat="server" AutoGenerateColumns="false" CellPadding="5"
-                    AlternatingRowStyle-CssClass="alt"
-                    OnRowCommand="gvMachineSchedulingList_RowCommand">
-                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                    <Columns>
-                        <asp:TemplateField HeaderText="Sr No">
-                            <ItemTemplate>
-                                <asp:Label ID="lblTypeOfWorkID" runat="server" Visible="false" Text='<%# Eval("TYPE_OF_WORK_ID") %>' />
-                                <asp:Label ID="lblActivityID" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_ID") %>' />
-                                <asp:Label ID="lblMachineID" runat="server" Visible="false" Text='<%# Eval("MACHINE_ID") %>' />
-                                <asp:Label ID="lblWorkerID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
-                                <asp:TextBox ID="txtSrNoToMSchInList" runat="server" Enabled="false" CssClass="textboxcenter"
-                                    Text='<%# Eval("SR_NO") %>' />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                    <asp:GridView
+                        CssClass="popup-grid"
+                        ID="gvMachineSchedulingList" runat="server" AutoGenerateColumns="false" CellPadding="5"
+                        AlternatingRowStyle-CssClass="alt"
+                        OnRowCommand="gvMachineSchedulingList_RowCommand">
+                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                        <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                            <ItemTemplate>
-                                <asp:ImageButton ID="imgBtnRemove" CommandArgument="REMOVE" runat="server" ToolTip="Remove"
-                                    ImageUrl="~/Images/Icons/REMOVE03.png" Width="35px" Height="35px" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                        <Columns>
+                            <asp:TemplateField HeaderText="Sr No">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblTypeOfWorkID" runat="server" Visible="false" Text='<%# Eval("TYPE_OF_WORK_ID") %>' />
+                                    <asp:Label ID="lblActivityID" runat="server" Visible="false" Text='<%# Eval("ACTIVITY_ID") %>' />
+                                    <asp:Label ID="lblMachineID" runat="server" Visible="false" Text='<%# Eval("MACHINE_ID") %>' />
+                                    <asp:Label ID="lblWorkerID" runat="server" Visible="false" Text='<%# Eval("EMP_RECORD_ID") %>' />
 
-                        <%--<asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                    <asp:TextBox ID="txtSrNoToMSchInList" runat="server" Enabled="false" CssClass="textboxcenter"
+                                        Text='<%# Eval("SR_NO") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <asp:TemplateField HeaderText="Remove" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                <ItemTemplate>
+                                    <asp:ImageButton ID="imgBtnRemove" CommandArgument="REMOVE" runat="server" ToolTip="Remove"
+                                        ImageUrl="~/Images/Icons/REMOVE03.png" Width="35px" Height="35px" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                            <%--<asp:TemplateField HeaderText="Edit" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                                         <ItemTemplate>
                                             <asp:ImageButton ID="imgBtnEdit" CommandArgument="EDIT" runat="server" ToolTip="Edit"
                                                 ImageUrl="~/Images/LOT/edit5.png" Width="35px" Height="35px" />
                                         </ItemTemplate>
                                     </asp:TemplateField>--%>
 
-                        <asp:TemplateField HeaderText="Type" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtTypeOfWorkToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                    Width="150px" Text='<%# Eval("TYPE_OF_WORK") %>' />
+                            <asp:TemplateField HeaderText="Type" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtTypeOfWorkToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                        Width="150px" Text='<%# Eval("TYPE_OF_WORK") %>' />
 
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Activity">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtActivityToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                    Width="150px" Text='<%# Eval("ACTIVITY_NAME") %>' />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Activity">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtActivityToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                        Width="150px" Text='<%# Eval("ACTIVITY_NAME") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Machine">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtMachineToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                    Width="250px" Text='<%# Eval("MACHINE_NAME") %>' />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Machine">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtMachineToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                        Width="250px" Text='<%# Eval("MACHINE_NAME") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Worker" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtWorkerToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
-                                    Width="250px" Text='<%# Eval("EMPLOYEE_NAME") %>' />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Worker" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtWorkerToMSchInList" runat="server" Enabled="false" CssClass="textboxleftyellow"
+                                        Width="250px" Text='<%# Eval("EMPLOYEE_NAME") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Date">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtScheduledDateToMSchInList" runat="server" Width="100px"
-                                    Enabled="false" CssClass="textboxleftyellow"
-                                    Text='<%# Eval("DATE") %>'></asp:TextBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Date">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtScheduledDateToMSchInList" runat="server" Width="100px"
+                                        Enabled="false" CssClass="textboxleftyellow"
+                                        Text='<%# Eval("DATE") %>'></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Scheduled From">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtScheduledFromToMSchInList" runat="server" Width="100%"
-                                    Enabled="false" CssClass="textboxleftgreen"
-                                    Text='<%# Eval("SCHEDULED_FROM") %>'></asp:TextBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Scheduled From">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtScheduledFromToMSchInList" runat="server" Width="100%"
+                                        Enabled="false" CssClass="textboxleftgreen"
+                                        Text='<%# Eval("SCHEDULED_FROM") %>'></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:TemplateField HeaderText="Scheduled To">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtScheduledToMSchInList" runat="server" Width="100%"
-                                    Enabled="false" CssClass="textboxleftgreen"
-                                    Text='<%# Eval("SCHEDULED_TO") %>'></asp:TextBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-
-
-                        <asp:TemplateField HeaderText="Scheduled Hours">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtScheduledHoursToMSchInList" runat="server" Width="100%"
-                                    Enabled="false" CssClass="textboxleftgreen"
-                                    Text='<%# Eval("SCHEDULED_HOURS") %>'></asp:TextBox>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Scheduled To">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtScheduledToMSchInList" runat="server" Width="100%"
+                                        Enabled="false" CssClass="textboxleftgreen"
+                                        Text='<%# Eval("SCHEDULED_TO") %>'></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
 
+                            <asp:TemplateField HeaderText="Scheduled Hours">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtScheduledHoursToMSchInList" runat="server" Width="100%"
+                                        Enabled="false" CssClass="textboxleftgreen"
+                                        Text='<%# Eval("SCHEDULED_HOURS") %>'></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <%--<asp:TemplateField HeaderText="Available From">
+
+
+                            <%--<asp:TemplateField HeaderText="Available From">
                                         <ItemTemplate>
                                             <asp:TextBox ID="txtAvailableFromToMSchInList" runat="server" Width="100%"
                                                 CssClass="textboxleftyellow"
@@ -2272,24 +2278,25 @@
                                         </ItemTemplate>
                                     </asp:TemplateField>--%>
 
-                        <asp:TemplateField HeaderText="Remarks">
-                            <ItemTemplate>
-                                <asp:TextBox ID="txtRemarksToMSchInList" Width="250px" runat="server" TextMode="MultiLine"
-                                    Text='<%# Eval("REMARKS") %>' Columns="30" CssClass="textboxleftyellow" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Remarks">
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtRemarksToMSchInList" Width="250px" runat="server" TextMode="MultiLine"
+                                        Text='<%# Eval("REMARKS") %>' Columns="30" CssClass="textboxleftyellow" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                    </Columns>
+                        </Columns>
 
-                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                    <EditRowStyle BackColor="#7C6F57" />
-                    <AlternatingRowStyle BackColor="White" />
-                </asp:GridView>
+                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                        <EditRowStyle BackColor="#7C6F57" />
+                        <AlternatingRowStyle BackColor="White" />
+                    </asp:GridView>
 
-            </div>
+                    <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -2343,7 +2350,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendMachineNameSchD" runat="server" Text="Schedule Machine" />:
@@ -2426,7 +2433,9 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+           <%-- <div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Panel ID="pnlScheduleDatesMsg" Visible="false" runat="server">
                         <asp:Label ID="lblScheduleDatesMsg" runat="server" Font-Bold="true" Font-Size="Large" />
@@ -2627,7 +2636,8 @@
                 </asp:UpdatePanel>
                 <input type="hidden" id="div_position" name="div_position" />
 
-            </div>
+            <%--</div>--%>
+                </fieldset>
 
         </div>
 
@@ -2653,7 +2663,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendSchedulingCompletion" runat="server" Text="Complete Scheduling" />
@@ -2806,7 +2816,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+            <%--<div class="popup-grid-container">--%>
 
                 <div align="center">
                     <asp:Panel ID="pnlSchedulingCompletionMsg" Visible="false" runat="server">
@@ -2930,7 +2941,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+            <%--</div>--%>
+                </fieldset>
 
         </div>
 

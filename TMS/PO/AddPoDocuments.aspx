@@ -507,7 +507,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -526,7 +526,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -775,7 +775,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblMRNDetailRecors" runat="server" Text="MRN Detailed Records[0]" />
@@ -850,7 +850,10 @@
                         OnClientClick="return ValidateAllFileAttachment1();" />
                 </div>
             </div>
-            <div class="popup-grid-container">
+
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="popup-grid"
@@ -931,8 +934,8 @@
 
 
 
-            </div>
-
+                <%--</div>--%>
+            </fieldset>
         </div>
 
     </asp:Panel>

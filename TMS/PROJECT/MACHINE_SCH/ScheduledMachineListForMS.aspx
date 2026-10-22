@@ -506,7 +506,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendMachineNameSchD" runat="server" Text="Re-Schedule Machine" />:
@@ -515,9 +515,7 @@
 
                     <div class="form-grid form-grid-3">
 
-
                         <div class="full-width button-group">
-
 
                             <label>Machine Name:</label>
                             <asp:Label ID="lblMachineIDSchD" runat="server" Visible="false" />
@@ -656,7 +654,9 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+            <%--<div class="popup-grid-container">--%>
 
                 <asp:UpdatePanel runat="server" ID="uppanel">
                     <ContentTemplate>
@@ -914,7 +914,8 @@
                 </asp:UpdatePanel>
                 <input type="hidden" id="div_position" name="div_position" />
 
-            </div>
+            <%--</div>--%>
+                </fieldset>
 
         </div>
 
@@ -941,7 +942,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendAssignedDrawingDetails" runat="server" Text="Assigned Drawings List" />:
@@ -972,7 +973,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+            <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Panel ID="pnlAssignedDrawingDetailsMsg" Visible="false" runat="server">
                         <asp:Label ID="lblAssignedDrawingDetailsMsg" runat="server" Font-Bold="true" Font-Size="Large" />
@@ -1064,7 +1066,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+           <%-- </div>--%>
+                </fieldset>
 
         </div>
 

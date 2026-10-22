@@ -421,7 +421,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
@@ -440,7 +440,9 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
@@ -470,7 +472,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
     </asp:Panel>
@@ -496,49 +499,52 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
-                <fieldset class="filter-popup-card">
-                    <legend>
-                        <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" /></legend>
 
-                    <div class="popup-grid-container">
 
-                        <asp:GridView
-                            CssClass="popup-grid"
-                            ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                            ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
-                            OnRowCommand="gvDrawingDetail_RowCommand">
-                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                            <Columns>
-                                <asp:TemplateField HeaderText="Get" HeaderStyle-Width="20px">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblDrawingNo" runat="server" Visible="false" Text='<%# Eval("DRAWING_NO") %>' />
-                                        <asp:Label ID="lblDrawingID" runat="server" Visible="false" Text='<%# Eval("DRAWING_ID") %>' />
-                                        <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>' />
-                                        <asp:Label ID="lblQuantity" runat="server" Visible="false" Text='<%# Eval("QUANTITY") %>' />
-                                        <asp:Label ID="lblUOM" runat="server" Visible="false" Text='<%# Eval("UOM") %>' />
-                                        <asp:Label ID="lblReqdDateByProjectTeam" runat="server" Visible="false" Text='<%# Eval("REQD_DATE_BY_PROJECT_TEAM") %>' />
-                                        <asp:Button ID="btnGetDrawingDetail" CommandArgument="GET" ToolTip="Get" Width="100%"
-                                            runat="server" Text="Get" CssClass="button" />
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:BoundField DataField="DRAWING_NO" HeaderText="Drawing No." />
-                                <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
-                                <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
-                                <asp:BoundField DataField="REQD_DATE_BY_PROJECT_TEAM" HeaderText="Reqd. Date by Project Team" />
-                            </Columns>
-                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                            <EditRowStyle BackColor="#7C6F57" />
-                            <AlternatingRowStyle BackColor="White" />
-                        </asp:GridView>
-
-                    </div>
-
-                </fieldset>
+            <div class="popup-grid-container">
             </div>
+
+            <fieldset class="popup-grid-fieldset">
+                <legend>
+                    <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" /></legend>
+
+                <%--<div class="popup-grid-container">--%>
+
+                <asp:GridView
+                    CssClass="popup-grid"
+                    ID="gvDrawingDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvDrawingDetail_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Get" HeaderStyle-Width="20px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDrawingNo" runat="server" Visible="false" Text='<%# Eval("DRAWING_NO") %>' />
+                                <asp:Label ID="lblDrawingID" runat="server" Visible="false" Text='<%# Eval("DRAWING_ID") %>' />
+                                <asp:Label ID="lblDescription" runat="server" Visible="false" Text='<%# Eval("DESCRIPTION") %>' />
+                                <asp:Label ID="lblQuantity" runat="server" Visible="false" Text='<%# Eval("QUANTITY") %>' />
+                                <asp:Label ID="lblUOM" runat="server" Visible="false" Text='<%# Eval("UOM") %>' />
+                                <asp:Label ID="lblReqdDateByProjectTeam" runat="server" Visible="false" Text='<%# Eval("REQD_DATE_BY_PROJECT_TEAM") %>' />
+                                <asp:Button ID="btnGetDrawingDetail" CommandArgument="GET" ToolTip="Get" Width="100%"
+                                    runat="server" Text="Get" CssClass="button" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="DRAWING_NO" HeaderText="Drawing No." />
+                        <asp:BoundField DataField="DESCRIPTION" HeaderText="Description" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
+                        <asp:BoundField DataField="REQD_DATE_BY_PROJECT_TEAM" HeaderText="Reqd. Date by Project Team" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+                <%--</div>--%>
+            </fieldset>
+
         </div>
 
     </asp:Panel>

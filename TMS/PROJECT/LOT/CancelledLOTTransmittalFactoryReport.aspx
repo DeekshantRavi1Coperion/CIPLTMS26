@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS - Cancelled LOT Report" Language="C#" 
+<%@ Page Title="CIPLTMS - Cancelled LOT Report" Language="C#"
     MasterPageFile="~/HOME.master" AutoEventWireup="true"
     EnableViewState="true" CodeFile="CancelledLOTTransmittalFactoryReport.aspx.cs"
     Inherits="PROJECT_LOT_CancelledLOTTransmittalFactoryReport" %>
@@ -676,7 +676,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Subitem Details:
                     <asp:Label ID="lblSubitemsSIRerords" runat="server" Text="Subitems Records[0]" />
@@ -699,7 +699,8 @@
 
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Panel ID="pnlSubitemsMsg" Visible="false" runat="server">
                     <asp:Label ID="lblSubitemsMsg" runat="server" Font-Bold="true" Font-Size="Large" />
@@ -840,7 +841,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

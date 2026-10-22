@@ -428,7 +428,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendDetails" runat="server" />:
@@ -476,7 +476,8 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="employee-grid"
@@ -517,8 +518,9 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
+<%--</div>--%>
+</fieldset>
 
-            </div>
         </div>
 
     </asp:Panel>

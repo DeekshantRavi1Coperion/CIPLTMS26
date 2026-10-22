@@ -348,7 +348,7 @@
                             </tr>
                         </table>
                     </div>
-                    
+
                     <label>JOB No.:</label>
                     <asp:Label ID="lblJOBNo" runat="server" Font-Bold="true" Font-Size="Small" ForeColor="DarkGreen" />
 
@@ -576,7 +576,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>PO List:
                         <asp:Label ID="lblPOdetailRecords" runat="server" Text="Records[0]" />
@@ -610,7 +610,10 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="popup-grid"
@@ -661,7 +664,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -684,7 +688,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>PO Detail:
                     <asp:Label ID="Label2" runat="server" Text="Records[0]" />
@@ -732,7 +736,11 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+
+
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="Label1" runat="server" Text="Records[0]" />
 
@@ -758,7 +766,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+            <%--</div>--%>
+</fieldset>
 
         </div>
 

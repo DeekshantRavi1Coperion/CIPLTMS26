@@ -1604,7 +1604,7 @@
                                     OnSelectedIndexChanged="ddlLOTMainItems_SelectedIndexChanged" />
                             </td>
                             <td style="width: 40%">
-                                <asp:DropDownList ID="ddlLOTMainSubItems" runat="server" Width="100%" Height="26px"
+                                <asp:DropDownList ID="ddlLOTMainSubItems" runat="server" CssClass="form-control"
                                     onblur="return ValidateLOTMainSubItems();" />
                             </td>
                         </tr>
@@ -1716,7 +1716,9 @@
                                                     <tr>
                                                         <td>
                                                             <asp:HiddenField ID="hdUploadSiDrawing1" runat="server" Value="0" />
-                                                            <asp:FileUpload ID="uploadFileSiDrawing1" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                                                            <asp:FileUpload ID="uploadFileSiDrawing1" runat="server"
+                                                                CssClass="form-control"
+                                                                BorderStyle="Groove" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -1766,7 +1768,9 @@
                                                     <tr>
                                                         <td>
                                                             <asp:HiddenField ID="hdUploadSiDrawing2" runat="server" Value="0" />
-                                                            <asp:FileUpload ID="uploadFileSiDrawing2" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                                                            <asp:FileUpload ID="uploadFileSiDrawing2" runat="server"
+                                                                CssClass="form-control"
+                                                                BorderStyle="Groove" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -1815,7 +1819,9 @@
                                                     <tr>
                                                         <td>
                                                             <asp:HiddenField ID="hdUploadSiDrawing3" runat="server" Value="0" />
-                                                            <asp:FileUpload ID="uploadFileSiDrawing3" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                                                            <asp:FileUpload ID="uploadFileSiDrawing3" runat="server"
+                                                                CssClass="form-control"
+                                                                BorderStyle="Groove" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -1864,7 +1870,9 @@
                                                     <tr>
                                                         <td>
                                                             <asp:HiddenField ID="hdUploadSiDrawing4" runat="server" Value="0" />
-                                                            <asp:FileUpload ID="uploadFileSiDrawing4" runat="server" Width="100%" Height="29px" BorderStyle="Groove" />
+                                                            <asp:FileUpload ID="uploadFileSiDrawing4" runat="server"
+                                                                CssClass="form-control"
+                                                                BorderStyle="Groove" />
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -1926,7 +1934,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Material Requisition List:
                     <asp:Label ID="lblProductonOrderNoRecords" runat="server" Text="Records[0]" />
@@ -1947,7 +1955,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+
                 <div align="center">
                     <asp:Label ID="lblProductonOrderNoMsg" runat="server" />
                 </div>
@@ -1983,7 +1992,7 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+            </fieldset>
 
         </div>
 
@@ -2008,7 +2017,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDMSDrawingNoListRecords" runat="server" Text="Records[0]" />
@@ -2026,7 +2035,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblDMSDrawingNoListMsg" runat="server" />
                 </div>
@@ -2057,8 +2067,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
-
+                <%--</div>--%>
+            </fieldset>
         </div>
     </asp:Panel>
     <%--DMS DRAWING NO LIST END--%>
@@ -2161,7 +2171,7 @@
     </ajax:ModalPopupExtender>
     <asp:Panel ID="pnlPopupJOBDetail" runat="server"
         CssClass="popup-edit">
-        
+
         <table width="100%">
             <tr>
                 <td align="right">

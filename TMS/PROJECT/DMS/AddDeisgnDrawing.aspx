@@ -193,8 +193,7 @@
 
     <div class="form-entry-container">
         <fieldset class="form-card">
-            <legend>
-               Add Design Request</legend>
+            <legend>Add Design Request</legend>
 
             <div class="form-grid form-grid-2">
 
@@ -318,7 +317,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
@@ -330,38 +329,42 @@
 
                         <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
                             Width="100%" OnClick="btnSearchJOBNo_Click" />
-                    </div>                   
+                    </div>
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
 
-                        <asp:Label ID="lblJOBMsg" runat="server" />
+            <fieldset class="popup-grid-fieldset">
 
-                        <asp:GridView
-                            CssClass="popup-grid"
-                            ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                            ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
-                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                            <Columns>
-                                <asp:TemplateField HeaderText="Get JOB No." HeaderStyle-Width="20px">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
-                                        <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No." Width="100%"
-                                            runat="server" Text="Get JOB No." CssClass="button" />
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                            </Columns>
-                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                            <EditRowStyle BackColor="#7C6F57" />
-                            <AlternatingRowStyle BackColor="White" />
-                        </asp:GridView>
+                <%--<div class="popup-grid-container">--%>
 
-                    </div>
+                <asp:Label ID="lblJOBMsg" runat="server" />
+
+                <asp:GridView
+                    CssClass="popup-grid"
+                    ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="Get JOB No." HeaderStyle-Width="20px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NO") %>' />
+                                <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No." Width="100%"
+                                    runat="server" Text="Get JOB No." CssClass="button" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

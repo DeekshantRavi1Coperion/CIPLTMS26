@@ -913,7 +913,7 @@
     <asp:ModalPopupExtender ID="ModalPopupExtender2" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </asp:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -922,7 +922,7 @@
                 </td>
             </tr>
         </table>
-        <div CssClass="popup-img">
+        <div cssclass="popup-img">
             <asp:Image ID="imgFile" runat="server" />
         </div>
     </asp:Panel>
@@ -932,7 +932,7 @@
     <asp:ModalPopupExtender ID="ModalPopupExtender3" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </asp:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -941,11 +941,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
-            CssClass="popup-iframe"
+        <iframe
+            cssclass="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
 
     <%--</ContentTemplate>
@@ -971,36 +970,36 @@
         <div class="popup-layout">
 
             <div class="popup-grid-container">
-
-                <fieldset class="filter-popup-card">
-                    <legend>
-                        <asp:Label ID="lblOpenTours" runat="server" Text="Records[0]" /></legend>
-
-
-                    <div align="center">
-                        <asp:Label ID="lblOpenToursMsg" runat="server" />
-                    </div>
-
-                    <asp:GridView ID="gvOpenTours"
-                        CssClass="popup-grid"
-                        runat="server" AutoGenerateColumns="False" CellPadding="4"
-                        ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center">
-                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                        <Columns>
-                            <asp:BoundField DataField="TOUR_NO" HeaderText="TOUR_NO" />
-                            <asp:BoundField DataField="TOUR_SANCTION_NO" HeaderText="TOUR_SANCTION_NO" />
-                            <asp:BoundField DataField="TOUR_STATUS_NAME" HeaderText="TOUR_STATUS_NAME" />
-                        </Columns>
-                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                        <EditRowStyle BackColor="#7C6F57" />
-                        <AlternatingRowStyle BackColor="White" />
-                    </asp:GridView>
-
-                </fieldset>
             </div>
+            <fieldset class="popup-grid-fieldset">
+                <legend>
+                    <asp:Label ID="lblOpenTours" runat="server" Text="Records[0]" /></legend>
+
+
+                <div align="center">
+                    <asp:Label ID="lblOpenToursMsg" runat="server" />
+                </div>
+
+                <asp:GridView ID="gvOpenTours"
+                    CssClass="popup-grid"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="TOUR_NO" HeaderText="TOUR_NO" />
+                        <asp:BoundField DataField="TOUR_SANCTION_NO" HeaderText="TOUR_SANCTION_NO" />
+                        <asp:BoundField DataField="TOUR_STATUS_NAME" HeaderText="TOUR_STATUS_NAME" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </fieldset>
+
 
         </div>
 

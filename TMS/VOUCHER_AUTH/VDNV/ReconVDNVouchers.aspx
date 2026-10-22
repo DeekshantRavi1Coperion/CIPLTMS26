@@ -1392,11 +1392,11 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
-                <fieldset class="filter-popup-card">
+            <div class="popup-grid-container">
+                </div>
+                 <fieldset class="popup-grid-fieldset">
                     <legend>Records: [<asp:Label ID="lblShowFolderDocumentsCount" runat="server" />]</legend>
 
-                    <div class="popup-grid-container">
                         <asp:GridView
                             CssClass="popup-grid"
                             ID="gvFolderDocuments"
@@ -1449,10 +1449,8 @@
                             <EditRowStyle BackColor="#7C6F57" />
                             <AlternatingRowStyle BackColor="White" />
                         </asp:GridView>
-                    </div>
 
                 </fieldset>
-            </div>
 
         </div>
 

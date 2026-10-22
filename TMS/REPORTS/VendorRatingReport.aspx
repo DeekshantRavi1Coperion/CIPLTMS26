@@ -899,7 +899,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblMRNDetailRecors" runat="server" Text="MRN Detailed Records[0]" />
@@ -937,7 +937,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="popup-grid"
@@ -954,7 +955,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+            <%--</div>--%>
+</fieldset>
 
         </div>
 

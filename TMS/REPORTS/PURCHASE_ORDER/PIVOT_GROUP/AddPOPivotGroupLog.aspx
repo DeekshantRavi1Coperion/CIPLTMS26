@@ -363,7 +363,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPORecords" runat="server" Text="Records[0]" /></legend>
@@ -387,7 +387,10 @@
 
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
+
                 <asp:Label ID="lblPOMsg" runat="server" />
 
                 <asp:GridView
@@ -419,8 +422,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
-
+                <%--</div>--%>
+            </fieldset>
         </div>
 
     </asp:Panel>
@@ -445,7 +448,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPONewPGRecords" runat="server" Text="Records[0]" />
@@ -469,7 +472,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:Label ID="lblPONewPGMsg" runat="server" />
 
                 <asp:GridView
@@ -507,7 +511,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

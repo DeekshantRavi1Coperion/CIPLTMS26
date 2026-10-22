@@ -1368,7 +1368,7 @@
         </table>
 
         <div class="popup-layout">
-            <div class="form-entry-container">
+            <div class="popup-entry-container">
                 <fieldset class="form-popup-card">
                     <legend>PO Detail:
                         <asp:Label ID="lblPODetailRerords" runat="server" Text="Records[0]" />
@@ -1392,7 +1392,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
                 <asp:GridView
                     CssClass="popup-grid"
                     ID="gvPODetailsList" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -1453,7 +1454,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+            <%--</div>--%>
+</fieldset>
 
         </div>
 

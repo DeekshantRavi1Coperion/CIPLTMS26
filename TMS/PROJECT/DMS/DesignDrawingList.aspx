@@ -472,7 +472,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -549,7 +549,7 @@
 
                 <asp:Button ID="btnDesignList" CssClass="button" Width="100%" runat="server" Text="Design List"
                     OnClick="btnDesignList_Click" />
-            </div>            
+            </div>
         </div>
 
 
@@ -869,7 +869,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
@@ -888,7 +888,9 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
@@ -915,7 +917,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

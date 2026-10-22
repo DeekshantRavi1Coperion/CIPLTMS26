@@ -775,7 +775,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblAuthorizeVoucherDetailsLegend" runat="server" />
@@ -856,7 +856,7 @@
                 <table width="100%" runat="server">
                     <tr>
                         <td id="tdVoucherFiles" style="width: 45%;">
-                            <fieldset style="width: 97%; margin-left: 1%; margin-top: 10px;">
+                             <fieldset class="popup-grid-fieldset">
                                 <legend style="text-align: center;">
                                     <asp:Label ID="lblAttachedFilesLegend" runat="server" />
                                     &nbsp; Files
@@ -924,7 +924,7 @@
                             </fieldset>
                         </td>
                         <td id="tdOtherVoucherFiles" style="width: 45%;">
-                            <fieldset style="width: 97%; margin-left: 1%; margin-top: 10px;">
+                             <fieldset class="popup-grid-fieldset">
                                 <legend style="text-align: center;">
                                     <asp:Label ID="lblAttachedOtherFilesLegend" runat="server" />
                                     &nbsp; Files

@@ -1,6 +1,6 @@
-<%@ Page Title="CIPLTMS - Update Expected Completion Date" 
+<%@ Page Title="CIPLTMS - Update Expected Completion Date"
     Language="C#" MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    EnableViewState="true" CodeFile="LOTTransmittalFactoryListToUpdateExpectedCompDate.aspx.cs" 
+    EnableViewState="true" CodeFile="LOTTransmittalFactoryListToUpdateExpectedCompDate.aspx.cs"
     Inherits="PROJECT_LOT_LOTTransmittalFactoryListToUpdateExpectedCompDate" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
@@ -393,7 +393,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -411,7 +411,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -909,7 +909,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Subitem Details:
                     <asp:Label ID="lblSubitemsSIRerords" runat="server" Text="Subitems Records[0]" />
@@ -930,7 +930,9 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:GridView
                     CssClass="popup-grid"
                     ID="gvSubitemsSI" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -1043,7 +1045,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

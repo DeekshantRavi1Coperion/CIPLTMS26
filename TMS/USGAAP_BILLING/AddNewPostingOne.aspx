@@ -763,7 +763,7 @@
         </table>
 
         <div class="popup-layout">
-            <div class="form-entry-container">
+            <div class="popup-entry-container">
                 <fieldset class="form-popup-card">
                     <legend>
                         <asp:Label ID="lblCustomerRecords" runat="server" Text="Records[0]" />
@@ -788,7 +788,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblCustomerMsg" runat="server" />
                 </div>
@@ -823,8 +824,9 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
+<%--</div>--%>
+</fieldset>
 
-            </div>
         </div>
     </asp:Panel>
 
@@ -844,7 +846,7 @@
         </table>
 
         <div class="popup-layout">
-            <div class="form-entry-container">
+            <div class="popup-entry-container">
                 <fieldset class="form-popup-card">
                     <legend>
                         <asp:Label ID="lblProductRecords" runat="server" Text="Records[0]" />
@@ -869,7 +871,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblProductMsg" runat="server" />
                 </div>
@@ -898,7 +901,9 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+            <%--</div>--%>
+</fieldset>
+
         </div>
     </asp:Panel>
 
@@ -919,7 +924,7 @@
         </table>
 
         <div class="popup-layout">
-            <div class="form-entry-container">
+            <div class="popup-entry-container">
                 <fieldset class="form-popup-card">
                     <legend>
                         <asp:Label ID="lblRevenueAccRecords" runat="server" Text="Records[0]" />
@@ -945,7 +950,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblRevenueAccMsg" runat="server" />
                 </div>
@@ -978,7 +984,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+            <%--</div>--%>
+</fieldset>
 
         </div>
 

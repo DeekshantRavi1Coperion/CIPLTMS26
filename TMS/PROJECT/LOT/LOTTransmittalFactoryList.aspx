@@ -1,6 +1,6 @@
-<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#" 
+<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#"
     MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    EnableViewState="true" CodeFile="LOTTransmittalFactoryList.aspx.cs" 
+    EnableViewState="true" CodeFile="LOTTransmittalFactoryList.aspx.cs"
     Inherits="PROJECT_LOT_LOTTransmittalFactoryList" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
@@ -2124,7 +2124,7 @@
                     <label>LOT Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -2143,7 +2143,7 @@
                     <label>LOT End Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:80%;">
+                            <td style="width: 80%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -3477,7 +3477,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Material Requisition List:
                     <asp:Label ID="lblProductonOrderNoRecords" runat="server" Text="Records[0]" />
@@ -3498,7 +3498,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblProductonOrderNoMsg" runat="server" />
                 </div>
@@ -3534,7 +3535,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -3559,7 +3561,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDMSDrawingNoListRecords" runat="server" Text="Records[0]" />
@@ -3577,7 +3579,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%-- <div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblDMSDrawingNoListMsg" runat="server" />
                 </div>
@@ -3608,7 +3611,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
     </asp:Panel>

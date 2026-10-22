@@ -715,7 +715,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" />
@@ -724,7 +724,7 @@
                     <div class="form-grid form-grid-3">
 
                         <label>JOB No.:</label>
-                        <asp:TextBox ID="txtJOBNoSearch" runat="server" CssClass="form-control"/>
+                        <asp:TextBox ID="txtJOBNoSearch" runat="server" CssClass="form-control" />
 
                         <label>Customer Code:</label>
                         <asp:TextBox ID="txtCustomerCodeSearch" runat="server" CssClass="form-control" />
@@ -736,7 +736,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
@@ -764,8 +765,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
-
+                <%-- </div>--%>
+            </fieldset>
         </div>
 
     </asp:Panel>
@@ -790,7 +791,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblVendorRecords" runat="server" Text="Records[0]" />
@@ -817,7 +818,9 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:Label ID="lblVendorMsg" runat="server" />
 
                 <asp:GridView
@@ -873,7 +876,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

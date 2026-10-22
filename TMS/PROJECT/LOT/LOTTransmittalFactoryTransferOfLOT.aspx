@@ -1,4 +1,4 @@
-<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#" 
+<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#"
     MasterPageFile="~/HOME.master" AutoEventWireup="true"
     EnableViewState="true" CodeFile="LOTTransmittalFactoryTransferOfLOT.aspx.cs"
     Inherits="PROJECT_LOT_LOTTransmittalFactoryTransferOfLOT" %>
@@ -2607,7 +2607,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Material Requisition List:
                     <asp:Label ID="lblProductonOrderNoRecords" runat="server" Text="Records[0]" />
@@ -2628,7 +2628,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblProductonOrderNoMsg" runat="server" />
                 </div>
@@ -2664,8 +2665,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
-
+                <%--</div>--%>
+            </fieldset>
         </div>
 
     </asp:Panel>
@@ -2690,7 +2691,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDMSDrawingNoListRecords" runat="server" Text="Records[0]" />
@@ -2708,7 +2709,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <div align="center">
                     <asp:Label ID="lblDMSDrawingNoListMsg" runat="server" />
                 </div>
@@ -2739,7 +2741,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
     </asp:Panel>
@@ -2922,7 +2925,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Subitem Details:
                     <asp:Label ID="lblSubitemsSIRerords" runat="server" Text="Subitems Records[0]" />
@@ -2944,7 +2947,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:GridView
                     CssClass="popup-grid"
                     ID="gvSubitemsSI" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -3059,7 +3063,8 @@
                 </asp:GridView>
 
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

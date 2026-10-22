@@ -1129,7 +1129,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>PO List:
                     <asp:Label ID="lblPOListRecords" runat="server" Text="Records[0]" />
@@ -1165,7 +1165,11 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
+
                 <asp:Panel ID="pnlMsgPOList" Visible="false" runat="server" Height="50px">
                     <asp:Label ID="lblMsgPOList" runat="server" Font-Bold="True" Font-Size="Large" />
                 </asp:Panel>
@@ -1240,7 +1244,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+           <%--</div>--%>
+</fieldset>
 
         </div>
 
@@ -1264,7 +1269,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>PO Detail:
                     <asp:Label ID="lblPOItemListRecords" runat="server" Text="Records[0]" />
@@ -1304,7 +1309,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="popup-grid"
@@ -1328,7 +1334,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+            <%--</div>--%>
+</fieldset>
 
         </div>
 
@@ -1352,7 +1359,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPivotGroupDetailsLegend" runat="server" />:
@@ -1409,7 +1416,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="popup-grid"
@@ -1453,7 +1461,9 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+            <%--</div>--%>
+</fieldset>
+
 
         </div>
 
@@ -1587,7 +1597,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPORecords" runat="server" Text="Records[0]" />
@@ -1609,7 +1619,9 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblPOMsg" runat="server" />
 
@@ -1643,7 +1655,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+            <%--</div>--%>
+</fieldset>
 
         </div>
 
@@ -1669,7 +1682,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPONewPGRecords" runat="server" Text="Records[0]" />
@@ -1693,7 +1706,9 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+             <fieldset class="popup-grid-fieldset">
+ <%--<div class="popup-grid-container">--%>
+
                 <asp:Label ID="lblPONewPGMsg" runat="server" />
 
                 <asp:Panel ID="pnlNewPGDetail" Visible="false" runat="server" Height="50px">
@@ -1736,7 +1751,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+           <%--</div>--%>
+</fieldset>
 
         </div>
 

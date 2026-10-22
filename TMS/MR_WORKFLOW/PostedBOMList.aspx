@@ -1125,7 +1125,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>BOM List:
                     <asp:Label ID="lblBOMListRecords" runat="server" Text="BOM Records[0]" />
@@ -1201,7 +1201,8 @@
                 </fieldset>
             </div>
 
-            <div class="employee-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:GridView
                     CssClass="employee-grid"
@@ -1248,7 +1249,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -1305,13 +1307,13 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Add Products:
                     <asp:Label ID="lblPostedProductRecors" runat="server" Text="Products Records[0]" />
                     </legend>
 
-                    <div class="employee-grid-container">
+                    <%--<div class="employee-grid-container">--%>
 
                         <asp:GridView
                             CssClass="employee-grid"
@@ -1377,7 +1379,7 @@
                             <AlternatingRowStyle BackColor="White" />
                         </asp:GridView>
 
-                    </div>
+                    <%--</div>--%>
                 </fieldset>
             </div>
         </div>

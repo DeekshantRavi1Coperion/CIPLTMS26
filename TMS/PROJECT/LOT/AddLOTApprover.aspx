@@ -210,7 +210,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>LOT Report For Factory:
                     <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" />
@@ -238,7 +238,9 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblJOBMsg" runat="server" />
 
@@ -267,7 +269,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

@@ -1,6 +1,6 @@
-<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#" 
+<%@ Page Title="CIPLTMS - Transmittal To Factory List" Language="C#"
     MasterPageFile="~/HOME.master" AutoEventWireup="true"
-    EnableViewState="true" CodeFile="LOTTransmittalFactoryListForCancellation.aspx.cs" 
+    EnableViewState="true" CodeFile="LOTTransmittalFactoryListForCancellation.aspx.cs"
     Inherits="PROJECT_LOT_LOTTransmittalFactoryListForCancellation" %>
 
 <%@ Register Assembly="CrystalDecisions.Web, Version=10.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304"
@@ -411,7 +411,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -429,7 +429,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -948,7 +948,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>Subitem Details:
                     <asp:Label ID="lblSubitemsSIRerords" runat="server" Text="Records[0]" />
@@ -969,7 +969,8 @@
                 </fieldset>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:Panel ID="pnlSubitemsMsg" Visible="false" runat="server">
                     <asp:Label ID="lblSubitemsMsg" runat="server" Font-Bold="true" Font-Size="Large" />
                 </asp:Panel>
@@ -1136,7 +1137,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

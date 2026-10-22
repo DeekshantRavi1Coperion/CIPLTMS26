@@ -754,7 +754,7 @@
                     <label>ED of Comp. by Planning/Production:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtDateToA" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdDateToA" runat="server" />
@@ -1035,7 +1035,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecordsLOT" runat="server" Text="Records[0]" />
@@ -1057,7 +1057,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblJOBMsgLOT" runat="server" />
 
@@ -1089,7 +1090,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -1115,7 +1117,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecordsFact" runat="server" Text="Records[0]" />
@@ -1142,7 +1144,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
 
                 <asp:Label ID="lblJOBMsgFact" runat="server" />
 
@@ -1171,7 +1174,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
@@ -1197,7 +1201,7 @@
 
         <div class="popup-layout">
 
-            <div class="form-grid-container">
+            <div class="popup-grid-container">
                 <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" />
@@ -1227,7 +1231,8 @@
                 </div>
             </div>
 
-            <div class="popup-grid-container">
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:Label ID="lblDrawingMsg" runat="server" />
 
                 <asp:GridView
@@ -1270,7 +1275,8 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
