@@ -779,6 +779,8 @@
                                 <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("CREATED_BY") %>' Visible="false" />
                                 <asp:Label ID="lblUnitId" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
                                 <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
+                                <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
+
                             </ItemTemplate>
 
                         </asp:TemplateField>

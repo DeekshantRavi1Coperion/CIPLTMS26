@@ -706,6 +706,7 @@
                             <asp:Label ID="lblStatusID" runat="server" Text='<%# Eval("STATUS_FID") %>' Visible="false" />
                             <asp:Label ID="lblCreatedBy" runat="server" Text='<%# Eval("VOUCHER_CREATED_BY") %>' Visible="false" />
                             <asp:Label ID="lblUnitId" runat="server" Text='<%# Eval("UNIT_ID") %>' Visible="false" />
+                            <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
                             <asp:Label ID="lblUnitName" runat="server" Text='<%# Eval("UNIT_NAME") %>' Visible="false" />
                             <asp:Label ID="lblApproverID" runat="server" Text='<%# Eval("APPROVER_ID") %>' Visible="false" />
                         </ItemTemplate>
@@ -802,6 +803,7 @@
                     <%--<asp:BoundField DataField="SR_NO" HeaderText="Sr No." />--%>
                     <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No." />
                     <asp:BoundField DataField="VOUCHER_DATE" HeaderText="Voucher Date" />
+                    <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
                     <asp:BoundField DataField="AUTHORIZED_ON" HeaderText="Authorized On" />
                     <asp:BoundField DataField="UNIT_NAME" HeaderText="Unit" />
                     <asp:BoundField DataField="VOUCHER_CREATED_BY" HeaderText="Created By" />
@@ -862,6 +864,11 @@
 
                     <label>Voucher Date:</label>
                     <asp:TextBox ID="txtVoucherDateToAS" runat="server"
+                        CssClass="form-control"
+                        Enabled="false" />
+
+                    <label>Amount:</label>
+                    <asp:TextBox ID="txtAmountToAS" runat="server"
                         CssClass="form-control"
                         Enabled="false" />
 
