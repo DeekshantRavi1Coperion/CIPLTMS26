@@ -553,6 +553,7 @@ namespace BAL
                string VoucherDate,
                int unitId,
                string VoucherCreatedBy,
+               decimal Amount,
                string AuthorizedRemarks,
 
                string FileName1,
@@ -590,6 +591,7 @@ namespace BAL
             cmd.Parameters.AddWithValue("@UnitId", unitId);
             cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
             cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+            cmd.Parameters.AddWithValue("@Amount", Amount);
 
             if (FileBytes1 != null)
             {
@@ -5138,67 +5140,6 @@ namespace BAL
                 con.Dispose();
             }
         }
-
-
-
-
-        public DataSet GetCBVouchersListToRecon(
-             string dateSignS
-           , string dateTypeS
-           , string startDateS
-           , string endDateS
-           , string warehouseIdS
-           , int unitIdS
-           , int statusToS
-           , int createdByIdS
-           , string searchByS
-           , string searchTextS
-           , string amountSearchByS
-           , string amountSignS
-           , decimal amountOneS
-           , decimal amountTwoS)
-        {
-            DataSet ds = new DataSet();
-            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
-            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = "[dbVoucher].[sp_get_cash_bank_vouchers_list_to_recon]";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Connection = con;
-            cmd.CommandTimeout = 600; // 10 minutes
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-
-            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
-            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
-            cmd.Parameters.AddWithValue("@StartDate", startDateS);
-            cmd.Parameters.AddWithValue("@EndDate", endDateS);
-            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
-            //cmd.Parameters.AddWithValue("@PTypeId", typeIdS);
-            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
-            cmd.Parameters.AddWithValue("@StatusID", statusToS);
-
-            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
-            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
-            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
-
-            cmd.Parameters.AddWithValue("@AmountSearchBy", amountSearchByS);
-            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
-            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
-            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
-
-            da.Fill(ds);
-            if (ds != null)
-                return ds;
-
-            return null;
-        }
-
-
-
-
-
-
-
 
 
         //CV
@@ -10446,6 +10387,1084 @@ namespace BAL
 
         //RECON
 
+        public DataSet GetJournalVouchersListToRecon
+            (
+              string startDate
+            , string endDate
+            , int UnitId
+            , int StatusId
+            , string voucherNo
+            , int createdBy
+            )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_journal_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@StartDate", startDate);
+            cmd.Parameters.AddWithValue("@EndDate", endDate);
+            cmd.Parameters.AddWithValue("@UnitID", UnitId);
+            cmd.Parameters.AddWithValue("@StatusID", StatusId);
+            cmd.Parameters.AddWithValue("@VoucherNo", voucherNo);
+            cmd.Parameters.AddWithValue("@CreatedBy", createdBy);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+        public DataSet GetPurchaseVouchersListToRecon(
+                    string dateSignS
+                , string dateTypeS
+                , string startDateS
+                , string endDateS
+                , string warehouseIdS
+                , int unitIdS
+                , int statusToS
+                , int CreatedByIdS
+                , string searchByS
+                , string searchTextS
+                , string vendorCodeS
+                , string vendorNameS
+                , string amountSignS
+                , decimal amountOneS
+                , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_purchase_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetMRNVouchersListToRecon(string startDate
+                            , string endDate
+                            , string WarehouseId
+                            , int UnitId
+                            , int StatusId
+                            , string voucherNo
+                            , int createdBy
+                )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_mrn_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@StartDate", startDate);
+            cmd.Parameters.AddWithValue("@EndDate", endDate);
+            cmd.Parameters.AddWithValue("@WarehouseId", WarehouseId);
+            cmd.Parameters.AddWithValue("@UnitID", UnitId);
+            cmd.Parameters.AddWithValue("@StatusID", StatusId);
+            cmd.Parameters.AddWithValue("@VoucherNo", voucherNo);
+            cmd.Parameters.AddWithValue("@CreatedBy", createdBy);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetServiceVouchersListToRecon(
+                   string dateSignS
+               , string dateTypeS
+               , string startDateS
+               , string endDateS
+               , string warehouseIdS
+               , int unitIdS
+               , int statusToS
+               , int CreatedByIdS
+               , string searchByS
+               , string searchTextS
+               , string vendorCodeS
+               , string vendorNameS
+               , string amountSignS
+               , decimal amountOneS
+               , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_service_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+        public DataSet GetSaleOrderVouchersListToRecon(
+                                  string dateSignS
+                                , string dateTypeS
+                                , string startDateS
+                                , string endDateS
+                                , string warehouseIdS
+                                , int unitIdS
+                                , int statusIdS
+                                , int createdByIdS
+                                , string searchByS
+                                , string searchTextS
+                                , string customerCodeS
+                                , string customerNameS
+                                , string amountSignS
+                                , decimal amountOneS
+                                , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_sale_order_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetSaleInvoiceVouchersListToRecon(
+                                    string dateSignS
+                                  , string dateTypeS
+                                  , string startDateS
+                                  , string endDateS
+                                  , string warehouseIdS
+                                  , int unitIdS
+                                  , int statusIdS
+                                  , int createdByIdS
+                                  , string searchByS
+                                  , string searchTextS
+                                  , string customerCodeS
+                                  , string customerNameS
+                                  , string amountSignS
+                                  , decimal amountOneS
+                                  , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_sale_invoice_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetVRPVouchersListToRecon(
+                           string dateSignS
+                         , string dateTypeS
+                         , string startDateS
+                         , string endDateS
+                         , string warehouseIdS
+                         , int unitIdS
+                         , int statusToS
+                         , int createdByIdS
+                         , string searchByS
+                         , string searchTextS
+                         , string vendorCodeS
+                         , string vendorNameS
+                         , string amountSearchByS
+                         , string amountSignS
+                         , decimal amountOneS
+                         , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_vendor_receipt_payment_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+
+            cmd.Parameters.AddWithValue("@AmountSearchBy", amountSearchByS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetCRPVouchersListToRecon(
+                          string dateSignS
+                        , string dateTypeS
+                        , string startDateS
+                        , string endDateS
+                        , string warehouseIdS
+                        , int unitIdS
+                        , int statusToS
+                        , int createdByIdS
+                        , string searchByS
+                        , string searchTextS
+                        , string customerCodeS
+                        , string customerNameS
+                        , string amountSearchByS
+                        , string amountSignS
+                        , decimal amountOneS
+                        , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_customer_receipt_payment_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+
+            cmd.Parameters.AddWithValue("@AmountSearchBy", amountSearchByS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetCBVouchersListToRecon(
+                string dateSignS
+              , string dateTypeS
+              , string startDateS
+              , string endDateS
+              , string warehouseIdS
+              //, string typeIdS
+              , int unitIdS
+              , int statusToS
+              , int createdByIdS
+              , string searchByS
+              , string searchTextS
+              , string amountSearchByS
+              , string amountSignS
+              , decimal amountOneS
+              , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_cash_bank_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            //cmd.Parameters.AddWithValue("@PTypeId", typeIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+            cmd.Parameters.AddWithValue("@AmountSearchBy", amountSearchByS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetCVouchersListToRecon(
+                string dateSignS
+              , string dateTypeS
+              , string startDateS
+              , string endDateS
+              , string warehouseIdS
+              , string typeIdS
+              , int unitIdS
+              , int statusToS
+              , int CreatedByIdS
+              , string searchByS
+              , string searchTextS
+              , string amountSignS
+              , decimal amountOneS
+              , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_contra_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@PTypeId", typeIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+        public DataSet GetMRVouchersListToRecon
+                (
+                  string startDate
+                , string endDate
+                , int UnitId
+                , string WarehouseId
+                , int StatusId
+                , string voucherNo
+                , int createdBy
+                )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_MR_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@StartDate", startDate);
+            cmd.Parameters.AddWithValue("@EndDate", endDate);
+            cmd.Parameters.AddWithValue("@WarehouseId", WarehouseId);
+            cmd.Parameters.AddWithValue("@UnitID", UnitId);
+            cmd.Parameters.AddWithValue("@StatusID", StatusId);
+            cmd.Parameters.AddWithValue("@VoucherNo", voucherNo);
+            cmd.Parameters.AddWithValue("@CreatedBy", createdBy);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetPurchaseOrderVouchersListToRecon(
+                            string dateSignS
+                        , string dateTypeS
+                        , string startDateS
+                        , string endDateS
+                        , string warehouseIdS
+                        , int unitIdS
+                        , int statusToS
+                        , int CreatedByIdS
+                        , string searchByS
+                        , string searchTextS
+                        , string vendorCodeS
+                        , string vendorNameS
+                        , string amountSignS
+                        , decimal amountOneS
+                        , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_purchase_Order_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+        public DataSet GetIIVouchersListToRecon(
+                         string dateSignS
+                       , string dateTypeS
+                       , string startDateS
+                       , string endDateS
+                       , int unitIdS
+                       , int statusIdS
+                       , string WarehouseIdS
+                       , string searchByS
+                       , string searchTextS
+                       , int createdByIdS
+               )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_inventory_issue_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+            cmd.Parameters.AddWithValue("@WarehouseId", WarehouseIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetIRVouchersListToRecon(
+                         string dateSignS
+                       , string dateTypeS
+                       , string startDateS
+                       , string endDateS
+                       , int unitIdS
+                       , int statusIdS
+                       , string WarehouseIdS
+                       , string searchByS
+                       , string searchTextS
+                       , int createdByIdS
+               )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_inventory_return_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+            cmd.Parameters.AddWithValue("@WarehouseId", WarehouseIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetVDNVouchersListToRecon(
+                 string dateSignS
+               , string dateTypeS
+               , string startDateS
+               , string endDateS
+               , string warehouseIdS
+               , int unitIdS
+               , string vendorCodeS
+               , string vendorNameS
+               , int statusIdS
+               , int createdByIdS
+               , string searchByS
+               , string searchTextS
+               )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_vendor_debit_note_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+
+
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetVCNVouchersListToRecon(
+                 string dateSignS
+               , string dateTypeS
+               , string startDateS
+               , string endDateS
+               , string warehouseIdS
+               , int unitIdS
+               , string vendorCodeS
+               , string vendorNameS
+               , int statusIdS
+               , int createdByIdS
+               , string searchByS
+               , string searchTextS
+               )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_vendor_credit_note_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+
+
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetCDNVouchersListToRecon(
+                     string dateSignS
+                   , string dateTypeS
+                   , string startDateS
+                   , string endDateS
+                   , string warehouseIdS
+                   , int unitIdS
+                   , string customerCodeS
+                   , string customerNameS
+                   , int statusIdS
+                   , int createdByIdS
+                   , string searchByS
+                   , string searchTextS
+                   )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_customer_debit_note_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+
+
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetCCNVouchersListToRecon(
+             string dateSignS
+           , string dateTypeS
+           , string startDateS
+           , string endDateS
+           , string warehouseIdS
+           , int unitIdS
+           , string customerCodeS
+           , string customerNameS
+           , int statusIdS
+           , int createdByIdS
+           , string searchByS
+           , string searchTextS
+           )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_customer_credit_note_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+
+
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetSTVouchersListToRecon(
+             string dateSignS
+           , string dateTypeS
+           , string startDateS
+           , string endDateS
+           , string fromWarehouseIdS
+           , string toWarehouseIdS
+           , int unitIdS
+           , string customerCodeS
+           , string customerNameS
+           , int statusIdS
+           , int createdByIdS
+           , string searchByS
+           , string searchTextS
+           )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_stock_transfer_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@FromWarehouseId", fromWarehouseIdS);
+            cmd.Parameters.AddWithValue("@ToWarehouseId", toWarehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+
+
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+        public DataSet GetSAVouchersListToRecon(
+            string dateSignS
+          , string dateTypeS
+          , string startDateS
+          , string endDateS
+          , int unitIdS
+          , int statusIdS
+          , int createdByIdS
+          , string searchByS
+          , string searchTextS
+          )
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_stock_adjustment_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+
+            cmd.Parameters.AddWithValue("@StatusID", statusIdS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", createdByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+        public DataSet GetPurchaseReturnVouchersListToRecon(
+               string dateSignS
+             , string dateTypeS
+             , string startDateS
+             , string endDateS
+             , string warehouseIdS
+             , int unitIdS
+             , int statusToS
+             , int CreatedByIdS
+             , string searchByS
+             , string searchTextS
+             , string vendorCodeS
+             , string vendorNameS
+             , string amountSignS
+             , decimal amountOneS
+             , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_purchase_return_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@VendorCode", vendorCodeS);
+            cmd.Parameters.AddWithValue("@VendorName", vendorNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+        public DataSet GetSaleReturnVouchersListToRecon(
+                string dateSignS
+              , string dateTypeS
+              , string startDateS
+              , string endDateS
+              , string warehouseIdS
+              , int unitIdS
+              , int statusToS
+              , int CreatedByIdS
+              , string searchByS
+              , string searchTextS
+              , string customerCodeS
+              , string customerNameS
+              , string amountSignS
+              , decimal amountOneS
+              , decimal amountTwoS)
+        {
+            DataSet ds = new DataSet();
+            string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
+            SqlConnection con = new SqlConnection(cipltmsconnectionstring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbVoucher].[sp_get_sale_return_vouchers_list_to_recon]";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            cmd.CommandTimeout = 600; // 10 minutes
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@DateSign", dateSignS);
+            cmd.Parameters.AddWithValue("@DateType", dateTypeS);
+            cmd.Parameters.AddWithValue("@StartDate", startDateS);
+            cmd.Parameters.AddWithValue("@EndDate", endDateS);
+            cmd.Parameters.AddWithValue("@WarehouseId", warehouseIdS);
+            cmd.Parameters.AddWithValue("@UnitId", unitIdS);
+            cmd.Parameters.AddWithValue("@StatusID", statusToS);
+
+            cmd.Parameters.AddWithValue("@CreatedBy", CreatedByIdS);
+            cmd.Parameters.AddWithValue("@SearchBy", searchByS);
+            cmd.Parameters.AddWithValue("@SearchText", searchTextS);
+            cmd.Parameters.AddWithValue("@CustomerCode", customerCodeS);
+            cmd.Parameters.AddWithValue("@CustomerName", customerNameS);
+            cmd.Parameters.AddWithValue("@AmountSign", amountSignS);
+            cmd.Parameters.AddWithValue("@AmountOne", amountOneS);
+            cmd.Parameters.AddWithValue("@AmountTwo", amountTwoS);
+
+            da.Fill(ds);
+            if (ds != null)
+                return ds;
+
+            return null;
+        }
+
+
+
+
+
+
+
+
+
         public int ReconJournalVoucher
            (
                int Pid,
@@ -10453,6 +11472,7 @@ namespace BAL
                string VoucherDate,
                int unitId,
                string VoucherCreatedBy,
+               decimal Amount,
                string AuthorizedRemarks,
 
                string FileName1,
@@ -10479,7 +11499,7 @@ namespace BAL
             SqlConnection con = new SqlConnection(cipltmsconnectionstring);
             SqlCommand cmd = new SqlCommand();
             SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
-            cmd.CommandText = "[dbVoucher].[sp_authorize_journal_voucher]";
+            cmd.CommandText = "[dbVoucher].[sp_recon_journal_voucher]";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Connection = con;
 
@@ -10490,6 +11510,7 @@ namespace BAL
             cmd.Parameters.AddWithValue("@UnitId", unitId);
             cmd.Parameters.AddWithValue("@VoucherCreatedBy", VoucherCreatedBy);
             cmd.Parameters.AddWithValue("@AuthorizedRemarks", AuthorizedRemarks);
+            cmd.Parameters.AddWithValue("@Amount", Amount);
 
             if (FileBytes1 != null)
             {
@@ -10650,7 +11671,7 @@ namespace BAL
             SqlConnection con = new SqlConnection(cipltmsconnectionstring);
             SqlCommand cmd = new SqlCommand();
             SqlParameter rCode = new SqlParameter("@RCode", SqlDbType.Int) { Direction = ParameterDirection.Output };
-            cmd.CommandText = "[dbVoucher].[sp_authorize_purchase_voucher]";
+            cmd.CommandText = "[dbVoucher].[sp_recon_purchase_voucher]";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Connection = con;
 

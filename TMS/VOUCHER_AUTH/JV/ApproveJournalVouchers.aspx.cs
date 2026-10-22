@@ -178,7 +178,7 @@ public partial class VOUCHER_AUTH_JV_ApproveJournalVouchers : System.Web.UI.Page
     {
         get
         {
-            if (ViewState["VoucherNo"] != null)
+            if (ViewState["VoucherDate"] != null)
                 _voucherDateToAS = Convert.ToString(ViewState["VoucherDate"]);
             else _voucherDateToAS = "";
 
@@ -876,6 +876,7 @@ public partial class VOUCHER_AUTH_JV_ApproveJournalVouchers : System.Web.UI.Page
 
                 Label lblUnitId = gvVouchersList.Rows[rowindex].FindControl("lblUnitId") as Label;
                 Label lblUnitName = gvVouchersList.Rows[rowindex].FindControl("lblUnitName") as Label;
+                Label lblAmount = gvVouchersList.Rows[rowindex].FindControl("lblAmount") as Label;
 
                 ViewState["PID"] = lblPID.Text;
                 ViewState["VoucherNo"] = lblVoucherNo.Text;
@@ -924,6 +925,7 @@ public partial class VOUCHER_AUTH_JV_ApproveJournalVouchers : System.Web.UI.Page
                     txtVoucherDateToAS.Text = lblVoucherDate.Text;
                     txtCreatedByToAS.Text = lblCreatedBy.Text;
                     txtUnitToAS.Text = lblUnitName.Text;
+                    txtAmountToAS.Text = lblAmount.Text;
 
                     GetVouchersDetails(lblVoucherNo.Text, Convert.ToInt32(lblUnitId.Text));
 
@@ -961,7 +963,7 @@ public partial class VOUCHER_AUTH_JV_ApproveJournalVouchers : System.Web.UI.Page
                     lblVoucherNoToAS.Text = lblVoucherNo.Text;
                     txtVoucherDateToAS.Text = lblVoucherDate.Text;
                     txtCreatedByToAS.Text = lblCreatedBy.Text;
-                    txtUnitToAS.Text = lblUnitName.Text;
+                    txtAmountToAS.Text = lblUnitName.Text;
 
                     GetVouchersDetails(lblVoucherNo.Text, Convert.ToInt32(lblUnitId.Text));
 

@@ -893,13 +893,15 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
                 Label lblCreatedBy = gvVouchersList.Rows[rowindex].FindControl("lblCreatedBy") as Label;
                 Label lblUnitId = gvVouchersList.Rows[rowindex].FindControl("lblUnitId") as Label;
                 Label lblUnitName = gvVouchersList.Rows[rowindex].FindControl("lblUnitName") as Label;
-                
+                Label lblAmount = gvVouchersList.Rows[rowindex].FindControl("lblAmount") as Label;
+
 
                 ViewState["PID"] = lblPID.Text;
                 ViewState["VoucherNo"] = lblVoucherNo.Text;
                 ViewState["VoucherDate"] = lblVoucherDate.Text;
                 ViewState["UnitId"] = lblUnitId.Text;
                 ViewState["VoucherCreatedBy"] = lblCreatedBy.Text;
+                ViewState["Amount"] = lblAmount.Text;
 
                 btnAuthorize.Visible = false;
                 pnlRemarksToAS.Visible = false;
@@ -1208,7 +1210,7 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
     {
         if (Convert.ToInt32(ViewState["StatusID"]) == (int)VoucherStatusTypes.EnumStatus.OPEN)
         {
-            Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, VoucherCreatedByToAS);
+            Authorize(Pid, VoucherNoToAS, VoucherDateToAS, UnitIdToAS, VoucherCreatedByToAS, AmountToAS);
         }
         else
         {
@@ -2071,6 +2073,7 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
                           , string VoucherDate
                           , int unitId
                           , string VoucherCreatedBy
+                          , decimal Amount
                       )
     {
         DataTable dtVoucherDetails = new DataTable();
@@ -2122,6 +2125,7 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
                , Convert.ToDateTime(VoucherDate).ToString("yyyy-MM-dd")
                , unitId
                , VoucherCreatedBy
+               , Amount
                , RemarksToAS
                , FileNameToAS1
                , FileBytesToAS1
@@ -2163,6 +2167,7 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
         DataTable dtVouchers = new DataTable();
         dtVouchers.Columns.Add("VOUCHER_NO", typeof(string));
         dtVouchers.Columns.Add("VOUCHER_DATE", typeof(string));
+        dtVouchers.Columns.Add("AMOUNT", typeof(decimal));
         dtVouchers.Columns.Add("UNIT_ID", typeof(string));
         dtVouchers.Columns.Add("VOUCHER_CREATED_BY", typeof(string));
 
@@ -2182,6 +2187,7 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
                 {
                     Label lblVoucherNo = (Label)gr.FindControl("lblVoucherNo");
                     Label lblVoucherDate = (Label)gr.FindControl("lblVoucherDate");
+                    Label lblAmount = (Label)gr.FindControl("lblAmount");
                     Label lblCreatedBy = (Label)gr.FindControl("lblCreatedBy");
                     Label lblUnitId = (Label)gr.FindControl("lblUnitId");
 
@@ -2189,6 +2195,11 @@ public partial class VOUCHER_AUTH_JV_AuthorizeJournalVouchers : System.Web.UI.Pa
 
                     dr["VOUCHER_NO"] = lblVoucherNo.Text;
                     dr["VOUCHER_DATE"] = lblVoucherDate.Text;
+
+                    if (!string.IsNullOrEmpty(lblAmount.Text))
+                        dr["AMOUNT"] = Convert.ToDecimal(lblAmount.Text);
+                    else dr["AMOUNT"] = 0;
+
                     dr["UNIT_ID"] = lblUnitId.Text;
                     dr["VOUCHER_CREATED_BY"] = lblCreatedBy.Text;
 
