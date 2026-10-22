@@ -21,6 +21,7 @@ namespace RECON_VOUCHERS_AUTOMAILER
         string bodyLine = string.Empty;
         string salutation = string.Empty;
         string closingLine = string.Empty;
+        string regards = string.Empty;
         string content = string.Empty;
 
 
@@ -80,58 +81,63 @@ namespace RECON_VOUCHERS_AUTOMAILER
         {
             try
             {
+
+                if (dsReports.Tables[1].Rows.Count == 0) return 0;
+
+                from = dsReports.Tables[0].Rows[0]["FROM"].ToString();
+                subject = dsReports.Tables[0].Rows[0]["SUBJECT"].ToString();
+                salutation = dsReports.Tables[0].Rows[0]["SALUTATION"].ToString();
+                closingLine = dsReports.Tables[0].Rows[0]["CLOSING_LINE"].ToString();
+                regards = dsReports.Tables[0].Rows[0]["REGARDS"].ToString();
+                bodyLine = dsReports.Tables[0].Rows[0]["BODY"].ToString();
+                cc = dsReports.Tables[0].Rows[0]["CC"].ToString();
+                bcc = dsReports.Tables[0].Rows[0]["BCC"].ToString();
+
+
+
                 int sendMailValue = 0;
                 int retVal = 0;
-                DataTable dtContent = null;
+                DataTable dtContent = new DataTable();
+                dtContent.Columns.Add("VOUCHER_TYPE", typeof(string));
+                dtContent.Columns.Add("VOUCHER_COUNTS", typeof(int));
 
-                cc = string.Empty;
-                foreach (DataRow dr0 in dsReports.Tables[0].Select("TYPE_ID= 0"))
+                foreach (DataRow item in dsReports.Tables[1].Rows)
                 {
-                    cc += Convert.ToString(dr0["BODY"]) + ";";
-                }
 
-
-                foreach (DataRow dr in dsReports.Tables[0].Select("TYPE_ID > 0"))
-                {
-                    subject = string.Empty;
-                    salutation = string.Empty;
-                    closingLine = string.Empty;
-                    bodyLine = string.Empty;
+                    salutation = dsReports.Tables[0].Rows[0]["SALUTATION"].ToString() + " " + item["EMPLOYEE_NAME"].ToString() + ",";
+                    
                     content = string.Empty;
-                    dtContent = new DataTable();
-                    to = string.Empty;
+                    dtContent.Rows.Clear();
+                    
+                    string factIserName = item["CREATED_BY"].ToString();
+                    to = item["EMAIL_ID"].ToString();
 
-
-                    int typeId = Convert.ToInt32(dr["TYPE_ID"]);
-
-                    foreach (DataRow dr0 in dsReports.Tables[0].Select("TYPE_ID= " + typeId))
+                    foreach (DataRow drc in dsReports.Tables[2].Select("CREATED_BY = '" + factIserName + "'"))
                     {
-                        subject = Convert.ToString(dr0["SUBJECT"]);
-                        salutation = Convert.ToString(dr0["SALUTATION"]);
-                        bodyLine = Convert.ToString(dr0["BODY"]);
-                        closingLine = Convert.ToString(dr0["REGARDS"]);
-                    }
+                        DataRow dr = dtContent.NewRow();
+                        dr["VOUCHER_TYPE"] = drc["VOUCHER_TYPE"];
+                        dr["VOUCHER_COUNTS"] = drc["VOUCHER_COUNTS"];
 
-                    foreach (DataRow drt in dsReports.Tables[typeId].Rows)
-                    {
-                        to += drt["EMAIL_ID"] + ";";
+                        dtContent.Rows.Add(dr);
                     }
-
-                    dtContent = dsReports.Tables[typeId].Copy();
+                    content = GenerateHTML(dtContent);
 
 
                     to = to.TrimEnd(';');
                     cc = cc.TrimEnd(';');
+                    bcc = bcc.TrimEnd(';');
 
                     if (dtContent != null && dtContent.Rows.Count > 0)
                     {
                         content = GenerateHTML(dtContent);
                         sendMailValue = SendMail
                            (
-                              subject
+                              from
+                            , subject
                             , bodyLine
                             , salutation
                             , closingLine
+                            , regards
                             , to
                             , cc
                             , bcc
@@ -140,10 +146,10 @@ namespace RECON_VOUCHERS_AUTOMAILER
                     }
                     else
                         retVal = 0;
-                }
 
-                if (sendMailValue > 0)
-                    retVal = 1;
+                    if (sendMailValue > 0)
+                        retVal = 1;                  
+                }                
 
                 return retVal;
             }
@@ -167,10 +173,8 @@ namespace RECON_VOUCHERS_AUTOMAILER
             // Add header row
             htmlTable.Append("<tr style='background-color:cornflowerblue;color:white;font-size: 12px;'>");
 
-            htmlTable.Append("<td width='40%'><b>Users</b></td>");
-            htmlTable.Append("<td width='30%' style='text-align:right;'><b>Pending For Authorization</b></td>");
-            htmlTable.Append("<td width='30%' style='text-align:right;'><b>Pending For Approval</b></td>");
-
+            htmlTable.Append("<td width='40%'><b>Voucher Type</b></td>");
+            htmlTable.Append("<td width='30%' style='text-align:right;'><b>Available Vouchers</b></td>");
             htmlTable.Append("</tr>");
 
             // Add rows dynamically
@@ -178,9 +182,8 @@ namespace RECON_VOUCHERS_AUTOMAILER
             {
                 htmlTable.Append("<tr style='font-size: 12px;'>");
 
-                htmlTable.Append($"<td>" + Convert.ToString(dr["CREATED_BY"]) + "</td>");
-                htmlTable.Append($"<td style='text-align:right;'>" + Convert.ToString(dr["PENDING_COUNTS"]) + "</td>");
-                htmlTable.Append($"<td style='text-align:right;'>" + Convert.ToString(dr["AUTHORIZED_COUNTS"]) + "</td>");
+                htmlTable.Append($"<td>" + Convert.ToString(dr["VOUCHER_TYPE"]) + "</td>");
+                htmlTable.Append($"<td style='text-align:right;'>" + Convert.ToString(dr["VOUCHER_COUNTS"]) + "</td>");
 
                 htmlTable.Append("</tr>");
             }
@@ -196,17 +199,19 @@ namespace RECON_VOUCHERS_AUTOMAILER
 
 
         private int SendMail(
-                             string subject
+                             string from
+                           , string subject
                            , string bodyLine
                            , string salutation
                            , string closingLine
+                           , string regards
                            , string to
                            , string cc
                            , string bcc
                            , string content
             )
         {
-            string from = "ithelpdesk@coperion.com";
+            //string from = "ithelpdesk@coperion.com";
             int returnVal = 0;
             SmtpClient SmtpServer = new SmtpClient();
             SmtpServer.Host = "eusmtp.hi.corp";
@@ -218,8 +223,9 @@ namespace RECON_VOUCHERS_AUTOMAILER
             mail.Subject = subject;
             mail.From = new MailAddress(from);
 
-            //to = "deekshant.ravi1@coperion.com";
-            //cc = "deekshant.ravi1@coperion.com";
+            to = "deekshant.ravi1@coperion.com";
+            cc = "deekshant.ravi1@coperion.com";
+            bcc = "deekshant.ravi1@coperion.com";
 
             if (!string.IsNullOrEmpty(to))
             {
@@ -271,6 +277,7 @@ namespace RECON_VOUCHERS_AUTOMAILER
                 body = body.Replace("{#bodyLine#}", bodyLine);
                 body = body.Replace("{#content#}", content);
                 body = body.Replace("{#closingLine#}", closingLine);
+                body = body.Replace("{#regards#}", regards);
 
                 mail.Body = body;
 
