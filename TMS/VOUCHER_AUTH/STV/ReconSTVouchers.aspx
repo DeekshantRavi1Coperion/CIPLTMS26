@@ -1119,7 +1119,7 @@
 
 
         <div class="form-entry-container">
-             <fieldset class="form-popup-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblAuthorizeVoucherDetailsLegend" runat="server" />
@@ -1145,58 +1145,60 @@
 
 
                     <div class="full-width">
-                        <div class="popup-grid-container">
-                            <asp:GridView ID="gvVoucherDetails"
-                                runat="server"
-                                AutoGenerateColumns="false"
-                                CellPadding="4"
-                                CssClass="popup-grid"
-                                ForeColor="#333333" GridLines="Both"
-                                Width="100%"
-                                HorizontalAlign="Center"
-                                OnRowDataBound="gvVoucherDetails_RowDataBound">
-                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <div class="popup-fix-grid">
+                            <div class="popup-grid-container">
+                                <asp:GridView ID="gvVoucherDetails"
+                                    runat="server"
+                                    AutoGenerateColumns="false"
+                                    CellPadding="4"
+                                    CssClass="popup-grid"
+                                    ForeColor="#333333" GridLines="Both"
+                                    Width="100%"
+                                    HorizontalAlign="Center"
+                                    OnRowDataBound="gvVoucherDetails_RowDataBound">
+                                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                                <Columns>
+                                    <Columns>
 
-                                    <asp:TemplateField HeaderText="Sl No."
-                                        HeaderStyle-HorizontalAlign="Center"
-                                        ItemStyle-HorizontalAlign="Center">
-                                        <ItemTemplate>
+                                        <asp:TemplateField HeaderText="Sl No."
+                                            HeaderStyle-HorizontalAlign="Center"
+                                            ItemStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
 
-                                            <asp:Label ID="lblSlNoD" runat="server" Text='<%# Eval("SR_NO") %>' />
-                                            <asp:Label ID="lblVoucherNoD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
-                                            <asp:Label ID="lblProductCodeD" runat="server" Text='<%# Eval("PRODUCT_CODE") %>' Visible="false" />
-                                            <asp:Label ID="lblProductDescriptionD" runat="server" Text='<%# Eval("PRODUCT_DESCRIPTION") %>' Visible="false" />
-                                            <asp:Label ID="lblFromWarehouseD" runat="server" Text='<%# Eval("FROM_WAREHOUSE") %>' Visible="false" />
-                                            <asp:Label ID="lblFromClassD" runat="server" Text='<%# Eval("FROM_CLASS") %>' Visible="false" />
-                                            <asp:Label ID="lblToWarehouseD" runat="server" Text='<%# Eval("TO_WAREHOUSE") %>' Visible="false" />
-                                            <asp:Label ID="lblToClassD" runat="server" Text='<%# Eval("TO_CLASS") %>' Visible="false" />
-                                            <asp:Label ID="lblQuantityD" runat="server" Text='<%# Eval("QUANTITY") %>' Visible="false" />
-                                            <asp:Label ID="lblUOMD" runat="server" Text='<%# Eval("UOM") %>' Visible="false" />
+                                                <asp:Label ID="lblSlNoD" runat="server" Text='<%# Eval("SR_NO") %>' />
+                                                <asp:Label ID="lblVoucherNoD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblProductCodeD" runat="server" Text='<%# Eval("PRODUCT_CODE") %>' Visible="false" />
+                                                <asp:Label ID="lblProductDescriptionD" runat="server" Text='<%# Eval("PRODUCT_DESCRIPTION") %>' Visible="false" />
+                                                <asp:Label ID="lblFromWarehouseD" runat="server" Text='<%# Eval("FROM_WAREHOUSE") %>' Visible="false" />
+                                                <asp:Label ID="lblFromClassD" runat="server" Text='<%# Eval("FROM_CLASS") %>' Visible="false" />
+                                                <asp:Label ID="lblToWarehouseD" runat="server" Text='<%# Eval("TO_WAREHOUSE") %>' Visible="false" />
+                                                <asp:Label ID="lblToClassD" runat="server" Text='<%# Eval("TO_CLASS") %>' Visible="false" />
+                                                <asp:Label ID="lblQuantityD" runat="server" Text='<%# Eval("QUANTITY") %>' Visible="false" />
+                                                <asp:Label ID="lblUOMD" runat="server" Text='<%# Eval("UOM") %>' Visible="false" />
 
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
-                                    <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
-                                    <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
-                                    <asp:BoundField DataField="FROM_WAREHOUSE" HeaderText="From Warehouse" />
-                                    <asp:BoundField DataField="FROM_CLASS" HeaderText="From Class" />
-                                    <asp:BoundField DataField="TO_WAREHOUSE" HeaderText="To Warehouse" />
-                                    <asp:BoundField DataField="TO_CLASS" HeaderText="To Class" />
-                                    <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
-                                    <asp:BoundField DataField="UOM" HeaderText="UOM" />
+                                        <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
+                                        <asp:BoundField DataField="PRODUCT_DESCRIPTION" HeaderText="Product Description" />
+                                        <asp:BoundField DataField="FROM_WAREHOUSE" HeaderText="From Warehouse" />
+                                        <asp:BoundField DataField="FROM_CLASS" HeaderText="From Class" />
+                                        <asp:BoundField DataField="TO_WAREHOUSE" HeaderText="To Warehouse" />
+                                        <asp:BoundField DataField="TO_CLASS" HeaderText="To Class" />
+                                        <asp:BoundField DataField="QUANTITY" HeaderText="Quantity" />
+                                        <asp:BoundField DataField="UOM" HeaderText="UOM" />
 
-                                </Columns>
+                                    </Columns>
 
 
-                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                <EditRowStyle BackColor="#7C6F57" />
-                                <AlternatingRowStyle BackColor="White" />
-                            </asp:GridView>
+                                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                    <EditRowStyle BackColor="#7C6F57" />
+                                    <AlternatingRowStyle BackColor="White" />
+                                </asp:GridView>
+                            </div>
                         </div>
                     </div>
 
@@ -1436,63 +1438,63 @@
         <div class="popup-layout">
 
             <div class="popup-grid-container">
-                </div>
-                 <fieldset class="popup-grid-fieldset">
-                    <legend>Records: [<asp:Label ID="lblShowFolderDocumentsCount" runat="server" />]</legend>
-                     
-                        <asp:GridView
-                            CssClass="popup-grid"
-                            ID="gvFolderDocuments"
-                            runat="server"
-                            AutoGenerateColumns="false"
-                            CellPadding="4"
-                            ForeColor="#333333" GridLines="Both"
-                            Width="100%"
-                            HorizontalAlign="Center"
-                            OnRowDataBound="gvFolderDocuments_RowDataBound"
-                            OnRowCommand="gvFolderDocuments_RowCommand">
-                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+            </div>
+            <fieldset class="popup-grid-fieldset">
+                <legend>Records: [<asp:Label ID="lblShowFolderDocumentsCount" runat="server" />]</legend>
 
-                            <Columns>
+                <asp:GridView
+                    CssClass="popup-grid"
+                    ID="gvFolderDocuments"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    ForeColor="#333333" GridLines="Both"
+                    Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvFolderDocuments_RowDataBound"
+                    OnRowCommand="gvFolderDocuments_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                                <asp:TemplateField HeaderText="Sl No."
-                                    HeaderStyle-HorizontalAlign="Center"
-                                    ItemStyle-HorizontalAlign="Center">
-                                    <ItemTemplate>
-                                        <asp:Label ID="lblSlNoFD" runat="server" Text='<%# Eval("SR_NO") %>' />
-                                        <asp:Label ID="lblVoucherNoFD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
-                                        <asp:Label ID="lblFileNameFD" runat="server" Text='<%# Eval("FILE_NAME") %>' Visible="false" />
-                                    </ItemTemplate>
-                                </asp:TemplateField>
+                    <Columns>
 
-                                <asp:TemplateField
-                                    HeaderStyle-HorizontalAlign="Center"
-                                    ItemStyle-HorizontalAlign="Center">
+                        <asp:TemplateField HeaderText="Sl No."
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSlNoFD" runat="server" Text='<%# Eval("SR_NO") %>' />
+                                <asp:Label ID="lblVoucherNoFD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
+                                <asp:Label ID="lblFileNameFD" runat="server" Text='<%# Eval("FILE_NAME") %>' Visible="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                                    <ItemTemplate>
-                                        <asp:ImageButton ID="imgBtnFolderDocument"
-                                            Height="20px"
-                                            Width="20px"
-                                            ImageUrl="~/Images/pdficon1.png"
-                                            CommandArgument="ViewFolderDocument"
-                                            runat="server" />
-                                    </ItemTemplate>
-                                </asp:TemplateField>
+                        <asp:TemplateField
+                            HeaderStyle-HorizontalAlign="Center"
+                            ItemStyle-HorizontalAlign="Center">
 
-                                <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No" />
-                                <asp:BoundField DataField="FILE_PATH" HeaderText="File Path" />
-                                <asp:BoundField DataField="FILE_NAME" HeaderText="File Name" />
-                            </Columns>
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnFolderDocument"
+                                    Height="20px"
+                                    Width="20px"
+                                    ImageUrl="~/Images/pdficon1.png"
+                                    CommandArgument="ViewFolderDocument"
+                                    runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="VOUCHER_NO" HeaderText="Voucher No" />
+                        <asp:BoundField DataField="FILE_PATH" HeaderText="File Path" />
+                        <asp:BoundField DataField="FILE_NAME" HeaderText="File Name" />
+                    </Columns>
 
 
-                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                            <EditRowStyle BackColor="#7C6F57" />
-                            <AlternatingRowStyle BackColor="White" />
-                        </asp:GridView>
-                </fieldset>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+            </fieldset>
         </div>
 
     </asp:Panel>

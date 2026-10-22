@@ -1067,48 +1067,50 @@
 
 
                     <div class="full-width">
-                        <div class="popup-grid-container">
-                            <asp:GridView ID="gvVoucherDetails"
-                                runat="server"
-                                AutoGenerateColumns="false"
-                                CellPadding="4"
-                                CssClass="popup-grid"
-                                ForeColor="#333333" GridLines="Both"
-                                Width="100%"
-                                HorizontalAlign="Center"
-                                OnRowDataBound="gvVoucherDetails_RowDataBound">
-                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <div class="popup-fix-grid">
+                            <div class="popup-grid-container">
+                                <asp:GridView ID="gvVoucherDetails"
+                                    runat="server"
+                                    AutoGenerateColumns="false"
+                                    CellPadding="4"
+                                    CssClass="popup-grid"
+                                    ForeColor="#333333" GridLines="Both"
+                                    Width="100%"
+                                    HorizontalAlign="Center"
+                                    OnRowDataBound="gvVoucherDetails_RowDataBound">
+                                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                                <Columns>
+                                    <Columns>
 
-                                    <asp:TemplateField HeaderText="Sl No."
-                                        HeaderStyle-HorizontalAlign="Center"
-                                        ItemStyle-HorizontalAlign="Center">
-                                        <ItemTemplate>
+                                        <asp:TemplateField HeaderText="Sl No."
+                                            HeaderStyle-HorizontalAlign="Center"
+                                            ItemStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
 
-                                            <asp:Label ID="lblSlNoD" runat="server" Text='<%# Eval("SR_NO") %>' />
-                                            <asp:Label ID="lblVoucherNoD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
-                                            <asp:Label ID="lblGLCodeD" runat="server" Text='<%# Eval("GL_CODE") %>' Visible="false" />
-                                            <asp:Label ID="lblGLDescriptionD" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
-                                            <asp:Label ID="lblAmountD" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
+                                                <asp:Label ID="lblSlNoD" runat="server" Text='<%# Eval("SR_NO") %>' />
+                                                <asp:Label ID="lblVoucherNoD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblGLCodeD" runat="server" Text='<%# Eval("GL_CODE") %>' Visible="false" />
+                                                <asp:Label ID="lblGLDescriptionD" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
+                                                <asp:Label ID="lblAmountD" runat="server" Text='<%# Eval("AMOUNT") %>' Visible="false" />
 
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
-                                    <asp:BoundField DataField="GL_CODE" HeaderText="GL Code" />
-                                    <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
-                                    <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
+                                        <asp:BoundField DataField="GL_CODE" HeaderText="GL Code" />
+                                        <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
+                                        <asp:BoundField DataField="AMOUNT" HeaderText="Amount" />
 
-                                </Columns>
+                                    </Columns>
 
 
-                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                <EditRowStyle BackColor="#7C6F57" />
-                                <AlternatingRowStyle BackColor="White" />
-                            </asp:GridView>
+                                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                    <EditRowStyle BackColor="#7C6F57" />
+                                    <AlternatingRowStyle BackColor="White" />
+                                </asp:GridView>
+                            </div>
                         </div>
                     </div>
 
@@ -1349,7 +1351,7 @@
 
             <div class="popup-grid-container">
             </div>
-             <fieldset class="popup-grid-fieldset">
+            <fieldset class="popup-grid-fieldset">
                 <legend>Records: [<asp:Label ID="lblShowFolderDocumentsCount" runat="server" />]</legend>
 
 

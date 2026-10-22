@@ -886,7 +886,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -905,7 +905,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -1234,7 +1234,7 @@
 
 
         <div class="form-entry-container">
-             <fieldset class="form-popup-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblAuthorizeVoucherDetailsLegend" runat="server" />
@@ -1259,73 +1259,75 @@
                         Enabled="false" />
 
                     <div class="full-width">
-                        <div class="popup-grid-container">
-                            <asp:GridView ID="gvVoucherDetails"
-                                runat="server"
-                                AutoGenerateColumns="false"
-                                CellPadding="4"
-                                CssClass="popup-grid"
-                                ForeColor="#333333" GridLines="Both"
-                                Width="100%"
-                                HorizontalAlign="Center"
-                                OnRowDataBound="gvVoucherDetails_RowDataBound">
-                                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                        <div class="popup-fix-grid">
+                            <div class="popup-grid-container">
+                                <asp:GridView ID="gvVoucherDetails"
+                                    runat="server"
+                                    AutoGenerateColumns="false"
+                                    CellPadding="4"
+                                    CssClass="popup-grid"
+                                    ForeColor="#333333" GridLines="Both"
+                                    Width="100%"
+                                    HorizontalAlign="Center"
+                                    OnRowDataBound="gvVoucherDetails_RowDataBound">
+                                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
 
-                                <Columns>
+                                    <Columns>
 
-                                    <asp:TemplateField HeaderText="Sl No."
-                                        HeaderStyle-HorizontalAlign="Center"
-                                        ItemStyle-HorizontalAlign="Center">
-                                        <ItemTemplate>
+                                        <asp:TemplateField HeaderText="Sl No."
+                                            HeaderStyle-HorizontalAlign="Center"
+                                            ItemStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
 
-                                            <asp:Label ID="lblSlNoD" runat="server" Text='<%# Eval("SR_NO") %>' />
-                                            <asp:Label ID="lblVoucherNoD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
-                                            <asp:Label ID="lblVoucherDateD" runat="server" Text='<%# Eval("VOUCHER_DATE") %>' Visible="false" />
-                                            <asp:Label ID="lblTypeD" runat="server" Text='<%# Eval("TYPE") %>' Visible="false" />
-                                            <asp:Label ID="lblDOCClassD" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
-                                            <asp:Label ID="lblGLCodeD" runat="server" Text='<%# Eval("GLCODE") %>' Visible="false" />
-                                            <asp:Label ID="lblGLDescriptionD" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
-                                            <asp:Label ID="lblCurrencyDescriptionD" runat="server" Text='<%# Eval("CURRENCY_DESC") %>' Visible="false" />
-                                            <asp:Label ID="lblReceiptAmountFCD" runat="server" Text='<%# Eval("RECEIPT_AMOUNT_FC") %>' Visible="false" />
-                                            <asp:Label ID="lblPaymentAmountFCD" runat="server" Text='<%# Eval("PAYMENT_AMOUNT_FC") %>' Visible="false" />
-                                            <asp:Label ID="lblReceiptAmountINRD" runat="server" Text='<%# Eval("RECEIPT_AMOUNT_INR") %>' Visible="false" />
-                                            <asp:Label ID="lblPaymentAmountINRD" runat="server" Text='<%# Eval("PAYMENT_AMOUNT_INR") %>' Visible="false" />
-                                            <asp:Label ID="lblPaidToOrReceivedFromD" runat="server" Text='<%# Eval("PAID_TO_OR_RECEIVED_FROM") %>' Visible="false" />
-                                            <asp:Label ID="lblChequeOrReferenceNoD" runat="server" Text='<%# Eval("CHEQUE_OR_REFERENCE_NO") %>' Visible="false" />
-                                            <asp:Label ID="lblChequeDatedD" runat="server" Text='<%# Eval("CHEQUE_DATED") %>' Visible="false" />
-                                            <asp:Label ID="lblBankTransactionRefNoOrUTRD" runat="server" Text='<%# Eval("BANK_TRANSACTION_REF_NO_OR_UTR") %>' Visible="false" />
-                                            <asp:Label ID="lblReconcileDateD" runat="server" Text='<%# Eval("RECONCILED_DATE") %>' Visible="false" />
-                                            <asp:Label ID="lblNarrationD" runat="server" Text='<%# Eval("NARRATION") %>' Visible="false" />
+                                                <asp:Label ID="lblSlNoD" runat="server" Text='<%# Eval("SR_NO") %>' />
+                                                <asp:Label ID="lblVoucherNoD" runat="server" Text='<%# Eval("VOUCHER_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblVoucherDateD" runat="server" Text='<%# Eval("VOUCHER_DATE") %>' Visible="false" />
+                                                <asp:Label ID="lblTypeD" runat="server" Text='<%# Eval("TYPE") %>' Visible="false" />
+                                                <asp:Label ID="lblDOCClassD" runat="server" Text='<%# Eval("DOC_CLASS") %>' Visible="false" />
+                                                <asp:Label ID="lblGLCodeD" runat="server" Text='<%# Eval("GLCODE") %>' Visible="false" />
+                                                <asp:Label ID="lblGLDescriptionD" runat="server" Text='<%# Eval("GL_DESCRIPTION") %>' Visible="false" />
+                                                <asp:Label ID="lblCurrencyDescriptionD" runat="server" Text='<%# Eval("CURRENCY_DESC") %>' Visible="false" />
+                                                <asp:Label ID="lblReceiptAmountFCD" runat="server" Text='<%# Eval("RECEIPT_AMOUNT_FC") %>' Visible="false" />
+                                                <asp:Label ID="lblPaymentAmountFCD" runat="server" Text='<%# Eval("PAYMENT_AMOUNT_FC") %>' Visible="false" />
+                                                <asp:Label ID="lblReceiptAmountINRD" runat="server" Text='<%# Eval("RECEIPT_AMOUNT_INR") %>' Visible="false" />
+                                                <asp:Label ID="lblPaymentAmountINRD" runat="server" Text='<%# Eval("PAYMENT_AMOUNT_INR") %>' Visible="false" />
+                                                <asp:Label ID="lblPaidToOrReceivedFromD" runat="server" Text='<%# Eval("PAID_TO_OR_RECEIVED_FROM") %>' Visible="false" />
+                                                <asp:Label ID="lblChequeOrReferenceNoD" runat="server" Text='<%# Eval("CHEQUE_OR_REFERENCE_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblChequeDatedD" runat="server" Text='<%# Eval("CHEQUE_DATED") %>' Visible="false" />
+                                                <asp:Label ID="lblBankTransactionRefNoOrUTRD" runat="server" Text='<%# Eval("BANK_TRANSACTION_REF_NO_OR_UTR") %>' Visible="false" />
+                                                <asp:Label ID="lblReconcileDateD" runat="server" Text='<%# Eval("RECONCILED_DATE") %>' Visible="false" />
+                                                <asp:Label ID="lblNarrationD" runat="server" Text='<%# Eval("NARRATION") %>' Visible="false" />
 
-                                        </ItemTemplate>
-                                    </asp:TemplateField>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
 
-                                    <asp:BoundField DataField="TYPE" HeaderText="Type" />
-                                    <asp:BoundField DataField="DOC_CLASS" HeaderText="DOC Class" />
-                                    <asp:BoundField DataField="GLCODE" HeaderText="GL Code" />
-                                    <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
-                                    <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency" />
+                                        <asp:BoundField DataField="TYPE" HeaderText="Type" />
+                                        <asp:BoundField DataField="DOC_CLASS" HeaderText="DOC Class" />
+                                        <asp:BoundField DataField="GLCODE" HeaderText="GL Code" />
+                                        <asp:BoundField DataField="GL_DESCRIPTION" HeaderText="GL Description" />
+                                        <asp:BoundField DataField="CURRENCY_DESC" HeaderText="Currency" />
 
-                                    <asp:BoundField DataField="RECEIPT_AMOUNT_FC" HeaderText="Receipt Amount FC" />
-                                    <asp:BoundField DataField="PAYMENT_AMOUNT_FC" HeaderText="Payment Amount FC" />
-                                    <asp:BoundField DataField="RECEIPT_AMOUNT_INR" HeaderText="Receipt Amount INR" />
-                                    <asp:BoundField DataField="PAID_TO_OR_RECEIVED_FROM" HeaderText="Paid To Received From" />
-                                    <asp:BoundField DataField="PAYMENT_AMOUNT_INR" HeaderText="Bank Transaction Ref. No / UTR" />
-                                    <asp:BoundField DataField="CHEQUE_OR_REFERENCE_NO" HeaderText="Cheque" />
-                                    <asp:BoundField DataField="CHEQUE_DATED" HeaderText="Cheque Dated" />
-                                    <asp:BoundField DataField="BANK_TRANSACTION_REF_NO_OR_UTR" HeaderText="Cheque Dated" />
-                                    <asp:BoundField DataField="NARRATION" HeaderText="Narration" />
+                                        <asp:BoundField DataField="RECEIPT_AMOUNT_FC" HeaderText="Receipt Amount FC" />
+                                        <asp:BoundField DataField="PAYMENT_AMOUNT_FC" HeaderText="Payment Amount FC" />
+                                        <asp:BoundField DataField="RECEIPT_AMOUNT_INR" HeaderText="Receipt Amount INR" />
+                                        <asp:BoundField DataField="PAID_TO_OR_RECEIVED_FROM" HeaderText="Paid To Received From" />
+                                        <asp:BoundField DataField="PAYMENT_AMOUNT_INR" HeaderText="Bank Transaction Ref. No / UTR" />
+                                        <asp:BoundField DataField="CHEQUE_OR_REFERENCE_NO" HeaderText="Cheque" />
+                                        <asp:BoundField DataField="CHEQUE_DATED" HeaderText="Cheque Dated" />
+                                        <asp:BoundField DataField="BANK_TRANSACTION_REF_NO_OR_UTR" HeaderText="Cheque Dated" />
+                                        <asp:BoundField DataField="NARRATION" HeaderText="Narration" />
 
-                                </Columns>
+                                    </Columns>
 
 
-                                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                <EditRowStyle BackColor="#7C6F57" />
-                                <AlternatingRowStyle BackColor="White" />
-                            </asp:GridView>
+                                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                    <EditRowStyle BackColor="#7C6F57" />
+                                    <AlternatingRowStyle BackColor="White" />
+                                </asp:GridView>
+                            </div>
                         </div>
                     </div>
 

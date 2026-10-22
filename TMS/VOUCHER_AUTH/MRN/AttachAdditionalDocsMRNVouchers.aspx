@@ -1066,9 +1066,10 @@
             </table>
 
 
-            <div id="divAttachedFiles" runat="server"
+            <%--<div id="divAttachedFiles" runat="server"
                 style='overflow-y: auto; overflow-x: auto; width: 100%; height: 350px; border: 1px solid lightgray;'
-                onscroll="SetDivPosition()">
+                onscroll="SetDivPosition()">--%>
+             <div class="popup-fix-grid">
 
                 <asp:GridView ID="gvAttachedFiles"
                     runat="server"

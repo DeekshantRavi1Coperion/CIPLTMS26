@@ -1272,6 +1272,7 @@
 
 
                     <div class="full-width">
+                        <div class="popup-fix-grid">
                         <div class="employee-grid-container">
                             <asp:GridView ID="gvVoucherDetails"
                                 runat="server"
@@ -1317,6 +1318,7 @@
                                 <AlternatingRowStyle BackColor="White" />
                             </asp:GridView>
                         </div>
+                            </div>
                     </div>
 
 

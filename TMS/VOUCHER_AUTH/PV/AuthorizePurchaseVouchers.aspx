@@ -1156,6 +1156,7 @@
 
 
                     <div class="full-width">
+                        <div class="popup-fix-grid">
                         <div class="popup-grid-container">
                             <asp:GridView
                                 CssClass="popup-grid"
@@ -1237,6 +1238,7 @@
                                 <AlternatingRowStyle BackColor="White" />
                             </asp:GridView>
                         </div>
+                            </div>
                     </div>
 
                     <div class="full-width">

@@ -1142,6 +1142,7 @@
 
 
                     <div class="full-width">
+                        <div class="popup-fix-grid">
                         <div class="popup-grid-container">
                             <asp:GridView ID="gvVoucherDetails"
                                 runat="server"
@@ -1188,6 +1189,7 @@
                             </asp:GridView>
                         </div>
                     </div>
+                        </div>
 
 
 
