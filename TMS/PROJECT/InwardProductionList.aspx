@@ -927,12 +927,14 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="lblLegend" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"
                                 cellpadding="0" cellspacing="0">--%>
+            
             <div style='overflow: auto; width: 99%; height: 500px; border: 1px solid lightgray; margin-left: 5px;'>
+                
                 <table style="width: 95%; height: 100%; margin-left: 20px;">
                     <tr>
                         <td>&nbsp;
@@ -1212,12 +1214,12 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="Label5" runat="server" /></legend>
-            <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"
-                                cellpadding="0" cellspacing="0">--%>
+            
             <div style='overflow: auto; width: 99%; height: 500px; border: 1px solid lightgray; margin-left: 5px;'>
+                
                 <table style="width: 95%; height: 100%; margin-left: 20px;">
                     <tr>
                         <td>&nbsp;
@@ -1570,12 +1572,14 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="Label1" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"
                                 cellpadding="0" cellspacing="0">--%>
+
             <div style='overflow: auto; width: 99%; height: 500px; border: 1px solid lightgray; margin-left: 5px;'>
+
                 <table style="width: 95%; height: 100%; margin-left: 20px;">
                     <tr>
                         <td>&nbsp;
@@ -1912,7 +1916,7 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="Label4" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"

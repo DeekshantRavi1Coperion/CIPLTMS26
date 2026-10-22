@@ -422,7 +422,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
                     <div class="form-grid form-grid-3">
@@ -505,7 +505,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblRecordsJobNo" runat="server" Text="Records[0]" /></legend>
                     <div class="form-grid form-grid-3">

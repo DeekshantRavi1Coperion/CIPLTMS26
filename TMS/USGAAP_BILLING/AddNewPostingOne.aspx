@@ -764,7 +764,7 @@
 
         <div class="popup-layout">
             <div class="form-entry-container">
-                <fieldset class="form-card">
+                <fieldset class="form-popup-card">
                     <legend>
                         <asp:Label ID="lblCustomerRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -845,7 +845,7 @@
 
         <div class="popup-layout">
             <div class="form-entry-container">
-                <fieldset class="form-card">
+                <fieldset class="form-popup-card">
                     <legend>
                         <asp:Label ID="lblProductRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -920,7 +920,7 @@
 
         <div class="popup-layout">
             <div class="form-entry-container">
-                <fieldset class="form-card">
+                <fieldset class="form-popup-card">
                     <legend>
                         <asp:Label ID="lblRevenueAccRecords" runat="server" Text="Records[0]" />
                     </legend>

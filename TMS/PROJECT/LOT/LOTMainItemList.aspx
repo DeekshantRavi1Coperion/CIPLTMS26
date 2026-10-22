@@ -192,7 +192,7 @@
         </table>
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+           <fieldset class="form-popup-card">
 
                 <legend>Main Item Detail</legend>
 

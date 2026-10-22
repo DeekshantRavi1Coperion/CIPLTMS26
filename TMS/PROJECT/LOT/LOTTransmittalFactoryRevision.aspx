@@ -1589,7 +1589,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend style="text-align: center;">TF No. [<asp:Label ID="lblTFNo" runat="server" />] Details</legend>
 
                 <div class="form-grid form-grid-2">
@@ -1966,7 +1966,7 @@
         <asp:HiddenField ID="hdAddSubitemFlag" runat="server" Value="0" />
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend style="text-align: center;" id="lgSubitemUpdation" runat="server" />
 
                 <div class="form-grid form-grid-2">
@@ -2364,7 +2364,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>Material Requisition List:
                     <asp:Label ID="lblProductonOrderNoRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -2446,7 +2446,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDMSDrawingNoListRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -2520,7 +2520,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend style="text-align: center;">Add/Update Additional Attachments</legend>
 
                 <div class="form-grid form-grid-2">
@@ -2680,7 +2680,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>Subitem Details:
                     <asp:Label ID="lblSubitemsSIRerords" runat="server" Text="Subitems Records[0]" />
                     </legend>

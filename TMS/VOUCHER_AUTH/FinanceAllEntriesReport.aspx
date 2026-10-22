@@ -714,7 +714,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblAuthorizeVoucherDetailsLegend" runat="server" />[Document Details]
                     </legend>

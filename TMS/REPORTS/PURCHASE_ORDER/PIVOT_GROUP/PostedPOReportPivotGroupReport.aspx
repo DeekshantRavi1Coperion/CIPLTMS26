@@ -577,7 +577,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>PO List:
                         <asp:Label ID="lblPOdetailRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -685,7 +685,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>PO Detail:
                     <asp:Label ID="Label2" runat="server" Text="Records[0]" />
                     </legend>

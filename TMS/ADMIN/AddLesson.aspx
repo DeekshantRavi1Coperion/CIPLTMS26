@@ -711,6 +711,8 @@
         <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
             PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
         </ajax:ModalPopupExtender>
+
+
         <asp:Panel ID="pnlPopupJOBDetail" runat="server" CssClass="popup-edit">
             <table width="100%">
                 <tr>
@@ -725,7 +727,7 @@
             <div class="popup-layout">
 
                 <div class="form-grid-container">
-                    <fieldset class="filter-card">
+                    <fieldset class="filter-popup-card">
                         <legend>
                             <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" />
                         </legend>

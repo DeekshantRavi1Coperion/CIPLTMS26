@@ -2784,7 +2784,7 @@
         <asp:HiddenField ID="HiddenField3" runat="server" />
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>Billing Address</legend>
 
@@ -2890,7 +2890,7 @@
         <asp:HiddenField ID="HiddenField6" runat="server" />
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>Add Contact Person</legend>
 

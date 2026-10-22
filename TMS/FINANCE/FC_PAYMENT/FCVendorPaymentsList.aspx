@@ -646,7 +646,7 @@
         </table>
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>Update Payment Request</legend>
 
@@ -858,7 +858,7 @@
         </table>
 
         <div class="form-grid-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Update Status Of Payment Request</legend>
 
                 <div class="form-grid form-grid-2">
@@ -1070,7 +1070,7 @@
 
 
         <div class="form-grid-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>Cancel Payment Request</legend>
 

@@ -981,7 +981,7 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+       <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="lblLegend" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"
@@ -1277,7 +1277,7 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="Label5" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"
@@ -1636,7 +1636,8 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <%--<fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">--%>
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="Label1" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"
@@ -1979,7 +1980,7 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 22px; margin-top: 10px;">
+        <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="Label4" runat="server" /></legend>
             <%--<table width="100%" style="border: Solid 3px #D55500; width: 100%; height: 100%"

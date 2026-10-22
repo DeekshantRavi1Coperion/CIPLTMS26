@@ -319,7 +319,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
 

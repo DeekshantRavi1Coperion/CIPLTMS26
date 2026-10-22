@@ -1309,7 +1309,7 @@
 
         <div class="form-entry-container">
 
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <asp:Label ID="lblLegend" runat="server" />
 
                 <asp:Panel ID="pnlNewComplaint" runat="server" Enabled="false">

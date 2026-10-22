@@ -507,7 +507,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendMachineNameSchD" runat="server" Text="Re-Schedule Machine" />:
                     <asp:Label ID="lblAvailableDatesRecords" runat="server" Text="Available Hours[0]" />
@@ -942,7 +942,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendAssignedDrawingDetails" runat="server" Text="Assigned Drawings List" />:
                     <asp:Label ID="lblAssignedDrawingList" runat="server" Text="Records[0]" />

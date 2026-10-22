@@ -1165,7 +1165,7 @@
             <div class="form-grid form-grid-2">
 
                 <label>LOT Type</label>
-                <asp:DropDownList ID="ddlLOTType" runat="server" 
+                <asp:DropDownList ID="ddlLOTType" runat="server"
                     CssClass="form-control"
                     OnSelectedIndexChanged="ddlLOTType_SelectedIndexChanged" AutoPostBack="true">
                     <asp:ListItem Text="New" Value="1" />
@@ -1259,12 +1259,20 @@
 
                 <div class="full-width">
                     <label>Item</label>
-                    <asp:TextBox ID="txtItemName" runat="server"
-                        CssClass="form-control" />
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 80%;">
+                                <asp:TextBox ID="txtItemName" runat="server"
+                                    CssClass="form-control" /></td>
+                            <td>
+                                <asp:Button ID="btnAddSubitem" runat="server"
+                                    Text="Add Subitem" CssClass="button" OnClick="btnAddSubitem_Click" />
+                            </td>
+                        </tr>
+                    </table>
                 </div>
 
-                <asp:Button ID="btnAddSubitem" runat="server"
-                    Text="Add Subitem" CssClass="button" OnClick="btnAddSubitem_Click" />
+
 
                 <%--ADD SUBITEM START--%>
                 <%--ADD SUBITEM END--%>
@@ -1536,7 +1544,7 @@
         <asp:HiddenField ID="hdLastSUID" runat="server" />
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Add Subitem</legend>
 
                 <div class="form-grid form-grid-2">
@@ -1919,7 +1927,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>Material Requisition List:
                     <asp:Label ID="lblProductonOrderNoRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1983,7 +1991,7 @@
     <%--PRODUCTION ORDER NO DETAIL END--%>
 
 
-   <%--DMS DRAWING NO LIST START--%>
+    <%--DMS DRAWING NO LIST START--%>
     <asp:Button ID="btnShowPopupDMSDrawingNoList" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="mpeDMSDrawingNoList" runat="server" TargetControlID="btnShowPopupDMSDrawingNoList"
         PopupControlID="pnlPopupDMSDrawingNoList" CancelControlID="imgBtnCancelDMSDrawingNoList" BackgroundCssClass="modalBackground">
@@ -2001,7 +2009,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDMSDrawingNoListRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -2056,7 +2064,7 @@
     <%--DMS DRAWING NO LIST END--%>
 
 
-     <%--ADD ATTACHMENTS START--%>
+    <%--ADD ATTACHMENTS START--%>
     <asp:Button ID="btnShowPopupAddAttachments" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="mpeAddUpdateAttachments" runat="server" TargetControlID="btnShowPopupAddAttachments"
         PopupControlID="pnlPopupAddAttachments" CancelControlID="imgBtnCancelAddAttachments" BackgroundCssClass="modalBackground">
@@ -2073,7 +2081,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend style="text-align: center;">Add/Update Additional Attachments</legend>
 
                 <div class="form-grid form-grid-2">
@@ -2151,8 +2159,9 @@
     <ajax:ModalPopupExtender ID="mpeJOBDetail" runat="server" TargetControlID="btnShowPopupJOBDetail"
         PopupControlID="pnlPopupJOBDetail" CancelControlID="imgBtnCancelJOBDetail" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlPopupJOBDetail" runat="server" 
+    <asp:Panel ID="pnlPopupJOBDetail" runat="server"
         CssClass="popup-edit">
+        
         <table width="100%">
             <tr>
                 <td align="right">
@@ -2161,10 +2170,11 @@
             </tr>
         </table>
 
+
         <div class="popup-layout">
 
             <div class="popup-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
 
@@ -2179,14 +2189,16 @@
                         <label>Customer Code</label>
                         <asp:TextBox ID="txtCustomerCodeSearch" runat="server" CssClass="form-control" />
 
-                        <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
-                            Width="100%" OnClick="btnSearchJOBNo_Click" />
-
                     </div>
                 </fieldset>
+                <div class="full-width button-group">
+                    <asp:Button ID="btnSearchJOBNo" CssClass="button" runat="server" Text="Search"
+                        Width="100%" OnClick="btnSearchJOBNo_Click" />
+                </div>
             </div>
 
-            <div class="popup-grid-container">
+
+            <fieldset class="popup-grid-fieldset">
                 <div align="center">
                     <asp:Label ID="lblJOBMsg" runat="server" />
                 </div>
@@ -2194,7 +2206,8 @@
                 <asp:GridView
                     CssClass="popup-grid"
                     ID="gvJOBDetail" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center" OnRowCommand="gvJOBDetail_RowCommand">
+                    ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
+                    OnRowCommand="gvJOBDetail_RowCommand">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                     <Columns>
                         <asp:TemplateField HeaderText="Get JOB">
@@ -2224,18 +2237,21 @@
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
 
-            </div>
+            </fieldset>
+
         </div>
+
+
 
     </asp:Panel>
     <%--JOB DETAIL END--%>
-    
+
     <%-- ADD LOT JOB APPROVERS START --%>
     <asp:Button ID="btnShowAddApproversPopup" runat="server" Style="display: none" />
     <ajax:ModalPopupExtender ID="mpeAddApprovers" runat="server" TargetControlID="btnShowAddApproversPopup"
         PopupControlID="pnlAddApprovers" CancelControlID="imgBtnCancelAddApprovers" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlAddApprovers" runat="server" 
+    <asp:Panel ID="pnlAddApprovers" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2244,11 +2260,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeAddApprovers"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- ADD LOT JOB APPROVERS END --%>
 
@@ -2257,7 +2272,7 @@
     <ajax:ModalPopupExtender ID="mpeAddSubitemManagers" runat="server" TargetControlID="btnShowAddSubitemManagersPopup"
         PopupControlID="pnlAddSubitemManagers" CancelControlID="imgBtnCancelAddSubitemManagers" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlAddSubitemManagers" runat="server" 
+    <asp:Panel ID="pnlAddSubitemManagers" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2266,11 +2281,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeAddSubitemManagers"
-            runat="server">            
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- ADD LOT SUBITEM MANAGERS END --%>
 
@@ -2279,7 +2293,7 @@
     <ajax:ModalPopupExtender ID="mpeViewImgFileAttachment" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2299,7 +2313,7 @@
     <ajax:ModalPopupExtender ID="mpeViewPDFFileAttachment" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -2308,11 +2322,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- SHOW PDF FILE END--%>
 
@@ -2332,12 +2345,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewTravelStatementInPDF"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- VIEW DETAIL IN PDF END--%>
-
 </asp:Content>

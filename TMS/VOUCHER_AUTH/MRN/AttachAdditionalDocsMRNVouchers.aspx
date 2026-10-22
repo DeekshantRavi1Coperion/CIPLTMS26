@@ -917,7 +917,7 @@
         </table>
 
 
-        <fieldset style="width: 97%; margin-left: 1%; margin-top: 10px;">
+         <fieldset class="form-popup-card">
             <legend style="text-align: center;">
                 <asp:Label ID="lblAuthorizeVoucherDetailsLegend" runat="server" />
 

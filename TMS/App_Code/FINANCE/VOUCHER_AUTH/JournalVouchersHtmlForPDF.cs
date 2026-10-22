@@ -9,6 +9,7 @@ public class JournalVouchersHtmlForPDF
 
     string VoucherNo = string.Empty;
     string VoucherDate = string.Empty;
+    string Amount = string.Empty;
     string VoucherCreatedBy = string.Empty;
     string VoucherType = string.Empty;
     string Unit = string.Empty;
@@ -36,6 +37,7 @@ public class JournalVouchersHtmlForPDF
 
                 if (dr0["VOUCHER_NO"] != DBNull.Value) VoucherNo = Convert.ToString(dr0["VOUCHER_NO"]).Trim();
                 if (dr0["VOUCHER_DATE"] != DBNull.Value) VoucherDate = Convert.ToString(dr0["VOUCHER_DATE"]).Trim();
+                if (dr0["AMOUNT"] != DBNull.Value) Amount = Convert.ToString(dr0["AMOUNT"]).Trim();
                 if (dr0["VOUCHER_CREATED_BY"] != DBNull.Value) VoucherCreatedBy = Convert.ToString(dr0["VOUCHER_CREATED_BY"]).Trim();
                 if (dr0["VOUCHER_TYPE"] != DBNull.Value) VoucherType = Convert.ToString(dr0["VOUCHER_TYPE"]).Trim();
                 if (dr0["UNIT_NAME"] != DBNull.Value) Unit = Convert.ToString(dr0["UNIT_NAME"]).Trim();
@@ -77,6 +79,8 @@ public class JournalVouchersHtmlForPDF
             sb.Append("<tr>\n");
             sb.Append("<td class='td1header'>Unit:</td>\n");
             sb.Append("<td class='td2header'>{#Unit#}</td>\n");
+            sb.Append("<td class='td1header'>Amount:</td>\n");
+            sb.Append("<td class='td2header'>{#Amount#}</td>\n");
             sb.Append("</tr>\n");
 
 
@@ -88,6 +92,7 @@ public class JournalVouchersHtmlForPDF
             sb.Replace("{#VoucherCreatedBy#}", VoucherCreatedBy);
             sb.Replace("{#VoucherType#}", VoucherType);
             sb.Replace("{#Unit#}", Unit);
+            sb.Replace("{#Amount#}", Amount);
 
 
             //VOUCHER DETAILS START[===========================]

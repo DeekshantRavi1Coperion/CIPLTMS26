@@ -142,7 +142,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -164,7 +164,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -629,480 +629,478 @@
             </tr>
         </table>
 
-        <fieldset style="width: 97%; margin-left: 17px; margin-top: 10px;">
-            <%--<legend style="text-align: center;">TF No. [<asp:Label ID="lblBOM" runat="server" />] Details</legend>--%>
-            <legend style="text-align: center;">[
-                <asp:Label ID="lblMrNoLegend" runat="server" Font-Bold="true" />
-                ] Material Requisition Details</legend>
-            <div style='overflow: auto; width: 99%; height: 680px; border: 1px solid lightgray; margin-left: 5px;'>
+        <fieldset class="form-popup-card">
+            <legend>[<asp:Label ID="lblMrNoLegend" runat="server" Font-Bold="true" />] Material Requisition Details</legend>
 
-                <table width="95%" align="center">
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td colspan="9" align="center">
-                            <asp:Panel ID="pnlUpdateMsg" Visible="false" runat="server" Height="50px">
-                                <asp:Label ID="lblUpdateMsg" runat="server" Font-Bold="True" Font-Size="Large" />
-                            </asp:Panel>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Bom Date:</td>
-                        <td>
-                            <asp:TextBox ID="txtBomDateToU" runat="server" Width="100%" Enabled="false" />
-                        </td>
-                        <td>&nbsp;</td>
+            <%--<div style='overflow: auto; width: 99%; height: 680px; border: 1px solid lightgray; margin-left: 5px;'>--%>
 
-                        <td>Bom No.:</td>
-                        <td>
-                            <asp:TextBox ID="txtBomNoToU" runat="server" Width="100%" Enabled="false" />
-                        </td>
+            <table width="95%" align="center">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="9" align="center">
+                        <asp:Panel ID="pnlUpdateMsg" Visible="false" runat="server" Height="50px">
+                            <asp:Label ID="lblUpdateMsg" runat="server" Font-Bold="True" Font-Size="Large" />
+                        </asp:Panel>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bom Date:</td>
+                    <td>
+                        <asp:TextBox ID="txtBomDateToU" runat="server" Width="100%" Enabled="false" />
+                    </td>
+                    <td>&nbsp;</td>
 
-                        <td>&nbsp;</td>
+                    <td>Bom No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtBomNoToU" runat="server" Width="100%" Enabled="false" />
+                    </td>
 
-                        <td>Job No.:
-                        </td>
-                        <td>
-                            <asp:TextBox ID="txtJobNoToU" runat="server" Width="100%" Enabled="false" />
-                        </td>
+                    <td>&nbsp;</td>
 
-                        <td>&nbsp;</td>
+                    <td>Job No.:
+                    </td>
+                    <td>
+                        <asp:TextBox ID="txtJobNoToU" runat="server" Width="100%" Enabled="false" />
+                    </td>
 
-                        <td>
-                            <asp:Button ID="btnGetBomDetailList" CssClass="button" Width="100%" runat="server"
-                                Text="Get List"
-                                OnClick="btnGetBomDetailList_Click" />
-                        </td>
+                    <td>&nbsp;</td>
 
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-                </table>
+                    <td>
+                        <asp:Button ID="btnGetBomDetailList" CssClass="button" Width="100%" runat="server"
+                            Text="Get List"
+                            OnClick="btnGetBomDetailList_Click" />
+                    </td>
 
-                <%--Product List of selected BOM--%>
-                <table width="95%" align="center">
-                    <tr>
-                        <td>
-                            <div align="center">
-                                <fieldset style="width: 100%;">
-                                    <legend style="text-align: center;">
-                                        <asp:Label ID="lblProductListRecords" runat="server" Text="Products Records[0]" />
-                                    </legend>
-                                    <%--<div style='overflow-y: scroll; overflow-x: scroll; width: 1200px; height: 300px; border: 1px solid lightgray;'>--%>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
 
-                                    <asp:HiddenField ID="hdScrollPositionY" runat="server" Value="0" />
-                                    <asp:HiddenField ID="hdScrollPositionX" runat="server" Value="0" />
+            <%--Product List of selected BOM--%>
+            <table width="95%" align="center">
+                <tr>
+                    <td>
+                        <div align="center">
+                            <fieldset style="width: 100%;">
+                                <legend style="text-align: center;">
+                                    <asp:Label ID="lblProductListRecords" runat="server" Text="Products Records[0]" />
+                                </legend>
+                                <%--<div style='overflow-y: scroll; overflow-x: scroll; width: 1200px; height: 300px; border: 1px solid lightgray;'>--%>
 
-                                    <div id="gridContainer" runat="server"
-                                        style='overflow-y: auto; overflow-x: auto; width: 1200px; height: 300px; border: 1px solid lightgray;'
-                                        onscroll="SetDivPosition()">
+                                <asp:HiddenField ID="hdScrollPositionY" runat="server" Value="0" />
+                                <asp:HiddenField ID="hdScrollPositionX" runat="server" Value="0" />
 
-                                        <asp:GridView ID="gvProductList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                                            ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
-                                            OnRowDataBound="gvProductList_RowDataBound">
-                                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                                            <Columns>
+                                <div id="gridContainer" runat="server"
+                                    style='overflow-y: auto; overflow-x: auto; width: 1200px; height: 300px; border: 1px solid lightgray;'
+                                    onscroll="SetDivPosition()">
 
-                                                <asp:TemplateField HeaderText="Select" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                                    <ItemTemplate>
+                                    <asp:GridView ID="gvProductList" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                                        ForeColor="#333333" GridLines="Vertical" Width="100%" HorizontalAlign="Center"
+                                        OnRowDataBound="gvProductList_RowDataBound">
+                                        <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                                        <Columns>
 
-                                                        <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
-                                                        <asp:Label ID="lblHPID" runat="server" Text='<%# Eval("H_PID") %>' Visible="false" />
-                                                        <asp:Label ID="lblLPID" runat="server" Text='<%# Eval("L_PID") %>' Visible="false" />
-                                                        <asp:Label ID="lblProductCode" runat="server" Text='<%# Eval("PRODUCT_CODE") %>' Visible="false" />
-                                                        <asp:Label ID="lblProductDescription" runat="server" Text='<%# Eval("PRODUCT_DESCRIPTION") %>' Visible="false" />
-                                                        <asp:Label ID="lblAdditionalDescription" runat="server" Text='<%# Eval("ADDITIONAL_DESCRIPTION") %>' Visible="false" />
-                                                        <asp:Label ID="lblUom" runat="server" Text='<%# Eval("UOM") %>' Visible="false" />
+                                            <asp:TemplateField HeaderText="Select" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                                                <ItemTemplate>
 
-                                                        <asp:Label ID="lblTotalQuantity" runat="server" Text='<%# Eval("TOTAL_QUANTITY") %>' Visible="false" />
-                                                        <asp:Label ID="lblTotalAmount" runat="server" Text='<%# Eval("TOTAL_AMOUNT") %>' Visible="false" />
-                                                        <asp:Label ID="lblPerUnitAmount" runat="server" Text='<%# Eval("PER_UNIT_AMOUNT") %>' Visible="false" />
+                                                    <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
+                                                    <asp:Label ID="lblHPID" runat="server" Text='<%# Eval("H_PID") %>' Visible="false" />
+                                                    <asp:Label ID="lblLPID" runat="server" Text='<%# Eval("L_PID") %>' Visible="false" />
+                                                    <asp:Label ID="lblProductCode" runat="server" Text='<%# Eval("PRODUCT_CODE") %>' Visible="false" />
+                                                    <asp:Label ID="lblProductDescription" runat="server" Text='<%# Eval("PRODUCT_DESCRIPTION") %>' Visible="false" />
+                                                    <asp:Label ID="lblAdditionalDescription" runat="server" Text='<%# Eval("ADDITIONAL_DESCRIPTION") %>' Visible="false" />
+                                                    <asp:Label ID="lblUom" runat="server" Text='<%# Eval("UOM") %>' Visible="false" />
 
-                                                        <asp:Label ID="lblPostedQuantity" runat="server" Text='<%# Eval("POSTED_QUANTITY") %>' Visible="false" />
-                                                        <asp:Label ID="lblPostedAmount" runat="server" Text='<%# Eval("POSTED_AMOUNT") %>' Visible="false" />
+                                                    <asp:Label ID="lblTotalQuantity" runat="server" Text='<%# Eval("TOTAL_QUANTITY") %>' Visible="false" />
+                                                    <asp:Label ID="lblTotalAmount" runat="server" Text='<%# Eval("TOTAL_AMOUNT") %>' Visible="false" />
+                                                    <asp:Label ID="lblPerUnitAmount" runat="server" Text='<%# Eval("PER_UNIT_AMOUNT") %>' Visible="false" />
 
-                                                        <asp:Label ID="lblRemainingQuantity" runat="server" Text='<%# Eval("REMAINING_QUANTITY") %>' Visible="false" />
-                                                        <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("REMAINING_AMOUNT") %>' Visible="false" />
+                                                    <asp:Label ID="lblPostedQuantity" runat="server" Text='<%# Eval("POSTED_QUANTITY") %>' Visible="false" />
+                                                    <asp:Label ID="lblPostedAmount" runat="server" Text='<%# Eval("POSTED_AMOUNT") %>' Visible="false" />
 
-                                                        <%--<asp:Label ID="lblIsBomFid" runat="server" Text='<%# Eval("IS_BOM_FID") %>' Visible="false" />--%>
+                                                    <asp:Label ID="lblRemainingQuantity" runat="server" Text='<%# Eval("REMAINING_QUANTITY") %>' Visible="false" />
+                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("REMAINING_AMOUNT") %>' Visible="false" />
 
-                                                        <asp:CheckBox runat="server" ID="chkSelect"
-                                                            OnCheckedChanged="chkSelect_CheckedChanged"
-                                                            AutoPostBack="true"></asp:CheckBox>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
+                                                    <%--<asp:Label ID="lblIsBomFid" runat="server" Text='<%# Eval("IS_BOM_FID") %>' Visible="false" />--%>
+
+                                                    <asp:CheckBox runat="server" ID="chkSelect"
+                                                        OnCheckedChanged="chkSelect_CheckedChanged"
+                                                        AutoPostBack="true"></asp:CheckBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
 
 
-                                                <asp:TemplateField HeaderText="Sr.No.">
-                                                    <ItemTemplate>
-                                                        <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>'
-                                                            Width="50PX"
-                                                            onkeyDown="javascript:preventInput(event);"
-                                                            CssClass="textboxcenter">
-                                                        </asp:TextBox>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Sr.No.">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtSrNo" runat="server" Text='<%# Eval("SR_NO") %>'
+                                                        Width="50PX"
+                                                        onkeyDown="javascript:preventInput(event);"
+                                                        CssClass="textboxcenter">
+                                                    </asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
 
-                                                <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
+                                            <asp:BoundField DataField="PRODUCT_CODE" HeaderText="Product Code" />
 
-                                                <asp:TemplateField HeaderText="Product Description">
-                                                    <ItemTemplate>
-                                                        <asp:TextBox ID="txtProductDescription" runat="server"
-                                                            Text='<%# Eval("PRODUCT_DESCRIPTION") %>'
-                                                            Width="300PX"
-                                                            CssClass="textboxleft"
-                                                            TextMode="Multiline"
-                                                            Rows="2">
-                                                        </asp:TextBox>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Product Description">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtProductDescription" runat="server"
+                                                        Text='<%# Eval("PRODUCT_DESCRIPTION") %>'
+                                                        Width="300PX"
+                                                        CssClass="textboxleft"
+                                                        TextMode="Multiline"
+                                                        Rows="2">
+                                                    </asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
 
-                                                <asp:TemplateField HeaderText="Additional Description">
-                                                    <ItemTemplate>
-                                                        <asp:TextBox ID="txtAdditionalDescription" runat="server"
-                                                            Text='<%# Eval("ADDITIONAL_DESCRIPTION") %>'
-                                                            Width="300PX"
-                                                            CssClass="textboxleft"
-                                                            TextMode="Multiline"
-                                                            Rows="2">
-                                                        </asp:TextBox>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Additional Description">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtAdditionalDescription" runat="server"
+                                                        Text='<%# Eval("ADDITIONAL_DESCRIPTION") %>'
+                                                        Width="300PX"
+                                                        CssClass="textboxleft"
+                                                        TextMode="Multiline"
+                                                        Rows="2">
+                                                    </asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
 
-                                                <asp:BoundField DataField="UOM" HeaderText="UOM" />
+                                            <asp:BoundField DataField="UOM" HeaderText="UOM" />
 
-                                                <asp:TemplateField HeaderText="Quantity">
-                                                    <ItemTemplate>
-                                                        <%--<asp:TextBox ID="txtQuantity" runat="server" Text='<%# Eval("REMAINING_QUANTITY") %>'
+                                            <asp:TemplateField HeaderText="Quantity">
+                                                <ItemTemplate>
+                                                    <%--<asp:TextBox ID="txtQuantity" runat="server" Text='<%# Eval("REMAINING_QUANTITY") %>'
                                                             Width="50PX"
                                                             onkeyDown="javascript:preventInput(event);"
                                                             CssClass="textboxright">
                                                         </asp:TextBox>--%>
 
-                                                        <asp:DropDownList ID="ddlQuantity" Width="90px" Height="26px" runat="server"
-                                                            OnSelectedIndexChanged="ddlQuantity_SelectedIndexChanged" AutoPostBack="true" />
+                                                    <asp:DropDownList ID="ddlQuantity" Width="90px" Height="26px" runat="server"
+                                                        OnSelectedIndexChanged="ddlQuantity_SelectedIndexChanged" AutoPostBack="true" />
 
 
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
 
-                                                <asp:TemplateField HeaderText="Amount">
-                                                    <ItemTemplate>
-                                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("REMAINING_AMOUNT") %>'
-                                                            Width="100PX"
-                                                            onkeyDown="javascript:preventInput(event);"
-                                                            CssClass="textboxright">
-                                                        </asp:TextBox>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Amount">
+                                                <ItemTemplate>
+                                                    <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("REMAINING_AMOUNT") %>'
+                                                        Width="100PX"
+                                                        onkeyDown="javascript:preventInput(event);"
+                                                        CssClass="textboxright">
+                                                    </asp:TextBox>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
 
-                                            </Columns>
-                                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                                            <EditRowStyle BackColor="#7C6F57" />
-                                            <AlternatingRowStyle BackColor="White" />
-                                        </asp:GridView>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </td>
-                    </tr>
+                                        </Columns>
+                                        <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                                        <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                                        <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                                        <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                                        <EditRowStyle BackColor="#7C6F57" />
+                                        <AlternatingRowStyle BackColor="White" />
+                                    </asp:GridView>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+
+            <table width="95%" align="center">
+                <tr>
+                    <td style="width: 15%;">Unit:</td>
+                    <td style="width: 30%;">
+                        <asp:DropDownList ID="ddlUnitToU" runat="server" Width="100%" Height="23px">
+                            <asp:ListItem Text="All" Value="0"></asp:ListItem>
+                            <asp:ListItem Text="A35" Value="1"></asp:ListItem>
+                            <asp:ListItem Text="Gnu" Value="4"></asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td style="width: 15%;">Type:</td>
+                    <td style="width: 30%;">
+                        <asp:DropDownList ID="ddlTypeToU" runat="server" Width="100%" Height="23px">
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <tr>
+                    <td>Mr Date:</td>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="txtMrDateToU" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
+                                    <asp:HiddenField ID="hdMrDateToU" runat="server" />
+                                    <ajax:CalendarExtender ID="calendarMrDateToU" PopupButtonID="imgbtnMrDateToU"
+                                        runat="server" TargetControlID="txtMrDateToU" Format="dd-MMM-yyyy"
+                                        OnClientDateSelectionChanged="clientChangedMrDate">
+                                    </ajax:CalendarExtender>
+                                </td>
+                                <td align="right">
+                                    <asp:ImageButton ID="imgbtnMrDateToU" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                        ToolTip="Mr Date Calendar" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>Delivery Required By:</td>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <asp:TextBox ID="txtDeliveryRequiredByToU" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
+                                    <asp:HiddenField ID="hdDeliveryRequiredByToU" runat="server" />
+                                    <ajax:CalendarExtender ID="calendarDeliveryRequiredByToU" PopupButtonID="imgbtnDeliveryRequiredByToU"
+                                        runat="server" TargetControlID="txtDeliveryRequiredByToU" Format="dd-MMM-yyyy"
+                                        OnClientDateSelectionChanged="clientChangedDeliveryRequiredBy">
+                                    </ajax:CalendarExtender>
+                                </td>
+                                <td align="right">
+                                    <asp:ImageButton ID="imgbtnDeliveryRequiredByToU" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                        ToolTip="Delivery Required By Date Calendar" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+
+                <tr>
+                    <td>Acceptable Vendor 1:</td>
+                    <td style="width: 30%;">
+                        <asp:TextBox ID="txtAcceptableVendor1ToU" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>Acceptable Vendor 2:</td>
+                    <td>
+                        <asp:TextBox ID="txtAcceptableVendor2ToU" runat="server" Width="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+
+                <tr>
+
+                    <td>Acceptable Vendor 3:</td>
+                    <td>
+                        <asp:TextBox ID="txtAcceptableVendor3ToU" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+
+                    <td>Acceptable Vendor 4:</td>
+                    <td>
+                        <asp:TextBox ID="txtAcceptableVendor4ToU" runat="server" Width="100%" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <tr>
+
+                    <td>Acceptable Vendor 5:</td>
+                    <td>
+                        <asp:TextBox ID="txtAcceptableVendor5ToU" runat="server" Width="100%" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>Revision No.:</td>
+                    <td>
+                        <asp:TextBox ID="txtRevisionNoToU" runat="server" Width="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <tr>
+                    <td>Budgeted Cost:</td>
+                    <td>
+                        <asp:TextBox ID="txtBudgetedCostToU" runat="server" Width="100%"
+                            onpaste="return false"
+                            onkeypress="return inNumberKeyWithDecimal(this, event);"
+                            Text="0" />
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>Estimated Cost:</td>
+                    <td>
+                        <asp:TextBox ID="txtEstimatedCostToU" runat="server" Width="100%"
+                            onpaste="return false"
+                            onkeypress="return inNumberKeyWithDecimal(this, event);"
+                            Text="0" />
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Cost Related Remarks:</td>
+                    <td colspan="4">
+                        <asp:TextBox ID="txtCostRelatedRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Pivot Group:</td>
+                    <td>
+                        <asp:DropDownList ID="ddlPivotGroupToU" runat="server" Width="100%" Height="23px">
+                            <asp:ListItem Text="Select" Value="0"></asp:ListItem>
+                            <asp:ListItem Text="A35" Value="1"></asp:ListItem>
+                            <asp:ListItem Text="Gnu" Value="4"></asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>Responsible for Po:</td>
+                    <td>
+                        <asp:DropDownList ID="ddlResponsibleForBOMToU" runat="server" Width="100%" Height="23px">
+                        </asp:DropDownList>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+
+                <asp:Panel ID="pnlCreatedRemarksToU" runat="server" Visible="false">
                     <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-                </table>
-
-                <table width="95%" align="center">
-                    <tr>
-                        <td style="width: 15%;">Unit:</td>
-                        <td style="width: 30%;">
-                            <asp:DropDownList ID="ddlUnitToU" runat="server" Width="100%" Height="23px">
-                                <asp:ListItem Text="All" Value="0"></asp:ListItem>
-                                <asp:ListItem Text="A35" Value="1"></asp:ListItem>
-                                <asp:ListItem Text="Gnu" Value="4"></asp:ListItem>
-                            </asp:DropDownList>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td style="width: 15%;">Type:</td>
-                        <td style="width: 30%;">
-                            <asp:DropDownList ID="ddlTypeToU" runat="server" Width="100%" Height="23px">
-                            </asp:DropDownList>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td>Mr Date:</td>
-                        <td>
-                            <table width="100%">
-                                <tr>
-                                    <td>
-                                        <asp:TextBox ID="txtMrDateToU" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
-                                        <asp:HiddenField ID="hdMrDateToU" runat="server" />
-                                        <ajax:CalendarExtender ID="calendarMrDateToU" PopupButtonID="imgbtnMrDateToU"
-                                            runat="server" TargetControlID="txtMrDateToU" Format="dd-MMM-yyyy"
-                                            OnClientDateSelectionChanged="clientChangedMrDate">
-                                        </ajax:CalendarExtender>
-                                    </td>
-                                    <td align="right">
-                                        <asp:ImageButton ID="imgbtnMrDateToU" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                            ToolTip="Mr Date Calendar" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>Delivery Required By:</td>
-                        <td>
-                            <table width="100%">
-                                <tr>
-                                    <td>
-                                        <asp:TextBox ID="txtDeliveryRequiredByToU" runat="server" ReadOnly="true" Width="100%"></asp:TextBox>
-                                        <asp:HiddenField ID="hdDeliveryRequiredByToU" runat="server" />
-                                        <ajax:CalendarExtender ID="calendarDeliveryRequiredByToU" PopupButtonID="imgbtnDeliveryRequiredByToU"
-                                            runat="server" TargetControlID="txtDeliveryRequiredByToU" Format="dd-MMM-yyyy"
-                                            OnClientDateSelectionChanged="clientChangedDeliveryRequiredBy">
-                                        </ajax:CalendarExtender>
-                                    </td>
-                                    <td align="right">
-                                        <asp:ImageButton ID="imgbtnDeliveryRequiredByToU" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                            ToolTip="Delivery Required By Date Calendar" />
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-
-
-                    <tr>
-                        <td>Acceptable Vendor 1:</td>
-                        <td style="width: 30%;">
-                            <asp:TextBox ID="txtAcceptableVendor1ToU" runat="server" Width="100%" />
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>Acceptable Vendor 2:</td>
-                        <td>
-                            <asp:TextBox ID="txtAcceptableVendor2ToU" runat="server" Width="100%" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-
-
-                    <tr>
-
-                        <td>Acceptable Vendor 3:</td>
-                        <td>
-                            <asp:TextBox ID="txtAcceptableVendor3ToU" runat="server" Width="100%" />
-                        </td>
-                        <td>&nbsp;</td>
-
-                        <td>Acceptable Vendor 4:</td>
-                        <td>
-                            <asp:TextBox ID="txtAcceptableVendor4ToU" runat="server" Width="100%" />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-
-                    <tr>
-
-                        <td>Acceptable Vendor 5:</td>
-                        <td>
-                            <asp:TextBox ID="txtAcceptableVendor5ToU" runat="server" Width="100%" />
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>Revision No.:</td>
-                        <td>
-                            <asp:TextBox ID="txtRevisionNoToU" runat="server" Width="100%" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-
-                    <tr>
-                        <td>Budgeted Cost:</td>
-                        <td>
-                            <asp:TextBox ID="txtBudgetedCostToU" runat="server" Width="100%"
-                                onpaste="return false"
-                                onkeypress="return inNumberKeyWithDecimal(this, event);"
-                                Text="0" />
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>Estimated Cost:</td>
-                        <td>
-                            <asp:TextBox ID="txtEstimatedCostToU" runat="server" Width="100%"
-                                onpaste="return false"
-                                onkeypress="return inNumberKeyWithDecimal(this, event);"
-                                Text="0" />
-
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>Cost Related Remarks:</td>
+                        <td>Created Remarks:</td>
                         <td colspan="4">
-                            <asp:TextBox ID="txtCostRelatedRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
+                            <asp:TextBox ID="txtCreatedRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
                         </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                     </tr>
+                </asp:Panel>
+
+                <asp:Panel ID="pnlAmendmentRemarksToU" runat="server" Visible="false">
                     <tr>
-                        <td>Pivot Group:</td>
-                        <td>
-                            <asp:DropDownList ID="ddlPivotGroupToU" runat="server" Width="100%" Height="23px">
-                                <asp:ListItem Text="Select" Value="0"></asp:ListItem>
-                                <asp:ListItem Text="A35" Value="1"></asp:ListItem>
-                                <asp:ListItem Text="Gnu" Value="4"></asp:ListItem>
-                            </asp:DropDownList>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td>Responsible for Po:</td>
-                        <td>
-                            <asp:DropDownList ID="ddlResponsibleForBOMToU" runat="server" Width="100%" Height="23px">
-                            </asp:DropDownList>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
-
-                    <asp:Panel ID="pnlCreatedRemarksToU" runat="server" Visible="false">
-                        <tr>
-                            <td>Created Remarks:</td>
-                            <td colspan="4">
-                                <asp:TextBox ID="txtCreatedRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </asp:Panel>
-
-                    <asp:Panel ID="pnlAmendmentRemarksToU" runat="server" Visible="false">
-                        <tr>
-                            <td>Amendment Remarks:</td>
-                            <td colspan="4">
-                                <asp:TextBox ID="txtAmendmentRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </asp:Panel>
-
-                    <asp:Panel ID="pnlEditAmendedRemarksToU" runat="server" Visible="false">
-                        <tr>
-                            <td>Edit/Amended Remarks:</td>
-                            <td colspan="4">
-                                <asp:TextBox ID="txtEditAmendedRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </asp:Panel>
-
-
-
-                    <tr>
-                        <td>Remarks:
-                        </td>
+                        <td>Amendment Remarks:</td>
                         <td colspan="4">
-                            <asp:TextBox ID="txtRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
+                            <asp:TextBox ID="txtAmendmentRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
                         </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                     </tr>
+                </asp:Panel>
+
+                <asp:Panel ID="pnlEditAmendedRemarksToU" runat="server" Visible="false">
                     <tr>
-                        <td>Is TC Required?:</td>
-                        <td>
-                            <asp:CheckBox runat="server" ID="chkIsTCRequiredToU"></asp:CheckBox>
+                        <td>Edit/Amended Remarks:</td>
+                        <td colspan="4">
+                            <asp:TextBox ID="txtEditAmendedRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
                         </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                     </tr>
+                </asp:Panel>
 
 
-                    <asp:Panel ID="pnlSavingTypeToU" runat="server">
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td colspan="3">
-                                <asp:RadioButtonList ID="rdSavingType" runat="server" RepeatDirection="Horizontal" Width="100%">
-                                    <asp:ListItem Text="Save for later" Value="0" Selected="True" />
-                                    <asp:ListItem Text="Save & send for approval" Value="1" />
-                                </asp:RadioButtonList>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </asp:Panel>
+
+                <tr>
+                    <td>Remarks:
+                    </td>
+                    <td colspan="4">
+                        <asp:TextBox ID="txtRemarksToU" runat="server" Width="100%" TextMode="MultiLine" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Is TC Required?:</td>
+                    <td>
+                        <asp:CheckBox runat="server" ID="chkIsTCRequiredToU"></asp:CheckBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
 
 
-                    <asp:Panel ID="pnlSave" runat="server">
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td colspan="4">
-                                <asp:Button ID="btnSave"
-                                    runat="server"
-                                    Width="100%"
-                                    Text="Save" CssClass="button"
-                                    OnClick="btnSave_Click"
-                                    OnClientClick="return ValidateAllSave();" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                        </tr>
-                    </asp:Panel>
-
-
+                <asp:Panel ID="pnlSavingTypeToU" runat="server">
                     <tr>
                         <td>&nbsp;</td>
-                        <td colspan="2" style="width: 45%;">
-                            <asp:Panel ID="pnlUpdateStatus" runat="server">
-                                <asp:Button ID="btnUpdateStatus"
-                                    runat="server"
-                                    Width="100%"
-                                    Text="Update Status" CssClass="button"
-                                    OnClick="btnUpdateStatus_Click"
-                                    OnClientClick="return ValidateAllSave();" />
-                            </asp:Panel>
-                        </td>
-                        <td>&nbsp;</td>
-                        <td style="width: 45%;">
-                            <asp:Panel ID="pnlSendToAmendment" runat="server">
-                                <asp:Button ID="btnSendToAmendment"
-                                    runat="server"
-                                    Width="100%"
-                                    Text="Send To Amendment"
-                                    CssClass="button"
-                                    OnClick="btnSendToAmendment_Click"
-                                    OnClientClick="return ValidateAllRemarks();" />
-                            </asp:Panel>
+                        <td colspan="3">
+                            <asp:RadioButtonList ID="rdSavingType" runat="server" RepeatDirection="Horizontal" Width="100%">
+                                <asp:ListItem Text="Save for later" Value="0" Selected="True" />
+                                <asp:ListItem Text="Save & send for approval" Value="1" />
+                            </asp:RadioButtonList>
                         </td>
                     </tr>
-                </table>
-                <br />
-            </div>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                </asp:Panel>
+
+
+                <asp:Panel ID="pnlSave" runat="server">
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="4">
+                            <asp:Button ID="btnSave"
+                                runat="server"
+                                Width="100%"
+                                Text="Save" CssClass="button"
+                                OnClick="btnSave_Click"
+                                OnClientClick="return ValidateAllSave();" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                </asp:Panel>
+
+
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="2" style="width: 45%;">
+                        <asp:Panel ID="pnlUpdateStatus" runat="server">
+                            <asp:Button ID="btnUpdateStatus"
+                                runat="server"
+                                Width="100%"
+                                Text="Update Status" CssClass="button"
+                                OnClick="btnUpdateStatus_Click"
+                                OnClientClick="return ValidateAllSave();" />
+                        </asp:Panel>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td style="width: 45%;">
+                        <asp:Panel ID="pnlSendToAmendment" runat="server">
+                            <asp:Button ID="btnSendToAmendment"
+                                runat="server"
+                                Width="100%"
+                                Text="Send To Amendment"
+                                CssClass="button"
+                                OnClick="btnSendToAmendment_Click"
+                                OnClientClick="return ValidateAllRemarks();" />
+                        </asp:Panel>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <%--</div>--%>
         </fieldset>
 
 
@@ -1128,7 +1126,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>BOM List:
                     <asp:Label ID="lblBOMListRecords" runat="server" Text="BOM Records[0]" />
                     </legend>
@@ -1308,7 +1306,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>Add Products:
                     <asp:Label ID="lblPostedProductRecors" runat="server" Text="Products Records[0]" />
                     </legend>

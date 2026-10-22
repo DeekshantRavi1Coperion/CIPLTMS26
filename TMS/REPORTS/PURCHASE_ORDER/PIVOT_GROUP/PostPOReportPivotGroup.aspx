@@ -1130,7 +1130,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>PO List:
                     <asp:Label ID="lblPOListRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1265,7 +1265,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>PO Detail:
                     <asp:Label ID="lblPOItemListRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1353,7 +1353,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPivotGroupDetailsLegend" runat="server" />:
                         <asp:Label ID="lblPivotGroupDetailsRecords" runat="server" Text="Records[0]" />
@@ -1476,7 +1476,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+           <fieldset class="form-popup-card">
 
                 <legend>Update Pivot Group</legend>
 
@@ -1588,7 +1588,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPORecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1670,7 +1670,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblPONewPGRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1761,7 +1761,7 @@
         </table>
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>Post Pivot Group</legend>
 

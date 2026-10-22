@@ -218,7 +218,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Update Department</legend>
                 <div class="form-grid form-grid-2">
                     <label>Unit:</label>

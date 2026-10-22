@@ -2006,7 +2006,7 @@
         </table>
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Update Design Details</legend>
 
                 <div class="form-grid form-grid-2">
@@ -2262,7 +2262,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" /></legend>
 
@@ -2336,7 +2336,7 @@
 
             <div class="form-grid-container">
 
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" /></legend>
 
@@ -2400,7 +2400,7 @@
 
         <div class="form-entry-container">
 
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Add Timesheet
                 </legend>
 

@@ -1366,7 +1366,7 @@
 
         <div class="form-entry-container">
 
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Travel Statement Details</legend>
                 <div align="center">
                     <asp:Panel ID="pnlSuccessMsg" Visible="false" runat="server" Height="50px">
@@ -2081,13 +2081,13 @@
                     Text="Save"
                     CssClass="button"
                     OnClientClick="return ValidateAll();"
-                    OnClick="btnSubmit_Click" Width="50%" />
+                    OnClick="btnSubmit_Click" Width="100%" />
 
                 <asp:Button ID="btnAmendment"
                     runat="server"
                     Text="Send to Amendment"
                     CssClass="button"
-                    OnClick="btnAmendment_Click" Width="50%" />
+                    OnClick="btnAmendment_Click" Width="100%" />
             </div>
 
             <div class="full-width">
@@ -2177,7 +2177,7 @@
 
         <div class="form-entry-container">
 
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Add Additional Attachments</legend>
 
                 <div align="center">
@@ -2244,7 +2244,7 @@
                     Text="Save"
                     CssClass="button"
                     OnClientClick="return ValidateAllFileAdditionalAttachment();"
-                    OnClick="SaveAdditionalAttachments_Click" Width="50%" />
+                    OnClick="SaveAdditionalAttachments_Click" Width="100%" />
             </div>
 
         </div>

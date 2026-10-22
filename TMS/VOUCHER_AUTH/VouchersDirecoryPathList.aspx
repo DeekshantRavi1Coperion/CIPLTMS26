@@ -337,7 +337,7 @@
         </table>
 
 
-        <fieldset style="width: 97%; margin-left: 1%; margin-top: 10px;">
+         <fieldset class="form-popup-card">
             <legend style="text-align: center;">Update Directory Path</legend>
 
             <table width="90%" align="center">

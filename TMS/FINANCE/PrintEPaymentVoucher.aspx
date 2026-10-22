@@ -767,7 +767,7 @@
             <div class="popup-layout">
 
                 <div class="form-grid-container">
-                    <fieldset class="filter-card">
+                    <fieldset class="filter-popup-card">
                         <legend>
                             <asp:Label ID="lblVouchersSIRerords" runat="server" Text="Vouchers Records[0]" />
                         </legend>

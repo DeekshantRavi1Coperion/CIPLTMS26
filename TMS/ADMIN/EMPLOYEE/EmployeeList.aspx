@@ -539,7 +539,7 @@
         <div class="form-entry-container">
 
             <%--<fieldset style="width: 93%; margin-left: 23px; margin-top: 5px;">--%>
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <%-- <legend style="text-align: center;">--%>
                 <legend>Employee Details
                 <%--<asp:Label ID="lblLegend" runat="server" Text="Employee Details" />--%>
@@ -718,7 +718,7 @@
                 </td>
             </tr>
         </table>
-        <fieldset style="width: 95%; margin-left: 23px; margin-top: 10px;">
+         <fieldset class="form-popup-card">
             <legend style="text-align: center;">Deactive Employee
             </legend>
             <div style='overflow: auto; width: 99%; height: 600px; border: 1px solid lightgray; margin-left: 5px;'>

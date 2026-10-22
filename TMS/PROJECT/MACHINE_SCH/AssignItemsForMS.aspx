@@ -1036,7 +1036,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecordsLOT" runat="server" Text="Records[0]" />
                     </legend>
@@ -1116,7 +1116,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecordsFact" runat="server" Text="Records[0]" />
                     </legend>
@@ -1198,7 +1198,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" />
                     </legend>

@@ -156,7 +156,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblLegend" runat="server" Text="Activity Details" />

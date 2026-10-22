@@ -1826,7 +1826,7 @@
 
 
         <div class="form-grid-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblTCHeadingText" runat="server" />

@@ -842,7 +842,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Tour Expense</legend>
 
                 <div class="form-grid form-grid-2">
@@ -1172,7 +1172,7 @@
 
         <div class="popup-layout">
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblTourSanctionNoRecords" runat="server" Text="Records[0]" /></legend>
 

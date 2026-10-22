@@ -282,7 +282,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
                 <legend>Pivot Group</legend>
 
                 <div class="form-grid form-grid-2">

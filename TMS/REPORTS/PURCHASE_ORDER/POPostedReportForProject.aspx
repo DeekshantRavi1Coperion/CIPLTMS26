@@ -840,7 +840,7 @@
 
         <div class="popup-layout">
             <div class="form-entry-container">
-                <fieldset class="form-card">
+                <fieldset class="form-popup-card">
                     <legend>PO Detail:
                         <asp:Label ID="lblPODetailRerords" runat="server" Text="Records[0]" />
                     </legend>

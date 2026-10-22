@@ -1488,7 +1488,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblJOBRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1567,7 +1567,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblDrawingRecords" runat="server" Text="Records[0]" />
                     </legend>
@@ -1661,7 +1661,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblLegend" runat="server" Text="Update Details" />
@@ -1880,7 +1880,7 @@
         </table>
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblLegendUpdateStatus" runat="server" Text="Update Status" />
@@ -2020,7 +2020,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendScheduleMachine" runat="server" Text="Schedule Machine" />:
                         <asp:Label ID="lblScheduleMachineRecords" runat="server" Text="Records[0]" />
@@ -2344,7 +2344,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendMachineNameSchD" runat="server" Text="Schedule Machine" />:
                         <asp:Label ID="lblAvailableDatesRecords" runat="server" Text="Available Hours[0]" />
@@ -2654,7 +2654,7 @@
         <div class="popup-layout">
 
             <div class="form-grid-container">
-                <fieldset class="filter-card">
+                <fieldset class="filter-popup-card">
                     <legend>
                         <asp:Label ID="lblLegendSchedulingCompletion" runat="server" Text="Complete Scheduling" />
                     </legend>
@@ -2958,7 +2958,7 @@
 
 
         <div class="form-entry-container">
-            <fieldset class="form-card">
+            <fieldset class="form-popup-card">
 
                 <legend>
                     <asp:Label ID="lblLegendQualityInspection" runat="server" Text="Quality Inspection" />
