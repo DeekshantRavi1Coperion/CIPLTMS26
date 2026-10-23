@@ -746,7 +746,7 @@ public partial class VOUCHER_AUTH_MRN_AttachAdditionalDocsMRNVouchers : System.W
                 {
                     lblAuthorizeVoucherDetailsLegend.Text = "View Voucher Details";
 
-                    divAttachedFiles.Visible = true;
+                    //divAttachedFiles.Visible = true;
 
                     if (Convert.ToString(e.CommandArgument) == "ViewDETAIL")
                     {

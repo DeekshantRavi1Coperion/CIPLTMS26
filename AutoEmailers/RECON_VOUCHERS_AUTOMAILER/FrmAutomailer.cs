@@ -223,9 +223,9 @@ namespace RECON_VOUCHERS_AUTOMAILER
             mail.Subject = subject;
             mail.From = new MailAddress(from);
 
-            to = "deekshant.ravi1@coperion.com";
-            cc = "deekshant.ravi1@coperion.com";
-            bcc = "deekshant.ravi1@coperion.com";
+            //to = "deekshant.ravi1@coperion.com";
+            //cc = "deekshant.ravi1@coperion.com";
+            //bcc = "deekshant.ravi1@coperion.com";
 
             if (!string.IsNullOrEmpty(to))
             {
