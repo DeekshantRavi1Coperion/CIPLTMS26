@@ -11,6 +11,7 @@
     <link href="../../Styles/form.css" rel="stylesheet" />
     <link href="../../Styles/grid.css" rel="stylesheet" />
     <link href="../../Styles/filter.css" rel="stylesheet" />
+    <link href="../../Styles/popup.css" rel="stylesheet" />
 
     <style type="text/css">
         .modalBackground {
@@ -225,8 +226,7 @@
     <ajax:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
         PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlpopup" runat="server" BackColor="White" Height="250px" Width="900px"
-        Style="display: block; padding: 50px; border-radius: 5px;">
+    <asp:Panel ID="pnlpopup" runat="server" CssClass="popup-edit">
         <table width="100%">
             <tr>
                 <td align="right">
