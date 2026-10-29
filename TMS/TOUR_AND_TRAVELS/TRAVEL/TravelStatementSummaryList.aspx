@@ -309,7 +309,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td style="width: 90%;">
+                            <td style="width: 80%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
