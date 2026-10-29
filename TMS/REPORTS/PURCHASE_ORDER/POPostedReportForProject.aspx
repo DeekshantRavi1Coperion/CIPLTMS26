@@ -389,11 +389,9 @@
 
         <div class="form-grid-container">
             <fieldset class="filter-card">
-                <legend>Procurement Status- Project View:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-filter-grid">
 
                     <label>Date Type</label>
                     <asp:DropDownList ID="ddlDateType" runat="server"
@@ -405,7 +403,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -426,7 +424,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -472,8 +470,7 @@
                     <label>Follow-Up Date</label>
                     <table width="100%">
                         <tr>
-
-                            <td>
+                            <td style="width: 80%;">
                                 <asp:TextBox ID="txtFollowUpDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -483,7 +480,7 @@
                                     OnClientDateSelectionChanged="clientChangedFollowUpDateSearch">
                                 </asp:CalendarExtender>
                             </td>
-                            <td align="right">
+                            <td>
                                 <asp:ImageButton ID="imgbtnFollowUpDateSearch" runat="server" ImageUrl="~/Images/Calendar2.png"
                                     ToolTip="End Date Calendar" Width="20px" />
                             </td>
@@ -569,254 +566,260 @@
                         CssClass="form-control">
                     </asp:DropDownList>
 
-                    <label>Total PO Value [INR]</label>
-                    <asp:Label ID="lblTotalInvoiceINR" runat="server" Text="0" Font-Bold="true" Font-Size="Larger" ForeColor="Green" />
-
-                    &nbsp;
-
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
-
-                    &nbsp;
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
-
+                   
                 </div>
             </fieldset>
+            <div class="full-width button-group">
+
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
+
+                <label>Total PO Value [INR]</label>
+                    <asp:Label ID="lblTotalInvoiceINR" runat="server" Text="0" Font-Bold="true" Font-Size="Larger" ForeColor="Green" />
+
+            </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Procurement Status- Project View:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPOList" runat="server" CellPadding="4" ForeColor="#333333"
-                AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvPOList_RowDataBound"
-                OnRowCommand="gvPOList_RowCommand">
-                <Columns>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                    <asp:TemplateField HeaderText="VIEW" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDETAIL" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPOList" runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="false" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvPOList_RowDataBound"
+                    OnRowCommand="gvPOList_RowCommand">
+                    <Columns>
+
+                        <asp:TemplateField HeaderText="VIEW" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDETAIL" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="PO_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFollowUpDays" runat="server" Visible="false" Text='<%# Eval("FOLLOW_UP_DAYS") %>' />
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                            <asp:Label ID="lblPONo" runat="server" Visible="true" Text='<%# Eval("PO_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PO_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFollowUpDays" runat="server" Visible="false" Text='<%# Eval("FOLLOW_UP_DAYS") %>' />
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                <asp:Label ID="lblPONo" runat="server" Visible="true" Text='<%# Eval("PO_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PO_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPODate" runat="server" Visible="true" Text='<%# Eval("PO_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PO_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPODate" runat="server" Visible="true" Text='<%# Eval("PO_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PO_DELIVERY_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPODeliveryDate" runat="server" Visible="true" Text='<%# Eval("PO_DELIVERY_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PO_DELIVERY_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPODeliveryDate" runat="server" Visible="true" Text='<%# Eval("PO_DELIVERY_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="VENDOR_NAME">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderText="VENDOR_NAME">
+                            <ItemTemplate>
 
-                            <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
-                            <asp:Label ID="lblVendorName" runat="server" Visible="true" Text='<%# Eval("VENDOR_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
+                                <asp:Label ID="lblVendorName" runat="server" Visible="true" Text='<%# Eval("VENDOR_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="ITEM_NAME">
-                        <ItemTemplate>
-                            <asp:Label ID="lblItemName" runat="server" Visible="true" Text='<%# Eval("ITEM_NAME") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ITEM_NAME">
+                            <ItemTemplate>
+                                <asp:Label ID="lblItemName" runat="server" Visible="true" Text='<%# Eval("ITEM_NAME") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="QUANTITY">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderText="QUANTITY">
+                            <ItemTemplate>
 
-                            <asp:Label ID="lblBalQuantity" runat="server" Visible="false" Text='<%# Eval("BAL_QUANTITY") %>' />
-                            <asp:TextBox ID="txtQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("QUANTITY") %>' CssClass="textbox"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:Label ID="lblBalQuantity" runat="server" Visible="false" Text='<%# Eval("BAL_QUANTITY") %>' />
+                                <asp:TextBox ID="txtQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("QUANTITY") %>' CssClass="textbox"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <%--<asp:TemplateField HeaderText="BALANCE_QUANTITY">
+                        <%--<asp:TemplateField HeaderText="BALANCE_QUANTITY">
                             <ItemTemplate>
                                 <asp:TextBox ID="txtBalQuantity" runat="server" Width="100%" onkeyDown="javascript:preventInput(event);"
                                     Text='<%# Eval("BAL_QUANTITY") %>' CssClass="textbox"></asp:TextBox>
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:TemplateField HeaderText="UOM">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderText="UOM">
+                            <ItemTemplate>
 
-                            <%--<asp:Label ID="lblService" runat="server" Visible="false" Text='<%# Eval("SERVICE") %>' />--%>
-                            <asp:Label ID="lblUOM" runat="server" Visible="true" Text='<%# Eval("UOM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <%--<asp:Label ID="lblService" runat="server" Visible="false" Text='<%# Eval("SERVICE") %>' />--%>
+                                <asp:Label ID="lblUOM" runat="server" Visible="true" Text='<%# Eval("UOM") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PO_VALUE_INR">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtPOValueINR" runat="server" Width="120px" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("PO_VALUE_INR") %>' CssClass="textbox"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PO_VALUE_INR">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtPOValueINR" runat="server" Width="120px" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("PO_VALUE_INR") %>' CssClass="textbox"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="JOB_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="JOB_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="BUDGET">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtBudget" runat="server" Width="120px" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("BUDGET") %>' CssClass="textbox" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="FOLLOW_UP_BY">
-                        <ItemTemplate>
-
-                            <asp:Label ID="lblMrCreatedBy" runat="server" Visible="false" Text='<%# Eval("MR_CREATED_BY") %>' />
-                            <asp:Label ID="lblFollowUpBy" runat="server" Visible="true" Text='<%# Eval("FOLLOW_UP_BY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="BUDGET">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtBudget" runat="server" Width="120px" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("BUDGET") %>' CssClass="textbox" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="LOCATION">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLocation" runat="server" Visible="true" Text='<%# Eval("LOCATION") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="FOLLOW_UP_BY">
+                            <ItemTemplate>
 
-                    <asp:TemplateField HeaderText="REVISION">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRevision" runat="server" Visible="true" Text='<%# Eval("REVISION") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                                <asp:Label ID="lblMrCreatedBy" runat="server" Visible="false" Text='<%# Eval("MR_CREATED_BY") %>' />
+                                <asp:Label ID="lblFollowUpBy" runat="server" Visible="true" Text='<%# Eval("FOLLOW_UP_BY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PO_FIRST_ITEM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPOFirstItem" runat="server" Visible="true" Text='<%# Eval("PO_FIRST_ITEM") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="ENGG_APPROVAL_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEnggApprovalStatus" runat="server" Visible="true" Text='<%# Eval("ENGG_APPROVAL_STATUS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LOCATION">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLocation" runat="server" Visible="true" Text='<%# Eval("LOCATION") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="PRESENT_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPresentStatus" runat="server" Visible="true" Text='<%# Eval("PRESENT_STATUS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="REVISION">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRevision" runat="server" Visible="true" Text='<%# Eval("REVISION") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="ED_OF_INSP/COMP">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEdOfInspection" runat="server" Visible="true" Text='<%# Eval("ED_OF_INSP/COMP") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="PO_FIRST_ITEM">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPOFirstItem" runat="server" Visible="true" Text='<%# Eval("PO_FIRST_ITEM") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="POSTING_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNextFollowupDate" runat="server" Visible="false" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>' />
-                            <asp:Label ID="lblPostingStatus" runat="server" Visible="true" Text='<%# Eval("POSTING_STATUS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ENGG_APPROVAL_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEnggApprovalStatus" runat="server" Visible="true" Text='<%# Eval("ENGG_APPROVAL_STATUS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <%--  <asp:TemplateField HeaderText="NEXT_FOLLOWUP_DATE">
+                        <asp:TemplateField HeaderText="PRESENT_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPresentStatus" runat="server" Visible="true" Text='<%# Eval("PRESENT_STATUS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="ED_OF_INSP/COMP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEdOfInspection" runat="server" Visible="true" Text='<%# Eval("ED_OF_INSP/COMP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="POSTING_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNextFollowupDate" runat="server" Visible="false" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>' />
+                                <asp:Label ID="lblPostingStatus" runat="server" Visible="true" Text='<%# Eval("POSTING_STATUS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--  <asp:TemplateField HeaderText="NEXT_FOLLOWUP_DATE">
                             <ItemTemplate>
                                 <asp:Label ID="lblNextFollowupDate" runat="server" Visible="true" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
 
-                    <asp:TemplateField HeaderText="LAST_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLastStatus" runat="server" Visible="true" Text='<%# Eval("LAST_STATUS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="LAST_ED_OF_INSP/COMP">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLastEdOfInspection" runat="server" Visible="true" Text='<%# Eval("LAST_ED_OF_INSP/COMP") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LAST_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLastStatus" runat="server" Visible="true" Text='<%# Eval("LAST_STATUS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LAST_ED_OF_INSP/COMP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLastEdOfInspection" runat="server" Visible="true" Text='<%# Eval("LAST_ED_OF_INSP/COMP") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="LAST_FOLLOW_UP_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLastModifiedDate" runat="server" Visible="true" Text='<%# Eval("LAST_FOLLOW_UP_DATE") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="LAST_FOLLOW_UP_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLastModifiedDate" runat="server" Visible="true" Text='<%# Eval("LAST_FOLLOW_UP_DATE") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="OA_RECEIVED">
-                        <ItemTemplate>
-                            <asp:Label ID="lblOAReceived" runat="server" Visible="true" Text='<%# Eval("OA_RECEIVED") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="OA_RECEIVED">
+                            <ItemTemplate>
+                                <asp:Label ID="lblOAReceived" runat="server" Visible="true" Text='<%# Eval("OA_RECEIVED") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="DATE_OF_DRAWING_RECEIVED_FROM_VENDOR">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDateOfDrawingReceivedFromVendor" runat="server" Visible="true" Text='<%# Eval("DATE_OF_DRAWING_RECEIVED_FROM_VENDOR") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="DATE_OF_DRAWING_RECEIVED_FROM_VENDOR">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDateOfDrawingReceivedFromVendor" runat="server" Visible="true" Text='<%# Eval("DATE_OF_DRAWING_RECEIVED_FROM_VENDOR") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDateOfApprovedDrawingSentToVendor" runat="server" Visible="true"
-                                Text='<%# Eval("DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDateOfApprovedDrawingSentToVendor" runat="server" Visible="true"
+                                    Text='<%# Eval("DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDeliveryTermsAgreedWithSupplierInWeeks" runat="server" Visible="true"
-                                Text='<%# Eval("DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDeliveryTermsAgreedWithSupplierInWeeks" runat="server" Visible="true"
+                                    Text='<%# Eval("DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFinalDeliveryDateAsPerAgreedTerms" runat="server" Visible="true"
-                                Text='<%# Eval("FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFinalDeliveryDateAsPerAgreedTerms" runat="server" Visible="true"
+                                    Text='<%# Eval("FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="CHECKED_BY">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCheckedBy" runat="server" Visible="true"
-                                Text='<%# Eval("CHECKED_BY") %>' Width="100px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="CHECKED_BY">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCheckedBy" runat="server" Visible="true"
+                                    Text='<%# Eval("CHECKED_BY") %>' Width="100px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                </Columns>
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
+            </div>
+        </fieldset>
 
     </div>
 
@@ -863,8 +866,8 @@
                 </fieldset>
             </div>
 
-             <fieldset class="popup-grid-fieldset">
- <%--<div class="popup-grid-container">--%>
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:GridView
                     CssClass="popup-grid"
                     ID="gvPODetailsList" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -925,8 +928,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            <%--</div>--%>
-</fieldset>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 

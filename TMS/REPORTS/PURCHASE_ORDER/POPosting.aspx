@@ -716,16 +716,9 @@
 
         <div class="form-grid-container">
             <fieldset class="filter-card">
-                <legend>Procurement Status- Procurement View:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                    - 
-                Select All
-                <asp:CheckBox ID="chkSelectAll" Checked="false" runat="server" AutoPostBack="true"
-                    OnCheckedChanged="chkSelectAll_CheckedChanged" />
+                <legend>Filters</legend>
 
-                </legend>
-
-                <div class="form-grid form-grid-3">
+                <div class="form-grid">
 
                     <label>Date Type</label>
                     <asp:DropDownList ID="ddlDateType" runat="server"
@@ -737,7 +730,7 @@
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -758,7 +751,7 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -803,8 +796,7 @@
                     <label>Follow-Up Date</label>
                     <table width="100%">
                         <tr>
-
-                            <td>
+                            <td style="width:80%;">
                                 <asp:TextBox ID="txtFollowUpDateSearch" runat="server"
                                     onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
@@ -814,7 +806,7 @@
                                     OnClientDateSelectionChanged="clientChangedFollowUpDateSearch">
                                 </asp:CalendarExtender>
                             </td>
-                            <td align="right">
+                            <td>
                                 <asp:ImageButton ID="imgbtnFollowUpDateSearch" runat="server" ImageUrl="~/Images/Calendar2.png"
                                     ToolTip="End Date Calendar" Width="20px" />
                             </td>
@@ -902,453 +894,468 @@
                         CssClass="form-control">
                     </asp:DropDownList>
 
-                    <label>Total PO Value [INR]</label>
-                    <asp:Label ID="lblTotalInvoiceINR" runat="server" Text="0" Font-Bold="true" Font-Size="Larger" ForeColor="Green" />
 
-
-                    <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
-                        OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
-
-
-                    <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
-                        OnClick="btnExport_Click" />
-
-
-                    <asp:Button ID="btnPost" CssClass="button" Width="100%" runat="server" Text="Post"
-                        OnClientClick="return PostingConfirmation();" OnClick="btnPost_Click" />
-
-                    <asp:Button ID="btnDelete" CssClass="button" Width="100%" runat="server" Text="Delete"
-                        OnClientClick="return DeletionConfirmation();" OnClick="btnDelete_Click" />
 
 
                 </div>
             </fieldset>
-        </div>
+            <div class="full-width button-group">
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+                <asp:Button ID="btnSearch" CssClass="button" Width="100%" runat="server" Text="Search"
+                    OnClientClick="return ValidateAll();" OnClick="btnSearch_Click" />
+
+                <asp:Button ID="btnExport" CssClass="button" Width="100%" runat="server" Text="Export"
+                    OnClick="btnExport_Click" />
+
+                <asp:Button ID="btnPost" CssClass="button" Width="100%" runat="server" Text="Post"
+                    OnClientClick="return PostingConfirmation();" OnClick="btnPost_Click" />
+
+                <asp:Button ID="btnDelete" CssClass="button" Width="100%" runat="server" Text="Delete"
+                    OnClientClick="return DeletionConfirmation();" OnClick="btnDelete_Click" />
+
+                <label>Total PO Value [INR]</label>
+                <asp:Label ID="lblTotalInvoiceINR" runat="server" Text="0" Font-Bold="true" Font-Size="Larger" 
+                    ForeColor="Green" />
+
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvPOList" runat="server" CellPadding="4" ForeColor="#333333"
-                AutoGenerateColumns="false" HorizontalAlign="Center"
-                OnRowDataBound="gvPOList_RowDataBound"
-                OnRowCommand="gvPOList_RowCommand">
-                <Columns>
-                    <asp:TemplateField HeaderText="VIEW" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDETAIL" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PO_NO">
-                        <ItemTemplate>
-                            <asp:Label ID="lblSrNo" runat="server" Visible="false" Text='<%# Eval("SR_NO") %>' />
-                            <asp:Label ID="lblFollowUpDays" runat="server" Visible="false" Text='<%# Eval("FOLLOW_UP_DAYS") %>' />
-                            <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
-                            <asp:Label ID="lblTableName" runat="server" Visible="false" Text='<%# Eval("TABLE_NAME") %>' />
-                            <asp:Label ID="lblMRCreatedBy" runat="server" Visible="false" Text='<%# Eval("MR_CREATED_BY") %>' Width="150px" />
-
-                            <asp:Label ID="lblPONo" runat="server" Visible="true" Text='<%# Eval("PO_NO") %>'
-                                Width="130px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PO_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPODate" runat="server" Visible="true" Text='<%# Eval("PO_DATE") %>'
-                                Width="100px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <%--3--%>
-                    <asp:TemplateField HeaderText="PO_DELIVERY_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPODeliveryDate" runat="server" Visible="true" Text='<%# Eval("PO_DELIVERY_DATE") %>'
-                                Width="100px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="VENDOR_NAME">
-                        <ItemTemplate>
-                            <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
-                            <asp:Label ID="lblVendorName" runat="server" Visible="true" Text='<%# Eval("VENDOR_NAME") %>'
-                                Width="350px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <%--5--%>
-                    <asp:TemplateField HeaderText="ITEM_NAME">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtItemName" runat="server" Text='<%# Eval("ITEM_NAME") %>'
-                                CssClass="textbox1" Wrap="true" TextMode="MultiLine" Rows="3"
-                                Width="300px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="QUANTITY">
-                        <ItemTemplate>
-                            <%--<asp:Label ID="lblService" runat="server" Visible="false" Text='<%# Eval("SERVICE") %>' />--%>
-                            <asp:TextBox ID="txtQuantity" runat="server" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("QUANTITY") %>' CssClass="textbox"
-                                Width="100px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="BALANCE_QUANTITY">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtBalQuantity" runat="server" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("BAL_QUANTITY") %>' CssClass="textbox"
-                                Width="100px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="UOM">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUOM" runat="server" Visible="true" Text='<%# Eval("UOM") %>'
-                                Width="60px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PO_VALUE_INR">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtPOValueINR" runat="server" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("PO_VALUE_INR") %>' CssClass="textbox"
-                                Width="120px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <%--10--%>
-                    <asp:TemplateField HeaderText="JOB_NO">
-                        <ItemTemplate>
-                            <%--<asp:Label ID="lblCompleteJOBNo" runat="server" Visible="false" Text='<%# Eval("COMPLETE_JOB_NO") %>' Width="150px" />--%>
-                            <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>'
-                                Width="120px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="BUDGET">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtBudget" runat="server" onkeyDown="javascript:preventInput(event);"
-                                Text='<%# Eval("BUDGET") %>' CssClass="textbox" Width="120px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="FOLLOW_UP_BY">
-                        <ItemTemplate>
-                            <asp:Label ID="lblFollowUpBy" runat="server" Visible="true" Text='<%# Eval("FOLLOW_UP_BY") %>'
-                                Width="100px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="SELECT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:CheckBox ID="chkSelect" runat="server" Width="60px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="LOCATION">
-                        <ItemTemplate>
-                            <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
-                            <asp:Label ID="lblLocation" runat="server" Visible="true" Text='<%# Eval("LOCATION") %>'
-                                Width="80px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <%--15--%>
-                    <asp:TemplateField HeaderText="REVISION">
-                        <ItemTemplate>
-                            <asp:Label ID="lblRevision" runat="server" Visible="true" Text='<%# Eval("REVISION") %>'
-                                Width="150px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PO_FIRST_ITEM">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtPOFirstItem" runat="server" Text='<%# Eval("PO_FIRST_ITEM") %>'
-                                TextMode="MultiLine" Rows="3" onkeyDown="javascript:preventInput(event);" CssClass="textbox1"
-                                Width="300px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="ENGG_APPROVAL_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEnggApprovalStatus" runat="server" Visible="false" Text='<%# Eval("ENGG_APPROVAL_STATUS") %>' />
-                            <asp:DropDownList ID="ddlEnggApprovalStatus" runat="server" Height="26px" Width="150px">
-                                <asp:ListItem Text="Approved" Value="Approved" />
-                                <asp:ListItem Text="Not Approved" Value="Not Approved" />
-                                <asp:ListItem Text="Not Applicable" Value="Not Applicable" />
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="PRESENT_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPresentStatus" runat="server" Visible="false" Text='<%# Eval("PRESENT_STATUS") %>' />
-                            <asp:TextBox ID="txtPresentStatus" runat="server" Text='<%# Eval("PRESENT_STATUS") %>'
-                                TextMode="MultiLine" Rows="3"
-                                CssClass="textbox1" Width="300px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="ED_OF_INSP/COMP">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEdOfInspection" runat="server" Visible="false" Text='<%# Eval("ED_OF_INSP/COMP") %>' />
-                            <asp:TextBox ID="txtEdOfInspection" runat="server" Text='<%# Eval("ED_OF_INSP/COMP") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                            <asp:CalendarExtender ID="calendarEdOfInspection" PopupButtonID="imgbtnEdOfInspection"
-                                runat="server" TargetControlID="txtEdOfInspection" Format="dd-MMM-yyyy">
-                            </asp:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnEdOfInspection" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Expected Delivery Of Inspection Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <%--20--%>
-                    <asp:TemplateField HeaderText="POSTING_STATUS">
-                        <ItemTemplate>
-                            <asp:Label ID="lblPostingStatus" runat="server" Visible="false" Text='<%# Eval("POSTING_STATUS") %>' />
-                            <asp:DropDownList ID="ddlPostingStatus" runat="server" Height="26px" Width="100px">
-                                <asp:ListItem Text="Open" Value="Open" />
-                                <asp:ListItem Text="Close" Value="Close" />
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="NEXT_FOLLOWUP_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblNextFollowupDate" runat="server" Visible="false" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>' />
-                            <asp:TextBox ID="txtNextFollowupDate" runat="server" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                            <asp:CalendarExtender ID="calendarNextFollowupDate" PopupButtonID="imgbtnNextFollowupDate"
-                                runat="server" TargetControlID="txtNextFollowupDate" Format="dd-MMM-yyyy">
-                            </asp:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnNextFollowupDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Expected Delivery Of Inspection Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="LAST_STATUS">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtLastStatus" runat="server" Text='<%# Eval("LAST_STATUS") %>'
-                                TextMode="MultiLine" Rows="3"
-                                onkeyDown="javascript:preventInput(event);" Enabled="false"
-                                CssClass="textbox1" Width="300px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="LAST_ED_OF_INSP/COMP">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLastEdOfInspection" runat="server" Visible="true"
-                                Text='<%# Eval("LAST_ED_OF_INSP/COMP") %>' Width="300px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="LAST_FOLLOW_UP_DATE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblLastModifiedDate" runat="server" Visible="true"
-                                Text='<%# Eval("LAST_FOLLOW_UP_DATE") %>' Width="100px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-
-
-                    <asp:TemplateField HeaderText="GAD_SENT_1" ItemStyle-Width="150px">
-            <ItemTemplate>
-                <asp:Label ID="lblGADSENT1" runat="server" Visible="FALSE" Text='<%# Eval("GAD_GIVEN_1") %>' />
-                <asp:TextBox ID="txtGADsent1" runat="server" Text='<%# Eval("GAD_GIVEN_1") %>'
-                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                <asp:CalendarExtender ID="calendarNextGADsent1" PopupButtonID="imgbtnGADsent1"
-                    runat="server" TargetControlID="txtGADsent1" Format="dd-MMM-yyyy">
-                </asp:CalendarExtender>
-                <asp:ImageButton ID="imgbtnGADsent1" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Sent 1" Width="20px" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        
-        <asp:TemplateField HeaderText="GAD_RECEIVED_1" ItemStyle-Width="150px">
-            <ItemTemplate>
-                <asp:Label ID="lblGADREC1" runat="server" Visible="false" Text='<%# Eval("GAD_RECEIVED_1") %>' />
-                <asp:TextBox ID="txtGADrec1" runat="server" Text='<%# Eval("GAD_RECEIVED_1") %>'
-                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                <asp:CalendarExtender ID="calendarNextGADrec1" PopupButtonID="imgbtnGADrec1"
-                    runat="server" TargetControlID="txtGADrec1" Format="dd-MMM-yyyy">
-                </asp:CalendarExtender>
-                <asp:ImageButton ID="imgbtnGADrec1" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Received 1" Width="20px" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-       
-        <asp:TemplateField HeaderText="GAD_SENT_2" ItemStyle-Width="150px">
-            <ItemTemplate>
-                <asp:Label ID="lblGADSENT2" runat="server" Visible="false" Text='<%# Eval("GAD_GIVEN_2") %>' />
-                <asp:TextBox ID="txtGADsent2" runat="server" Text='<%# Eval("GAD_GIVEN_2") %>'
-                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                <asp:CalendarExtender ID="calendarNextGADsent2" PopupButtonID="imgbtnGADsent2"
-                    runat="server" TargetControlID="txtGADsent2" Format="dd-MMM-yyyy">
-                </asp:CalendarExtender>
-                <asp:ImageButton ID="imgbtnGADsent2" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Sent 2" Width="20px" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-       
-        <asp:TemplateField HeaderText="GAD_RECEIVED_2" ItemStyle-Width="150px">
-            <ItemTemplate>
-                <asp:Label ID="lblGADREC2" runat="server" Visible="false" Text='<%# Eval("GAD_RECEIVED_2") %>' />
-                <asp:TextBox ID="txtGADrec2" runat="server" Text='<%# Eval("GAD_RECEIVED_2") %>'
-                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                <asp:CalendarExtender ID="calendarNextGADrec2" PopupButtonID="imgbtnGADrec2"
-                    runat="server" TargetControlID="txtGADrec2" Format="dd-MMM-yyyy">
-                </asp:CalendarExtender>
-                <asp:ImageButton ID="imgbtnGADrec2" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Received 2" Width="20px" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-     
-        <asp:TemplateField HeaderText="GAD_SENT_3" ItemStyle-Width="150px">
-            <ItemTemplate>
-                <asp:Label ID="lblGADSENT3" runat="server" Visible="false" Text='<%# Eval("GAD_GIVEN_3") %>' />
-                <asp:TextBox ID="txtGADsent3" runat="server" Text='<%# Eval("GAD_GIVEN_3") %>'
-                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                <asp:CalendarExtender ID="calendarNextGADsent3" PopupButtonID="imgbtnGADsent3"
-                    runat="server" TargetControlID="txtGADsent3" Format="dd-MMM-yyyy">
-                </asp:CalendarExtender>
-                <asp:ImageButton ID="imgbtnGADsent3" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Sent 3" Width="20px" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-        <asp:TemplateField HeaderText="GAD_RECEIVED_3" ItemStyle-Width="150px">
-            <ItemTemplate>
-                <asp:Label ID="lblGADREC3" runat="server" Visible="false" Text='<%# Eval("GAD_RECEIVED_3") %>' />
-                <asp:TextBox ID="txtGADrec3" runat="server" Text='<%# Eval("GAD_RECEIVED_3") %>'
-                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                <asp:CalendarExtender ID="calendarNextGADrec3" PopupButtonID="imgbtnGADrec3"
-                    runat="server" TargetControlID="txtGADrec3" Format="dd-MMM-yyyy">
-                </asp:CalendarExtender>
-                <asp:ImageButton ID="imgbtnGADrec3" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Received 3" Width="20px" />
-            </ItemTemplate>
-        </asp:TemplateField>
-
-
-
-                    <%--25--%>
-                    <asp:TemplateField HeaderText="OA_RECEIVED">
-                        <ItemTemplate>
-                            <asp:Label ID="lblOAReceived" runat="server" Visible="false" Text='<%# Eval("OA_RECEIVED") %>' />
-                            <asp:TextBox ID="txtOnReceived" runat="server" Text='<%# Eval("OA_RECEIVED") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                            <asp:CalendarExtender ID="calendarOnReceived" PopupButtonID="imgbtnOnReceived"
-                                runat="server" TargetControlID="txtOnReceived" Format="dd-MMM-yyyy">
-                            </asp:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnOnReceived" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="On Received Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="DATE_OF_DRAWING_RECEIVED_FROM_VENDOR">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDateOfDrawingReceivedFromVendor" runat="server" Visible="false" Text='<%# Eval("DATE_OF_DRAWING_RECEIVED_FROM_VENDOR") %>' />
-                            <asp:TextBox ID="txtDateOfDrawingReceivedFromVendor" runat="server" Text='<%# Eval("DATE_OF_DRAWING_RECEIVED_FROM_VENDOR") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
-                            <asp:CalendarExtender ID="calendarDateOfDrawingReceivedFromVendor" PopupButtonID="imgbtnDateOfDrawingReceivedFromVendor"
-                                runat="server" TargetControlID="txtDateOfDrawingReceivedFromVendor" Format="dd-MMM-yyyy">
-                            </asp:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnDateOfDrawingReceivedFromVendor" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Date Of Drawing Received From Vendor Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <%--27--%>
-                    <asp:TemplateField HeaderText="DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR">
-                        <ItemTemplate>
-                            <asp:Label ID="lblDateOfApprovedDrawingSentToVendor" runat="server" Visible="false"
-                                Text='<%# Eval("DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR") %>' />
-                            <asp:TextBox ID="txtDateOfApprovedDrawingSentToVendor" runat="server"
-                                Text='<%# Eval("DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR") %>'
-                                onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"
-                                onChange="GetWeeks(this)">
-                                    <%--OnTextChanged="txtDateOfApprovedDrawingSentToVendor_OnTextChanged"
-                                    AutoPostBack="true"--%>
-                            </asp:TextBox>
-                            <asp:CalendarExtender ID="calendarDateOfApprovedDrawingSentToVendor" PopupButtonID="imgbtnDateOfApprovedDrawingSentToVendor"
-                                runat="server" TargetControlID="txtDateOfApprovedDrawingSentToVendor" Format="dd-MMM-yyyy">
-                            </asp:CalendarExtender>
-                            <asp:ImageButton ID="imgbtnDateOfApprovedDrawingSentToVendor" runat="server"
-                                ImageUrl="~/Images/Calendar2.png"
-                                ToolTip="Date Of Approved Drawing Sent To Vendor Calendar" Width="20px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtDeliveryTermsAgreedWithSupplierInWeeks" runat="server"
-                                Text='<%# Eval("DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS") %>'
-                                onkeypress="return inNumberKeyWithDecimal(this, event);" CssClass="textbox1"
-                                onChange="GetWeeks(this)"
-                                Width="100px"></asp:TextBox>
-
-                            <%--onKeyUp="OnChange(this);"
-                                    OnTextChanged="txtDeliveryTermsAgreedWithSupplierInWeeks_OnTextChanged"
-                                    AutoPostBack="true"--%>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="IMPORT_MODE">
-                        <ItemTemplate>
-                            <asp:Label ID="lblImportMode" runat="server" Visible="false" Text='<%# Eval("IMPORT_MODE_ID") %>' />
-                            <asp:DropDownList ID="ddlImportMode" runat="server" Height="26px" Width="180px"
-                                onChange="GetWeeks(this)">
-                            </asp:DropDownList>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtFinalDeliveryDateAsPerAgreedTerms" runat="server"
-                                Text='<%# Eval("FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS") %>'
-                                onkeyDown="javascript:preventInput(event);" Enabled="false"
-                                CssClass="textbox1" Width="120px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <%--30--%>
-                    <asp:TemplateField HeaderText="NON_NEGOTIABLE_OFFERED_PRICE">
-                        <ItemTemplate>
-                            <asp:TextBox ID="txtNonNegotiableOfferedPrice" runat="server"
-                                onkeypress="return inNumberKeyWithDecimal(this, event);"
-                                Text='<%# Eval("NON_NEGOTIABLE_OFFERED_PRICE") %>'
-                                CssClass="textbox" Width="120px"></asp:TextBox>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="CHECKED_BY">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCheckedBy" runat="server" Visible="true"
-                                Text='<%# Eval("CHECKED_BY") %>' Width="100px" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                </Columns>
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-
         </div>
 
+
+        <fieldset class="employee-grid-fieldset">
+            <legend>Procurement Status- Procurement View:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+                - 
+                Select All
+                <asp:CheckBox ID="chkSelectAll" Checked="false" runat="server" AutoPostBack="true"
+                    OnCheckedChanged="chkSelectAll_CheckedChanged" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvPOList" runat="server" CellPadding="4" ForeColor="#333333"
+                    AutoGenerateColumns="false" HorizontalAlign="Center"
+                    OnRowDataBound="gvPOList_RowDataBound"
+                    OnRowCommand="gvPOList_RowCommand">
+                    <Columns>
+                        <asp:TemplateField HeaderText="VIEW" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDETAIL" Height="20px" Width="20px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/viewdetails.png" ToolTip="View Subitem Details" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO_NO">
+                            <ItemTemplate>
+                                <asp:Label ID="lblSrNo" runat="server" Visible="false" Text='<%# Eval("SR_NO") %>' />
+                                <asp:Label ID="lblFollowUpDays" runat="server" Visible="false" Text='<%# Eval("FOLLOW_UP_DAYS") %>' />
+                                <asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />
+                                <asp:Label ID="lblTableName" runat="server" Visible="false" Text='<%# Eval("TABLE_NAME") %>' />
+                                <asp:Label ID="lblMRCreatedBy" runat="server" Visible="false" Text='<%# Eval("MR_CREATED_BY") %>' Width="150px" />
+
+                                <asp:Label ID="lblPONo" runat="server" Visible="true" Text='<%# Eval("PO_NO") %>'
+                                    Width="130px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPODate" runat="server" Visible="true" Text='<%# Eval("PO_DATE") %>'
+                                    Width="100px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--3--%>
+                        <asp:TemplateField HeaderText="PO_DELIVERY_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPODeliveryDate" runat="server" Visible="true" Text='<%# Eval("PO_DELIVERY_DATE") %>'
+                                    Width="100px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="VENDOR_NAME">
+                            <ItemTemplate>
+                                <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("VENDOR_CODE") %>' />
+                                <asp:Label ID="lblVendorName" runat="server" Visible="true" Text='<%# Eval("VENDOR_NAME") %>'
+                                    Width="350px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--5--%>
+                        <asp:TemplateField HeaderText="ITEM_NAME">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtItemName" runat="server" Text='<%# Eval("ITEM_NAME") %>'
+                                    CssClass="textbox1" Wrap="true" TextMode="MultiLine" Rows="3"
+                                    Width="300px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="QUANTITY">
+                            <ItemTemplate>
+                                <%--<asp:Label ID="lblService" runat="server" Visible="false" Text='<%# Eval("SERVICE") %>' />--%>
+                                <asp:TextBox ID="txtQuantity" runat="server" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("QUANTITY") %>' CssClass="textbox"
+                                    Width="100px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="BALANCE_QUANTITY">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtBalQuantity" runat="server" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("BAL_QUANTITY") %>' CssClass="textbox"
+                                    Width="100px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="UOM">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUOM" runat="server" Visible="true" Text='<%# Eval("UOM") %>'
+                                    Width="60px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO_VALUE_INR">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtPOValueINR" runat="server" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("PO_VALUE_INR") %>' CssClass="textbox"
+                                    Width="120px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--10--%>
+                        <asp:TemplateField HeaderText="JOB_NO">
+                            <ItemTemplate>
+                                <%--<asp:Label ID="lblCompleteJOBNo" runat="server" Visible="false" Text='<%# Eval("COMPLETE_JOB_NO") %>' Width="150px" />--%>
+                                <asp:Label ID="lblJOBNo" runat="server" Visible="true" Text='<%# Eval("JOB_NO") %>'
+                                    Width="120px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="BUDGET">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtBudget" runat="server" onkeyDown="javascript:preventInput(event);"
+                                    Text='<%# Eval("BUDGET") %>' CssClass="textbox" Width="120px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="FOLLOW_UP_BY">
+                            <ItemTemplate>
+                                <asp:Label ID="lblFollowUpBy" runat="server" Visible="true" Text='<%# Eval("FOLLOW_UP_BY") %>'
+                                    Width="100px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="SELECT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkSelect" runat="server" Width="60px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="LOCATION">
+                            <ItemTemplate>
+                                <asp:Label ID="lblUnitID" runat="server" Visible="false" Text='<%# Eval("UNIT_ID") %>' />
+                                <asp:Label ID="lblLocation" runat="server" Visible="true" Text='<%# Eval("LOCATION") %>'
+                                    Width="80px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <%--15--%>
+                        <asp:TemplateField HeaderText="REVISION">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRevision" runat="server" Visible="true" Text='<%# Eval("REVISION") %>'
+                                    Width="150px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PO_FIRST_ITEM">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtPOFirstItem" runat="server" Text='<%# Eval("PO_FIRST_ITEM") %>'
+                                    TextMode="MultiLine" Rows="3" onkeyDown="javascript:preventInput(event);" CssClass="textbox1"
+                                    Width="300px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="ENGG_APPROVAL_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEnggApprovalStatus" runat="server" Visible="false" Text='<%# Eval("ENGG_APPROVAL_STATUS") %>' />
+                                <asp:DropDownList ID="ddlEnggApprovalStatus" runat="server" Height="26px" Width="150px">
+                                    <asp:ListItem Text="Approved" Value="Approved" />
+                                    <asp:ListItem Text="Not Approved" Value="Not Approved" />
+                                    <asp:ListItem Text="Not Applicable" Value="Not Applicable" />
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="PRESENT_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPresentStatus" runat="server" Visible="false" Text='<%# Eval("PRESENT_STATUS") %>' />
+                                <asp:TextBox ID="txtPresentStatus" runat="server" Text='<%# Eval("PRESENT_STATUS") %>'
+                                    TextMode="MultiLine" Rows="3"
+                                    CssClass="textbox1" Width="300px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="ED_OF_INSP/COMP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblEdOfInspection" runat="server" Visible="false" Text='<%# Eval("ED_OF_INSP/COMP") %>' />
+                                <asp:TextBox ID="txtEdOfInspection" runat="server" Text='<%# Eval("ED_OF_INSP/COMP") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarEdOfInspection" PopupButtonID="imgbtnEdOfInspection"
+                                    runat="server" TargetControlID="txtEdOfInspection" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnEdOfInspection" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Expected Delivery Of Inspection Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--20--%>
+                        <asp:TemplateField HeaderText="POSTING_STATUS">
+                            <ItemTemplate>
+                                <asp:Label ID="lblPostingStatus" runat="server" Visible="false" Text='<%# Eval("POSTING_STATUS") %>' />
+                                <asp:DropDownList ID="ddlPostingStatus" runat="server" Height="26px" Width="100px">
+                                    <asp:ListItem Text="Open" Value="Open" />
+                                    <asp:ListItem Text="Close" Value="Close" />
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="NEXT_FOLLOWUP_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblNextFollowupDate" runat="server" Visible="false" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>' />
+                                <asp:TextBox ID="txtNextFollowupDate" runat="server" Text='<%# Eval("NEXT_FOLLOWUP_DATE") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextFollowupDate" PopupButtonID="imgbtnNextFollowupDate"
+                                    runat="server" TargetControlID="txtNextFollowupDate" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnNextFollowupDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Expected Delivery Of Inspection Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="LAST_STATUS">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtLastStatus" runat="server" Text='<%# Eval("LAST_STATUS") %>'
+                                    TextMode="MultiLine" Rows="3"
+                                    onkeyDown="javascript:preventInput(event);" Enabled="false"
+                                    CssClass="textbox1" Width="300px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="LAST_ED_OF_INSP/COMP">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLastEdOfInspection" runat="server" Visible="true"
+                                    Text='<%# Eval("LAST_ED_OF_INSP/COMP") %>' Width="300px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="LAST_FOLLOW_UP_DATE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblLastModifiedDate" runat="server" Visible="true"
+                                    Text='<%# Eval("LAST_FOLLOW_UP_DATE") %>' Width="100px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+
+                        <asp:TemplateField HeaderText="GAD_SENT_1" ItemStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGADSENT1" runat="server" Visible="FALSE" Text='<%# Eval("GAD_GIVEN_1") %>' />
+                                <asp:TextBox ID="txtGADsent1" runat="server" Text='<%# Eval("GAD_GIVEN_1") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextGADsent1" PopupButtonID="imgbtnGADsent1"
+                                    runat="server" TargetControlID="txtGADsent1" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnGADsent1" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Sent 1" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="GAD_RECEIVED_1" ItemStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGADREC1" runat="server" Visible="false" Text='<%# Eval("GAD_RECEIVED_1") %>' />
+                                <asp:TextBox ID="txtGADrec1" runat="server" Text='<%# Eval("GAD_RECEIVED_1") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextGADrec1" PopupButtonID="imgbtnGADrec1"
+                                    runat="server" TargetControlID="txtGADrec1" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnGADrec1" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Received 1" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="GAD_SENT_2" ItemStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGADSENT2" runat="server" Visible="false" Text='<%# Eval("GAD_GIVEN_2") %>' />
+                                <asp:TextBox ID="txtGADsent2" runat="server" Text='<%# Eval("GAD_GIVEN_2") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextGADsent2" PopupButtonID="imgbtnGADsent2"
+                                    runat="server" TargetControlID="txtGADsent2" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnGADsent2" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Sent 2" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="GAD_RECEIVED_2" ItemStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGADREC2" runat="server" Visible="false" Text='<%# Eval("GAD_RECEIVED_2") %>' />
+                                <asp:TextBox ID="txtGADrec2" runat="server" Text='<%# Eval("GAD_RECEIVED_2") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextGADrec2" PopupButtonID="imgbtnGADrec2"
+                                    runat="server" TargetControlID="txtGADrec2" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnGADrec2" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Received 2" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+                        <asp:TemplateField HeaderText="GAD_SENT_3" ItemStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGADSENT3" runat="server" Visible="false" Text='<%# Eval("GAD_GIVEN_3") %>' />
+                                <asp:TextBox ID="txtGADsent3" runat="server" Text='<%# Eval("GAD_GIVEN_3") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextGADsent3" PopupButtonID="imgbtnGADsent3"
+                                    runat="server" TargetControlID="txtGADsent3" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnGADsent3" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Sent 3" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="GAD_RECEIVED_3" ItemStyle-Width="150px">
+                            <ItemTemplate>
+                                <asp:Label ID="lblGADREC3" runat="server" Visible="false" Text='<%# Eval("GAD_RECEIVED_3") %>' />
+                                <asp:TextBox ID="txtGADrec3" runat="server" Text='<%# Eval("GAD_RECEIVED_3") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarNextGADrec3" PopupButtonID="imgbtnGADrec3"
+                                    runat="server" TargetControlID="txtGADrec3" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnGADrec3" runat="server" ImageUrl="~/Images/Calendar2.png" ToolTip="GAD Received 3" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
+
+                        <%--25--%>
+                        <asp:TemplateField HeaderText="OA_RECEIVED">
+                            <ItemTemplate>
+                                <asp:Label ID="lblOAReceived" runat="server" Visible="false" Text='<%# Eval("OA_RECEIVED") %>' />
+                                <asp:TextBox ID="txtOnReceived" runat="server" Text='<%# Eval("OA_RECEIVED") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarOnReceived" PopupButtonID="imgbtnOnReceived"
+                                    runat="server" TargetControlID="txtOnReceived" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnOnReceived" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="On Received Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="DATE_OF_DRAWING_RECEIVED_FROM_VENDOR">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDateOfDrawingReceivedFromVendor" runat="server" Visible="false" Text='<%# Eval("DATE_OF_DRAWING_RECEIVED_FROM_VENDOR") %>' />
+                                <asp:TextBox ID="txtDateOfDrawingReceivedFromVendor" runat="server" Text='<%# Eval("DATE_OF_DRAWING_RECEIVED_FROM_VENDOR") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"></asp:TextBox>
+                                <asp:CalendarExtender ID="calendarDateOfDrawingReceivedFromVendor" PopupButtonID="imgbtnDateOfDrawingReceivedFromVendor"
+                                    runat="server" TargetControlID="txtDateOfDrawingReceivedFromVendor" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnDateOfDrawingReceivedFromVendor" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Date Of Drawing Received From Vendor Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--27--%>
+                        <asp:TemplateField HeaderText="DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR">
+                            <ItemTemplate>
+                                <asp:Label ID="lblDateOfApprovedDrawingSentToVendor" runat="server" Visible="false"
+                                    Text='<%# Eval("DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR") %>' />
+                                <asp:TextBox ID="txtDateOfApprovedDrawingSentToVendor" runat="server"
+                                    Text='<%# Eval("DATE_OF_APPROVED_DRAWING_SENT_TO_VENDOR") %>'
+                                    onkeyDown="javascript:preventInput(event);" CssClass="textbox1" Width="100px"
+                                    onChange="GetWeeks(this)">
+                                    <%--OnTextChanged="txtDateOfApprovedDrawingSentToVendor_OnTextChanged"
+                                    AutoPostBack="true"--%>
+                                </asp:TextBox>
+                                <asp:CalendarExtender ID="calendarDateOfApprovedDrawingSentToVendor" PopupButtonID="imgbtnDateOfApprovedDrawingSentToVendor"
+                                    runat="server" TargetControlID="txtDateOfApprovedDrawingSentToVendor" Format="dd-MMM-yyyy">
+                                </asp:CalendarExtender>
+                                <asp:ImageButton ID="imgbtnDateOfApprovedDrawingSentToVendor" runat="server"
+                                    ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Date Of Approved Drawing Sent To Vendor Calendar" Width="20px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtDeliveryTermsAgreedWithSupplierInWeeks" runat="server"
+                                    Text='<%# Eval("DELIVERY_TERMS_AGREED_WITH_SUPPLIER_IN_WEEKS") %>'
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);" CssClass="textbox1"
+                                    onChange="GetWeeks(this)"
+                                    Width="100px"></asp:TextBox>
+
+                                <%--onKeyUp="OnChange(this);"
+                                    OnTextChanged="txtDeliveryTermsAgreedWithSupplierInWeeks_OnTextChanged"
+                                    AutoPostBack="true"--%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="IMPORT_MODE">
+                            <ItemTemplate>
+                                <asp:Label ID="lblImportMode" runat="server" Visible="false" Text='<%# Eval("IMPORT_MODE_ID") %>' />
+                                <asp:DropDownList ID="ddlImportMode" runat="server" Height="26px" Width="180px"
+                                    onChange="GetWeeks(this)">
+                                </asp:DropDownList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtFinalDeliveryDateAsPerAgreedTerms" runat="server"
+                                    Text='<%# Eval("FINAL_DELIVERY_DATE_AS_PER_AGREED_TERMS") %>'
+                                    onkeyDown="javascript:preventInput(event);" Enabled="false"
+                                    CssClass="textbox1" Width="120px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <%--30--%>
+                        <asp:TemplateField HeaderText="NON_NEGOTIABLE_OFFERED_PRICE">
+                            <ItemTemplate>
+                                <asp:TextBox ID="txtNonNegotiableOfferedPrice" runat="server"
+                                    onkeypress="return inNumberKeyWithDecimal(this, event);"
+                                    Text='<%# Eval("NON_NEGOTIABLE_OFFERED_PRICE") %>'
+                                    CssClass="textbox" Width="120px"></asp:TextBox>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="CHECKED_BY">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCheckedBy" runat="server" Visible="true"
+                                    Text='<%# Eval("CHECKED_BY") %>' Width="100px" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                    </Columns>
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
+
+            </div>
+
+        </fieldset>
     </div>
 
 
@@ -1392,8 +1399,8 @@
                 </fieldset>
             </div>
 
-             <fieldset class="popup-grid-fieldset">
- <%--<div class="popup-grid-container">--%>
+            <fieldset class="popup-grid-fieldset">
+                <%--<div class="popup-grid-container">--%>
                 <asp:GridView
                     CssClass="popup-grid"
                     ID="gvPODetailsList" runat="server" AutoGenerateColumns="False" CellPadding="4"
@@ -1454,8 +1461,8 @@
                     <EditRowStyle BackColor="#7C6F57" />
                     <AlternatingRowStyle BackColor="White" />
                 </asp:GridView>
-            <%--</div>--%>
-</fieldset>
+                <%--</div>--%>
+            </fieldset>
 
         </div>
 
