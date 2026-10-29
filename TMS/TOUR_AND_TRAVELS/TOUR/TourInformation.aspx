@@ -7,6 +7,8 @@
     <%-- <link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
     <link href="../../Styles/form.css" rel="stylesheet" />
+    <link href="../../Styles/grid.css" rel="stylesheet" />
+    <link href="../../Styles/popup.css" rel="stylesheet" />
 
     <link rel="icon" href="../../Images/Icon04.png" />
     <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
@@ -969,8 +971,8 @@
 
         <div class="popup-layout">
 
-            <div class="popup-grid-container">
-            </div>
+            <%--<div class="popup-grid-container">
+            </div>--%>
             <fieldset class="popup-grid-fieldset">
                 <legend>
                     <asp:Label ID="lblOpenTours" runat="server" Text="Records[0]" /></legend>
@@ -1001,26 +1003,6 @@
             </fieldset>
 
 
-        </div>
-
-
-
-        <div align="center">
-            <fieldset style="width: 90%; margin-top: 10px;">
-                <legend style="text-align: center;"></legend>
-                <br />
-
-                <table style="width: 95%;">
-                    <tr>
-                        <td></td>
-                    </tr>
-                </table>
-                <br />
-                <div style='overflow: auto; width: 99%; height: 390px; border: 1px solid lightgray; margin-left: 5px;'>
-                    <div align="center">
-                    </div>
-                </div>
-            </fieldset>
         </div>
 
 
