@@ -608,7 +608,7 @@ public partial class PROJECT_LOT_LOTTransmittalFactoryReportForProduction : Syst
     {
         try
         {
-            dsProductionManagers = objProject.GetProductionManagers();
+            dsProductionManagers = objProject.GetProductionManagers(0);
             if (dsProductionManagers.Tables.Count > 0 && dsProductionManagers.Tables[0].Rows.Count > 0)
             {
                 ddlProductionManager.DataSource = dsProductionManagers.Tables[0];

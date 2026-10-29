@@ -6833,7 +6833,7 @@ namespace BAL
         }
 
 
-        public DataSet GetProductionManagers()
+        public DataSet GetProductionManagers(int unitId)
         {
             DataSet ds = new DataSet();
             string cipltmsconnectionstring = ConnectionString.GetCiplTMSCommonConn();
@@ -6844,6 +6844,10 @@ namespace BAL
             cmd.Connection = con;
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            cmd.Parameters.AddWithValue("@unitId", unitId);
+
+
             da.Fill(ds);
             if (ds != null)
                 return ds;
