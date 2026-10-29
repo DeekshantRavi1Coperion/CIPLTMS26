@@ -272,10 +272,10 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
             if (Session["EMP_RECORD_ID"] != null)
             {
                 int rowindex = 0;
-                if (Convert.ToString(e.CommandArgument) == "ViewATTACHMENT" ||
+                if (Convert.ToString(e.CommandArgument) == "ViewATTACHMENT1" ||
                     Convert.ToString(e.CommandArgument) == "ViewATTACHMENT2" ||
                     Convert.ToString(e.CommandArgument) == "ViewATTACHMENT3" ||
-                    Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT" ||
+                    Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT1" ||
                     Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT2" ||
                     Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT3" ||
                     Convert.ToString(e.CommandArgument) == "VIEW_DETAIL")
@@ -326,9 +326,9 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                     iframeViewDrawingDetailsInPDF.Attributes.Add("src", "TicketDetailInPDF.aspx?recordID=" + Convert.ToInt32(lblTicketID.Text) + "");
                 }
 
-                else if (Convert.ToString(e.CommandArgument) == "ViewATTACHMENT")
+                else if (Convert.ToString(e.CommandArgument) == "ViewATTACHMENT1")
                 {
-                    ViewAttachedFilesNew01(Convert.ToInt32(lblTicketID.Text), "ATTACHMENT");
+                    ViewAttachedFilesNew01(Convert.ToInt32(lblTicketID.Text), "ATTACHMENT1");
                 }
                 else if (Convert.ToString(e.CommandArgument) == "ViewATTACHMENT2")
                 {
@@ -338,9 +338,9 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                 {
                     ViewAttachedFilesNew01(Convert.ToInt32(lblTicketID.Text), "ATTACHMENT3");
                 }
-                else if (Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT")
+                else if (Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT1")
                 {
-                    ViewAttachedFilesNew01(Convert.ToInt32(lblTicketID.Text), "CLOSINGATTACHMENT");
+                    ViewAttachedFilesNew01(Convert.ToInt32(lblTicketID.Text), "CLOSINGATTACHMENT1");
                 }
                 else if (Convert.ToString(e.CommandArgument) == "ViewCLOSINGATTACHMENT2")
                 {
@@ -453,8 +453,7 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                         btnFileOneName.ToolTip = lblFileOneName.Text;
                     }
 
-                    else if (FileOneNameExtn == "eml" || FileOneNameExtn == "msg" ||
-                    FileOneNameExtn == "EML" || FileOneNameExtn == "MSG")
+                    else if (FileOneNameExtn == "eml" || FileOneNameExtn == "msg" || FileOneNameExtn == "EML" || FileOneNameExtn == "MSG")
                     {
                         btnFileOneName.ImageUrl = "~/Images/NEWICONS/email02.png";
                         btnFileOneName.ToolTip = lblFileOneName.Text;
@@ -485,15 +484,15 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                         btnFileTwoName.ImageUrl = "~/Images/pdficon1.png";
                         btnFileTwoName.ToolTip = lblFileTwoName.Text;
                     }
-                    else if (FileOneNameExtn == "DOC" || FileOneNameExtn == "DOCX" || FileOneNameExtn == "doc" || FileOneNameExtn == "docx")
+                    else if (FileTwoNameExtn == "DOC" || FileTwoNameExtn == "DOCX" || FileTwoNameExtn == "doc" || FileTwoNameExtn == "docx")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/doc.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnFileTwoName.ImageUrl = "~/Images/doc.png";
+                        btnFileTwoName.ToolTip = lblFileOneName.Text;
                     }
-                    else if (FileOneNameExtn == "xls" || FileOneNameExtn == "xlsx" || FileOneNameExtn == "XLS" || FileOneNameExtn == "XLSX")
+                    else if (FileTwoNameExtn == "xls" || FileTwoNameExtn == "xlsx" || FileTwoNameExtn == "XLS" || FileTwoNameExtn == "XLSX")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/xlsx.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnFileTwoName.ImageUrl = "~/Images/xlsx.png";
+                        btnFileTwoName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileTwoNameExtn == "eml" || FileTwoNameExtn == "msg" ||
                     FileTwoNameExtn == "EML" || FileTwoNameExtn == "MSG")
@@ -527,15 +526,15 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                         btnFileThreeName.ImageUrl = "~/Images/pdficon1.png";
                         btnFileThreeName.ToolTip = lblFileThreeName.Text;
                     }
-                    else if (FileOneNameExtn == "DOC" || FileOneNameExtn == "DOCX" || FileOneNameExtn == "doc" || FileOneNameExtn == "docx")
+                    else if (FileThreeNameExtn == "DOC" || FileThreeNameExtn == "DOCX" || FileThreeNameExtn == "doc" || FileThreeNameExtn == "docx")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/doc.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnFileThreeName.ImageUrl = "~/Images/doc.png";
+                        btnFileThreeName.ToolTip = lblFileOneName.Text;
                     }
-                    else if (FileOneNameExtn == "xls" || FileOneNameExtn == "xlsx" || FileOneNameExtn == "XLS" || FileOneNameExtn == "XLSX")
+                    else if (FileThreeNameExtn == "xls" || FileThreeNameExtn == "xlsx" || FileThreeNameExtn == "XLS" || FileThreeNameExtn == "XLSX")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/xlsx.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnFileThreeName.ImageUrl = "~/Images/xlsx.png";
+                        btnFileThreeName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileThreeNameExtn == "eml" || FileThreeNameExtn == "msg" ||
                     FileThreeNameExtn == "EML" || FileThreeNameExtn == "MSG")
@@ -575,15 +574,15 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                     //    btnClosingFileOneName.ImageUrl = "~/Images/pdficon1.png";
                     //    btnClosingFileOneName.ToolTip = lblClosingFileOneName.Text;
                     //}
-                    else if (FileOneNameExtn == "DOC" || FileOneNameExtn == "DOCX" || FileOneNameExtn == "doc" || FileOneNameExtn == "docx")
+                    else if (FileClosingOneNameExtn == "DOC" || FileClosingOneNameExtn == "DOCX" || FileClosingOneNameExtn == "doc" || FileClosingOneNameExtn == "docx")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/doc.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnClosingFileOneName.ImageUrl = "~/Images/doc.png";
+                        btnClosingFileOneName.ToolTip = lblFileOneName.Text;
                     }
-                    else if (FileOneNameExtn == "xls" || FileOneNameExtn == "xlsx" || FileOneNameExtn == "XLS" || FileOneNameExtn == "XLSX")
+                    else if (FileClosingOneNameExtn == "xls" || FileClosingOneNameExtn == "xlsx" || FileClosingOneNameExtn == "XLS" || FileClosingOneNameExtn == "XLSX")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/xlsx.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnClosingFileOneName.ImageUrl = "~/Images/xlsx.png";
+                        btnClosingFileOneName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileClosingOneNameExtn == "eml" || FileClosingOneNameExtn == "msg" ||
                    FileClosingOneNameExtn == "EML" || FileClosingOneNameExtn == "MSG")
@@ -617,15 +616,15 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                         btnClosingFileTwoName.ImageUrl = "~/Images/pdficon1.png";
                         btnClosingFileTwoName.ToolTip = lblClosingFileTwoName.Text;
                     }
-                    else if (FileOneNameExtn == "DOC" || FileOneNameExtn == "DOCX" || FileOneNameExtn == "doc" || FileOneNameExtn == "docx")
+                    else if (FileClosingTwoNameExtn == "DOC" || FileClosingTwoNameExtn == "DOCX" || FileClosingTwoNameExtn == "doc" || FileClosingTwoNameExtn == "docx")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/doc.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnClosingFileTwoName.ImageUrl = "~/Images/doc.png";
+                        btnClosingFileTwoName.ToolTip = lblFileOneName.Text;
                     }
-                    else if (FileOneNameExtn == "xls" || FileOneNameExtn == "xlsx" || FileOneNameExtn == "XLS" || FileOneNameExtn == "XLSX")
+                    else if (FileClosingTwoNameExtn == "xls" || FileClosingTwoNameExtn == "xlsx" || FileClosingTwoNameExtn == "XLS" || FileClosingTwoNameExtn == "XLSX")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/xlsx.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnClosingFileTwoName.ImageUrl = "~/Images/xlsx.png";
+                        btnClosingFileTwoName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileClosingTwoNameExtn == "eml" || FileClosingTwoNameExtn == "msg" ||
                  FileClosingTwoNameExtn == "EML" || FileClosingTwoNameExtn == "MSG")
@@ -659,15 +658,15 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                         btnClosingFileThreeName.ImageUrl = "~/Images/pdficon1.png";
                         btnClosingFileThreeName.ToolTip = lblClosingFileThreeName.Text;
                     }
-                    else if (FileOneNameExtn == "DOC" || FileOneNameExtn == "DOCX" || FileOneNameExtn == "doc" || FileOneNameExtn == "docx")
+                    else if (FileClosingThreeNameExtn == "DOC" || FileClosingThreeNameExtn == "DOCX" || FileClosingThreeNameExtn == "doc" || FileClosingThreeNameExtn == "docx")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/doc.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnClosingFileThreeName.ImageUrl = "~/Images/doc.png";
+                        btnClosingFileThreeName.ToolTip = lblFileOneName.Text;
                     }
-                    else if (FileOneNameExtn == "xls" || FileOneNameExtn == "xlsx" || FileOneNameExtn == "XLS" || FileOneNameExtn == "XLSX")
+                    else if (FileClosingThreeNameExtn == "xls" || FileClosingThreeNameExtn == "xlsx" || FileClosingThreeNameExtn == "XLS" || FileClosingThreeNameExtn == "XLSX")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/xlsx.png";
-                        btnFileOneName.ToolTip = lblFileOneName.Text;
+                        btnClosingFileThreeName.ImageUrl = "~/Images/xlsx.png";
+                        btnClosingFileThreeName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileClosingThreeNameExtn == "eml" || FileClosingThreeNameExtn == "msg" ||
                             FileClosingThreeNameExtn == "EML" || FileClosingThreeNameExtn == "MSG")
@@ -717,6 +716,7 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
             return;
         }
     }
+
 
 
     #endregion
@@ -910,6 +910,113 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
         ddlTicketSubtype.SelectedIndex = 0;
     }
 
+    //private void ViewAttachedFilesNew01(int ticketID, string fileType)
+    //{
+    //    try
+    //    {
+    //        byte[] bytes = null;
+    //        DataTable dtTicketList = (DataTable)Session["dtTicketList"];
+
+    //        string fileName = Convert.ToString(dtTicketList.Select("PID='" + ticketID + "'"));
+
+    //        string extn = string.Empty;
+    //        foreach (DataRow dr in dtTicketList.Select("PID='" + ticketID + "'"))
+    //        {
+    //            if (fileType == "ATTACHMENT1")
+    //            {
+    //                fileName = Convert.ToString(dr["FILE_NAME1"]);
+    //                bytes = (byte[])dr["DOC_NAME1"];
+    //            }
+    //            else if (fileType == "ATTACHMENT2")
+    //            {
+    //                fileName = Convert.ToString(dr["FILE_NAME2"]);
+    //                bytes = (byte[])dr["DOC_NAME2"];
+    //            }
+    //            else if (fileType == "ATTACHMENT3")
+    //            {
+    //                fileName = Convert.ToString(dr["FILE_NAME3"]);
+    //                bytes = (byte[])dr["DOC_NAME3"];
+    //            }
+
+
+    //            if (fileType == "CLOSINGATTACHMENT")
+    //            {
+    //                fileName = Convert.ToString(dr["FILECLOSING_NAME1"]);
+    //                bytes = (byte[])dr["FILEDOC_NAME1"];
+    //            }
+    //            else if (fileType == "CLOSINGATTACHMENT2")
+    //            {
+    //                fileName = Convert.ToString(dr["FILECLOSING_NAME2"]);
+    //                bytes = (byte[])dr["FILEDOC_NAME2"];
+    //            }
+    //            else if (fileType == "CLOSINGATTACHMENT3")
+    //            {
+    //                fileName = Convert.ToString(dr["FILECLOSING_NAME3"]);
+    //                bytes = (byte[])dr["FILEDOC_NAME3"];
+    //            }
+
+
+    //        }
+    //        if (!string.IsNullOrEmpty(fileName))
+    //        {
+    //            extn = fileName.Split('.').Last();
+    //            if (extn == "jpg" || extn == "jpeg" || extn == "bmp" || extn == "png" || extn == "gif" || extn == "JPG" || extn == "JPEG" || extn == "BMP" || extn == "PNG" || extn == "GIF")
+    //            {
+    //                imgFile.ImageUrl = "ViewAttachedImageFile.ashx?ticketID=" + ticketID + "&fileType=" + fileType;
+    //                ModalPopupExtender2.Show();
+    //            }
+    //            else if (extn == "pdf" || extn == "PDF")
+    //            {
+    //                iframeViewPDFFile.Attributes.Add("src", "ViewAttachedPDFFile.aspx?ticketID=" + ticketID + "&fileType=" + fileType);
+    //                this.ModalPopupExtender3.Show();
+    //            }
+    //            else if (extn == "xls" || extn == "xlsx")
+    //            {
+    //                if (bytes != null && bytes.Length > 0)
+    //                {
+    //                    Response.Clear();
+    //                    Response.ClearHeaders();
+    //                    Response.ContentType = "application/octet-stream";
+    //                    Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+    //                    Response.BinaryWrite(bytes);
+    //                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+    //                }
+    //                else
+    //                {
+    //                    ExceptionMessage("Excel file is empty!");
+    //                    return;
+    //                }
+    //            }
+    //            else if (extn == "eml" || extn == "msg" || extn == "EML" || extn == "MSG")
+    //            {
+    //                if (bytes != null && bytes.Length > 0)
+    //                {
+    //                    Response.Clear();
+    //                    Response.ClearHeaders();
+    //                    Response.ContentType = "application/octet-stream";
+    //                    Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+    //                    Response.BinaryWrite(bytes);
+    //                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+    //                }
+    //                else
+    //                {
+    //                    ExceptionMessage("Email file is empty!");
+    //                    return;
+    //                }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            ExceptionMessage("File Doesn't exist!");
+    //            return;
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw ex;
+    //    }
+    //}
+
     private void ViewAttachedFilesNew01(int ticketID, string fileType)
     {
         try
@@ -917,7 +1024,7 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
             byte[] bytes = null;
             DataTable dtTicketList = (DataTable)Session["dtTicketList"];
 
-            string fileName = Convert.ToString(dtTicketList.Select("PID='" + ticketID + "'"));
+            string fileName = string.Empty;// Convert.ToString(dtTicketList.Select("PID='" + ticketID + "'"));
 
             string extn = string.Empty;
             foreach (DataRow dr in dtTicketList.Select("PID='" + ticketID + "'"))
@@ -938,8 +1045,7 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                     bytes = (byte[])dr["DOC_NAME3"];
                 }
 
-
-                if (fileType == "CLOSINGATTACHMENT")
+                if (fileType == "CLOSINGATTACHMENT1")
                 {
                     fileName = Convert.ToString(dr["FILECLOSING_NAME1"]);
                     bytes = (byte[])dr["FILEDOC_NAME1"];
@@ -954,8 +1060,6 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                     fileName = Convert.ToString(dr["FILECLOSING_NAME3"]);
                     bytes = (byte[])dr["FILEDOC_NAME3"];
                 }
-
-
             }
             if (!string.IsNullOrEmpty(fileName))
             {
@@ -984,6 +1088,24 @@ public partial class HR_TICKET_TicketReport : System.Web.UI.Page
                     else
                     {
                         ExceptionMessage("Excel file is empty!");
+                        return;
+                    }
+                }
+                else if (extn == "doc" || extn == "docx" || extn == "DOC" || extn == "DOCX")
+                {
+                    if (bytes != null && bytes.Length > 0)
+                    {
+                        Response.Clear();
+                        Response.ClearHeaders();
+                        // Sets the type to a generic stream so the browser triggers a download
+                        Response.ContentType = "application/octet-stream";
+                        Response.AddHeader("Content-Disposition", "attachment; filename=" + fileName);
+                        Response.BinaryWrite(bytes);
+                        HttpContext.Current.ApplicationInstance.CompleteRequest();
+                    }
+                    else
+                    {
+                        ExceptionMessage("Word file is empty!");
                         return;
                     }
                 }

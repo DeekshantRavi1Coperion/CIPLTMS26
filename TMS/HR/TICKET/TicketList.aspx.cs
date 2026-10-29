@@ -253,7 +253,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
             _attachmentTwoFileNameU = value;
         }
     }
-     public string AttachmentThreeFileNameU
+    public string AttachmentThreeFileNameU
     {
         get
         {
@@ -597,16 +597,16 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                 }
 
 
-                if(!string.IsNullOrEmpty(lblFileTwoName.Text))
+                if (!string.IsNullOrEmpty(lblFileTwoName.Text))
                 {
                     pnlViewAttachments.Visible = true;
                     FileTwoNameExtn = Convert.ToString(lblFileTwoName.Text).Split('.').Last();
-                    if(FileTwoNameExtn == "jpg" || FileTwoNameExtn == "jpeg" || FileTwoNameExtn == "bmp" || FileTwoNameExtn == "png" || FileTwoNameExtn == "gif" || FileTwoNameExtn == "JPG" || FileTwoNameExtn == "JPEG" || FileTwoNameExtn == "BMP" || FileTwoNameExtn == "PNG" || FileTwoNameExtn == "GIF" )
+                    if (FileTwoNameExtn == "jpg" || FileTwoNameExtn == "jpeg" || FileTwoNameExtn == "bmp" || FileTwoNameExtn == "png" || FileTwoNameExtn == "gif" || FileTwoNameExtn == "JPG" || FileTwoNameExtn == "JPEG" || FileTwoNameExtn == "BMP" || FileTwoNameExtn == "PNG" || FileTwoNameExtn == "GIF")
                     {
                         btnViewAttachment2.ImageUrl = "~/Images/imgicon1.png";
                         btnViewAttachment2.ToolTip = lblFileTwoName.Text;
                     }
-                    else if(FileTwoNameExtn == "pdf" || FileTwoNameExtn == "PDF")
+                    else if (FileTwoNameExtn == "pdf" || FileTwoNameExtn == "PDF")
                     {
                         btnViewAttachment2.ImageUrl = "~/Images/pdficon1.png";
                         btnViewAttachment2.ToolTip = lblFileTwoName.Text;
@@ -1054,7 +1054,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                         FileOneNameExtn == "bmp" ||
                         FileOneNameExtn == "png" ||
                         FileOneNameExtn == "gif" ||
-                     
+
                         FileOneNameExtn == "JPG" ||
                         FileOneNameExtn == "JPEG" ||
                         FileOneNameExtn == "BMP" ||
@@ -1122,8 +1122,8 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                         btnFileTwoName.ImageUrl = "~/Images/xlsx.png";
                         btnFileTwoName.ToolTip = lblFileTwoName.Text;
                     }
-                   else if (FileTwoNameExtn == "eml" || FileTwoNameExtn == "msg" ||
-                   FileTwoNameExtn == "EML" || FileTwoNameExtn == "MSG")
+                    else if (FileTwoNameExtn == "eml" || FileTwoNameExtn == "msg" ||
+                    FileTwoNameExtn == "EML" || FileTwoNameExtn == "MSG")
                     {
                         btnFileTwoName.ImageUrl = "~/Images/NEWICONS/email02.png";
                         btnFileTwoName.ToolTip = lblFileTwoName.Text;
@@ -1371,7 +1371,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     if (Convert.ToInt32(lblAllocatedToID.Text) == CurrentUserIdU)
                     {
                         btnClose.Visible = true;
-                        
+
                     }
 
                     if
@@ -1497,27 +1497,27 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
     {
         try
         {
-        //    dsCreatedBy = objTourAndTravels.GetEmployeeForTravel(0);
-        //    if (dsCreatedBy.Tables.Count > 0 && dsCreatedBy.Tables[0].Rows.Count > 0)
-        //    {
-        //        ddlCreatedBy.DataSource = dsCreatedBy.Tables[0];
-        //        ddlCreatedBy.DataTextField = "EMPLOYEE_NAME";
-        //        ddlCreatedBy.DataValueField = "EMP_RECORD_ID";
-        //        ddlCreatedBy.DataBind();
-        //        ddlCreatedBy.Items.Insert(0, "All");
-        //        ddlCreatedBy.SelectedIndex = 0;
-        //    }
+            //    dsCreatedBy = objTourAndTravels.GetEmployeeForTravel(0);
+            //    if (dsCreatedBy.Tables.Count > 0 && dsCreatedBy.Tables[0].Rows.Count > 0)
+            //    {
+            //        ddlCreatedBy.DataSource = dsCreatedBy.Tables[0];
+            //        ddlCreatedBy.DataTextField = "EMPLOYEE_NAME";
+            //        ddlCreatedBy.DataValueField = "EMP_RECORD_ID";
+            //        ddlCreatedBy.DataBind();
+            //        ddlCreatedBy.Items.Insert(0, "All");
+            //        ddlCreatedBy.SelectedIndex = 0;
+            //    }
 
-       if (Convert.ToInt32(Session["DEPARTMENT_ID"]) == 4 ||
-           Convert.ToInt32(Session["EMP_RECORD_ID"]) == 117 ||
-           Convert.ToInt32(Session["EMP_RECORD_ID"]) == 11 ||
-           Convert.ToString(Session["USER_TYPE"]) == "A")
+            if (Convert.ToInt32(Session["DEPARTMENT_ID"]) == 4 ||
+                Convert.ToInt32(Session["EMP_RECORD_ID"]) == 117 ||
+                Convert.ToInt32(Session["EMP_RECORD_ID"]) == 11 ||
+                Convert.ToString(Session["USER_TYPE"]) == "A")
                 dsEmployee = objTicket.GetEmployeeForTicket(0);
-        else
-            dsEmployee = objTicket.GetEmployeeForTicket(Convert.ToInt32(Session["EMP_RECORD_ID"]));
+            else
+                dsEmployee = objTicket.GetEmployeeForTicket(Convert.ToInt32(Session["EMP_RECORD_ID"]));
 
-        if (dsEmployee.Tables.Count > 0 && dsEmployee.Tables[0].Rows.Count > 0)
-        {
+            if (dsEmployee.Tables.Count > 0 && dsEmployee.Tables[0].Rows.Count > 0)
+            {
                 ddlCreatedBy.DataSource = dsEmployee.Tables[0];
                 ddlCreatedBy.DataTextField = "EMPLOYEE_NAME";
                 ddlCreatedBy.DataValueField = "EMP_RECORD_ID";
@@ -1532,7 +1532,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                 ddlCreatedBy.DataBind();
                 ddlCreatedBy.Items.Insert(0, "Select");
                 ddlCreatedBy.SelectedIndex = 0;
-        }
+            }
         }
         catch (Exception ex)
         {
@@ -1652,7 +1652,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
             return;
         }
     }
-    
+
     private void BindAllocatePriority()
     {
 
@@ -1706,7 +1706,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
             byte[] bytes = null;
             DataTable dtTicketList = (DataTable)Session["dtTicketList"];
 
-            string fileName = Convert.ToString(dtTicketList.Select("PID='" + ticketID + "'"));
+            string fileName = string.Empty;// Convert.ToString(dtTicketList.Select("PID='" + ticketID + "'"));
 
             string extn = string.Empty;
             foreach (DataRow dr in dtTicketList.Select("PID='" + ticketID + "'"))
@@ -1879,8 +1879,8 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                                                  , insuranceNo
                                                  , creat
                                                  , AllocatedToIdS
-                                                 ,teamMemberID
-                                                 ,teamMembers);
+                                                 , teamMemberID
+                                                 , teamMembers);
 
             if (dsTicketList.Tables.Count > 0 && dsTicketList.Tables[0].Rows.Count > 0)
             {
@@ -1949,9 +1949,9 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
             }
             ////////////////////////////////////////////////
             Byte[] attachmentTwoBytes = null;
-            if(fileUploadAttachment2.HasFile)
+            if (fileUploadAttachment2.HasFile)
             {
-                if(!string.IsNullOrEmpty(fileUploadAttachment2.PostedFile.FileName))
+                if (!string.IsNullOrEmpty(fileUploadAttachment2.PostedFile.FileName))
                 {
                     AttachmentTwoFileNameU = fileUploadAttachment2.PostedFile.FileName;
                     attachmentTwoBytes = GetFileBytes(fileUploadAttachment2.PostedFile.FileName
@@ -2157,7 +2157,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
             ExceptionMessage(ex.ToString());
         }
         #endregion
-        
+
         return GSTbytes;
     }
 
@@ -2190,7 +2190,8 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                 messageText = "Allocated";
 
 
-                if(Convert.ToInt32(ViewState["ALLOCATED_TO_ID"]) > 0) {
+                if (Convert.ToInt32(ViewState["ALLOCATED_TO_ID"]) > 0)
+                {
                     allocatedToId = Convert.ToInt32(ViewState["ALLOCATED_TO_ID"]);
                 }
 
@@ -2290,7 +2291,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
             if (TicketIdU > 0)
             {
                 int value = objTicket.UpdateTicketStatus(TicketIdU, TicketStatusId, RemarksU,
-                                                         AllocateToIdU, allocatedToId,AllocatedToPriority
+                                                         AllocateToIdU, allocatedToId, AllocatedToPriority
                                                           , closingAttachmentOneFileName
                                                           , closingAttachmentOneBytes
                                                           , closingAttachmentTwoFileName
@@ -2302,7 +2303,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                 if (value > 0)
                 {
                     HRTicketSendMail objSendMail = new HRTicketSendMail(TicketIdU);
-                    
+
                     if (isAddStatus > 0 && isClose > 0)
                     {
                         sentMailValue = objSendMail.InitializeSendMail();

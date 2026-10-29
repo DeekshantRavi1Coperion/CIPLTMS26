@@ -568,7 +568,7 @@
                                 <ItemTemplate>
                                     <asp:Label ID="lblClosingFileOneName" runat="server" Visible="false" Text='<%# Eval("FILECLOSING_NAME1") %>' />
                                     <asp:ImageButton ID="btnClosingFileName" Height="20px" Width="20px"
-                                        CommandArgument="ViewCLOSINGATTACHMENT"
+                                        CommandArgument="ViewCLOSINGATTACHMENT1"
                                         runat="server" />
                                 </ItemTemplate>
                             </asp:TemplateField>
