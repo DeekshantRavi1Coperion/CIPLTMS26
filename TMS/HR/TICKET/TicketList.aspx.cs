@@ -1066,7 +1066,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     }
                     else if (FileOneNameExtn == "DOC" || FileOneNameExtn == "DOCX" || FileOneNameExtn == "doc" || FileOneNameExtn == "docx")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/wordlogo.png";
+                        btnFileOneName.ImageUrl = "~/Images/doc.png";
                         btnFileOneName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileOneNameExtn == "pdf" || FileOneNameExtn == "PDF")
@@ -1076,7 +1076,7 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     }
                     else if (FileOneNameExtn == "xls" || FileOneNameExtn == "xlsx" || FileOneNameExtn == "XLS" || FileOneNameExtn == "XLSX")
                     {
-                        btnFileOneName.ImageUrl = "~/Images/newexcelicon.png";
+                        btnFileOneName.ImageUrl = "~/Images/xlsx.png";
                         btnFileOneName.ToolTip = lblFileOneName.Text;
                     }
                     else if (FileOneNameExtn == "eml" || FileOneNameExtn == "msg" ||
@@ -1114,12 +1114,12 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     }
                     else if (FileTwoNameExtn == "DOC" || FileTwoNameExtn == "DOCX" || FileTwoNameExtn == "doc" || FileTwoNameExtn == "docx")
                     {
-                        btnFileTwoName.ImageUrl = "~/Images/wordlogo.png";
+                        btnFileTwoName.ImageUrl = "~/Images/doc.png";
                         btnFileTwoName.ToolTip = lblFileTwoName.Text;
                     }
                     else if (FileTwoNameExtn == "xls" || FileTwoNameExtn == "xlsx" || FileTwoNameExtn == "XLS" || FileTwoNameExtn == "XLSX")
                     {
-                        btnFileTwoName.ImageUrl = "~/Images/newexcelicon.png";
+                        btnFileTwoName.ImageUrl = "~/Images/xlsx.png";
                         btnFileTwoName.ToolTip = lblFileTwoName.Text;
                     }
                    else if (FileTwoNameExtn == "eml" || FileTwoNameExtn == "msg" ||
@@ -1156,12 +1156,12 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     }
                     else if (FileThreeNameExtn == "xls" || FileThreeNameExtn == "xlsx" || FileThreeNameExtn == "XLS" || FileThreeNameExtn == "XLSX")
                     {
-                        btnFileThreeName.ImageUrl = "~/Images/newexcelicon.png";
+                        btnFileThreeName.ImageUrl = "~/Images/xlsx.png";
                         btnFileThreeName.ToolTip = lblFileThreeName.Text;
                     }
                     else if (FileThreeNameExtn == "DOC" || FileThreeNameExtn == "DOCX" || FileThreeNameExtn == "doc" || FileThreeNameExtn == "docx")
                     {
-                        btnFileThreeName.ImageUrl = "~/Images/wordlogo.png";
+                        btnFileThreeName.ImageUrl = "~/Images/doc.png";
                         btnFileThreeName.ToolTip = lblFileThreeName.Text;
                     }
                     else if (FileThreeNameExtn == "eml" || FileThreeNameExtn == "msg" ||
@@ -1204,12 +1204,12 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     //}
                     else if (FileClosingOneNameExtn == "DOC" || FileClosingOneNameExtn == "DOCX" || FileClosingOneNameExtn == "doc" || FileClosingOneNameExtn == "docx")
                     {
-                        btnClosingFileOneName.ImageUrl = "~/Images/wordlogo.png";
+                        btnClosingFileOneName.ImageUrl = "~/Images/doc.png";
                         btnClosingFileOneName.ToolTip = lblClosingFileOneName.Text;
                     }
                     else if (FileClosingOneNameExtn == "xls" || FileClosingOneNameExtn == "xlsx" || FileClosingOneNameExtn == "XLS" || FileClosingOneNameExtn == "XLSX")
                     {
-                        btnClosingFileOneName.ImageUrl = "~/Images/newexcelicon.png";
+                        btnClosingFileOneName.ImageUrl = "~/Images/xlsx.png";
                         btnClosingFileOneName.ToolTip = lblClosingFileOneName.Text;
                     }
                     else if (FileClosingOneNameExtn == "eml" || FileClosingOneNameExtn == "msg" ||
@@ -1246,12 +1246,12 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     }
                     else if (FileClosingTwoNameExtn == "DOC" || FileClosingTwoNameExtn == "DOCX" || FileClosingTwoNameExtn == "doc" || FileClosingTwoNameExtn == "docx")
                     {
-                        btnClosingFileTwoName.ImageUrl = "~/Images/wordlogo.png";
+                        btnClosingFileTwoName.ImageUrl = "~/Images/doc.png";
                         btnClosingFileTwoName.ToolTip = lblClosingFileTwoName.Text;
                     }
                     else if (FileClosingTwoNameExtn == "xls" || FileClosingTwoNameExtn == "xlsx" || FileClosingTwoNameExtn == "XLS" || FileClosingTwoNameExtn == "XLSX")
                     {
-                        btnClosingFileTwoName.ImageUrl = "~/Images/newexcelicon.png";
+                        btnClosingFileTwoName.ImageUrl = "~/Images/xlsx.png";
                         btnClosingFileTwoName.ToolTip = lblClosingFileTwoName.Text;
                     }
                     else if (FileClosingTwoNameExtn == "eml" || FileClosingTwoNameExtn == "msg" ||
@@ -1288,12 +1288,12 @@ public partial class HR_TICKET_TicketList : System.Web.UI.Page
                     }
                     else if (FileClosingThreeNameExtn == "DOC" || FileClosingThreeNameExtn == "DOCX" || FileClosingThreeNameExtn == "doc" || FileClosingThreeNameExtn == "docx")
                     {
-                        btnClosingFileThreeName.ImageUrl = "~/Images/wordlogo.png";
+                        btnClosingFileThreeName.ImageUrl = "~/Images/doc.png";
                         btnClosingFileThreeName.ToolTip = lblClosingFileThreeName.Text;
                     }
                     else if (FileClosingThreeNameExtn == "xls" || FileClosingThreeNameExtn == "xlsx" || FileClosingThreeNameExtn == "XLS" || FileClosingThreeNameExtn == "XLSX")
                     {
-                        btnClosingFileThreeName.ImageUrl = "~/Images/newexcelicon.png";
+                        btnClosingFileThreeName.ImageUrl = "~/Images/xlsx.png";
                         btnClosingFileThreeName.ToolTip = lblClosingFileThreeName.Text;
                     }
                     else if (FileClosingThreeNameExtn == "eml" || FileClosingThreeNameExtn == "msg" ||

@@ -511,7 +511,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -531,7 +531,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:80%;">
+                            <td style="width: 80%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -640,7 +640,7 @@
                     OnRowDataBound="gvTicketList_RowDataBound">--%>
 
 
-                    <asp:GridView
+                <asp:GridView
                     CssClass="employee-grid"
                     ID="gvTicketList" runat="server" CellPadding="4" ForeColor="#333333"
                     AutoGenerateColumns="False" Width="100%" HorizontalAlign="Center"
@@ -944,11 +944,16 @@
                             CssClass="form-control" />
                     </asp:Panel>
 
+                </div>
 
-                    <asp:Panel ID="pnlAttachments" runat="server" Visible="false">
-                        <div class="full-width">
+                <div class="form-grid form-grid-2">
+
+
+                    <div class="full-width">
+                        <asp:Panel ID="pnlAttachments" runat="server" Visible="false">
+
                             <label>Attachment:</label>
-                            <table>
+                            <table style="width: 100%;">
                                 <tr>
                                     <td>
                                         <asp:FileUpload ID="fileUploadAttachment1" runat="server"
@@ -966,7 +971,7 @@
 
 
                             <label>Attachment2:</label>
-                            <table>
+                            <table style="width: 100%;">
                                 <tr>
                                     <td>
                                         <asp:FileUpload ID="fileUploadAttachment2" runat="server"
@@ -984,7 +989,7 @@
 
 
                             <label>Attachment3:</label>
-                            <table>
+                            <table style="width: 100%;">
                                 <tr>
                                     <td>
                                         <asp:FileUpload ID="fileUploadAttachment3" runat="server"
@@ -1000,12 +1005,15 @@
                                 </tr>
                             </table>
 
-                        </div>
 
 
-                    </asp:Panel>
-                    <asp:Panel ID="pnlViewAttachments" runat="server">
-                        <div class="full-width">
+
+                        </asp:Panel>
+                    </div>
+
+                    <div class="full-width">
+                        <asp:Panel ID="pnlViewAttachments" runat="server">
+
                             <label>Attachment:</label>
                             <table width="100%">
                                 <tr>
@@ -1051,9 +1059,9 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
+                            <%--</div>
 
-                        <div class="full-width">
+                        <div class="full-width">--%>
                             <label>Closing Attachment1:</label>
                             <table width="100%">
                                 <tr>
@@ -1068,9 +1076,9 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
+                            <%--</div>
 
-                        <div class="full-width">
+                        <div class="full-width">--%>
                             <label>Closing Attachment2:</label>
                             <table width="100%">
                                 <tr>
@@ -1085,9 +1093,9 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
+                            <%--</div>
 
-                        <div class="full-width">
+                        <div class="full-width">--%>
                             <label>Closing Attachment3:</label>
                             <table width="100%">
                                 <tr>
@@ -1102,9 +1110,9 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
-                    </asp:Panel>
 
+                        </asp:Panel>
+                    </div>
 
                     <div class="full-width">
                         <label>Description:</label>
@@ -1114,18 +1122,18 @@
                             CssClass="form-control" />
                     </div>
 
-                    <asp:Panel ID="pnlCreatedRemarks" runat="server">
-                        <div class="full-width">
+                    <div class="full-width">
+                        <asp:Panel ID="pnlCreatedRemarks" runat="server">
+
                             <label>Created Remarks:</label>
                             <asp:TextBox ID="txtCreatedRemarksToU"
                                 runat="server"
                                 TextMode="MultiLine"
                                 CssClass="form-control"
                                 Enabled="false" />
-                        </div>
 
-                    </asp:Panel>
-
+                        </asp:Panel>
+                    </div>
 
                     <asp:Panel ID="pnlAllocateTo" runat="server">
 
