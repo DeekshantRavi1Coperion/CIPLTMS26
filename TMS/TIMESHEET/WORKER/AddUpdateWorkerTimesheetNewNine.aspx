@@ -10,7 +10,7 @@
     <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
 
     <link href="../../Styles/form.css" rel="stylesheet" />
-    <link href="../../Styles/filter.css" rel="stylesheet" />
+    <%--<link href="../../Styles/filter.css" rel="stylesheet" />--%>
     <link href="../../Styles/grid.css" rel="stylesheet" />
     <link href="../../Styles/popup.css" rel="stylesheet" />
 
@@ -713,39 +713,40 @@
                 <asp:CheckBox ID="chkExcludeMissedPunch" runat="server" />
 
                 <label>Copy From</label>
-                <div class="full-width button-group">
-                    <asp:DropDownList runat="server" ID="ddlCopyFromDay"
-                        CssClass="form-control"
-                        OnSelectedIndexChanged="ddlCopyFromDay_SelectedIndexChanged"
-                        AutoPostBack="true">
-                        <asp:ListItem Text="Not Applicable" Value="0" />
-                        <asp:ListItem Text="Previous Day" Value="1" />
-                        <asp:ListItem Text="Specific Day" Value="2" />
-                    </asp:DropDownList>
 
-                    <table width="100%">
-                        <tr>
-                            <td>
-                                <asp:TextBox ID="txtPrevDate" runat="server" ReadOnly="true"
-                                    CssClass="form-control"
-                                    Visible="false"></asp:TextBox>
-                                <asp:HiddenField ID="hdPrevDate" runat="server" />
-                                <asp:HiddenField ID="hdCurrentPrevDate" runat="server" />
-                                <asp:CalendarExtender ID="calendarPrevDate" PopupButtonID="imgbtnPrevDate" runat="server"
-                                    TargetControlID="txtPrevDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedPrevDate">
-                                </asp:CalendarExtender>
-                            </td>
-                            <td align="right">
-                                <asp:ImageButton ID="imgbtnPrevDate" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                    ToolTip="Previous Date Calendar" Visible="false" Height="25PX" Width="25PX" />
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <asp:DropDownList runat="server" ID="ddlCopyFromDay"
+                                CssClass="form-control"
+                                OnSelectedIndexChanged="ddlCopyFromDay_SelectedIndexChanged"
+                                AutoPostBack="true">
+                                <asp:ListItem Text="Not Applicable" Value="0" />
+                                <asp:ListItem Text="Previous Day" Value="1" />
+                                <asp:ListItem Text="Specific Day" Value="2" />
+                            </asp:DropDownList>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtPrevDate" runat="server" ReadOnly="true"
+                                CssClass="form-control"
+                                Visible="false"></asp:TextBox>
+                            <asp:HiddenField ID="hdPrevDate" runat="server" />
+                            <asp:HiddenField ID="hdCurrentPrevDate" runat="server" />
+                            <asp:CalendarExtender ID="calendarPrevDate" PopupButtonID="imgbtnPrevDate" runat="server"
+                                TargetControlID="txtPrevDate" Format="dd-MMM-yyyy" OnClientDateSelectionChanged="clientChangedPrevDate">
+                            </asp:CalendarExtender>
+                        </td>
+                        <td align="right">
+                            <asp:ImageButton ID="imgbtnPrevDate" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                ToolTip="Previous Date Calendar" Visible="false" Height="25PX" Width="25PX" />
 
-                                <asp:ImageButton ID="imgbtnRefreshDate" runat="server" ImageUrl="~/Images/LOT/undo2.png"
-                                    ToolTip="Refresh Previous Date" Visible="false" Height="25PX" Width="25PX"
-                                    OnClick="imgbtnRefreshDate_Click" />
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                            <asp:ImageButton ID="imgbtnRefreshDate" runat="server" ImageUrl="~/Images/LOT/undo2.png"
+                                ToolTip="Refresh Previous Date" Visible="false" Height="25PX" Width="25PX"
+                                OnClick="imgbtnRefreshDate_Click" />
+                        </td>
+                    </tr>
+                </table>
+
 
                 <label>Project Supervisor</label>
                 <asp:DropDownList ID="ddlProjectSupervisor" runat="server"
@@ -772,7 +773,7 @@
             <asp:Button
                 ID="btnAddNewRow"
                 CssClass="button"
-                Width="50%"
+                Width="100%"
                 runat="server"
                 Text="Add New"
                 OnClick="btnAddNewRow_Click"
@@ -781,7 +782,7 @@
             <asp:Button
                 ID="btnSave"
                 CssClass="button"
-                Width="50%"
+                Width="100%"
                 runat="server"
                 Text="Save"
                 OnClick="btnSave_Click"
@@ -801,7 +802,7 @@
                 <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
             <div class="employee-grid-container">
-                <asp:GridView 
+                <asp:GridView
                     CssClass="employee-grid"
                     ID="gvWorkerTimesheetList" runat="server" AutoGenerateColumns="False"
                     CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%" HorizontalAlign="Center"
