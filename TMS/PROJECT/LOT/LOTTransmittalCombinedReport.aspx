@@ -333,18 +333,15 @@
 
         <div class="form-grid-container">
             <fieldset class="filter-card">
-                <legend>Combined Status-Wise LOT Report:
-                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+                <legend>Filters</legend>
 
-                <div class="form-grid form-grid-3">
-
+                <div class="form-grid">
 
                     <label>Start Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true" 
+                            <td style="width:90%;">
+                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
                                 <ajax:CalendarExtender ID="calendarStartDateSearch" PopupButtonID="imgbtnStartDateSearch"
@@ -361,8 +358,8 @@
                     <label>End Date</label>
                     <table width="100%">
                         <tr>
-                            <td>
-                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true" 
+                           <td style="width:90%;">
+                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
                                 <ajax:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
@@ -376,27 +373,27 @@
                     </table>
 
                     <label>TF No.</label>
-                    <asp:TextBox ID="txtTFNo" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtTFNo" runat="server"
+                        CssClass="form-control" />
 
                     <label>Customer Name</label>
-                    <asp:TextBox ID="txtCustomerName" runat="server" 
-                        CssClass="form-control"/>
+                    <asp:TextBox ID="txtCustomerName" runat="server"
+                        CssClass="form-control" />
 
                     <label>Status.</label>
-                    <asp:DropDownList ID="ddlStatus" runat="server" 
+                    <asp:DropDownList ID="ddlStatus" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
                     <label>Company</label>
-                    <asp:DropDownList ID="ddlCompany" runat="server" 
+                    <asp:DropDownList ID="ddlCompany" runat="server"
                         CssClass="form-control">
                     </asp:DropDownList>
 
 
                     <label>JOB No.</label>
                     <asp:TextBox ID="txtJOBNo" runat="server"
-                        CssClass="form-control"/>
+                        CssClass="form-control" />
 
 
                     <label>LOT For</label>
@@ -408,8 +405,8 @@
                                     OnSelectedIndexChanged="ddlLOTMainItems_SelectedIndexChanged" AutoPostBack="true" />
                             </td>
                             <td style="width: 50%;">
-                                <asp:DropDownList ID="ddlLOTMainSubitems" runat="server" 
-                                    CssClass="form-control"/>
+                                <asp:DropDownList ID="ddlLOTMainSubitems" runat="server"
+                                    CssClass="form-control" />
                             </td>
                         </tr>
                     </table>
@@ -419,8 +416,6 @@
 
                 </div>
             </fieldset>
-
-
 
             <div class="full-width button-group">
 
@@ -434,69 +429,75 @@
             </div>
         </div>
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
+        <fieldset class="employee-grid-fieldset">
+            <legend>Combined Status-Wise LOT Report:
+                    <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
+            </legend>
+
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvCombinedReport" runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Vertical" PageSize="10" Width="100%" HorizontalAlign="Center"
+                    OnRowDataBound="gvCombinedReport_RowDataBound">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:BoundField DataField="TF_NO" HeaderText="TF_NO" />
+                        <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
+                        <asp:BoundField DataField="LOT_DATE" HeaderText="LOT_DATE" />
+                        <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
+                        <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
+                        <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
+                        <asp:BoundField DataField="ITEM_NAME" HeaderText="ITEM_NAME" />
+                        <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY" />
+                        <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
+                        <asp:BoundField DataField="IMP_NOTES" HeaderText="IMP_NOTES" />
+                        <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
+                        <asp:BoundField DataField="PROD_ORDER_NO" HeaderText="PROD_ORDER_NO" />
+                        <asp:BoundField DataField="PROD_ORDER_DATE" HeaderText="PROD_ORDER_DATE" />
+                        <asp:BoundField DataField="EC_DATE" HeaderText="EC_DATE" />
+                        <asp:BoundField DataField="PROD_CODE" HeaderText="PROD_CODE" />
+                        <asp:BoundField DataField="PROD_DESC" HeaderText="PROD_DESC" />
+                        <asp:BoundField DataField="UOM" HeaderText="UOM" />
+                        <asp:BoundField DataField="SUBITEM_DESC" HeaderText="SUBITEM_DESC" />
+                        <asp:BoundField DataField="TAG_NO" HeaderText="TAG_NO" />
+                        <asp:BoundField DataField="MAIN_ITEM" HeaderText="MAIN_ITEM" />
+                        <asp:BoundField DataField="DRAWING_NO" HeaderText="DRAWING_NO" />
+                        <asp:BoundField DataField="REVISION_NO" HeaderText="REVISION_NO" />
+
+                        <asp:TemplateField HeaderText="CATEGORY">
+                            <ItemTemplate>
+                                <asp:Label ID="lblCategoryID" runat="server" Visible="false" Text='<%# Eval("CATEGORY") %>' />
+                                <asp:Label ID="lblCategory" runat="server" Visible="true" Text='<%# Eval("CATEGORY") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:BoundField DataField="IS_PART_OF_PROD_STATUS" HeaderText="IS_PART_OF_PROD_STATUS" />
+                        <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
+                        <asp:BoundField DataField="INTL_INSP_QTY" HeaderText="INTL_INSP_QTY" />
+                        <asp:BoundField DataField="ITEM_ACCEPTED_QTY" HeaderText="ITEM_ACCEPTED_QTY" />
+                        <asp:BoundField DataField="PE" HeaderText="PE" />
+                        <asp:BoundField DataField="PM" HeaderText="PM" />
+                        <asp:BoundField DataField="PRODUCTION_MANAGER" HeaderText="PRODUCTION_MANAGER" />
+                        <asp:BoundField DataField="QUALITY_MANAGER" HeaderText="QUALITY_MANAGER" />
+                        <asp:BoundField DataField="PLANNING_MANAGER" HeaderText="PLANNING_MANAGER" />
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
             </div>
 
-            <asp:GridView
-                CssClass="employee-grid"
-                ID="gvCombinedReport" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="10" Width="100%" HorizontalAlign="Center"
-                OnRowDataBound="gvCombinedReport_RowDataBound">
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <Columns>
-                    <asp:BoundField DataField="TF_NO" HeaderText="TF_NO" />
-                    <asp:BoundField DataField="UNIT" HeaderText="UNIT" />
-                    <asp:BoundField DataField="LOT_DATE" HeaderText="LOT_DATE" />
-                    <asp:BoundField DataField="CUSTOMER_NAME" HeaderText="CUSTOMER_NAME" />
-                    <asp:BoundField DataField="JOB_NO" HeaderText="JOB_NO" />
-                    <asp:BoundField DataField="PO_NO" HeaderText="PO_NO" />
-                    <asp:BoundField DataField="ITEM_NAME" HeaderText="ITEM_NAME" />
-                    <asp:BoundField DataField="CREATED_BY" HeaderText="CREATED_BY" />
-                    <asp:BoundField DataField="CREATED_ON" HeaderText="CREATED_ON" />
-                    <asp:BoundField DataField="IMP_NOTES" HeaderText="IMP_NOTES" />
-                    <asp:BoundField DataField="STATUS" HeaderText="STATUS" />
-                    <asp:BoundField DataField="PROD_ORDER_NO" HeaderText="PROD_ORDER_NO" />
-                    <asp:BoundField DataField="PROD_ORDER_DATE" HeaderText="PROD_ORDER_DATE" />
-                    <asp:BoundField DataField="EC_DATE" HeaderText="EC_DATE" />
-                    <asp:BoundField DataField="PROD_CODE" HeaderText="PROD_CODE" />
-                    <asp:BoundField DataField="PROD_DESC" HeaderText="PROD_DESC" />
-                    <asp:BoundField DataField="UOM" HeaderText="UOM" />
-                    <asp:BoundField DataField="SUBITEM_DESC" HeaderText="SUBITEM_DESC" />
-                    <asp:BoundField DataField="TAG_NO" HeaderText="TAG_NO" />
-                    <asp:BoundField DataField="MAIN_ITEM" HeaderText="MAIN_ITEM" />
-                    <asp:BoundField DataField="DRAWING_NO" HeaderText="DRAWING_NO" />
-                    <asp:BoundField DataField="REVISION_NO" HeaderText="REVISION_NO" />
-
-                    <asp:TemplateField HeaderText="CATEGORY">
-                        <ItemTemplate>
-                            <asp:Label ID="lblCategoryID" runat="server" Visible="false" Text='<%# Eval("CATEGORY") %>' />
-                            <asp:Label ID="lblCategory" runat="server" Visible="true" Text='<%# Eval("CATEGORY") %>' />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-
-                    <asp:BoundField DataField="IS_PART_OF_PROD_STATUS" HeaderText="IS_PART_OF_PROD_STATUS" />
-                    <asp:BoundField DataField="QUANTITY" HeaderText="QUANTITY" />
-                    <asp:BoundField DataField="INTL_INSP_QTY" HeaderText="INTL_INSP_QTY" />
-                    <asp:BoundField DataField="ITEM_ACCEPTED_QTY" HeaderText="ITEM_ACCEPTED_QTY" />
-                    <asp:BoundField DataField="PE" HeaderText="PE" />
-                    <asp:BoundField DataField="PM" HeaderText="PM" />
-                    <asp:BoundField DataField="PRODUCTION_MANAGER" HeaderText="PRODUCTION_MANAGER" />
-                    <asp:BoundField DataField="QUALITY_MANAGER" HeaderText="QUALITY_MANAGER" />
-                    <asp:BoundField DataField="PLANNING_MANAGER" HeaderText="PLANNING_MANAGER" />
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
-        </div>
-
+        </fieldset>
     </div>
 
 
@@ -507,7 +508,7 @@
     <ajax:ModalPopupExtender ID="mpeShowImageFile" runat="server" TargetControlID="btnShowImgFile"
         PopupControlID="pnlViewImgFilePopup" CancelControlID="imgBtnCancelImgFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewImgFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewImgFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -528,7 +529,7 @@
     <ajax:ModalPopupExtender ID="mpeShowPDFFile" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlViewPDFFilePopup" runat="server" 
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -537,11 +538,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewPDFFile"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- SHOW PDF FILE END--%>
 
@@ -552,7 +552,7 @@
         PopupControlID="pnlbtnViewInPDFPopup" CancelControlID="imgBtnViewInPDFPopup"
         BackgroundCssClass="modalBackground">
     </ajax:ModalPopupExtender>
-    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server" 
+    <asp:Panel ID="pnlbtnViewInPDFPopup" runat="server"
         CssClass="popup-pdf">
         <table width="100%">
             <tr>
@@ -562,11 +562,10 @@
                 </td>
             </tr>
         </table>
-        <iframe 
+        <iframe
             class="popup-iframe"
             id="iframeViewTravelStatementInPDF"
-            runat="server">
-        </iframe>
+            runat="server"></iframe>
     </asp:Panel>
     <%-- VIEW DETAIL IN PDF END--%>
 
