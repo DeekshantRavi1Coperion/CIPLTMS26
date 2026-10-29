@@ -252,182 +252,182 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
     <asp:ToolkitScriptManager ID="ScriptManager2" runat="server">
     </asp:ToolkitScriptManager>
-    <asp:UpdatePanel runat="server" ID="uppanel">
-        <ContentTemplate>
+    <%--<asp:UpdatePanel runat="server" ID="uppanel">
+        <ContentTemplate>--%>
 
-            <div class="page-layout">
+    <div class="page-layout">
 
-                <div class="filter-grid-container">
-                    <fieldset class="filter-card">
-                        <legend>Filters</legend>
+        <div class="filter-grid-container">
+            <fieldset class="filter-card">
+                <legend>Filters</legend>
 
-                        <div class="form-filter-grid">
-                            <label>Start Date</label>
-                            <table width="100%">
-                                <tr>
-                                    <td style="width: 90%;">
-                                        <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
-                                            CssClass="form-control"></asp:TextBox>
-                                        <asp:HiddenField ID="hdStartDateSearch" runat="server" />
-                                        <asp:CalendarExtender ID="calendarStartDateSearch" PopupButtonID="imgbtnStartDateSearch"
-                                            runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy"
-                                            OnClientDateSelectionChanged="clientChangedSearch">
-                                        </asp:CalendarExtender>
-                                    </td>
-                                    <td align="right">
-                                        <asp:ImageButton ID="imgbtnStartDateSearch" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                            ToolTip="Start Date Calendar" />
-                                    </td>
-                                </tr>
-                            </table>
+                <div class="form-filter-grid">
+                    <label>Start Date</label>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
+                                    CssClass="form-control"></asp:TextBox>
+                                <asp:HiddenField ID="hdStartDateSearch" runat="server" />
+                                <asp:CalendarExtender ID="calendarStartDateSearch" PopupButtonID="imgbtnStartDateSearch"
+                                    runat="server" TargetControlID="txtStartDateSearch" Format="dd-MMM-yyyy"
+                                    OnClientDateSelectionChanged="clientChangedSearch">
+                                </asp:CalendarExtender>
+                            </td>
+                            <td align="right">
+                                <asp:ImageButton ID="imgbtnStartDateSearch" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="Start Date Calendar" />
+                            </td>
+                        </tr>
+                    </table>
 
-                            <label>End Date</label>
-                            <table width="100%">
-                                <tr>
-                                    <td style="width: 90%;">
-                                        <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
-                                            CssClass="form-control"></asp:TextBox>
-                                        <asp:HiddenField ID="hdEndDateSearch" runat="server" />
-                                        <asp:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
-                                            runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy"
-                                            OnClientDateSelectionChanged="clientChangedSearch">
-                                        </asp:CalendarExtender>
-                                    </td>
-                                    <td align="right">
-                                        <asp:ImageButton ID="imgbtnEndDateSearch" runat="server" ImageUrl="~/Images/Calendar2.png"
-                                            ToolTip="End Date Calendar" Width="20px" />
-                                    </td>
-                                </tr>
-                            </table>
+                    <label>End Date</label>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 90%;">
+                                <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
+                                    CssClass="form-control"></asp:TextBox>
+                                <asp:HiddenField ID="hdEndDateSearch" runat="server" />
+                                <asp:CalendarExtender ID="calendarEndDateSearch" PopupButtonID="imgbtnEndDateSearch"
+                                    runat="server" TargetControlID="txtEndDateSearch" Format="dd-MMM-yyyy"
+                                    OnClientDateSelectionChanged="clientChangedSearch">
+                                </asp:CalendarExtender>
+                            </td>
+                            <td align="right">
+                                <asp:ImageButton ID="imgbtnEndDateSearch" runat="server" ImageUrl="~/Images/Calendar2.png"
+                                    ToolTip="End Date Calendar" Width="20px" />
+                            </td>
+                        </tr>
+                    </table>
 
-                            <label>JOB No.</label>
-                            <asp:TextBox ID="txtJOBNo" runat="server" CssClass="form-control"></asp:TextBox>
+                    <label>JOB No.</label>
+                    <asp:TextBox ID="txtJOBNo" runat="server" CssClass="form-control"></asp:TextBox>
 
-                            <label>Unit</label>
-                            <asp:DropDownList ID="ddlUnit" runat="server"
-                                CssClass="form-control"
-                                OnSelectedIndexChanged="ddlUnit_SelectedIndexChanged"
-                                AutoPostBack="true">
-                            </asp:DropDownList>
+                    <label>Unit</label>
+                    <asp:DropDownList ID="ddlUnit" runat="server"
+                        CssClass="form-control"
+                        OnSelectedIndexChanged="ddlUnit_SelectedIndexChanged"
+                        AutoPostBack="true">
+                    </asp:DropDownList>
 
-                            <label>Project Supervisor</label>
-                            <asp:DropDownList ID="ddlProjectSupervisor" runat="server"
-                                CssClass="form-control"
-                                OnSelectedIndexChanged="ddlProjectSupervisor_SelectedIndexChanged"
-                                AutoPostBack="true">
-                            </asp:DropDownList>
+                    <label>Project Supervisor</label>
+                    <asp:DropDownList ID="ddlProjectSupervisor" runat="server"
+                        CssClass="form-control"
+                        OnSelectedIndexChanged="ddlProjectSupervisor_SelectedIndexChanged"
+                        AutoPostBack="true">
+                    </asp:DropDownList>
 
-                            <label>Company</label>
-                            <asp:DropDownList ID="ddlCompany" runat="server"
-                                CssClass="form-control"
-                                OnSelectedIndexChanged="ddlCompany_SelectedIndexChanged"
-                                AutoPostBack="true">
-                            </asp:DropDownList>
+                    <label>Company</label>
+                    <asp:DropDownList ID="ddlCompany" runat="server"
+                        CssClass="form-control"
+                        OnSelectedIndexChanged="ddlCompany_SelectedIndexChanged"
+                        AutoPostBack="true">
+                    </asp:DropDownList>
 
 
-                            <label>Project Worker</label>
-                            <asp:DropDownList ID="ddlProjectWorker" runat="server"
-                                CssClass="form-control">
-                            </asp:DropDownList>
+                    <label>Project Worker</label>
+                    <asp:DropDownList ID="ddlProjectWorker" runat="server"
+                        CssClass="form-control">
+                    </asp:DropDownList>
 
-                        </div>
-                    </fieldset>
-                    <div class="full-width button-group">
-                        <asp:Button ID="btnSearch"
-                            OnClick="btnSearch_Click"
-                            runat="server"
-                            Text="Search"
-                            CssClass="button" />
-                    </div>
                 </div>
+            </fieldset>
+            <div class="full-width button-group">
+                <asp:Button ID="btnSearch"
+                    OnClick="btnSearch_Click"
+                    runat="server"
+                    Text="Search"
+                    CssClass="button" />
+            </div>
+        </div>
 
-                <fieldset class="employee-grid-fieldset">
-                    <legend>Worker Timesheet List:
+        <fieldset class="employee-grid-fieldset">
+            <legend>Worker Timesheet List:
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
 
-                    <div class="employee-grid-container">
-                        <div align="center">
-                            <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                                <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                            </asp:Panel>
-                        </div>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-                        <asp:GridView
-                            CssClass="employee-grid"
-                            ID="gvWorkerTimesheetList" runat="server" AutoGenerateColumns="False"
-                            CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%"
-                            HorizontalAlign="Center"
-                            OnRowDataBound="gvWorkerTimesheetList_RowDataBound" OnRowCommand="gvWorkerTimesheetList_RowCommand">
-                            <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                            <Columns>
-                                <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                                    <ItemTemplate>
-                                        <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" ToolTip="Edit" runat="server"
-                                            ImageUrl="~/Images/royal_search.png" />
-                                        <%--<asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />--%>
-                                        <asp:Label ID="lblEmployeeName" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_NAME") %>' />
-                                        <asp:Label ID="lblEmployeeCode" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_CODE") %>' />
-                                        <asp:Label ID="lblEntryDate" runat="server" Visible="false" Text='<%# Eval("ENTRY_DATE") %>' />
-                                        <%--<asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NUMBER") %>' />--%>
-                                        <asp:Label ID="lblInTime" runat="server" Visible="false" Text='<%# Eval("IN_TIME") %>' />
-                                        <asp:Label ID="lblOutTime" runat="server" Visible="false" Text='<%# Eval("OUT_TIME") %>' />
-                                        <asp:Label ID="lblWorkingHours1" runat="server" Visible="false" Text='<%# Eval("WORKING_HOURS") %>' />
-                                        <asp:Label ID="lblAllocationHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATION_HOURS") %>' />
-                                        <asp:Label ID="lblAllocatedHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_HOURS") %>' />
-                                        <asp:Label ID="lblAllocatedMins" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_MINS") %>' />
-                                        <asp:Label ID="lblOTHours" runat="server" Visible="false" Text='<%# Eval("OT_HOURS") %>' />
-                                        <%--<asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("REMARKS") %>' />--%>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
-                                <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
-                                <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
-                                <%--<asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />--%>
-                                <asp:BoundField DataField="IN_TIME" HeaderText="IN_TIME" />
-                                <asp:BoundField DataField="OUT_TIME" HeaderText="OUT_TIME" />
-                                <asp:BoundField DataField="WORKING_HOURS" HeaderText="WORKING_HOURS" />
-                                <%--<asp:BoundField DataField="ALLOCATION_HOURS" HeaderText="ALLOCATION_HOURS" />--%>
-                                <asp:BoundField DataField="ALLOCATED_HOURS" HeaderText="ALLOCATED_HOURS" />
-                                <asp:BoundField DataField="ALLOCATED_MINS" HeaderText="ALLOCATED_MINS" />
-                                <asp:BoundField DataField="OT_HOURS" HeaderText="OT_HOURS" />
-                                <%--<asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />--%>
-                            </Columns>
-                            <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                            <EditRowStyle BackColor="#7C6F57" />
-                            <AlternatingRowStyle BackColor="White" />
-                        </asp:GridView>
-
-                    </div>
-                </fieldset>
+                <asp:GridView
+                    CssClass="employee-grid"
+                    ID="gvWorkerTimesheetList" runat="server" AutoGenerateColumns="False"
+                    CellPadding="4" ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowDataBound="gvWorkerTimesheetList_RowDataBound" OnRowCommand="gvWorkerTimesheetList_RowCommand">
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="EDIT" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgProperties" CommandArgument="PROPERTIES" ToolTip="Edit" runat="server"
+                                    ImageUrl="~/Images/royal_search.png" />
+                                <%--<asp:Label ID="lblRecordID" runat="server" Visible="false" Text='<%# Eval("RECORD_ID") %>' />--%>
+                                <asp:Label ID="lblEmployeeName" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_NAME") %>' />
+                                <asp:Label ID="lblEmployeeCode" runat="server" Visible="false" Text='<%# Eval("EMPLOYEE_CODE") %>' />
+                                <asp:Label ID="lblEntryDate" runat="server" Visible="false" Text='<%# Eval("ENTRY_DATE") %>' />
+                                <%--<asp:Label ID="lblJOBNo" runat="server" Visible="false" Text='<%# Eval("JOB_NUMBER") %>' />--%>
+                                <asp:Label ID="lblInTime" runat="server" Visible="false" Text='<%# Eval("IN_TIME") %>' />
+                                <asp:Label ID="lblOutTime" runat="server" Visible="false" Text='<%# Eval("OUT_TIME") %>' />
+                                <asp:Label ID="lblWorkingHours1" runat="server" Visible="false" Text='<%# Eval("WORKING_HOURS") %>' />
+                                <asp:Label ID="lblAllocationHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATION_HOURS") %>' />
+                                <asp:Label ID="lblAllocatedHours" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_HOURS") %>' />
+                                <asp:Label ID="lblAllocatedMins" runat="server" Visible="false" Text='<%# Eval("ALLOCATED_MINS") %>' />
+                                <asp:Label ID="lblOTHours" runat="server" Visible="false" Text='<%# Eval("OT_HOURS") %>' />
+                                <%--<asp:Label ID="lblRemarks" runat="server" Visible="false" Text='<%# Eval("REMARKS") %>' />--%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="EMPLOYEE_NAME" HeaderText="EMPLOYEE_NAME" />
+                        <asp:BoundField DataField="EMPLOYEE_CODE" HeaderText="EMPLOYEE_CODE" />
+                        <asp:BoundField DataField="ENTRY_DATE" HeaderText="ENTRY_DATE" />
+                        <%--<asp:BoundField DataField="JOB_NUMBER" HeaderText="JOB_NUMBER" />--%>
+                        <asp:BoundField DataField="IN_TIME" HeaderText="IN_TIME" />
+                        <asp:BoundField DataField="OUT_TIME" HeaderText="OUT_TIME" />
+                        <asp:BoundField DataField="WORKING_HOURS" HeaderText="WORKING_HOURS" />
+                        <%--<asp:BoundField DataField="ALLOCATION_HOURS" HeaderText="ALLOCATION_HOURS" />--%>
+                        <asp:BoundField DataField="ALLOCATED_HOURS" HeaderText="ALLOCATED_HOURS" />
+                        <asp:BoundField DataField="ALLOCATED_MINS" HeaderText="ALLOCATED_MINS" />
+                        <asp:BoundField DataField="OT_HOURS" HeaderText="OT_HOURS" />
+                        <%--<asp:BoundField DataField="REMARKS" HeaderText="REMARKS" />--%>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
             </div>
+        </fieldset>
+
+    </div>
 
 
 
 
 
-            <asp:Button ID="btnShowPopup" runat="server" Style="display: none" />
-            <asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
-                PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
-            </asp:ModalPopupExtender>
-            <asp:Panel ID="pnlpopup" runat="server"
-                CssClass="popup-pdf">
-                <table width="100%">
-                    <tr>
-                        <td align="right">
-                            <asp:ImageButton ID="imgBtnCancel" ImageUrl="~/Images/cancelled_img.png" runat="server" />
-                        </td>
-                    </tr>
-                </table>
-                <iframe
-                    class="popup-iframe"
-                    id="iframeEditTimesheetList"
-                    runat="server"></iframe>
-            </asp:Panel>
-        </ContentTemplate>
-    </asp:UpdatePanel>
+    <asp:Button ID="btnShowPopup" runat="server" Style="display: none" />
+    <asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup"
+        PopupControlID="pnlpopup" CancelControlID="imgBtnCancel" BackgroundCssClass="modalBackground">
+    </asp:ModalPopupExtender>
+    <asp:Panel ID="pnlpopup" runat="server"
+        CssClass="popup-pdf">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancel" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <iframe
+            class="popup-iframe"
+            id="iframeEditTimesheetList"
+            runat="server"></iframe>
+    </asp:Panel>
+    <%-- </ContentTemplate>
+    </asp:UpdatePanel>--%>
 </asp:Content>
