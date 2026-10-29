@@ -2,10 +2,14 @@
     CodeFile="AssignMenu.aspx.cs" Inherits="ADMIN_MENU_AssignMenu" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+
     <link href="../Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="../Styles/HomeNew.css" rel="stylesheet" type="text/css" />
     <link rel="icon" href="../Images/Icons/Icon04.png" />
-<link href="../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
+
+    <link href="../../Styles/menu-assign.css" rel="stylesheet" />
+
     <script language="javascript" type="text/javascript">
         function postBackByObject() {
             var o = window.event.srcElement;
@@ -36,95 +40,146 @@
 
             return true;
         }
-        
+
     </script>
 
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder2" runat="Server">
-    <asp:ScriptManager ID="ScriptManager1" runat="server">
-    </asp:ScriptManager>
+
+
+<asp:Content ID="Content2"
+    ContentPlaceHolderID="ContentPlaceHolder2"
+    runat="Server">
+
+    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
     <asp:UpdatePanel ID="uppanel" runat="server">
         <ContentTemplate>
-            <div align="center" style="margin-top: 20px;">
-                <fieldset style="width: 40%; margin-top: 100px;">
-                    <legend style="text-align: center;">Assign Menu</legend>
-                    <table width="80%">
-                        <tr>
-                            <td colspan="1">
-                                <p>
-                                    Employee Name:</p>
-                                <p>
-                                    <asp:DropDownList ID="ddlEmployeeName" runat="server" Width="100%" Height="26px"
-                                        onblur="return ValidateEmployeeName();" AutoPostBack="true" OnSelectedIndexChanged="ddlEmployeeName_SelectedIndexChanged">
-                                    </asp:DropDownList>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                &nbsp;
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width: 45%;">
-                                <p>
-                                    Menu Name:
-                                </p>
-                                <div style='overflow: auto; width: 100%; height: 250px; border: 1px solid lightgray;'>
-                                    <p>
-                                        <asp:TreeView ID="tvMenu" runat="server" ImageSet="Arrows" Width="100%" Height="100%"
-                                            LineImagesFolder="~/TreeLineImages" ShowCheckBoxes="All">
-                                            <%--OnTreeNodeCheckChanged="tvMenu_TreeNodeCheckChanged"
-                                            onclick="javascript:postBackByObject()"--%>
-                                            <ParentNodeStyle Font-Bold="False" />
-                                            <HoverNodeStyle Font-Underline="True" ForeColor="#5555DD" />
-                                            <SelectedNodeStyle Font-Underline="True" HorizontalPadding="0px" VerticalPadding="0px"
-                                                ForeColor="#5555DD" />
-                                            <NodeStyle Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" HorizontalPadding="5px"
-                                                NodeSpacing="0px" VerticalPadding="0px" />
-                                        </asp:TreeView>
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                &nbsp;
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="1">
-                                <table width="100%">
-                                    <tr>
-                                        <td style="width: 45%;">
-                                            <asp:Button ID="btnAssign" CssClass="button" runat="server" Width="100%" Text="Assign"
-                                                OnClick="btnAssign_Click" OnClientClick="return ValidateAll();" />
-                                        </td>
-                                        <td>
-                                            &nbsp;
-                                        </td>
-                                        <td style="width: 45%;">
-                                            <asp:Button ID="btnUnAssign" CssClass="button" runat="server" Width="100%" Text="Unassign"
-                                                OnClick="btnUnAssign_Click" OnClientClick="return ValidateAll();" />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="1">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="1" align="center">
-                                <asp:Panel ID="pnlMsg" Visible="false" runat="server" Height="50px">
-                                    <asp:Label ID="lblMsg" runat="server" Font-Bold="True" />
-                                </asp:Panel>
-                            </td>
-                        </tr>
-                    </table>
-                </fieldset>
+
+            <div class="assignment-container">
+
+                <div class="assignment-card">
+
+                    <!-- HEADER -->
+                    <div class="assignment-header">
+                        <h2>Menu Assignment</h2>
+                        <p>Manage employee menu permissions</p>
+                    </div>
+
+                    <!-- EMPLOYEE -->
+                    <div class="assignment-employee">
+
+                        <label>Employee Name</label>
+
+                        <asp:DropDownList
+                            ID="ddlEmployeeName"
+                            runat="server"
+                            CssClass="form-control"
+                            AutoPostBack="true"
+                            onblur="return ValidateEmployeeName();"
+                            OnSelectedIndexChanged="ddlEmployeeName_SelectedIndexChanged">
+                        </asp:DropDownList>
+
+                    </div>
+
+                    <!-- MAIN CONTENT -->
+                    <div class="assignment-layout">
+
+                        <!-- LEFT TREE -->
+                        <div class="assignment-tree-card">
+
+                            <div class="assignment-section-title">
+                                Available Menus
+                            </div>
+
+                            <div class="assignment-tree-scroll">
+
+                                <asp:TreeView
+                                    ID="tvMenu"
+                                    runat="server"
+                                    ImageSet="Arrows"
+                                    Width="100%"
+                                    LineImagesFolder="~/TreeLineImages"
+                                    ShowCheckBoxes="All">
+
+                                    <ParentNodeStyle Font-Bold="False" />
+
+                                    <HoverNodeStyle
+                                        Font-Underline="True"
+                                        ForeColor="#0078d4" />
+
+                                    <SelectedNodeStyle
+                                        Font-Underline="True"
+                                        ForeColor="#0078d4" />
+
+                                    <NodeStyle
+                                        Font-Names="Segoe UI"
+                                        Font-Size="10pt"
+                                        ForeColor="#333333"
+                                        HorizontalPadding="6px"
+                                        NodeSpacing="5px"
+                                        VerticalPadding="4px" />
+
+                                </asp:TreeView>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT ACTIONS -->
+                        <div class="assignment-action-card">
+
+                            <div class="assignment-section-title">
+                                Manage Access
+                            </div>
+
+                            <p>
+                                Select the required menu permissions
+                                from the tree and choose an action.
+                            </p>
+
+                            <div class="assignment-buttons">
+
+                                <asp:Button
+                                    ID="btnAssign"
+                                    runat="server"
+                                    Text="Assign Selected"
+                                    CssClass="button assignment-btn-assign"
+                                    OnClick="btnAssign_Click"
+                                    OnClientClick="return ValidateAll();" />
+
+                                <asp:Button
+                                    ID="btnUnAssign"
+                                    runat="server"
+                                    Text="Unassign Selected"
+                                    CssClass="button assignment-btn-unassign"
+                                    OnClick="btnUnAssign_Click"
+                                    OnClientClick="return ValidateAll();" />
+
+                            </div>
+
+                            <asp:Panel
+                                ID="pnlMsg"
+                                runat="server"
+                                Visible="false"
+                                CssClass="assignment-message">
+
+                                <asp:Label
+                                    ID="lblMsg"
+                                    runat="server"
+                                    Font-Bold="True" />
+
+                            </asp:Panel>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </ContentTemplate>
     </asp:UpdatePanel>
+
 </asp:Content>
+

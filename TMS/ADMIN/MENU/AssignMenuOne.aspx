@@ -6,8 +6,10 @@
     <%--<link href="../../Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
 
-    <link href="../../Styles/form.css" rel="stylesheet" />
-    <link href="../../Styles/filter.css" rel="stylesheet" />
+    <%--<link href="../../Styles/form.css" rel="stylesheet" />
+    <link href="../../Styles/filter.css" rel="stylesheet" />--%>
+
+    <link href="../../Styles/menu-assign.css" rel="stylesheet" />
 
     <link rel="icon" href="../../Images/Icons/Icon04.png" />
     <link href="../../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
@@ -52,59 +54,119 @@
         <ContentTemplate>--%>
 
 
+
     <div class="form-entry-container">
+
         <fieldset class="form-card">
+
             <legend>Menu Assignment</legend>
 
+            <!-- Employee Selection -->
             <div class="form-grid form-grid-2">
+
                 <label>Employee Name</label>
-                <asp:DropDownList ID="ddlEmployeeName"
+
+                <asp:DropDownList
+                    ID="ddlEmployeeName"
                     runat="server"
                     CssClass="form-control"
-                    AutoPostBack="true" OnSelectedIndexChanged="ddlEmployeeName_SelectedIndexChanged" />
+                    AutoPostBack="true"
+                    OnSelectedIndexChanged="ddlEmployeeName_SelectedIndexChanged" />
 
             </div>
 
+            <!-- Menu Tree -->
             <div class="form-grid form-grid-2">
 
                 <label>Menu Name</label>
-                <asp:TreeView ID="tvMenu" runat="server" ImageSet="Arrows" Width="100%" Height="100px"
-                    LineImagesFolder="~/TreeLineImages" ShowCheckBoxes="All">
-                    <ParentNodeStyle Font-Bold="False" />
-                    <HoverNodeStyle Font-Underline="True" ForeColor="#5555DD" />
-                    <SelectedNodeStyle Font-Underline="True" HorizontalPadding="0px" VerticalPadding="0px"
-                        ForeColor="#5555DD" />
-                    <NodeStyle Font-Names="Verdana" Font-Size="8pt" ForeColor="Black" HorizontalPadding="5px"
-                        NodeSpacing="0px" VerticalPadding="0px" />
-                </asp:TreeView>
+
+                <div class="menu-tree-container">
+
+                    <asp:TreeView
+                        ID="tvMenu"
+                        runat="server"
+                        ImageSet="Arrows"
+                        Width="100%"
+                        LineImagesFolder="~/TreeLineImages"
+                        ShowCheckBoxes="All">
+
+                        <parentnodestyle font-bold="False" />
+
+                        <hovernodestyle
+                            font-underline="True"
+                            forecolor="#0078d4" />
+
+                        <selectednodestyle
+                            font-underline="True"
+                            horizontalpadding="0px"
+                            verticalpadding="0px"
+                            forecolor="#0078d4" />
+
+                        <nodestyle
+                            font-names="Segoe UI"
+                            font-size="10pt"
+                            forecolor="#333333"
+                            horizontalpadding="6px"
+                            nodespacing="4px"
+                            verticalpadding="4px" />
+
+                    </asp:TreeView>
+
+                </div>
 
             </div>
 
+            <!-- Select All -->
             <div class="form-grid form-grid-2">
-                <label>Select/Deselect All</label>
-                <asp:CheckBox ID="chkSelectAll" runat="server"
-                    AutoPostBack="true" OnCheckedChanged="chkSelectAll_CheckedChanged" />
-            </div>
-    </fieldset>
 
+                <label>Select/Deselect All</label>
+
+                <asp:CheckBox
+                    ID="chkSelectAll"
+                    runat="server"
+                    AutoPostBack="true"
+                    OnCheckedChanged="chkSelectAll_CheckedChanged" />
+
+            </div>
+
+        </fieldset>
+
+        <!-- Save Button -->
         <div class="full-width button-group">
-            <asp:Button ID="btnSave"
+
+            <asp:Button
+                ID="btnSave"
                 runat="server"
                 Text="Save"
                 CssClass="button"
                 OnClientClick="return ValidateAll();"
-                OnClick="btnSave_Click" Width="100%" />
+                OnClick="btnSave_Click"
+                Width="100%" />
+
         </div>
 
-    <div class="full-width">
+        <!-- Message -->
+        <div class="full-width">
 
-        <asp:Panel ID="pnlMsg" Visible="false" runat="server" Height="50px">
-            <asp:Label ID="lblMsg" runat="server" Font-Bold="True" />
-        </asp:Panel>
+            <asp:Panel
+                ID="pnlMsg"
+                Visible="false"
+                runat="server"
+                Height="50px">
+
+                <asp:Label
+                    ID="lblMsg"
+                    runat="server"
+                    Font-Bold="True" />
+
+            </asp:Panel>
+
+        </div>
 
     </div>
 
-    </div>
+
+
     <%--</ContentTemplate>
     </asp:UpdatePanel>--%>
 </asp:Content>

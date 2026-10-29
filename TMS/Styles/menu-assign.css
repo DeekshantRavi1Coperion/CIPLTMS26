@@ -1,0 +1,161 @@
+﻿
+/* ==========================================
+   MENU ASSIGNMENT PAGE
+   ========================================== */
+
+.form-entry-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+    /* Main Card */
+
+    .form-entry-container .form-card {
+        width: 100%;
+        max-height: none;
+        padding: 20px 25px;
+        border: 1px solid #dcdcdc;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        box-sizing: border-box;
+    }
+
+        /* Legend */
+
+        .form-entry-container .form-card legend {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 0 10px;
+        }
+
+    /* ==========================================
+   FORM GRID
+   ========================================== */
+
+    .form-entry-container .form-grid-2 {
+        display: grid;
+        grid-template-columns: 160px minmax(0, 1fr);
+        gap: 12px 15px;
+        align-items: start;
+        margin-bottom: 18px;
+    }
+
+        /* Labels */
+
+        .form-entry-container .form-grid-2 label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            padding-top: 8px;
+        }
+
+    /* Dropdown */
+
+    .form-entry-container .form-control {
+        width: 100%;
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 13px;
+        border: 1px solid #cbd5e1;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    /* ==========================================
+   TREEVIEW SCROLL CONTAINER
+   ========================================== */
+
+    .form-entry-container .menu-tree-container {
+        width: 100%;
+        height: 350px;
+        padding: 12px 15px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid #d8d8d8;
+        border-radius: 6px;
+        background: #fafbfc;
+        box-sizing: border-box;
+        scrollbar-gutter: stable;
+    }
+
+        /* TreeView */
+
+        .form-entry-container .menu-tree-container table {
+            border-collapse: separate;
+        }
+
+        .form-entry-container .menu-tree-container td {
+            vertical-align: middle;
+        }
+
+        .form-entry-container .menu-tree-container input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            accent-color: #0078d4;
+            vertical-align: middle;
+        }
+
+    /* ==========================================
+   SELECT ALL
+   ========================================== */
+
+    .form-entry-container input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: #0078d4;
+    }
+
+    /* ==========================================
+   SAVE BUTTON
+   ========================================== */
+
+    .form-entry-container .button-group {
+        display: flex;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+        .form-entry-container .button-group .button {
+            width: 100%;
+            height: 36px;
+            background: #0078d4;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .form-entry-container .button-group .button:hover {
+                background: #005ea6;
+            }
+
+/* ==========================================
+   RESPONSIVE / ZOOM SUPPORT
+   ========================================== */
+
+@media (max-width: 768px) {
+
+    .form-entry-container {
+        padding: 10px;
+    }
+
+        .form-entry-container .form-card {
+            padding: 15px;
+        }
+
+        .form-entry-container .form-grid-2 {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .form-entry-container .menu-tree-container {
+            height: 280px;
+        }
+}
