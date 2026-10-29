@@ -180,7 +180,7 @@
                             <ItemTemplate>
                                 <asp:Button ID="btnGetJOBNo" CommandArgument="GET_JOB_NO"
                                     runat="server" Text="Get JOB No."
-                                    CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                    CssClass="button"/>
                             </ItemTemplate>
                         </asp:TemplateField>
 
@@ -197,7 +197,7 @@
                             <ItemTemplate>
                                 <asp:Button ID="btnGetDrawingNo" CommandArgument="GET_DRAWING_NO"
                                     runat="server" Text="Get Drawing No."
-                                    CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                    CssClass="button" />
                             </ItemTemplate>
                         </asp:TemplateField>
 
@@ -383,7 +383,7 @@
                             <ItemTemplate>
                                 <asp:Button ID="btnSaveDesign" CommandArgument="SAVE_DESIGN"
                                     runat="server" Text="Send To Design"
-                                    CssClass="cancelbutton" Width="95%" BorderColor="Yellow" BorderStyle="Solid" BorderWidth="2px" />
+                                    CssClass="button"/>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
