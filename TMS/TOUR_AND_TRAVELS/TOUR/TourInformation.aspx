@@ -666,17 +666,28 @@
 
                 <asp:Panel ID="pnlViewPassportcopy" runat="server" Visible="false" Width="100%">
                     <label>Passport copy</label>
-                    <div class="full-width">
-                        <asp:TextBox ID="txtPassportcopy" CssClass="form-control"
-                            runat="server" Width="100%" Enabled="false" />
-
-                        <asp:ImageButton ID="imgbtnPassportcopy" ImageUrl="~/Images/NEWICONS/PASSPORT_01.png"
-                            runat="server" OnClick="imgbtnPassportcopy_Click" Height="20px" Width="20" />
-                    </div>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 80%;">
+                                <asp:TextBox ID="txtPassportcopy" CssClass="form-control"
+                                    runat="server" Enabled="false" />
+                            </td>
+                            <td>
+                                <asp:ImageButton ID="imgbtnPassportcopy" ImageUrl="~/Images/NEWICONS/PASSPORT_01.png"
+                                    runat="server" OnClick="imgbtnPassportcopy_Click" Height="20px" Width="20px" />
+                            </td>
+                        </tr>
+                    </table>
 
                 </asp:Panel>
                 <asp:Panel ID="pnlAddPassportCopy" runat="server" Visible="false" Width="100%">
                     <label>Passport copy</label>
+                    <%--<table style="width: 100%;">
+                        <tr>
+                            <td tyle="width:80%;"></td>
+                            <td></td>
+                        </tr>
+                    </table>--%>
                     <div class="full-width">
                         <asp:FileUpload ID="fileUploadPassportCopy"
                             runat="server"
@@ -930,7 +941,7 @@
     </asp:Panel>
 
 
-    <asp:Button ID="btnShowPDFFile" runat="server" Style="display: none" />
+    <%--<asp:Button ID="btnShowPDFFile" runat="server" Style="display: none" />
     <asp:ModalPopupExtender ID="ModalPopupExtender3" runat="server" TargetControlID="btnShowPDFFile"
         PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
     </asp:ModalPopupExtender>
@@ -947,7 +958,26 @@
             cssclass="popup-iframe"
             id="iframeViewPDFFile"
             runat="server"></iframe>
+    </asp:Panel>--%>
+
+    <asp:Button ID="btnShowPDFFile" runat="server" Style="display: none" />
+    <asp:ModalPopupExtender ID="ModalPopupExtender3" runat="server" TargetControlID="btnShowPDFFile"
+        PopupControlID="pnlViewPDFFilePopup" CancelControlID="imgBtnCancelPDFFile" BackgroundCssClass="modalBackground">
+    </asp:ModalPopupExtender>
+    <asp:Panel ID="pnlViewPDFFilePopup" runat="server"
+        CssClass="popup-pdf">
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <asp:ImageButton ID="imgBtnCancelPDFFile" ImageUrl="~/Images/cancelled_img.png" runat="server" />
+                </td>
+            </tr>
+        </table>
+        <iframe class="popup-iframe"
+            id="iframeViewPDFFile"
+            runat="server"></iframe>
     </asp:Panel>
+
 
     <%--</ContentTemplate>
     </asp:UpdatePanel>--%>

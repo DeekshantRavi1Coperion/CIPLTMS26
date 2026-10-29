@@ -124,11 +124,14 @@ public partial class TOUR_AND_TRAVELS_TOUR_TourInformation : System.Web.UI.Page
 
     protected void ddlEmployee_SelectedIndexChanged(object sender, EventArgs e)
     {
+        btnSubmit.Visible = true;
+        bool result = false;
         if (ddlEmployee.SelectedIndex > 0)
         {
             pnlMsg.Visible = false;
             BindEmpDetail();
-            GetOpenToursByEmpRecordID();
+            if (!GetOpenToursByEmpRecordID()) btnSubmit.Visible = false ;
+
         }
         else
         {
