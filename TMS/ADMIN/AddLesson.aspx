@@ -774,7 +774,7 @@
                                 <asp:Label ID="lblUnitName" runat="server" Visible="false" Text='<%# Eval("JOB_UNIT") %>' />
 
                                 <asp:Button ID="btnGetJOBNo" CommandArgument="GET" ToolTip="Get JOB No." Width="100%"
-                                    runat="server" Text="Get JOB No." CssClass="cancelbutton" />
+                                    runat="server" Text="Get JOB No." CssClass="button" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="CUST_CODE" HeaderText="CUST_CODE" />
