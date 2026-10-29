@@ -355,7 +355,7 @@
 
                     <label>Name</label>
                     <div class="full-width">
-                        <div style='overflow: auto; height: 100px; border: 1px solid lightgray;'>
+                        <div style='overflow: auto; height: 280px; border: 1px solid lightgray;'>
                             <asp:CheckBoxList ID="chklbEmployee" runat="server" CssClass="form-control" />
                         </div>
                     </div>
@@ -368,14 +368,14 @@
                     OnClick="btnSearch_Click"
                     runat="server"
                     Text="Search"
-                    Width="50%"
+                    Width="100%"
                     CssClass="button" />
 
                 <asp:Button ID="btnExport"
                     OnClick="btnExport_Click"
                     runat="server"
                     Text="Export"
-                    Width="50%"
+                    Width="100%"
                     CssClass="button" />
 
 
