@@ -370,7 +370,7 @@
 
     <div class="page-layout">
 
-        <div class="filter-grid-container">
+       <div class="filter-grid-container">
             <fieldset class="filter-card">
                 <legend>Filters</legend>
 
@@ -459,7 +459,7 @@
             </div>
         </div>
 
-        <fieldset class="filter-card">
+        <fieldset class="employee-grid-fieldset">
             <legend>Posted List:
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" /></legend>
 
@@ -471,8 +471,10 @@
                 </div>
                 <asp:GridView
                     CssClass="employee-grid"
-                    ID="gvPostedList" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                    ForeColor="#333333" GridLines="Both" PageSize="20" HorizontalAlign="Center" OnRowDataBound="gvPostedList_RowDataBound">
+                    ID="gvPostedList"
+                    runat="server" AutoGenerateColumns="False" CellPadding="4"
+                    ForeColor="#333333" GridLines="Both" PageSize="20" 
+                    HorizontalAlign="Center" OnRowDataBound="gvPostedList_RowDataBound">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                     <Columns>
                         <%--<asp:TemplateField HeaderText="EDIT">
