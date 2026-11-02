@@ -664,7 +664,7 @@
                 </td>
             </tr>
         </table>
-        <div cssclass="popup-img">
+        <div class="popup-img">
             <asp:Image ID="imgFile" runat="server" />
         </div>
     </asp:Panel>
@@ -684,7 +684,7 @@
             </tr>
         </table>
         <iframe
-            cssclass="popup-iframe"
+            class="popup-iframe"
             id="iframeViewPDFFile"
             runat="server"></iframe>
     </asp:Panel>
@@ -707,7 +707,7 @@
             </tr>
         </table>
         <iframe
-            cssclass="popup-iframe"
+            class="popup-iframe"
             id="iframeViewDrawingDetailsInPDF"
             runat="server"></iframe>
     </asp:Panel>
