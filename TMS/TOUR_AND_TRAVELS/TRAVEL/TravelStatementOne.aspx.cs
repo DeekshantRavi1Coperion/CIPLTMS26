@@ -687,7 +687,6 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
             string urlTxt = Convert.ToString(System.Configuration.ConfigurationSettings.AppSettings["URL"]);
             int tourid = 0;
 
-
             string startDateOfTour = string.Empty;
             string endDateOfTour = string.Empty;
             string placeOfVisit = string.Empty;
@@ -719,7 +718,8 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
             string tlEmail = string.Empty;
 
             string superAdminEmail = string.Empty;
-
+            string specialAdminEmail = string.Empty;
+            
             string hrdEmail = string.Empty;
 
             int tlEmpRecordID = 0;
@@ -727,6 +727,7 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
             string password = string.Empty;
             string href = string.Empty;
             string link = string.Empty;
+            int deptid = 0;
 
             dsTravelStmtInfo = objTourAndTravels.GetTravelStatementNoInfo(travelStatementID);
             if (dsTravelStmtInfo.Tables.Count > 0)
@@ -788,6 +789,9 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
                         expectedExpenditureCurrency = Convert.ToString(dsTravelStmtInfo.Tables[0].Rows[0]["EXPECTED_EXPENDITURE_CURRENCY"]);
                     else expectedExpenditureCurrency = string.Empty;
 
+                    if (dsTravelStmtInfo.Tables[0].Rows[0]["DEPT_ID"] != DBNull.Value)
+                        deptid = Convert.ToInt32(dsTravelStmtInfo.Tables[0].Rows[0]["DEPT_ID"]);
+                    else deptid = 0;
 
                     if (dsTravelStmtInfo.Tables[0].Rows[0]["EXPENDITURE_AMT"] != DBNull.Value)
                         totalExpenditureAmount = Convert.ToString(dsTravelStmtInfo.Tables[0].Rows[0]["EXPENDITURE_AMT"]);
@@ -856,11 +860,27 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
                 {
                     superAdminEmail = Convert.ToString(dsTravelStmtInfo.Tables[2].Rows[0]["SA_EMAIL"]);
                 }
+
+                if (dsTravelStmtInfo.Tables[3].Rows.Count > 0)
+                {
+                    specialAdminEmail = Convert.ToString(dsTravelStmtInfo.Tables[3].Rows[0]["SUA_EMAIL"]);
+                }
+
+
             }
 
             from = reqEmail;
             to = tlEmail;
             cc = superAdminEmail;
+
+            if (deptid == 8 || deptid == 12 || deptid == 18 || deptid == 19)
+            {
+                if (statusid == 1 || statusid == 8)
+                {
+                    //cc += "harish.singh@coperion.com";
+                    cc += ","+ specialAdminEmail;
+                }
+            }
 
             if (tlEmpRecordID == 8)
             {
@@ -881,14 +901,14 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
                 }
             }
 
-            //if (!string.IsNullOrEmpty(cc))
-            //{
-            //    string[] strCC = cc.Split(',');
-            //    foreach (string item in strCC)
-            //    {
-            //        mail.CC.Add(item);
-            //    }
-            //}
+            if (!string.IsNullOrEmpty(cc))
+            {
+                string[] strCC = cc.Split(',');
+                foreach (string item in strCC)
+                {
+                    mail.CC.Add(item);
+                }
+            }
 
             mail.Subject = "Approval of Travel Statement, Sanction No.: " + sanctionNo;
             mail.IsBodyHtml = true;
