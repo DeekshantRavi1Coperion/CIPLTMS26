@@ -1128,10 +1128,17 @@
 
                 <asp:GridView
                     CssClass="employee-grid"
-                    ID="gvComplaintLogList" runat="server" AutoGenerateColumns="False"
-                    CellPadding="4" ForeColor="#333333" GridLines="Both" PageSize="7" Width="100%"
-                    HorizontalAlign="Center" OnRowCommand="gvComplaintLogList_RowCommand" OnRowDataBound="gvComplaintLogList_RowDataBound"
-                    AllowPaging="True" OnPageIndexChanging="gvComplaintLogList_PageIndexChanging">
+                    ID="gvComplaintLogList" 
+                    runat="server" 
+                    AutoGenerateColumns="False"
+                    CellPadding="4" 
+                    ForeColor="#333333" 
+                    GridLines="Both" 
+                    Width="100%"
+                    HorizontalAlign="Center" 
+                    OnRowCommand="gvComplaintLogList_RowCommand" 
+                    OnRowDataBound="gvComplaintLogList_RowDataBound"
+                    OnPageIndexChanging="gvComplaintLogList_PageIndexChanging">
                     <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                     <Columns>
                         <asp:TemplateField HeaderText="VIEW">
