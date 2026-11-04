@@ -871,14 +871,15 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
 
             from = reqEmail;
             to = tlEmail;
-            cc = superAdminEmail;
+            //cc = superAdminEmail;
 
             if (deptid == 8 || deptid == 12 || deptid == 18 || deptid == 19)
             {
                 if (statusid == 1 || statusid == 8)
                 {
                     //cc += "harish.singh@coperion.com";
-                    cc += ","+ specialAdminEmail;
+                    //cc += ","+ specialAdminEmail;
+                    cc = specialAdminEmail;
                 }
             }
 
@@ -901,14 +902,14 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementOne : System.Web.UI.
                 }
             }
 
-            if (!string.IsNullOrEmpty(cc))
-            {
-                string[] strCC = cc.Split(',');
-                foreach (string item in strCC)
-                {
-                    mail.CC.Add(item);
-                }
-            }
+            //if (!string.IsNullOrEmpty(cc))
+            //{
+            //    string[] strCC = cc.Split(',');
+            //    foreach (string item in strCC)
+            //    {
+            //        mail.CC.Add(item);
+            //    }
+            //}
 
             mail.Subject = "Approval of Travel Statement, Sanction No.: " + sanctionNo;
             mail.IsBodyHtml = true;
