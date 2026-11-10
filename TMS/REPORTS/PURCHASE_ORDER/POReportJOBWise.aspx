@@ -251,13 +251,12 @@
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
                 </legend>
 
-                <div class="form-grid form-grid-3">
-
+                <div class="form-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -277,7 +276,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -320,8 +319,9 @@
             <asp:GridView
                 CssClass="employee-grid"
                 ID="gvPOReport" runat="server" AutoGenerateColumns="False" CellPadding="4"
-                ForeColor="#333333" GridLines="Vertical" PageSize="20" Width="100%" HorizontalAlign="Center"
-                AllowPaging="True" OnPageIndexChanging="gvPOReport_PageIndexChanging" OnRowDataBound="gvPOReport_RowDataBound">
+                ForeColor="#333333" GridLines="Vertical"
+                Width="100%" HorizontalAlign="Center"
+                OnPageIndexChanging="gvPOReport_PageIndexChanging" OnRowDataBound="gvPOReport_RowDataBound">
                 <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
                 <Columns>
                     <asp:BoundField HeaderText="PO_MONTH" DataField="PO_MONTH" />

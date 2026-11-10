@@ -3083,136 +3083,137 @@
 
                 <div class="form-grid form-grid-2">
 
-                    <div style="width: 100%; margin-left: 0px;">
+                    <%--<div style="width: 100%; margin-left: 0px;">--%>
 
-                        <label>Production Order No.</label>
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 80%">
-                                    <asp:TextBox ID="txtProductionOrderNoToEdit" runat="server"
-                                        CssClass="form-control" /></td>
-                                <td style="width: 20%">
-                                    <asp:Button ID="btnGetProductionNumber" runat="server" Width="100%" Text="Get" CssClass="button"
-                                        OnClick="btnGetProductionNumber_Click" OnClientClick="return ValidateProductionOrderNoAll();" /></td>
-                            </tr>
-                        </table>
+                    <label>Production Order No.</label>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width: 80%">
+                                <asp:TextBox ID="txtProductionOrderNoToEdit" runat="server"
+                                    CssClass="form-control" /></td>
+                            <td style="width: 20%">
+                                <asp:Button ID="btnGetProductionNumber" runat="server" Width="100%" Text="Get" CssClass="button"
+                                    OnClick="btnGetProductionNumber_Click" OnClientClick="return ValidateProductionOrderNoAll();" /></td>
+                        </tr>
+                    </table>
 
-                        <label>Production Order Date</label>
-                        <asp:TextBox ID="txtProductionOrderDateToEdit" runat="server"
-                            Enabled="false"
-                            CssClass="form-control" />
+                    <label>Production Order Date</label>
+                    <asp:TextBox ID="txtProductionOrderDateToEdit" runat="server"
+                        Enabled="false"
+                        CssClass="form-control" />
 
-                        <label>Product Code</label>
-                        <asp:DropDownList ID="ddlProductCodeToEdit" runat="server"
-                            CssClass="form-control"
-                            AutoPostBack="true" OnSelectedIndexChanged="ddlProductCodeToEdit_SelectedIndexChanged" />
+                    <label>Product Code</label>
+                    <asp:DropDownList ID="ddlProductCodeToEdit" runat="server"
+                        CssClass="form-control"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlProductCodeToEdit_SelectedIndexChanged" />
 
-                        <label>UOM</label>
-                        <asp:TextBox ID="txtUOMToEdit" runat="server"
-                            Enabled="false"
-                            CssClass="form-control" />
+                    <label>UOM</label>
+                    <asp:TextBox ID="txtUOMToEdit" runat="server"
+                        Enabled="false"
+                        CssClass="form-control" />
 
-                        <label>Product Description</label>
-                        <asp:TextBox ID="txtProductDescToEdit" runat="server" Enabled="false"
-                            CssClass="form-control" />
+                    <label>Product Description</label>
+                    <asp:TextBox ID="txtProductDescToEdit" runat="server" Enabled="false"
+                        CssClass="form-control" />
 
-                        <b>
-                            <label style="color: darkgreen;">Is Part of Production Status Report/Main Drawing?:</label></b>
-                        <asp:CheckBox ID="chkIsPartOfProductionOrMainDrawingToEdit" runat="server" />
+                    <b>
+                        <label style="color: darkgreen;">Is Part of Production Status Report/Main Drawing?:</label></b>
+                    <asp:CheckBox ID="chkIsPartOfProductionOrMainDrawingToEdit" runat="server" />
 
-                        <label>Completion Required By</label>
-                        <asp:TextBox ID="txtExpectedCompletionDateToEdit" runat="server"
-                            CssClass="form-control"
-                            Enabled="false" />
+                    <label>Completion Required By</label>
+                    <asp:TextBox ID="txtExpectedCompletionDateToEdit" runat="server"
+                        CssClass="form-control"
+                        Enabled="false" />
 
-                        <label>LOT For</label>
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 60%">
-                                    <asp:DropDownList ID="ddlLOTMainItemsToEdit" runat="server"
-                                        CssClass="form-control"
-                                        AutoPostBack="true" OnSelectedIndexChanged="ddlLOTMainItemsToEdit_SelectedIndexChanged" />
-                                </td>
-                                <td style="width: 40%">
-                                    <asp:DropDownList ID="ddlLOTMainSubitemsToEdit" runat="server"
-                                        CssClass="form-control" />
-                                </td>
-                            </tr>
-                        </table>
-
-
-                        <label>Drg./Doc No.</label>
-                        <table style="width: 100%">
-                            <tr>
-                                <td style="width: 80%">
-                                    <asp:TextBox ID="txtDrgNoToEdit" runat="server"
-                                        CssClass="form-control"
-                                        Style="text-transform: uppercase" />
-
-                                </td>
-                                <td style="width: 20%">
-                                    <asp:Button ID="btnGetDMSDrawingNo" runat="server" Width="100%" Text="DMS" CssClass="button"
-                                        OnClick="btnGetDMSDrawingNo_Click" OnClientClick="return ValidateProductionOrderNoAll();" /></td>
-                            </tr>
-                        </table>
-
-                        <label>Description</label>
-                        <asp:TextBox ID="txtDescriptionToEdit" TextMode="MultiLine" Rows="2" runat="server"
-                            CssClass="form-control" />
-
-                        <label>Rev. No.</label>
-                        <table width="100%">
-                            <tr>
-                                <td style="width: 70%;">
-
-                                    <asp:DropDownList ID="ddlRevNoToEdit" runat="server"
-                                        CssClass="form-control"
-                                        onchange="EnableRevisionNoTextboxOther()">
-                                        <asp:ListItem Text="00" Value="0" />
-                                        <asp:ListItem Text="01" Value="1" />
-                                        <asp:ListItem Text="02" Value="2" />
-                                        <asp:ListItem Text="03" Value="3" />
-                                        <asp:ListItem Text="04" Value="4" />
-                                        <asp:ListItem Text="05" Value="5" />
-                                        <asp:ListItem Text="06" Value="6" />
-                                        <asp:ListItem Text="07" Value="7" />
-                                        <asp:ListItem Text="08" Value="8" />
-                                        <asp:ListItem Text="09" Value="9" />
-                                        <asp:ListItem Text="10" Value="10" />
-                                        <asp:ListItem Text="99 – Any Other Revision" Value="99" />
-                                    </asp:DropDownList>
-                                </td>
-                                <td>
-                                    <asp:TextBox ID="txtRevNoTextToEdit"
-                                        runat="server"
-                                        Text="00"
-                                        CssClass="form-control"
-                                        Enabled="false" />
-                                    <asp:HiddenField ID="hdRevNoTextToEdit" runat="server" />
-                                    <asp:HiddenField ID="hdRevNoTextOldToEdit" runat="server" />
-                                </td>
-                            </tr>
-                        </table>
+                    <label>LOT For</label>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width: 60%">
+                                <asp:DropDownList ID="ddlLOTMainItemsToEdit" runat="server"
+                                    CssClass="form-control"
+                                    AutoPostBack="true" OnSelectedIndexChanged="ddlLOTMainItemsToEdit_SelectedIndexChanged" />
+                            </td>
+                            <td style="width: 40%">
+                                <asp:DropDownList ID="ddlLOTMainSubitemsToEdit" runat="server"
+                                    CssClass="form-control" />
+                            </td>
+                        </tr>
+                    </table>
 
 
-                        <label>Quantity</label>
-                        <asp:HiddenField ID="hdQuantityToEdit" runat="server" />
-                        <asp:TextBox ID="txtQuantityToEdit" runat="server"
-                            CssClass="form-control"
-                            onkeypress="return inNumberKey(this, event);" />
+                    <label>Drg./Doc No.</label>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width: 80%">
+                                <asp:TextBox ID="txtDrgNoToEdit" runat="server"
+                                    CssClass="form-control"
+                                    Style="text-transform: uppercase" />
+
+                            </td>
+                            <td style="width: 20%">
+                                <asp:Button ID="btnGetDMSDrawingNo" runat="server" Width="100%" Text="DMS" CssClass="button"
+                                    OnClick="btnGetDMSDrawingNo_Click" OnClientClick="return ValidateProductionOrderNoAll();" /></td>
+                        </tr>
+                    </table>
+
+                    <label>Description</label>
+                    <asp:TextBox ID="txtDescriptionToEdit" TextMode="MultiLine" Rows="2" runat="server"
+                        CssClass="form-control" />
+
+                    <label>Rev. No.</label>
+                    <table width="100%">
+                        <tr>
+                            <td style="width: 70%;">
+
+                                <asp:DropDownList ID="ddlRevNoToEdit" runat="server"
+                                    CssClass="form-control"
+                                    onchange="EnableRevisionNoTextboxOther()">
+                                    <asp:ListItem Text="00" Value="0" />
+                                    <asp:ListItem Text="01" Value="1" />
+                                    <asp:ListItem Text="02" Value="2" />
+                                    <asp:ListItem Text="03" Value="3" />
+                                    <asp:ListItem Text="04" Value="4" />
+                                    <asp:ListItem Text="05" Value="5" />
+                                    <asp:ListItem Text="06" Value="6" />
+                                    <asp:ListItem Text="07" Value="7" />
+                                    <asp:ListItem Text="08" Value="8" />
+                                    <asp:ListItem Text="09" Value="9" />
+                                    <asp:ListItem Text="10" Value="10" />
+                                    <asp:ListItem Text="99 – Any Other Revision" Value="99" />
+                                </asp:DropDownList>
+                            </td>
+                            <td>
+                                <asp:TextBox ID="txtRevNoTextToEdit"
+                                    runat="server"
+                                    Text="00"
+                                    CssClass="form-control"
+                                    Enabled="false" />
+                                <asp:HiddenField ID="hdRevNoTextToEdit" runat="server" />
+                                <asp:HiddenField ID="hdRevNoTextOldToEdit" runat="server" />
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <label>Quantity</label>
+                    <asp:HiddenField ID="hdQuantityToEdit" runat="server" />
+                    <asp:TextBox ID="txtQuantityToEdit" runat="server"
+                        CssClass="form-control"
+                        onkeypress="return inNumberKey(this, event);" />
 
 
 
-                        <label>Category (For Factory)</label>
-                        <asp:CheckBoxList ID="chkLstCategoryToEdit" runat="server" RepeatDirection="Horizontal"
-                            CssClass="form-control" />
+                    <label>Category (For Factory)</label>
+                    <asp:CheckBoxList ID="chkLstCategoryToEdit" runat="server" RepeatDirection="Horizontal"
+                        CssClass="form-control" />
 
-                        <label>Tag No.</label>
-                        <asp:TextBox ID="txtTagNoToEdit" runat="server"
-                            CssClass="form-control"
-                            Style="text-transform: uppercase" />
+                    <label>Tag No.</label>
+                    <asp:TextBox ID="txtTagNoToEdit" runat="server"
+                        CssClass="form-control"
+                        Style="text-transform: uppercase" />
 
 
+                    <div class="full-width button-group">
                         <asp:Panel ID="pnlAttachFiles" runat="server">
 
                             <label>Drawing (.pdf)</label>
@@ -3436,8 +3437,8 @@
                             </div>
 
                         </asp:Panel>
+                        <%-- </div>--%>
                     </div>
-
                 </div>
             </fieldset>
 

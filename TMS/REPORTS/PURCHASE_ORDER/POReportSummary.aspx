@@ -296,12 +296,12 @@
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
                 </legend>
 
-                <div class="form-grid form-grid-3">
+                <div class="form-grid">
 
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -319,7 +319,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td>
+                            <td style="width:90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" onkeyDown="javascript:preventInput(event);"
                                     CssClass="form-control" />
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
