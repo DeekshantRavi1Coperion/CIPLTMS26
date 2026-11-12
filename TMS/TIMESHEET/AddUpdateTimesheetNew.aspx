@@ -8,6 +8,7 @@
     <link href="../Styles/HomeNew.css" rel="stylesheet" type="text/css" />--%>
 
     <link href="../../Styles/form.css" rel="stylesheet" />
+    <link href="../../Styles/grid.css" rel="stylesheet" />
 
     <link rel="icon" href="../Images/Icon04.png" />
     <link href="../Styles/ClearCrossInTextbox.css" rel="stylesheet" type="text/css" />
@@ -37,13 +38,13 @@
                 document.getElementById('<%=txtTimesheetDate.ClientID %>').value = document.getElementById('<%=hdTimesheetDate.ClientID %>').value;
             }
 
-            var hdTimesheetDeptID = document.getElementById('<%=hdTimesheetDeptID.ClientID %>').value;
+            <%--var hdTimesheetDeptID = document.getElementById('<%=hdTimesheetDeptID.ClientID %>').value;
             if (hdTimesheetDeptID == "1") {
                 document.getElementById('dvDrawing').style.display = 'block';
             }
             else {
                 document.getElementById('dvDrawing').style.display = 'none';
-            }
+            }--%>
         }
 
         function clientChangedTimesheetDate(sender, args) {
@@ -237,6 +238,8 @@
         function ValidateAll() {
             var check = true;
 
+            
+
             if (ValidateProjectCategory()) {
                 return false;
             }
@@ -245,7 +248,7 @@
                 return false;
             }
 
-            if (document.getElementById('dvDrawing').style.display == 'block') {
+            /*if (document.getElementById('dvDrawing').style.display == 'block') {*/
                 if (ValidateCategory()) {
                     return false;
                 }
@@ -274,11 +277,14 @@
                 if (ValidateTypeOfDrawing()) {
                     return false;
                 }
-            }
+            //}
 
+            
             if (ValidateTitle()) {
                 return false;
             }
+
+            
 
             if (ValidateStartTime()) {
                 return false;
@@ -295,6 +301,8 @@
             if (ValidateTimeSpent()) {
                 return false;
             }
+
+            
 
 
             if (check) {
