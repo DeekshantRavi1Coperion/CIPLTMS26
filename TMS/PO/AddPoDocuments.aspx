@@ -983,7 +983,7 @@
             </tr>
         </table>
         <iframe
-            cssclass="popup-iframe"
+            class="popup-iframe"
             id="iframeViewPDFFile"
             runat="server"></iframe>
     </asp:Panel>
@@ -1004,7 +1004,7 @@
             </tr>
         </table>
         <iframe
-            cssclass="popup-iframe"
+            class="popup-iframe"
             id="iframeViewTravelStatementInPDF"
             runat="server"></iframe>
     </asp:Panel>

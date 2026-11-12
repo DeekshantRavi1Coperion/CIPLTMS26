@@ -955,7 +955,7 @@
             </tr>
         </table>
         <iframe
-            cssclass="popup-iframe"
+            class="popup-iframe"
             id="iframeViewPDFFile"
             runat="server"></iframe>
     </asp:Panel>--%>
