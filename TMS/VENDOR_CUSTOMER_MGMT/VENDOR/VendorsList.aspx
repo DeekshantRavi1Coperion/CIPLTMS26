@@ -1637,7 +1637,7 @@
                     <label>Start Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtStartDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdStartDateSearch" runat="server" />
@@ -1656,7 +1656,7 @@
                     <label>End Date:</label>
                     <table width="100%">
                         <tr>
-                            <td style="width:90%;">
+                            <td style="width: 90%;">
                                 <asp:TextBox ID="txtEndDateSearch" runat="server" ReadOnly="true"
                                     CssClass="form-control"></asp:TextBox>
                                 <asp:HiddenField ID="hdEndDateSearch" runat="server" />
@@ -1736,264 +1736,264 @@
         </div>
 
         <fieldset class="employee-grid-fieldset">
-                <legend>Vendors List:
+            <legend>Vendors List:
                     <asp:Label ID="lblRecords" runat="server" Text="Records[0]" />
-                </legend>
+            </legend>
 
 
-        <div class="employee-grid-container">
-            <div align="center">
-                <asp:Panel ID="pnlMsg" Visible="false" runat="server">
-                    <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
-                </asp:Panel>
-            </div>
+            <div class="employee-grid-container">
+                <div align="center">
+                    <asp:Panel ID="pnlMsg" Visible="false" runat="server">
+                        <asp:Label ID="lblMsg" runat="server" Font-Bold="true" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
 
-            <asp:GridView ID="gvVendorsList"
-                runat="server"
-                AutoGenerateColumns="false"
-                CellPadding="4"
-                CssClass="employee-grid"
-                ForeColor="#333333" GridLines="Both" Width="100%"
-                HorizontalAlign="Center"
-                OnRowCommand="gvVendorsList_RowCommand"
-                OnRowDataBound="gvVendorsList_RowDataBound">
+                <asp:GridView ID="gvVendorsList"
+                    runat="server"
+                    AutoGenerateColumns="false"
+                    CellPadding="4"
+                    CssClass="employee-grid"
+                    ForeColor="#333333" GridLines="Both" Width="100%"
+                    HorizontalAlign="Center"
+                    OnRowCommand="gvVendorsList_RowCommand"
+                    OnRowDataBound="gvVendorsList_RowDataBound">
 
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <RowStyle BackColor="#E3EAEB" HorizontalAlign="Left" />
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
 
-                <Columns>
+                    <Columns>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px" CommandArgument="ViewDETAIL"
-                                runat="server" ImageUrl="~/Images/VCM/pdf.png" ToolTip="View Vedor Detail in PDF" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnViewDetail" Height="30px" Width="30px" CommandArgument="ViewDETAIL"
+                                    runat="server" ImageUrl="~/Images/VCM/pdf.png" ToolTip="View Vedor Detail in PDF" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="btnDownloadDOCs" Height="30px" Width="30px" CommandArgument="DOWNLOAD_DOCS"
-                                runat="server" ImageUrl="~/Images/VCM/download.png" ToolTip="Download DOCs" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="btnDownloadDOCs" Height="30px" Width="30px" CommandArgument="DOWNLOAD_DOCS"
+                                    runat="server" ImageUrl="~/Images/VCM/download.png" ToolTip="Download DOCs" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgBtnEdit" CommandArgument="EDIT"
-                                runat="server" ImageUrl="~/Images/VCM/edit.png"
-                                Height="35px" Width="35px" ToolTip="Edit Vendor" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgBtnEdit" CommandArgument="EDIT"
+                                    runat="server" ImageUrl="~/Images/VCM/edit.png"
+                                    Height="35px" Width="35px" ToolTip="Edit Vendor" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
 
-                            <asp:ImageButton ID="imgBtnSendMail"
-                                CommandArgument="SEND_MAIL"
-                                runat="server" ImageUrl="~/Images/VCM/mail.png"
-                                Height="35px" Width="35px" ToolTip="Send mail" Visible="false" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
+                                <asp:ImageButton ID="imgBtnSendMail"
+                                    CommandArgument="SEND_MAIL"
+                                    runat="server" ImageUrl="~/Images/VCM/mail.png"
+                                    Height="35px" Width="35px" ToolTip="Send mail" Visible="false" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" Height="40px" Width="40px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgStatus" CommandArgument="STATUS" runat="server" Height="40px" Width="40px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
 
-                            <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
-                            <%--<asp:Label ID="lblAmendmentId" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_ENTITY_FID") %>' />--%>
-                            <asp:Label ID="lblVendorName" runat="server" Visible="false" Text='<%# Eval("NAME") %>' />
-                            <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("CODE") %>' />
-                            <asp:Label ID="lblStatusId" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>' />
+                                <asp:Label ID="lblPID" runat="server" Visible="false" Text='<%# Eval("PID") %>' />
+                                <%--<asp:Label ID="lblAmendmentId" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_ENTITY_FID") %>' />--%>
+                                <asp:Label ID="lblVendorName" runat="server" Visible="false" Text='<%# Eval("NAME") %>' />
+                                <asp:Label ID="lblVendorCode" runat="server" Visible="false" Text='<%# Eval("CODE") %>' />
+                                <asp:Label ID="lblStatusId" runat="server" Visible="false" Text='<%# Eval("STATUS_FID") %>' />
 
-                            <asp:Label ID="lblCreatedBy" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
-                            <asp:Label ID="lblIsCreatedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CREATED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblCreatedBy" runat="server" Visible="false" Text='<%# Eval("CREATED_BY") %>' />
+                                <asp:Label ID="lblIsCreatedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CREATED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblCheckedBy" runat="server" Visible="false" Text='<%# Eval("CHECKED_BY") %>' />
-                            <asp:Label ID="lblCheckedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CHECKED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblCheckedBy" runat="server" Visible="false" Text='<%# Eval("CHECKED_BY") %>' />
+                                <asp:Label ID="lblCheckedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_CHECKED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblPROCHodApprovedBy" runat="server" Visible="false" Text='<%# Eval("PROC_HOD_APPROVED_BY") %>' />
-                            <asp:Label ID="lblIsPROCHodApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PROC_HOD_APPROVED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblPROCHodApprovedBy" runat="server" Visible="false" Text='<%# Eval("PROC_HOD_APPROVED_BY") %>' />
+                                <asp:Label ID="lblIsPROCHodApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_PROC_HOD_APPROVED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblAccountsCheckedBy" runat="server" Visible="false" Text='<%# Eval("ACCOUNTS_CHECKED_BY") %>' />
-                            <asp:Label ID="lblIsAccountsCheckedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_ACCOUNTS_CHECKED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblAccountsCheckedBy" runat="server" Visible="false" Text='<%# Eval("ACCOUNTS_CHECKED_BY") %>' />
+                                <asp:Label ID="lblIsAccountsCheckedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_ACCOUNTS_CHECKED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblFinalApprovedBy" runat="server" Visible="false" Text='<%# Eval("FINAL_APPROVED_BY") %>' />
-                            <asp:Label ID="lblIsFinalApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_FINAL_APPROVED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblFinalApprovedBy" runat="server" Visible="false" Text='<%# Eval("FINAL_APPROVED_BY") %>' />
+                                <asp:Label ID="lblIsFinalApprovedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_FINAL_APPROVED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblRegisteredBy" runat="server" Visible="false" Text='<%# Eval("REGISTERED_BY") %>' />
-                            <asp:Label ID="lblIsRegisteredMailSent" runat="server" Visible="false" Text='<%# Eval("IS_REGISTERED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblRegisteredBy" runat="server" Visible="false" Text='<%# Eval("REGISTERED_BY") %>' />
+                                <asp:Label ID="lblIsRegisteredMailSent" runat="server" Visible="false" Text='<%# Eval("IS_REGISTERED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblRevisedBy" runat="server" Visible="false" Text='<%# Eval("REVISED_BY") %>' />
-                            <asp:Label ID="lblIsRevisedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_REVISED_MAIL_SENT") %>' />
+                                <asp:Label ID="lblRevisedBy" runat="server" Visible="false" Text='<%# Eval("REVISED_BY") %>' />
+                                <asp:Label ID="lblIsRevisedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_REVISED_MAIL_SENT") %>' />
 
-                            <asp:Label ID="lblSendToAmendmentBy" runat="server" Visible="false" Text='<%# Eval("SENT_TO_AMENDMENT_BY") %>' />
-                            <asp:Label ID="lblIsAmendmentMailSent" runat="server" Visible="false" Text='<%# Eval("IS_AMENDMENT_MAIL_SENT") %>' />
+                                <asp:Label ID="lblSendToAmendmentBy" runat="server" Visible="false" Text='<%# Eval("SENT_TO_AMENDMENT_BY") %>' />
+                                <asp:Label ID="lblIsAmendmentMailSent" runat="server" Visible="false" Text='<%# Eval("IS_AMENDMENT_MAIL_SENT") %>' />
 
 
-                            <asp:Label ID="lblIsAmendedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' />
-                            <%--<asp:Label ID="lblIsMSMED" runat="server" Visible="false" Text='<%# Eval("IS_MSMED") %>' />--%>
-                            <asp:Label ID="lblIsISOCertified" runat="server" Visible="false" Text='<%# Eval("IS_ISO_CERTIFIED") %>' />
-                            <asp:Label ID="lblIsTechnicalDetailsReceived" runat="server" Visible="false" Text='<%# Eval("IS_TECHNICAL_DETAILS_RECEIVED") %>' />
-                            <asp:Label ID="lblIsVisitByQa" runat="server" Visible="false" Text='<%# Eval("IS_VISIT_BY_QA") %>' />
-                            <asp:Label ID="lblIsGovernment" runat="server" Visible="false" Text='<%# Eval("IS_GOVERNMENT") %>' />
-                            <asp:Label ID="lblIsOneTime" runat="server" Visible="false" Text='<%# Eval("IS_ONE_TIME") %>' />
-                            <asp:Label ID="lblIsSentForApproval" runat="server" Visible="false" Text='<%# Eval("IS_SENT_FOR_APPROVAL") %>' />
+                                <asp:Label ID="lblIsAmendedMailSent" runat="server" Visible="false" Text='<%# Eval("IS_AMENDED_MAIL_SENT") %>' />
+                                <%--<asp:Label ID="lblIsMSMED" runat="server" Visible="false" Text='<%# Eval("IS_MSMED") %>' />--%>
+                                <asp:Label ID="lblIsISOCertified" runat="server" Visible="false" Text='<%# Eval("IS_ISO_CERTIFIED") %>' />
+                                <asp:Label ID="lblIsTechnicalDetailsReceived" runat="server" Visible="false" Text='<%# Eval("IS_TECHNICAL_DETAILS_RECEIVED") %>' />
+                                <asp:Label ID="lblIsVisitByQa" runat="server" Visible="false" Text='<%# Eval("IS_VISIT_BY_QA") %>' />
+                                <asp:Label ID="lblIsGovernment" runat="server" Visible="false" Text='<%# Eval("IS_GOVERNMENT") %>' />
+                                <asp:Label ID="lblIsOneTime" runat="server" Visible="false" Text='<%# Eval("IS_ONE_TIME") %>' />
+                                <asp:Label ID="lblIsSentForApproval" runat="server" Visible="false" Text='<%# Eval("IS_SENT_FOR_APPROVAL") %>' />
 
-                            <asp:Label ID="lblPIDVRF" runat="server" Visible="false" Text='<%# Eval("PID_VRF") %>' />
-                            <asp:Label ID="lblPIDGSTIN" runat="server" Visible="false" Text='<%# Eval("PID_GSTIN") %>' />
-                            <asp:Label ID="lblPIDPAN" runat="server" Visible="false" Text='<%# Eval("PID_PAN") %>' />
-                            <asp:Label ID="lblPIDCC" runat="server" Visible="false" Text='<%# Eval("PID_CANCELLED_CHEQUE") %>' />
-                            <asp:Label ID="lblPIDOther1" runat="server" Visible="false" Text='<%# Eval("PID_OTHER1") %>' />
-                            <asp:Label ID="lblPIDOther2" runat="server" Visible="false" Text='<%# Eval("PID_OTHER2") %>' />
-                            <asp:Label ID="lblPIDOther3" runat="server" Visible="false" Text='<%# Eval("PID_OTHER3") %>' />
-                            <asp:Label ID="lblPIDOther4" runat="server" Visible="false" Text='<%# Eval("PID_OTHER4") %>' />
+                                <asp:Label ID="lblPIDVRF" runat="server" Visible="false" Text='<%# Eval("PID_VRF") %>' />
+                                <asp:Label ID="lblPIDGSTIN" runat="server" Visible="false" Text='<%# Eval("PID_GSTIN") %>' />
+                                <asp:Label ID="lblPIDPAN" runat="server" Visible="false" Text='<%# Eval("PID_PAN") %>' />
+                                <asp:Label ID="lblPIDCC" runat="server" Visible="false" Text='<%# Eval("PID_CANCELLED_CHEQUE") %>' />
+                                <asp:Label ID="lblPIDOther1" runat="server" Visible="false" Text='<%# Eval("PID_OTHER1") %>' />
+                                <asp:Label ID="lblPIDOther2" runat="server" Visible="false" Text='<%# Eval("PID_OTHER2") %>' />
+                                <asp:Label ID="lblPIDOther3" runat="server" Visible="false" Text='<%# Eval("PID_OTHER3") %>' />
+                                <asp:Label ID="lblPIDOther4" runat="server" Visible="false" Text='<%# Eval("PID_OTHER4") %>' />
 
-                            <asp:Label ID="lblFileNameVRF" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_VRF") %>' />
-                            <asp:Label ID="lblFileNameGSTIN" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_GSTIN") %>' />
-                            <asp:Label ID="lblFileNamePAN" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_PAN") %>' />
-                            <asp:Label ID="lblFileNameCC" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_CANCELLED_CHEQUE") %>' />
-                            <asp:Label ID="lblFileNameOther1" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER1") %>' />
-                            <asp:Label ID="lblFileNameOther2" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER2") %>' />
-                            <asp:Label ID="lblFileNameOther3" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER3") %>' />
-                            <asp:Label ID="lblFileNameOther4" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER4") %>' />
+                                <asp:Label ID="lblFileNameVRF" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_VRF") %>' />
+                                <asp:Label ID="lblFileNameGSTIN" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_GSTIN") %>' />
+                                <asp:Label ID="lblFileNamePAN" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_PAN") %>' />
+                                <asp:Label ID="lblFileNameCC" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_CANCELLED_CHEQUE") %>' />
+                                <asp:Label ID="lblFileNameOther1" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER1") %>' />
+                                <asp:Label ID="lblFileNameOther2" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER2") %>' />
+                                <asp:Label ID="lblFileNameOther3" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER3") %>' />
+                                <asp:Label ID="lblFileNameOther4" runat="server" Visible="false" Text='<%# Eval("FILE_NAME_OTHER4") %>' />
 
-                            <asp:Label ID="lblAmendmentCount" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_COUNTS") %>' />
+                                <asp:Label ID="lblAmendmentCount" runat="server" Visible="false" Text='<%# Eval("AMENDMENT_COUNTS") %>' />
 
-                            <asp:Label ID="lblAddressCount" runat="server" Visible="false" Text='<%# Eval("ADDRESS_COUNTS") %>' />
-                            <asp:Label ID="lblContactPersonCount" runat="server" Visible="false" Text='<%# Eval("CONTACT_PERSON_COUNTS") %>' />
-                            <asp:Label ID="lblBankDetailsCount" runat="server" Visible="false" Text='<%# Eval("BANK_DETAILS_COUNTS") %>' />
-                            <asp:Label ID="lblRevisionCount" runat="server" Visible="false" Text='<%# Eval("REVISION_COUNTS") %>' />
+                                <asp:Label ID="lblAddressCount" runat="server" Visible="false" Text='<%# Eval("ADDRESS_COUNTS") %>' />
+                                <asp:Label ID="lblContactPersonCount" runat="server" Visible="false" Text='<%# Eval("CONTACT_PERSON_COUNTS") %>' />
+                                <asp:Label ID="lblBankDetailsCount" runat="server" Visible="false" Text='<%# Eval("BANK_DETAILS_COUNTS") %>' />
+                                <asp:Label ID="lblRevisionCount" runat="server" Visible="false" Text='<%# Eval("REVISION_COUNTS") %>' />
 
-                            <asp:Label ID="lblCheckerId" runat="server" Visible="false" Text='<%# Eval("CHECKER_FID") %>' />
+                                <asp:Label ID="lblCheckerId" runat="server" Visible="false" Text='<%# Eval("CHECKER_FID") %>' />
 
-                            <%--<asp:Button ID="btnSendToAmendment"
+                                <%--<asp:Button ID="btnSendToAmendment"
                                     CommandArgument="AMENDMENT" ToolTip="Send to Amendment" runat="server"
                                     Text="Amendment" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
                                     BorderStyle="Solid" BorderWidth="2px" />--%>
 
-                            <asp:Button ID="btnAmend"
-                                CommandArgument="AMEND" ToolTip="Amend Vendor" runat="server"
-                                Text="Amend" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnAmend"
+                                    CommandArgument="AMEND" ToolTip="Amend Vendor" runat="server"
+                                    Text="Amend" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnCheck"
-                                CommandArgument="CHECK" ToolTip="Check Vendor" runat="server"
-                                Text="Check" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnCheck"
+                                    CommandArgument="CHECK" ToolTip="Check Vendor" runat="server"
+                                    Text="Check" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnPROCHODApprove"
-                                CommandArgument="PROC_HOD_APPROVE" ToolTip="Approve Vendor" runat="server"
-                                Text="Approve" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnPROCHODApprove"
+                                    CommandArgument="PROC_HOD_APPROVE" ToolTip="Approve Vendor" runat="server"
+                                    Text="Approve" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnAccountsCheck"
-                                CommandArgument="ACCOUNTS_CHECK" ToolTip="Check Vendor" runat="server"
-                                Text="Check" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnAccountsCheck"
+                                    CommandArgument="ACCOUNTS_CHECK" ToolTip="Check Vendor" runat="server"
+                                    Text="Check" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnFinalApprove"
-                                CommandArgument="FINAL_APPROVE" ToolTip="Approve Vendor" runat="server"
-                                Text="Approve" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnFinalApprove"
+                                    CommandArgument="FINAL_APPROVE" ToolTip="Approve Vendor" runat="server"
+                                    Text="Approve" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnRegister"
-                                CommandArgument="REGISTER" ToolTip="Register Vendor" runat="server"
-                                Text="Register" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                                <asp:Button ID="btnRegister"
+                                    CommandArgument="REGISTER" ToolTip="Register Vendor" runat="server"
+                                    Text="Register" CssClass="cancelbutton" Width="100%" BorderColor="Yellow"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
 
 
-                    <asp:BoundField DataField="NAME" HeaderText="Name" />
-                    <asp:BoundField DataField="CODE" HeaderText="Code" />
-                    <%--<asp:BoundField DataField="STATUS" HeaderText="Status" />--%>
-                    <asp:BoundField DataField="CATEGORY" HeaderText="Category" />
-                    <%--<asp:BoundField DataField="GSTIN" HeaderText="Gstin" />--%>
-                    <asp:BoundField DataField="PAN" HeaderText="Pan" />
-                    <asp:BoundField DataField="CREDIT_DAYS" HeaderText="Credit Days" />
-                    <asp:BoundField DataField="CREDIT_LIMIT" HeaderText="Credit Limit" />
 
-                    <%--<asp:TemplateField HeaderText="Is Msmed" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+
+                        <asp:BoundField DataField="NAME" HeaderText="Name" />
+                        <asp:BoundField DataField="CODE" HeaderText="Code" />
+                        <%--<asp:BoundField DataField="STATUS" HeaderText="Status" />--%>
+                        <asp:BoundField DataField="CATEGORY" HeaderText="Category" />
+                        <%--<asp:BoundField DataField="GSTIN" HeaderText="Gstin" />--%>
+                        <asp:BoundField DataField="PAN" HeaderText="Pan" />
+                        <asp:BoundField DataField="CREDIT_DAYS" HeaderText="Credit Days" />
+                        <asp:BoundField DataField="CREDIT_LIMIT" HeaderText="Credit Limit" />
+
+                        <%--<asp:TemplateField HeaderText="Is Msmed" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
                             <ItemTemplate>
                                 <asp:ImageButton ID="imgIsMsmed" runat="server" Height="20px" Width="20px" Enabled="false" />
                             </ItemTemplate>
                         </asp:TemplateField>--%>
 
-                    <asp:TemplateField HeaderText="Is Iso Certified" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsIsoCertified" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Is Iso Certified" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsIsoCertified" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Is Technical Details Received" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsTechnicalDetailsReceived" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Is Technical Details Received" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsTechnicalDetailsReceived" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Is Visit By Qa" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsVisitByQa" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Is Visit By Qa" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsVisitByQa" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:TemplateField HeaderText="Is Government" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsGovernment" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Is Government" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsGovernment" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
 
-                    <asp:TemplateField HeaderText="Is One Time" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:ImageButton ID="imgIsOneTime" runat="server" Height="20px" Width="20px" Enabled="false" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Is One Time" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:ImageButton ID="imgIsOneTime" runat="server" Height="20px" Width="20px" Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
-                    <asp:BoundField DataField="RESPONSIBLE" HeaderText="Responsible" />
-                    <asp:BoundField DataField="VENDOR_TYPE" HeaderText="Vendor Type" />
+                        <asp:BoundField DataField="RESPONSIBLE" HeaderText="Responsible" />
+                        <asp:BoundField DataField="VENDOR_TYPE" HeaderText="Vendor Type" />
 
-                    <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
-                        <ItemTemplate>
-                            <asp:Button ID="btnRevised" Visible="false"
-                                ToolTip="Revised" runat="server"
-                                Text="Revised" CssClass="cancelbutton" Width="100%" BorderColor="Orange" Enabled="false"
-                                BorderStyle="Solid" BorderWidth="2px" />
+                        <asp:TemplateField HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center">
+                            <ItemTemplate>
+                                <asp:Button ID="btnRevised" Visible="false"
+                                    ToolTip="Revised" runat="server"
+                                    Text="Revised" CssClass="cancelbutton" Width="100%" BorderColor="Orange" Enabled="false"
+                                    BorderStyle="Solid" BorderWidth="2px" />
 
-                            <asp:Button ID="btnNew"
-                                ToolTip="New" runat="server" Visible="false"
-                                Text="New" CssClass="cancelbutton" Width="100%" BorderColor="Green" Enabled="false"
-                                BorderStyle="Solid" BorderWidth="2px" />
-                        </ItemTemplate>
-                        <HeaderStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-                </Columns>
-                <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
-                <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
-                <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
-                <EditRowStyle BackColor="#7C6F57" />
-                <AlternatingRowStyle BackColor="White" />
-            </asp:GridView>
+                                <asp:Button ID="btnNew"
+                                    ToolTip="New" runat="server" Visible="false"
+                                    Text="New" CssClass="cancelbutton" Width="100%" BorderColor="Green" Enabled="false"
+                                    BorderStyle="Solid" BorderWidth="2px" />
+                            </ItemTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
+                    </Columns>
+                    <FooterStyle BackColor="#1C5E55" ForeColor="White" Font-Bold="True" />
+                    <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+                    <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+                    <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+                    <EditRowStyle BackColor="#7C6F57" />
+                    <AlternatingRowStyle BackColor="White" />
+                </asp:GridView>
 
-        </div>
-            </fieldset>
+            </div>
+        </fieldset>
 
     </div>
 
@@ -2484,37 +2484,37 @@
 
                     <div class="form-grid form-grid-2">
 
-                        <div class="full-width button-group">
+                        <%--<div class="full-width button-group">--%>
 
-                            <label>Attachment Type:</label>
-                            <asp:DropDownList ID="ddlAttachmentType" runat="server" CssClass="form-control"></asp:DropDownList>
+                        <label>Attachment Type:</label>
+                        <asp:DropDownList ID="ddlAttachmentType" runat="server" CssClass="form-control"></asp:DropDownList>
 
-                            <label>Brownse:</label>
-                            <table width="100%">
-                                <tr>
-                                    <td>
-                                        <asp:FileUpload ID="fileUploadAttachment" runat="server"
-                                            CssClass="form-control"
-                                            BorderStyle="Groove" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div id="divfileAttachment" style="display: none;">
-                                            <asp:Label ID="lblfileAttachment" runat="server" ForeColor="Red" />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                        <label>Brownse:</label>
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <asp:FileUpload ID="fileUploadAttachment" runat="server"
+                                        CssClass="form-control"
+                                        BorderStyle="Groove" />
+                                </td>
+                                <td>
+                                    <asp:ImageButton ImageUrl="~/Images/VCM/add.png" runat="server"
+                                        ID="btnAddUpdateAttachmentToList"
+                                        OnClick="btnAddUpdateAttachmentToList_Click"
+                                        OnClientClick="return ValidateAllAttachment();"
+                                        ToolTip="Add new attachment" Height="30px" Width="30px" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="divfileAttachment" style="display: none;">
+                                        <asp:Label ID="lblfileAttachment" runat="server" ForeColor="Red" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
 
-                            <asp:ImageButton ImageUrl="~/Images/VCM/add.png" runat="server"
-                                ID="btnAddUpdateAttachmentToList"
-                                OnClick="btnAddUpdateAttachmentToList_Click"
-                                OnClientClick="return ValidateAllAttachment();"
-                                ToolTip="Add new attachment" Height="30px" Width="30px" />
-
-                        </div>
-
+                        <%--</div>--%>
                     </div>
 
                     <div class="employee-grid-container">
@@ -2657,46 +2657,61 @@
                 </div>
 
 
+                <%--<div class="full-width button-group">--%>
+
+                <br />
+
+                <asp:Panel runat="server" ID="pnlSavingType" Visible="false">
+                    <div class="form-grid form-grid-2">
+
+                        <label>Saving Type:</label>
+                        <asp:RadioButtonList ID="rdSavingType" runat="server" RepeatDirection="Horizontal" Width="100%">
+                            <asp:ListItem Text="Save & send for approval" Value="1" Selected="True" />
+                            <asp:ListItem Text="Save for later" Value="0" />
+                        </asp:RadioButtonList>
+
+                        <label>Checker:</label>
+                        <asp:DropDownList ID="ddlCheckerToS" runat="server" CssClass="form-control">
+                        </asp:DropDownList>
+
+
+
+                    </div>
+                </asp:Panel>
+
+                <%--</div>--%>
+
+                <br />
+
+                <div class="full-width button-group">
+                    <asp:Button ID="btnSave" runat="server" Width="100%" Text="Save" CssClass="button"
+                        OnClick="btnSave_Click" OnClientClick="return ValidateAll();" />
+
+                    <asp:Button ID="btnUpdateStatus" runat="server" Width="100%" Text="Update Status" CssClass="button"
+                        OnClick="btnUpdateStatus_Click" />
+
+                </div>
+
+                <br />
+
+                <div class="full-width button-group">
+
+                    <asp:Button ID="btnSendToAmendment" runat="server" Width="100%" Text="Send To Amendment" CssClass="button"
+                        OnClick="btnSendToAmendment_Click" />
+
+                    <asp:Button ID="btnRegisterVendor" runat="server" Width="100%" Text="Register Vendor" CssClass="button"
+                        OnClick="btnRegisterVendor_Click" OnClientClick="return ValidateCodeAll();" />
+
+                </div>
+
+                <div class="full-width">
+                    <asp:Panel ID="pnlUpdateMsg" Visible="true" runat="server" Height="50px">
+                        <asp:Label ID="lblUpdateMsg" runat="server" Font-Bold="True" Font-Size="Large" />
+                    </asp:Panel>
+                </div>
+
             </fieldset>
 
-            <div class="full-width button-group">
-                <asp:Panel runat="server" ID="pnlSavingType" Visible="false">
-
-                    <asp:RadioButtonList ID="rdSavingType" runat="server" RepeatDirection="Vertical" Width="100%">
-                        <asp:ListItem Text="Save & send for approval" Value="1" Selected="True" />
-                        <asp:ListItem Text="Save for later" Value="0" />
-                    </asp:RadioButtonList>
-
-                    <td style="width: 15%;">Checker:</td>
-                    <asp:DropDownList ID="ddlCheckerToS" runat="server" CssClass="form-control">
-                    </asp:DropDownList>
-
-                </asp:Panel>
-
-            </div>
-            <div class="full-width button-group">
-                <asp:Button ID="btnSave" runat="server" Width="100%" Text="Save" CssClass="button"
-                    OnClick="btnSave_Click" OnClientClick="return ValidateAll();" />
-
-                <asp:Button ID="btnUpdateStatus" runat="server" Width="100%" Text="Update Status" CssClass="button"
-                    OnClick="btnUpdateStatus_Click" />
-
-            </div>
-            <div class="full-width button-group">
-
-                <asp:Button ID="btnSendToAmendment" runat="server" Width="100%" Text="Send To Amendment" CssClass="button"
-                    OnClick="btnSendToAmendment_Click" />
-
-                <asp:Button ID="btnRegisterVendor" runat="server" Width="100%" Text="Register Vendor" CssClass="button"
-                    OnClick="btnRegisterVendor_Click" OnClientClick="return ValidateCodeAll();" />
-
-            </div>
-
-            <div class="full-width">
-                <asp:Panel ID="pnlUpdateMsg" Visible="true" runat="server" Height="50px">
-                    <asp:Label ID="lblUpdateMsg" runat="server" Font-Bold="True" Font-Size="Large" />
-                </asp:Panel>
-            </div>
         </div>
 
     </asp:Panel>
