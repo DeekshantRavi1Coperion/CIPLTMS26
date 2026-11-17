@@ -38,13 +38,13 @@
                 document.getElementById('<%=txtTimesheetDate.ClientID %>').value = document.getElementById('<%=hdTimesheetDate.ClientID %>').value;
             }
 
-            <%--var hdTimesheetDeptID = document.getElementById('<%=hdTimesheetDeptID.ClientID %>').value;
+            var hdTimesheetDeptID = document.getElementById('<%=hdTimesheetDeptID.ClientID %>').value;
             if (hdTimesheetDeptID == "1") {
                 document.getElementById('dvDrawing').style.display = 'block';
             }
             else {
                 document.getElementById('dvDrawing').style.display = 'none';
-            }--%>
+            }
         }
 
         function clientChangedTimesheetDate(sender, args) {
@@ -238,7 +238,7 @@
         function ValidateAll() {
             var check = true;
 
-            
+
 
             if (ValidateProjectCategory()) {
                 return false;
@@ -248,7 +248,7 @@
                 return false;
             }
 
-            /*if (document.getElementById('dvDrawing').style.display == 'block') {*/
+            if (document.getElementById('dvDrawing').style.display == 'block') {
                 if (ValidateCategory()) {
                     return false;
                 }
@@ -277,14 +277,14 @@
                 if (ValidateTypeOfDrawing()) {
                     return false;
                 }
-            //}
+            }
 
-            
+
             if (ValidateTitle()) {
                 return false;
             }
 
-            
+
 
             if (ValidateStartTime()) {
                 return false;
@@ -302,7 +302,7 @@
                 return false;
             }
 
-            
+
 
 
             if (check) {
@@ -619,50 +619,61 @@
                             CssClass="form-control"
                             onchange="GetDrawingID();" />
 
-                        <label>Category</label>
-                        <asp:DropDownList ID="ddlCategory" runat="server"
-                            CssClass="form-control"
-                            onchange="GetDrawingID();" />
-
-                        <label>Serial Number</label>
-                        <asp:DropDownList ID="ddlSerialNumber" runat="server"
-                            CssClass="form-control"
-                            onchange="GetDrawingID();" />
-
-                        <label>Size</label>
-                        <asp:DropDownList ID="ddlSize" runat="server"
-                            CssClass="form-control"
-                            onchange="GetDrawingID();" />
-
-                        <label>Rev.</label>
-                        <asp:DropDownList ID="ddlRev" runat="server"
-                            CssClass="form-control"
-                            onchange="GetDrawingID();" />
-
-                        <label>Sheets</label>
-                        <asp:TextBox ID="txtSheets" runat="server"
-                            CssClass="form-control"
-                            onkeypress="return isNumber(event)" onkeyup="GetDrawingID()" />
-
-                        <label>Drawing ID</label>
-                        <asp:TextBox ID="txtDrawingID" runat="server"
-                            CssClass="form-control"
-                            ReadOnly="true" />
-                        <asp:HiddenField ID="hdDrawingID" runat="server" />
 
 
-                        <label>Type Of Drawing</label>
-                        <asp:DropDownList ID="ddlTypeOfDrawing" runat="server"
-                            CssClass="form-control" />
 
-                    </div>
 
-                    <div class="form-grid form-grid-2">
-                        <div class="full-width">
-                            <label style="color: Blue; font-family: Calibri;">
-                                Note: Please enter 24 Hour format time.</label>
+
+                        <div style="display: block;" id="dvDrawing">
+                            <label>Category</label>
+                            <asp:DropDownList ID="ddlCategory" runat="server"
+                                CssClass="form-control"
+                                onchange="GetDrawingID();" />
+
+                            <label>Serial Number</label>
+                            <asp:DropDownList ID="ddlSerialNumber" runat="server"
+                                CssClass="form-control"
+                                onchange="GetDrawingID();" />
+
+                            <label>Size</label>
+                            <asp:DropDownList ID="ddlSize" runat="server"
+                                CssClass="form-control"
+                                onchange="GetDrawingID();" />
+
+                            <label>Rev.</label>
+                            <asp:DropDownList ID="ddlRev" runat="server"
+                                CssClass="form-control"
+                                onchange="GetDrawingID();" />
+
+                            <label>Sheets</label>
+                            <asp:TextBox ID="txtSheets" runat="server"
+                                CssClass="form-control"
+                                onkeypress="return isNumber(event)" onkeyup="GetDrawingID()" />
+
+                            <label>Drawing ID</label>
+                            <asp:TextBox ID="txtDrawingID" runat="server"
+                                CssClass="form-control"
+                                ReadOnly="true" />
+                            <asp:HiddenField ID="hdDrawingID" runat="server" />
+
+
+                            <label>Type Of Drawing</label>
+                            <asp:DropDownList ID="ddlTypeOfDrawing" runat="server"
+                                CssClass="form-control" />
+
+                        </div>
+
+                        <div class="form-grid form-grid-2">
+                            <div class="full-width">
+                                <label style="color: Blue; font-family: Calibri;">
+                                    Note: Please enter 24 Hour format time.</label>
+                            </div>
                         </div>
                     </div>
+
+
+
+
                     <div class="form-grid form-grid-2">
 
                         <label>Start Time</label>
