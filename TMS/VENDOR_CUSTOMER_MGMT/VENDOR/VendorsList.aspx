@@ -2171,6 +2171,7 @@
                                             <ItemTemplate>
 
                                                 <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblPID" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
                                                 <asp:Label ID="lblGSTIN" runat="server" Text='<%# Eval("GSTIN") %>' Visible="false" />
                                                 <asp:Label ID="lblAddress1" runat="server" Text='<%# Eval("ADDRESS_LINE1") %>' Visible="false" />
                                                 <asp:Label ID="lblAddress2" runat="server" Text='<%# Eval("ADDRESS_LINE2") %>' Visible="false" />
@@ -2293,6 +2294,7 @@
                                             <ItemTemplate>
 
                                                 <asp:Label ID="lblSrNo" runat="server" Text='<%# Eval("SR_NO") %>' Visible="false" />
+                                                <asp:Label ID="lblPID" runat="server" Text='<%# Eval("PID") %>' Visible="false" />
                                                 <asp:Label ID="lblContactPersonName" runat="server" Text='<%# Eval("NAME") %>' Visible="false" />
                                                 <asp:Label ID="lblContactPersonMobile" runat="server" Text='<%# Eval("MOBILE_NO") %>' Visible="false" />
                                                 <asp:Label ID="lblContactPersonPhone" runat="server" Text='<%# Eval("PHONE") %>' Visible="false" />

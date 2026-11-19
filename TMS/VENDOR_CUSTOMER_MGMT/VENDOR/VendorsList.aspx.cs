@@ -1250,7 +1250,7 @@ public partial class VENDOR_CUSTOMER_MGMT_VENDOR_VendorsList : System.Web.UI.Pag
                 }
 
                 Label lblSrNo = gvContactPerson.Rows[rowindex].FindControl("lblSrNo") as Label;
-                Label lblPID = gvBillingAddress.Rows[rowindex].FindControl("lblPID") as Label;
+                Label lblPID = gvContactPerson.Rows[rowindex].FindControl("lblPID") as Label;
                 Label lblContactPersonName = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonName") as Label;
                 Label lblContactPersonMobile = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonMobile") as Label;
                 Label lblContactPersonPhone = gvContactPerson.Rows[rowindex].FindControl("lblContactPersonPhone") as Label;
