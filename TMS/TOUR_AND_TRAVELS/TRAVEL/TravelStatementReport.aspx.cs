@@ -203,6 +203,7 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementReport : System.Web.
                 Convert.ToInt32(Session["DEPARTMENT_ID"]) == 2 || 
                 Convert.ToInt32(Session["EMP_RECORD_ID"]) == 117 ||
                 Convert.ToInt32(Session["EMP_RECORD_ID"]) == 115 ||
+                Convert.ToInt32(Session["EMP_RECORD_ID"]) == 45 ||
                 Convert.ToInt32(Session["EMP_RECORD_ID"]) == 17 ||
                 Convert.ToString(Session["USER_TYPE"]) == "Admin")
                 dsEmployee = objTourAndTravels.GetEmployeeForTravel(0);
