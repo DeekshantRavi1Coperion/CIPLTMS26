@@ -808,8 +808,9 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementListNewOne : System.
                         currentStatusID == Convert.ToInt32(TandTAllStatus.EnumTravelStatus.Approved))
                     {
                         imgStatus.ToolTip = "Approved";
-                        //if (empRecordID == 15 || empRecordID == 16 || empRecordID == 260 || empRecordID == 117)                        
-                        if (tsApprovalID == 3 || tsApprovalID == 1)
+                        if ((empRecordID == 16 || empRecordID == 496 || empRecordID == 117) 
+                        )
+                        //if (tsApprovalID == 3 || tsApprovalID == 1)
                         {
                             imgStatus.Enabled = true;
                             btnApproval.Visible = true;
@@ -829,8 +830,8 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementListNewOne : System.
                              currentStatusID == Convert.ToInt32(TandTAllStatus.EnumTravelStatus.AmendedApproved))
                     {
                         imgStatus.ToolTip = "Amended-Approved";
-                        //if (empRecordID == 15 || empRecordID == 16 || empRecordID == 260 || empRecordID == 117)
-                        if (tsApprovalID == 3 || tsApprovalID == 1)
+                        if (empRecordID == 15 || empRecordID == 16 || empRecordID == 260 || empRecordID == 117)
+                        //if (tsApprovalID == 3 || tsApprovalID == 1)
                         {
                             imgStatus.Enabled = true;
                             btnApproval.Visible = true;
@@ -1168,19 +1169,22 @@ public partial class TOUR_AND_TRAVELS_TRAVEL_TravelStatementListNewOne : System.
                 //    btnApproval.Visible = false;
                 //}
 
+                //commented out due to no use ------------------
 
+                //if (Convert.ToInt32(lblPsudoTeamLeaderID.Text) != Convert.ToInt32(Session["EMP_RECORD_ID"]))
+                //{
+                //    if (string.IsNullOrEmpty(lblAddAttachment1.Text))
+                //        imgBtnAddAttachment1.Visible = false;
 
-                if (Convert.ToInt32(lblPsudoTeamLeaderID.Text) != Convert.ToInt32(Session["EMP_RECORD_ID"]))
-                {
-                    if (string.IsNullOrEmpty(lblAddAttachment1.Text))
-                        imgBtnAddAttachment1.Visible = false;
+                //    if (string.IsNullOrEmpty(lblAddAttachment2.Text))
+                //        imgBtnAddAttachment2.Visible = false;
 
-                    if (string.IsNullOrEmpty(lblAddAttachment2.Text))
-                        imgBtnAddAttachment2.Visible = false;
+                //    imgStatus.Enabled = false;
+                //    btnApproval.Visible = false;
+                //}
 
-                    imgStatus.Enabled = false;
-                    btnApproval.Visible = false;
-                }
+                //commented out due to no use -----------------------
+
 
                 for (int i = 0; i < e.Row.Cells.Count; i++)
                 {
