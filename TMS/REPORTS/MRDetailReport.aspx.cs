@@ -248,39 +248,95 @@ public partial class REPORTS_MRDetailReport : System.Web.UI.Page
         }
     }
 
+    //private void ToCSVNew01(DataTable dt)
+    //{
+    //    try
+    //    {
+    //        string csv = string.Empty;
+    //        foreach (DataColumn column in dt.Columns)
+    //        {
+    //            csv += column.ColumnName + ',';
+    //        }
+    //        csv += "\r\n";
+
+    //        foreach (DataRow row in dt.Rows)
+    //        {
+    //            foreach (DataColumn column in dt.Columns)
+    //            {
+    //                csv += row[column.ColumnName].ToString().Replace(",", ";") + ',';
+    //            }
+    //            csv += "\r\n";
+    //        }
+
+    //        string fileName = "MRDetailReport_" + DateTime.Now.ToString("dd_MMM_yyyy");
+    //        Response.Clear();
+    //        Response.Buffer = true;
+    //        Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
+    //        Response.Charset = "";
+    //        Response.ContentType = "application/text";
+    //        Response.Output.Write(csv);
+    //        Response.Flush();
+    //        Response.End();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw ex;
+    //    }
+    //}
+
     private void ToCSVNew01(DataTable dt)
     {
         try
         {
-            string csv = string.Empty;
-            foreach (DataColumn column in dt.Columns)
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+           
+            for (int i = 0; i < dt.Columns.Count; i++)
             {
-                csv += column.ColumnName + ',';
+                sb.Append("\"" + dt.Columns[i].ColumnName.Replace("\"", "\"\"") + "\"");
+                if (i < dt.Columns.Count - 1)
+                    sb.Append(",");
             }
-            csv += "\r\n";
+            sb.Append("\r\n");
 
             foreach (DataRow row in dt.Rows)
             {
-                foreach (DataColumn column in dt.Columns)
+                for (int i = 0; i < dt.Columns.Count; i++)
                 {
-                    csv += row[column.ColumnName].ToString().Replace(",", ";") + ',';
+                    string val = row[i] == DBNull.Value ? "" : row[i].ToString();
+
+                    val = val.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+
+                   
+                    val = "\"" + val.Replace("\"", "\"\"") + "\"";
+
+                    sb.Append(val);
+                    if (i < dt.Columns.Count - 1)
+                        sb.Append(",");
                 }
-                csv += "\r\n";
+                sb.Append("\r\n");
             }
 
             string fileName = "MRDetailReport_" + DateTime.Now.ToString("dd_MMM_yyyy");
             Response.Clear();
             Response.Buffer = true;
             Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".csv");
-            Response.Charset = "";
-            Response.ContentType = "application/text";
-            Response.Output.Write(csv);
+            Response.Charset = "utf-8";
+            Response.ContentEncoding = System.Text.Encoding.UTF8;
+            Response.ContentType = "text/csv";
+
+            Response.BinaryWrite(System.Text.Encoding.UTF8.GetPreamble());
+            Response.Output.Write(sb.ToString());
             Response.Flush();
             Response.End();
         }
+        catch (System.Threading.ThreadAbortException)
+        {
+           
+        }
         catch (Exception ex)
         {
-            throw ex;
+            throw;
         }
     }
 
