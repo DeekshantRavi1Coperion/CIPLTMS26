@@ -714,11 +714,11 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
                 <legend>Filters</legend>
 
-                <div class="form-grid">
+                <div class="form-filter-grid">
 
                     <label>Date Type</label>
                     <asp:DropDownList ID="ddlDateType" runat="server"

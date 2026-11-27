@@ -387,7 +387,7 @@
 
     <div class="page-layout">
 
-        <div class="form-grid-container">
+        <div class="filter-grid-container">
             <fieldset class="filter-card">
                 <legend>Filters</legend>
 
