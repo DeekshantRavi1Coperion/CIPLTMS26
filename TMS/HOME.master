@@ -16,6 +16,8 @@
     <link href="Styles/Site.css" rel="stylesheet" />
     <link href="Styles/MasterPage.css" rel="stylesheet" />
     <script src="/Scripts/sidebar-resize.js?v=3" type="text/javascript"></script>
+    <script src="/Scripts/sidebar-toggle.js?v=1" type="text/javascript"></script>
+    <script src="/Scripts/filter-resize.js?v=1" type="text/javascript"></script>
 
 
 
@@ -252,12 +254,35 @@
                      TOP HEADER
                      ================================================= -->
 
-                <header class="top-header">
+                <%--<header class="top-header">
                     <div class="page-heading">
                         <asp:ContentPlaceHolder
                             ID="PageHeaderContent"
                             runat="server" />
                     </div>
+                </header>--%>
+
+                <header class="top-header">
+
+                    <!-- SIDEBAR TOGGLE BUTTON -->
+                    <button type="button"
+                        id="sidebarToggle"
+                        class="sidebar-toggle"
+                        title="Hide sidebar"
+                        aria-label="Hide sidebar"
+                        aria-expanded="true">
+
+                        <span class="toggle-icon">&#9776;</span>
+
+                    </button>
+
+                    <!-- PAGE HEADING -->
+                    <div class="page-heading">
+                        <asp:ContentPlaceHolder
+                            ID="PageHeaderContent"
+                            runat="server" />
+                    </div>
+
                 </header>
 
 
@@ -470,7 +495,7 @@
             });
 
         </script>
-    </form>    
+    </form>
 </body>
 
 </html>

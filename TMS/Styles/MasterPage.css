@@ -994,3 +994,96 @@ body.sidebar-resizing * {
     flex: 1 1 0;
     min-width: 0;
 }
+
+
+
+
+
+/*Toggle bar*/
+
+
+/* =========================================================
+   SIDEBAR SHOW / HIDE TOGGLE
+   ========================================================= */
+
+/* Header alignment */
+
+.top-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Toggle button */
+
+.sidebar-toggle {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 21px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+    .sidebar-toggle:hover {
+        background: #eff6ff;
+        border-color: #3b82f6;
+        color: #2563eb;
+    }
+
+    .sidebar-toggle:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+    }
+
+.toggle-icon {
+    line-height: 1;
+}
+
+/* Allow heading to occupy remaining header space */
+
+.top-header .page-heading {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+}
+
+/* =========================================================
+   COLLAPSED SIDEBAR
+   ========================================================= */
+
+.app-layout.sidebar-collapsed > .sidebar {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    flex: 0 0 0 !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+}
+
+/* Hide resize handle when sidebar is collapsed */
+
+.app-layout.sidebar-collapsed .sidebar-resizer {
+    display: none;
+}
+
+/* Main area takes all available space */
+
+.app-layout.sidebar-collapsed > .main-area {
+    flex: 1 1 0 !important;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Smooth transition when showing / hiding */
+
+.app-layout > .sidebar {
+    transition: width .22s ease, min-width .22s ease, max-width .22s ease, flex-basis .22s ease !important;
+}
